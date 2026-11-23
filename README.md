@@ -12,7 +12,7 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
   - `00_contexto_projeto_dicionario_dados.md`: ponto de entrada e dicionário das colunas.
   - `00_5_orientacoes_execucao_decisoes.md`: decisões consolidadas e marcos.
   - `01_preparacao_comum.md` a `06_…`: preparação, CNN com viagem completa e CNN com janelas.
-- `latex/`: proposta em LaTeX (`proposta_pt.tex`, `proposta_pt.pdf`) e bibliografia.
+- `latex/`: proposta em LaTeX (`proposta_pt.tex` (reescrita a partir de `proposta_IAHC_DINIS_ROSA.pdf`)) e bibliografia.
 - `scripts/`: scripts executáveis do projeto.
   - `create_split_manifest.py`: cria o manifesto de divisão por ID (seed 42, 70/15/15).
   - `check_units_train.py`: verifica unidades e convenções só com o conjunto de treino.

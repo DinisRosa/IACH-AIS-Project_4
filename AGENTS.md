@@ -125,7 +125,7 @@ Cada revisão lógica dos documentos recebe um ID e uma cor. Se originar altera�
 ### Antes de editar
 Ler os documentos de acompanhamento e o .tex real quando fornecido. Identificar macros, cores, pacotes e convenções existentes; não recolorir revisões anteriores. Se o significado das cores não for claro, perguntar. Não reconstruir cronologia/autoria por adivinhação.
 
-O ficheiro da proposta está em `latex/proposta_pt.tex` (com `latex/proposta_pt.pdf`). Não criar um relatório substituto nem afirmar que foi atualizado. Registar atualização pendente quando aplicável. O estado atual de revisão do `.tex` está em `PROGRESS.md`, secção "Inconsistências do LaTeX".
+O ficheiro da proposta está em `latex/proposta_pt.tex` (a base original é `latex/proposta_IAHC_DINIS_ROSA.pdf`). Não criar um relatório substituto nem afirmar que foi atualizado. Registar atualização pendente quando aplicável. O estado atual de revisão do `.tex` está em `PROGRESS.md`, secção "Inconsistências do LaTeX".
 
 ### Registo
 Criar/manter REVISION_LOG.md com:
