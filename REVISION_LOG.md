@@ -27,6 +27,8 @@ Regras:
 | REV-013 | Oliva | `#808000` | (128, 128, 0) |
 | REV-014 | Lilás | `#9575CD` | (149, 117, 205) |
 | REV-015 | Turquesa | `#26A69A` | (38, 166, 154) |
+| REV-016 | Amarelo-torrado | `#F57F17` | (245, 127, 23) |
+| REV-017 | Rosa-choque | `#FF4081` | (255, 64, 129) |
 
 ## Revisões
 
@@ -296,3 +298,35 @@ Regras:
   - Testes sintéticos da função de construção.
   - Medir a frequência de saltos e de inversões de rumo.
   - Push: feito pelo utilizador.
+
+### REV-016 — Testes sintéticos e correção de `wrap_180`
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Amarelo-torrado `#F57F17`, RGB (245, 127, 23). Só marcador do registo.
+- **O quê:**
+  - Criada a pasta `tests/` com `test_build_clean_dataset.py`: 10 testes com dados inventados. Cobrem: barco parado, linha reta a norte, rumo a leste, curva positiva no sentido do relógio, rotação pelo zero (350° para 10° dá +20°), primeiro ponto sem anterior, viagens que não se misturam, mapeamento do `target` e rótulo desconhecido.
+  - Correção em `scripts/build_clean_dataset.py`: `wrap_180` passa a devolver (-180, 180], como a documentação já dizia. Antes, um ângulo de exatamente 180° saía como -180°.
+- **Porquê:** o teste de `wrap_180(180)` falhou e revelou a discrepância entre código e documentação.
+- **Verificação:** `pytest tests/` passa (10 testes). Os três conjuntos foram regenerados. O treino ficou igual ao anterior (comparação de conteúdo). Nenhum valor de 180° ou -180° no treino.
+- **Ficheiros afetados:** `tests/test_build_clean_dataset.py` (novo), `scripts/build_clean_dataset.py`, `README.md`, `REVISION_LOG.md`, `PROGRESS.md`.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Pendentes:** medir a frequência de saltos e de inversões de rumo no treino (aguarda pedido de revisão do Marco 2).
+
+### REV-017 — Contagem de saltos e inversões de rumo por viagem (treino)
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Rosa-choque `#FF4081`, RGB (255, 64, 129). Só marcador do registo.
+- **O quê:**
+  - `scripts/count_anomalies_train.py`: conta, por viagem, pares com velocidade acima de 30 nós (salto) e pares com |variação de rumo| acima de 170° (inversão). Só lê o treino e não altera dados.
+  - Saídas em `results/anomalies_train/`: `per_trip.csv`, `summary.json`, `jumps_per_trip.png` e `inversions_per_trip.png`.
+  - `tests/test_count_anomalies_train.py`: 5 testes sintéticos da contagem e do resumo.
+- **Porquê:** pedido do utilizador: contagem por viagem, médias e medianas, e dois gráficos, para confirmar a escala das anomalias antes da revisão do Marco 2. O limiar de 30 nós é um valor de trabalho, não validado.
+- **Resultados (treino, 87 viagens):**
+  - Saltos acima de 30 nós: 55 no total, em 4 viagens. Média 0,63, mediana 0. Uma viagem tem 48 (`220099000-3`). Taxa de 0,077 por mil pares.
+  - Inversões acima de 170°: 3 717 no total, em 70 viagens. Média 42,7, mediana 3. Duas viagens concentram 68 % do total: `219028021-2` com 1 517 (6,4 % dos pares) e `220099000-3` com 1 018 (4,2 %). Taxa de 5,2 por mil pares.
+  - 83 viagens sem nenhum salto e 17 sem nenhuma inversão.
+- **Ficheiros afetados:** `scripts/count_anomalies_train.py` (novo), `tests/test_count_anomalies_train.py` (novo), `README.md`, `REVISION_LOG.md`, `PROGRESS.md`.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Pendentes:**
+  - Decidir se as inversões concentradas em poucas viagens são erro ou comportamento real (por exemplo, pesca em zigue-zague). Só contar não o distingue.
+  - Revisão do Marco 2 pelo utilizador antes do Marco 3.

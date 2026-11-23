@@ -277,3 +277,24 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Testes sintéticos da função de construção.
 - Medir a frequência de saltos e de inversões de rumo.
 - Push feito pelo utilizador.
+
+### 2026-11-23q — Testes sintéticos e correção de wrap_180 (REV-016)
+
+**Feito**
+- `tests/test_build_clean_dataset.py`: 10 testes sintéticos, todos a passar.
+- `wrap_180` corrigido para (-180, 180], em linha com a documentação. Os dados do treino não mudam.
+
+**Pendente**
+- Contagem de saltos e inversões de rumo no treino. Aguarda o pedido de revisão do Marco 2.
+- Push do `2f24970` feito pelo utilizador.
+
+### 2026-11-23r — Contagem de saltos e inversões por viagem (REV-017)
+
+**Feito**
+- `scripts/count_anomalies_train.py` e resultados em `results/anomalies_train/` (por viagem, resumo e dois gráficos). Testes: 15 a passar no total.
+- Saltos acima de 30 nós: 55 no total, 4 viagens afetadas. Inversões acima de 170°: 3 717 no total, 70 viagens afetadas, com 68 % concentrado em duas viagens.
+
+**Pendente**
+- Decidir se as inversões concentradas são erro ou comportamento real.
+- Revisão do Marco 2 pelo utilizador.
+- Commits das alterações desde 2f24970 ainda não feitos.

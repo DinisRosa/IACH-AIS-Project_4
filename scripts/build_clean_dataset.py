@@ -90,7 +90,9 @@ def load_raw(path: Path, train_ids: set[str]) -> pd.DataFrame:
 
 
 def wrap_180(angle: pd.Series) -> pd.Series:
-    return (angle + 180.0) % 360.0 - 180.0
+    """Normaliza para (-180, 180]: -180 passa a 180."""
+    wrapped = (angle + 180.0) % 360.0 - 180.0
+    return wrapped.where(wrapped != -180.0, 180.0)
 
 
 def build(frame: pd.DataFrame, split: str) -> pd.DataFrame:
