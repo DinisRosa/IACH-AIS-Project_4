@@ -1,0 +1,11 @@
+# Dependências mínimas do projeto AIS (AGENTS.md §4).
+# Ambiente: .venv (venv + pip, sem Conda). Python 3.14.4. CPU apenas (sem CUDA).
+# Instalação: .venv/bin/python -m pip install -r requirements.txt
+# Versões verificadas nesta máquina em 2026-11-23; ver PROGRESS.md.
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+numpy==2.5.5
+pandas==3.1.1
+torch==2.15.0+cpu
+pytest==9.2.0
