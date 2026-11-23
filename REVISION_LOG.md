@@ -400,3 +400,9 @@ Regras:
 - **Pendentes:**
   - Ver a lista de próximos passos do Marco 3 em `PROGRESS.md`.
   - Push, por conta do utilizador.
+
+- **Correção (2026-11-23, mesma revisão REV-022):**
+  - Quais os pontos com ausências: o **primeiro** ponto de cada viagem não tem `time_gap`, `speed` nem `signed_turn`. O **segundo** só não tem `signed_turn`. A versão anterior dizia que os dois primeiros não tinham as três grandezas, o que estava errado.
+  - Porque é que o segundo não tem `signed_turn`: `bearing` existe a partir do segundo ponto (é o rumo do primeiro intervalo). `signed_turn` é a diferença entre dois rumos consecutivos, por isso precisa de dois intervalos. No segundo ponto só há um.
+  - O primeiro ponto **mantém-se** no conjunto, com valores ausentes, por decisão do utilizador.
+  - A entrada dos pontos iniciais na função de perda **não está decidida**. A versão anterior dizia que ficavam fora, sem confirmação. Fica como pendente.

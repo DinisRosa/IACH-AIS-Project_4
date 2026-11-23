@@ -170,7 +170,7 @@ signed_turn
 time_gap_calc_s
 distanceToShore
 ```
-Seleção decidida pelo utilizador (REV-019), não uma conclusão científica sobre a inutilidade das restantes colunas. Unidades verificadas: speed em nós, signed_turn em graus (REV-003), time_gap em segundos e distanceToShore em metros (REV-008). Ausências: os dois primeiros pontos de cada viagem não têm time_gap, speed e signed_turn (ou só signed_turn, no segundo). Política decidida em REV-022: preenchimento com zero, indicador de ausência por máscara, pontos fora da perda; nenhuma linha removida.
+Seleção decidida pelo utilizador (REV-019), não uma conclusão científica sobre a inutilidade das restantes colunas. Unidades verificadas: speed em nós, signed_turn em graus (REV-003), time_gap em segundos e distanceToShore em metros (REV-008). Ausências: o primeiro ponto de cada viagem não tem time_gap, speed nem signed_turn; o segundo não tem signed_turn. Política decidida em REV-022: preenchimento com zero, indicador de ausência por máscara; nenhuma linha removida. Entrada dos pontos iniciais na perda: por confirmar.
 
 ID, target, label, timestamps absolutos e identificadores auxiliares não são features. x e y ficam fora das entradas por decisão do utilizador (REV-019), e bearing fica fora por ser função de x e y. Podem ser revistos se houver evidência de que ajudam ou de que o modelo aprende a posição absoluta.
 

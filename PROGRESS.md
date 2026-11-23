@@ -357,7 +357,7 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 ### 2026-11-23w — Política de ausências aprovada e Marco 3 em curso (REV-022)
 
 **Feito**
-- Política de ausências aprovada e aplicada aos documentos e à proposta: preenchimento com zero, máscara de ausência por característica, pontos iniciais fora da perda, nenhuma linha removida. Nota: o segundo ponto de cada viagem também não tem `signed_turn`, por isso a regra cobre os dois primeiros pontos.
+- Política de ausências aprovada: nenhuma linha removida, preenchimento com zero e máscara de ausência por característica. O primeiro ponto mantém-se, sem `time_gap`, `speed` nem `signed_turn`. O segundo só não tem `signed_turn` (porque `signed_turn` precisa de dois intervalos).
 - Marco 3 oficialmente em curso.
 
 **Próximos passos do Marco 3 (por ordem)**
@@ -372,3 +372,5 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 **Pendente**
 - Decisão do utilizador: partição interna de monitorização dentro do treino (proporção por ID) e orçamento de tempo para treino.
 - Push dos commits, por conta do utilizador.
+
+**Pendente adicional (2026-11-23w):** decidir se o primeiro e o segundo ponto entram na função de perda. Ficam com máscara nas entradas em qualquer caso.
