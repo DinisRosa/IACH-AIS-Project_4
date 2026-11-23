@@ -1,13 +1,47 @@
 # Handoff — Projeto AIS
 
-Data: 2026-11-23. Reescrito de raiz em REV-044 para retomar o trabalho numa nova sessão.
+**Data e hora desta atualização:** 2026-11-23 19:42 WET (UTC+00:00). Reescrito de raiz em REV-044 e atualizado em REV-045. Todas as horas deste ficheiro estão no fuso WET (em novembro igual a UTC).
+
+### Última validação (registada neste handoff)
+
+| Verificação | Resultado | Data e hora (WET) |
+|---|---|---|
+| Testes (`pytest tests/`) | 145 passaram | 2026-11-23 19:41 |
+| LaTeX (`pdflatex` + `bibtex`) | 8 páginas; 0 erros; 0 referências indefinidas | 2026-11-23 19:41 |
+| Git | `HEAD` `8e567ca`; `main` um commit à frente de `origin/main`; último push `1bc3d8c` | 2026-11-23 19:41 |
+| Números da baseline (`final_results.json`) | gerados por `build_final_results` | 2026-11-23 18:53 UTC |
+| Congelação da baseline | checkpoint com hash conferido | 2026-11-23 18:42 UTC |
+| Seleção no `test` (única ronda) | abertura e fim registados em `results/access_log.jsonl` | 18:40 a 18:41 UTC, 2026-11-23 |
+| Conjunto `validation` | **nunca aberto** (sem entradas no `access_log`) | verificado em 2026-11-23 19:41 |
+
+Quem retomar deve repetir estas verificações e comparar com as horas acima: o que tiver mudado depois destas horas **não foi** validado por este handoff.
+
+### Cronologia dos últimos commits (hora local WET)
+
+| Commit | Data e hora | Assunto |
+|---|---|---|
+| `8e567ca` | 2026-11-23 19:41 | Corrige o estado do git no handoff e nos registos depois do push (REV-044) |
+| `1bc3d8c` | 2026-11-23 19:39 | Reorganiza o PROGRESS e regista REV-044 |
+| `91a7b81` | 2026-11-23 19:39 | Reescreve o handoff para outra sessão (REV-044) |
+| `d7d5e7e` | 2026-11-23 19:39 | Limpa e alinha README e docs com o estado atual (REV-044) |
+| `d1f30e0` | 2026-11-23 19:32 | Regista REV-041 a REV-043 no PROGRESS, REVISION_LOG e handoff |
+| `ea2ba1f` | 2026-11-23 19:32 | Passa a preto o texto estável da proposta LaTeX e mantém a cor no que pode mudar (REV-043) |
+| `e4f283f` | 2026-11-23 19:32 | Reestrutura a proposta LaTeX em torno da CNN de referência e tira HMM e Wu das comparações (REV-041, REV-042) |
+| `9c78897` | 2026-11-23 19:32 | Fecha a baseline e define o Marco 4 nos documentos (REV-041) |
+| `7645df3` | 2026-11-23 18:57 | Regista os commits e o push de REV-035 a REV-040 no PROGRESS e no handoff |
+| `3d8bc0c` | 2026-11-23 18:56 | Regista REV-035 a REV-040 no PROGRESS, REVISION_LOG e handoff |
+| `82a2535` | 2026-11-23 18:56 | Atualiza regras e documentos com os papéis dos conjuntos e o estado do Marco 3 (REV-036, REV-037, REV-038) |
+| `191cc2a` | 2026-11-23 18:56 | Atualiza a proposta LaTeX com a baseline congelada e os papéis dos conjuntos (REV-035, REV-036, REV-040) |
+| `8fd0e19` | 2026-11-23 18:56 | Gerador do ficheiro final de resultados, macros LaTeX e figuras (REV-035, REV-040) |
+| `d954d3c` | 2026-11-23 18:56 | Contagem de navios partilhados entre conjuntos, só a partir do manifesto (REV-039) |
+
 
 ## Como retomar (ler por esta ordem)
 
 1. `AGENTS.md`: regras fixas. O `CLAUDE.md` manda lê-lo antes de qualquer ação.
 2. Este ficheiro.
 3. `docs/00_projeto_e_decisoes.md` e `docs/02_cnn_viagem_completa.md`; depois `docs/03_cnn_janelamento.md` (Marco 4) e `docs/01_dados_e_preparacao.md` se for preciso.
-4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23ba) e `REVISION_LOG.md` (REV-001 a REV-044).
+4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23bb) e `REVISION_LOG.md` (REV-001 a REV-045).
 5. Antes de qualquer ação: `git status` e `git log`, e `iach-ais-venv-4/bin/python -m pytest tests/` (145 testes a passar).
 
 Mensagem sugerida para abrir a nova sessão: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -63,8 +97,8 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 
 **Âmbito e LaTeX**
 - HMM e Wu et al. **não** são comparações (REV-006, REV-042): só literatura na Contexto. Explicabilidade, calibração e *dashboard* estão fora do mínimo atual.
-- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-045**.
-- Cores no `.tex` ainda em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`. Outras definidas, sem uso: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev022 `#00897B`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60`, rev035 `#6200EA`, rev036 `#00C853`. Só marcadores Markdown: REV-029 `#BF360C`, REV-033 `#3E2723`, REV-034 `#7CB342`, REV-037 `#FFAB00`, REV-038 `#304FFE`, REV-039 `#1DE9B6`, REV-044 `#9E9E9E`.
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-046**.
+- Cores no `.tex` ainda em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`. Outras definidas, sem uso: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev022 `#00897B`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60`, rev035 `#6200EA`, rev036 `#00C853`. Só marcadores Markdown: REV-029 `#BF360C`, REV-033 `#3E2723`, REV-034 `#7CB342`, REV-037 `#FFAB00`, REV-038 `#304FFE`, REV-039 `#1DE9B6`, REV-044 `#9E9E9E`, REV-045 `#BCAAA4`.
 
 ## Ficheiros principais
 
@@ -139,6 +173,7 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
 - No fim de cada interação que altere ficheiros: atualizar `PROGRESS.md` e `REVISION_LOG.md` (REV novo, cor nova, marcador `[REV-NNN | cor #HEX]`) e confirmar que `README.md`, `docs/` e o LaTeX não se contradizem.
 - Explicar comandos e alterações antes de os executar. Pedir autorização para alterações metodológicas, execuções prolongadas e instalações.
 - **Subagentes:** só com contrato fechado, regras explícitas no prompt e ficheiros distintos; nunca confiar só no relatório: rever o código, conferir à mão e correr os testes. (Nesta sessão: Sonnet para as métricas por segmento e Haiku para a contagem de navios.)
+- **Todo o handoff indica a data e a hora (com fuso) da escrita e da última validação** (testes, compilação do LaTeX, estado do git), para o próximo agente saber o que foi verificado e quando. Usar `date`, não estimar.
 - Comunicar em português europeu; funções e variáveis em inglês.
 
 ## Preferências do utilizador observadas

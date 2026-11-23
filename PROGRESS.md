@@ -22,7 +22,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
 - **LaTeX:** `latex/proposta_pt.tex` compila (8 páginas); texto estável a preto e só o que pode mudar com a cor da revisão (REV-043).
 - **Git:** último push autorizado e feito: `1bc3d8c` (REV-044). Confirmar com `git status -sb` se há commits posteriores por enviar; cada push precisa de autorização explícita nova.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-044.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-045.
 
 ## Decisões do utilizador (vigentes)
 
@@ -765,3 +765,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Pendências abertas listadas no topo deste ficheiro. Push dos commits de REV-044 feito em `d1f30e0..1bc3d8c`, autorizado pelo utilizador.
+
+### 2026-11-23bb — Handoff com data e hora (REV-045), 2026-11-23 19:42 WET
+
+**Feito**
+- `handoff.md`: data e hora da atualização, tabela «Última validação» (testes e LaTeX às 19:41 WET, estado do git, geração e congelação da baseline, seleção no `test`, `validation` por abrir) e cronologia dos últimos commits. Regra nova em `AGENTS.md` §5.
+
+**Validado**
+- `pytest`: 145 passaram; `pdflatex` + `bibtex`: 8 páginas, 0 erros (19:41 WET). Horas lidas do relógio, do `git log` e dos ficheiros de resultados.
+
+**Pendente**
+- Pendências abertas do topo deste ficheiro; push dos commits de REV-045, por autorização.

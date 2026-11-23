@@ -757,3 +757,15 @@ Regras:
 - **Validação:** releitura de todos os documentos e procura de contradições (estado dos marcos, contagem de testes, caminhos, números de REV, configurações); os números citados no handoff vêm de `results/baseline_frozen/final_results.json`; `pytest tests/` → 145 passaram. Código e LaTeX não foram alterados.
 - **Limitações:** as entradas históricas do `PROGRESS.md` e do `REVISION_LOG.md` mantêm caminhos e estados antigos (`scripts/`, «em curso»), por serem registo. Os commits desta revisão foram enviados em `d1f30e0..1bc3d8c`, com autorização do utilizador.
 - **Pendentes:** as pendências abertas do topo do `PROGRESS.md`.
+
+### REV-045 — Handoff com data e hora da escrita e da última validação
+
+- **Data:** 2026-11-23 19:42 WET.
+- **Cor:** Taupe `#BCAAA4`, RGB (188, 170, 164). Só marcador do registo; não há alteração ao `.tex`.
+- **O quê:** por pedido do utilizador, o `handoff.md` passa a indicar sempre a data e a hora (fuso WET, igual a UTC em novembro) da atualização e da última validação. Acrescentados: uma tabela «Última validação» (testes, compilação do LaTeX, estado do git, geração dos números da baseline, congelação, seleção no `test` e confirmação de que o `validation` não foi aberto, cada uma com a sua hora) e a cronologia dos últimos commits com data e hora, gerada a partir do `git log`. Regra nova em `AGENTS.md` §5 e no handoff: horas obtidas com `date`, nunca estimadas.
+- **Porquê:** para o utilizador e o próximo agente saberem o que foi verificado e a que horas; o que mudar depois dessas horas não está validado pelo handoff.
+- **Ficheiros afetados:** `AGENTS.md` (uma regra), `handoff.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação:** `pytest tests/` → 145 passaram e `pdflatex` + `bibtex` → 8 páginas, 0 erros, às 19:41 WET (as horas da tabela são as medidas nessas execuções); horas da baseline, da congelação e da seleção lidas dos ficheiros de resultados e do `access_log`.
+- **Limitações:** a tabela fica desatualizada assim que algo mudar; o handoff diz-o. As horas anteriores a esta revisão não foram registadas nos documentos, por isso a cronologia só cobre os commits.
+- **Pendentes:** nenhum.
