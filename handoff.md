@@ -6,7 +6,7 @@ Data: 2026-11-23. Documento para retomar o trabalho numa nova conversa.
 
 1. `AGENTS.md` (regras fixas; o `CLAUDE.md` manda lê-lo antes de qualquer ação).
 2. Este ficheiro.
-3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23aw) e `REVISION_LOG.md` (REV-001 a REV-040).
+3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23az) e `REVISION_LOG.md` (REV-001 a REV-043).
 4. Antes de qualquer ação: verificar `git status` e `git log` (ver «Estado atual»).
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -23,12 +23,12 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 
 ## Estado atual
 
-- Marcos 1 e 2 fechados. **Marco 3 (baseline) praticamente fechado**: treino de seleção de 300 épocas (só treino), seleção da época e do limiar no `test` numa ronda, e **baseline congelada** (época 162, limiar 0,65; `results/baseline_frozen/`). O Marco 4 só começou na ferramenta de medição por segmento.
+- Marcos 1 e 2 fechados. **Marco 3 (baseline) FECHADO por decisão do utilizador (REV-041)**: treino de seleção de 300 épocas (só treino), seleção da época e do limiar no `test` numa ronda, e **baseline congelada** (época 162, limiar 0,65; `results/baseline_frozen/`). O Marco 4 só começou na ferramenta de medição por segmento.
 - **Treinos:** execução 1 (REV-032, com monitorização), treino final de 100 épocas (REV-035, é o que o LaTeX descreve hoje) e treino de seleção de 300 épocas com um checkpoint por época (REV-038, `results/phase1_select/`). A baseline congelada vem deste último.
 - **145 testes a passar** (`iach-ais-venv-4/bin/python -m pytest tests/`), todos sintéticos (mais um que lê 3 viagens de treino).
 - **Git:** tudo está commitado e enviado: `origin/main` em `3d8bc0c` (REV-035 a REV-040 em oito commits). O push foi autorizado pontualmente pelo utilizador; cada push futuro precisa de nova autorização explícita.
 - **Push:** o utilizador autorizou pontualmente dois pushes (feitos por mim). A regra continua: o push é do utilizador, e cada push precisa de nova autorização explícita.
-- **LaTeX** (`latex/proposta_pt.tex`) compila (7 páginas) e está **atualizado com a baseline congelada** (REV-040): treino de 300 épocas, seleção no `test`, tabela e figuras com treino e teste. Todos esses números vêm de macros geradas (`latex/generated/resultados.tex`) a partir de `results/baseline_frozen/final_results.json`. Por decisão do utilizador, o texto não acrescenta nada sobre navios partilhados.
+- **LaTeX** (`latex/proposta_pt.tex`) compila (7 páginas) e está **atualizado com a baseline congelada** (REV-040): treino de 300 épocas, seleção no `test`, tabela e figuras com treino e teste. Todos esses números vêm de macros geradas (`latex/generated/resultados.tex`) a partir de `results/baseline_frozen/final_results.json`. Por decisão do utilizador, o texto não acrescenta nada sobre navios partilhados. **Cores (REV-043):** o texto estável está a preto e só o que ainda pode mudar mantém a cor da revisão (janelamento, pós-processamento, saída, 7.1, 7.3, 8.2, partes de janelas da Secção 5).
 - **`test` aberto uma só vez** (seleção, REV-038), registado em `results/access_log.jsonl`. **`validation` não foi aberto.** Metade das viagens reservadas vem de navios que também estão no treino (`results/shared_vessels/summary.json`).
 
 ## Decisões vigentes
@@ -47,8 +47,8 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 
 **LaTeX**
 - `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**.
-- Toda a alteração ao `.tex` leva cor com `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Texto movido mantém a cor antiga. Próximo ID livre: **REV-041** (precisa de cor nova e distinta).
-- Cores já usadas no `.tex`: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev021 `#D500F9`, rev022 `#00897B`, rev023 `#0277BD`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60`, rev035 `#6200EA`, rev036 `#00C853`; REV-037 `#FFAB00`, REV-038 `#304FFE` e REV-039 `#1DE9B6` só marcadores Markdown, rev040 `#7F0000` no `.tex` (REV-033 `#3E2723` e REV-034 `#7CB342` só marcadores Markdown; REV-029 `#BF360C` só marcador do registo).
+- Toda a alteração ao `.tex` leva cor com `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Texto movido mantém a cor antiga. Próximo ID livre: **REV-044** (precisa de cor nova e distinta).
+- Cores já usadas no `.tex`: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev021 `#D500F9`, rev022 `#00897B`, rev023 `#0277BD`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60`, rev035 `#6200EA`, rev036 `#00C853`; REV-037 `#FFAB00`, REV-038 `#304FFE` e REV-039 `#1DE9B6` só marcadores Markdown, rev040 `#7F0000` e rev041 `#FF1744` e rev042 `#0A3D62` no `.tex` (REV-033 `#3E2723` e REV-034 `#7CB342` só marcadores Markdown; REV-029 `#BF360C` só marcador do registo).
 
 ## Ficheiros principais
 
@@ -118,7 +118,9 @@ Compilar o LaTeX à mão **sem colidir com o vigilante** (a partir de `latex/`):
 
 **Navios partilhados:** o utilizador decidiu manter a divisão por viagem e **desconsiderar** a questão (sem quantificar, sem refazer, sem declarar no texto).
 
-**Decisão imediata do utilizador:** a perda no `test` é muito ruidosa de época para época (por exemplo, 0,18 na época 162 e 0,30 na 200) e o mínimo escolhido é estreito, por isso a seleção pode ter seguido ruído. A ronda autorizada era uma só e o protocolo manda congelar, o que foi feito. Opções (todas precisam de autorização/decisão): (a) aceitar a baseline como está; (b) nova autorização com um critério menos sensível ao ruído (por exemplo, média da perda em janelas de épocas, ou média de pesos); (c) mudar o treino (taxa de aprendizagem com decaimento) e repetir a seleção.
+**Decisão do utilizador (REV-041):** a baseline fica **como está** (época 162, limiar 0,65), definida e finalizada. Só se volta a falar dela na comparação com a CNN com janelamento e na escolha final entre as duas. O ruído da seleção fica registado como limitação.
+
+**Marco 4 (decisões do utilizador, nada implementado):** a mesma CNN de referência sobre janelas, começando com L = 64 pontos e sobreposição de 0 % (controlo) e 50 %; depois testar se aumentar ou diminuir L compensa. Por fixar: se a sobreposição se aplica no treino, na inferência ou em ambos; orçamento de treino; critério de seleção **igual ao da baseline** (menor perda por ponto no `test`, limiar por F1 médio) para a comparação ser justa; autorização para medir a baseline por segmento no `test`.
 
 Depois:
 1. Commit local de REV-035 a REV-039, se o utilizador autorizar. Push só pelo utilizador.

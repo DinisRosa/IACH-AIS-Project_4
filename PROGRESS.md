@@ -24,7 +24,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
   - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-040.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-043.
 
 ## Decisões do utilizador (vigentes)
 
@@ -754,3 +754,46 @@ Ver `docs/00_projeto_e_decisoes.md` §4 (estado dos marcos) e `docs/02_cnn_viage
 
 **Pendente**
 - Decisão sobre o ruído da seleção; Marco 4.
+
+### 2026-11-23ax — Baseline fechada e LaTeX reestruturado (REV-041)
+
+**Feito**
+- Decisão do utilizador: baseline (CNN 1D sobre a viagem completa) fechada como está; Marco 4 = a mesma CNN sobre janelas (L = 64; 0 % e 50 %; depois outros L).
+- LaTeX: 4.2 «CNN de referência» sem duplicar a Secção 5; Secção 5 serve as duas experiências; 4.4 (janelamento) definida; nova Secção 8 «Resultados» (8.1 viagem completa, 8.2 janelamento por fazer). Docs, README e handoff alinhados.
+
+**Validado**
+- `pdflatex` + `bibtex` sem erros (8 páginas), páginas 3 e 7 inspecionadas. Sem alterações a código nem a números.
+
+**Problemas e limitações**
+- Partes do relatório não revistas: ver REV-041 (resumo, secções 1 a 3, 6 e 7, título com «OOI»). Citam HMM e Wu et al. e quatro taxas de sobreposição, contra o âmbito atual.
+
+**Decisões**
+- Baseline fechada e finalizada; só volta na comparação final.
+
+**Pendente**
+- Rever essas passagens; decisões do Marco 4; commit local por autorizar.
+
+### 2026-11-23ay — HMM e Wu et al. deixam de ser comparações no LaTeX (REV-042)
+
+**Feito**
+- Resumo, objetivo 2, critérios de sucesso, Avaliação 7.1 e exemplo do pós-processamento corrigidos: a comparação é entre a CNN de referência (viagem completa) e a CNN com janelas. HMM e Wu et al. ficam só como literatura na Contexto.
+
+**Validado**
+- `pdflatex` + `bibtex` sem erros (8 páginas); página 1 inspecionada; procura por HMM, Wu e «baseline» no PDF.
+
+**Pendente**
+- Restantes passagens de REV-041 (quatro taxas de sobreposição e ablação, explicabilidade e dashboard, título «OOI», «human-on-the-loop», Secção 6 no futuro); commit local por autorizar; decisões do Marco 4.
+
+### 2026-11-23az — Texto estável do LaTeX a preto (REV-043)
+
+**Feito**
+- Por instrução do utilizador, o texto que considero estável passa a preto (objetivos 1 e 2, 4.1 a 4.3, Secção 5 exceto janelas, Secção 6, 7.2, 8.1) e o que ainda pode mudar mantém a cor (janelamento, pós-processamento, saída, 7.1, 7.3, 8.2 e partes de janelas). Lista completa em REV-043.
+
+**Validado**
+- Texto extraído do PDF antes e depois: igual. Compilação sem erros (8 páginas); páginas 3 e 6 inspecionadas.
+
+**Problemas e limitações**
+- «Preto» não significa «revisto pelo utilizador». Texto original sem cor que ainda pode mudar (ablação e quatro taxas de sobreposição em 7.1) fica a preto sem estar fechado.
+
+**Pendente**
+- Passagens abertas de REV-041 e REV-042; decisões do Marco 4.

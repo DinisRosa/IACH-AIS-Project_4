@@ -697,3 +697,46 @@ Regras:
   - A medição final no `validation` ainda não existe. As métricas por segmento ainda não estão no texto.
   - O gerador não tem teste automático além das funções de formatação.
 - **Pendentes:** decisão do utilizador sobre o ruído da seleção; commit local por autorizar; Marco 4.
+
+### REV-041 — Baseline fechada; CNN de referência única e secção de Resultados
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Vermelho vivo `#FF1744`, RGB (255, 23, 68). No `.tex`, em `\revtext{rev041}`.
+- **O quê:**
+  - Decisão do utilizador: a CNN 1D sobre a viagem completa fica **fechada** como está (época 162, limiar 0,65), e passa a ser a CNN de referência; só se volta a ela na comparação com as janelas e na escolha final. Marco 4: a mesma CNN sobre janelas, com L = 64 pontos e sobreposição de 0 % (controlo) e 50 %, e depois testar outros L.
+  - LaTeX: a subsecção 4.2 passa a «CNN de referência» (curta: é a mesma rede nas duas experiências, porque se escolheu esta referência, entrada) e deixa de repetir a arquitetura, a perda e o treino, que ficam só na Secção 5. A Secção 5 passa a valer para a viagem completa e para as janelas (entrada, figura, perda e lote). A subsecção 4.4 (janelamento) fica definida: L = 64, 0 % e 50 %, média por ponto, preenchimento ignorado, o que está por decidir e que ainda não foi implementado. Nova Secção 8 «Resultados»: 8.1 «CNN de referência sobre a viagem completa» (movida da Secção 5, com a nota de que está fechada) e 8.2 «CNN de referência com janelamento» (marcador: ainda não feito). Objetivo 2 e esquema do pipeline dizem «a mesma rede».
+  - `docs/00` (marcos 3 e 4), `docs/03` (L = 64 e baseline fechada), README e handoff atualizados.
+- **Porquê:** pedido do utilizador: um só texto da CNN de referência (sem duplicação entre 4.2 e 5), resultados separados por experiência e a baseline como termo de comparação.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `docs/00_projeto_e_decisoes.md`, `docs/03_cnn_janelamento.md`, `README.md`, `handoff.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex` + `bibtex` sem erros nem referências em falta (8 páginas); páginas 3 e 7 inspecionadas. Dois avisos de overfull pequenos (5,8 e 16 pt).
+- **Validação:** compilação e inspeção visual. Nenhum número novo: os resultados continuam a vir das macros geradas (REV-040). Código e testes não foram alterados.
+- **Limitações:** o texto das secções 1, 2, 3 (objetivos), 6 e 7, o resumo e o título não foram revistos nesta revisão (ver lista em PROGRESS); o resumo, os objetivos e a Avaliação ainda citam HMM e Wu et al. como comparações e as quatro taxas de sobreposição, embora o âmbito atual os deixe de fora (REV-006, REV-002).
+- **Pendentes:** decidir o que fazer com essas passagens; decisões do Marco 4 (sobreposição no treino/inferência, orçamento, autorização para medir a baseline por segmento); commit local por autorizar.
+
+### REV-042 — HMM e Wu et al. deixam de ser comparações no LaTeX
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Azul-marinho `#0A3D62`, RGB (10, 61, 98). No `.tex`, em `\revtext{rev042}`.
+- **O quê:** por decisão já registada (REV-006: HMM e Wu et al. fora por agora) e a pedido do utilizador, o texto deixa de os apresentar como comparações. Resumo: a avaliação compara a CNN sobre a viagem completa com a CNN sobre janelas sobrepostas. Objetivo 2: a CNN sobre a viagem completa é a referência com que se compara a das janelas (removido «Como baselines, Wu et al. e um HMM»). Critérios de sucesso (objetivos): efeito das componentes face à CNN de referência, e já não face a «baselines». Avaliação 7.1: compara a CNN sobre janelas com a CNN de referência. Pós-processamento (4.5): deixa de dar o HMM como exemplo; passa a votação por vizinhança, com unidade e largura por definir (conforme o `docs/00`, Marco 5).
+- **O que se manteve:** a Contexto continua a citar os HMM (Peel e Good, Vermard et al.) como história do problema e o Wu et al. (2022) como trabalho de referência na literatura, incluindo a frase «a referência central deste projeto» e a de posicionamento face ao Wu et al.; são literatura, não comparação.
+- **Porquê:** o texto contradizia o âmbito atual.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`, `handoff.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex` + `bibtex` sem erros nem referências em falta (8 páginas); página 1 inspecionada. Os termos HMM e Wu só restam na Contexto e na bibliografia.
+- **Validação:** compilação, inspeção visual e procura por HMM, Wu e «baseline» no PDF. Nenhum código nem número alterado.
+- **Limitações:** continuam por resolver as outras passagens da lista de REV-041: as quatro taxas de sobreposição e a ablação (7.1), a explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3), o título com «OOI», o texto a vermelho «human-on-the-loop» e a Secção 6 no futuro. A expressão «referência central» (Wu et al.) pode confundir-se com «CNN de referência».
+- **Pendentes:** decidir essas passagens; commit local por autorizar.
+
+### REV-043 — Texto estável do LaTeX passa a preto (cor definitiva)
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** nenhuma nova: o texto que o utilizador e eu consideramos estável passa a **preto**; o que ainda pode mudar mantém a cor da sua revisão. Por instrução expressa do utilizador («o que já não vai ser modificado, mete como cor definitiva a preto»).
+- **O quê:**
+  - **A preto (estável):** objetivos 1 e 2 e os critérios de sucesso; 4.1 Pré-processamento; 4.2 CNN de referência; 4.3 Verificação da implementação (exceto a última frase); Secção 5 (especificação da CNN) exceto as partes de janelas; Secção 6 (tratamento dos dados); 7.2 Divisão dos dados e protocolo; 8.1 Resultados da CNN de referência sobre a viagem completa (texto, tabela e legendas).
+  - **Mantém a cor (pode mudar):** o esquema do pipeline (Figura 1); 4.4 Janelamento (rev041); 4.5 Pós-processamento (rev021, rev042); 4.6 Saída, explicabilidade e ferramentas (rev021); a frase final da 4.3 sobre o conjunto de validação (rev040, deixa de ser verdade quando o `validation` for aberto); as partes de janelas da Secção 5 (entrada e saída, perda, otimizador, figura e frase inicial, rev041); 7.1 e 7.3 (títulos rev023 e a frase da 7.1, rev042); o resumo (frase rev042); a Secção 8 (título e introdução) e 8.2 (rev041).
+  - Números gerados (`\rv`) deixam de ter cor própria: herdam a do texto que os rodeia. A figura da CNN passa a cinzentos neutros em vez do verde de rev026.
+- **Porquê:** pedido do utilizador, para distinguir o que está fechado do que ainda se vai rever.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`, `handoff.md`.
+- **Correspondência no LaTeX:** **atualizado** (só cores). `pdflatex` + `bibtex` sem erros nem referências em falta (8 páginas). **Verificação de conteúdo:** compilei a versão anterior e a nova e comparei o texto extraído dos dois PDFs: igual (as 6 linhas de diferença são só a posição da numeração de linhas). Páginas 3 e 6 inspecionadas.
+- **Validação:** comparação de texto antes e depois e inspeção visual. Nenhum código nem número alterado.
+- **Limitações:** a classificação «estável» é minha; o utilizador não leu em pormenor as subsecções 5.3 a 5.6 nem a 6.1 depois das alterações, por isso a preto não significa «revisto». O texto original sem cor (por exemplo, as quatro taxas de sobreposição e a ablação na 7.1) continua a preto sem estar fechado; fica na lista de pendentes. As cores antigas continuam definidas no preâmbulo, sem uso.
+- **Pendentes:** passagens abertas de REV-041 e REV-042; decisões do Marco 4.
