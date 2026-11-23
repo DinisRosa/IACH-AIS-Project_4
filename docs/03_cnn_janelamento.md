@@ -18,7 +18,7 @@ Medir o efeito de dividir as viagens em janelas e de adicionar sobreposição, c
 
 ## 3. Protocolo das experiências
 
-Comprimento inicial proposto: **L = 64 pontos**, não validado. O comprimento em pontos não corresponde a uma duração fixa; manter a amostragem original e declará-lo.
+Comprimento inicial: **L = 64 pontos** (decisão do utilizador, REV-041). Depois testa-se se aumentar ou diminuir L compensa (valores a definir). A CNN é exatamente a de referência, e a baseline sobre a viagem completa está fechada (REV-041): serve de termo de comparação e não se treina de novo. O comprimento em pontos não corresponde a uma duração fixa; manter a amostragem original e declará-lo.
 
 | Variante | Entrada | Sobreposição | Passo | Prioridade |
 |---|---|---|---|---|

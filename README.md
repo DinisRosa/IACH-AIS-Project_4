@@ -58,4 +58,4 @@ iach-ais-venv-4/bin/python -m ais.cli.verify_trip_count
 
 ## Estado
 
-Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN 1D de referência sobre viagem completa) em curso: sequências, normalização, CNN, treino com paragem antecipada e checkpoints implementados e testados em `src/ais/phase1/` (REV-024, REV-032); treino final feito só com o treino oficial (87 viagens, REV-035), com os números do LaTeX gerados por código (`ais.cli.build_final_results`); resultados medidos no próprio treino. Janelamento (Marco 4) por fazer. Validação e teste oficiais por abrir. Ver `PROGRESS.md` e `handoff.md`.
+Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN 1D de referência sobre viagem completa) **fechado** (REV-041): sequências, normalização, CNN, treino com paragem antecipada e checkpoints implementados e testados em `src/ais/phase1/` (REV-024, REV-032); treino final feito só com o treino oficial (87 viagens, REV-035), com os números do LaTeX gerados por código (`ais.cli.build_final_results`); resultados medidos no próprio treino. Janelamento (Marco 4) por fazer. Validação e teste oficiais por abrir. Ver `PROGRESS.md` e `handoff.md`.
