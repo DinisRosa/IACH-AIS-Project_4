@@ -18,7 +18,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Validação e teste: só o `id` e as contagens de linhas. Nenhum valor de validação ou teste foi lido ou analisado.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e não versionado (ver 2026-11-23b).
 - **Conjuntos de validação e teste:** bloqueados para desenvolvimento.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-004.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-005.
 
 ## Entradas do registo
 
@@ -121,6 +121,22 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 **Pendente**
 - Atualizar o LaTeX (ver abaixo).
 
+### 2026-11-23e — Proposta LaTeX reescrita a partir do PDF (REV-005)
+
+**Feito**
+- `latex/proposta_pt.tex` reescrito a partir de `latex/proposta_IAHC_DINIS_ROSA.pdf`, sem cores de tentativas anteriores, mantendo o vermelho.
+- Corrigido o caminho do estilo IJCAI (`FormattingGuidelines-IJCAI-ECAI-26/`, relativo a `latex/`).
+
+**Validado**
+- Compilação com `pdflatex` e `bibtex`, a partir de `latex/`, com saída fora do repositório. 3 páginas, sem citações ou referências por resolver.
+
+**Problemas**
+- `kaggleAIS` em `references.bib` sem autor (aviso do `bibtex`). Não alterado.
+
+**Pendente**
+- Decidir se o PDF IAHC original deve ser atualizado (diz 128 e divisão por navio).
+- Confirmar se HMM e Wu et al. são baselines (proposta) ou ficam fora do âmbito mínimo (`AGENTS.md`).
+
 ## Pendentes (por marco, segundo `docs/00_5`)
 
 ### Marco 1 — Ambiente, consolidação e divisão mínima
@@ -157,21 +173,21 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Orçamento de tempo para execuções longas (AGENTS.md §2).
 - Se os overlaps 25% e 75% entram no âmbito (decisão posterior).
 - Se o manifesto de divisão deve ser versionado (ver entrada 2026-11-23b).
-- Discrepância de contagens entre `latex/proposta_pt.tex` (86/19/18) e o manifesto (87/18/18).
+- HMM e Wu et al. como baselines (proposta) vs âmbito mínimo do `AGENTS.md` sem eles.
 
 **Verificadas no treino** (ver REV-003)
 - Unidades de `x`, `y` e `distance_gap` (metros), `time_gap` (segundos), `euc_speed` (nós), `bearing` e `signed_turn` (graus).
 - Por confirmar: unidade de `distanceToShore` (metros é a hipótese mais plausível) e CRS de x/y e de lat/lon.
 
-## Inconsistências do LaTeX (`latex/proposta_pt.tex`) — por tratar
+## LaTeX (`latex/proposta_pt.tex`) — reescrito a partir do PDF (REV-005)
 
-O ficheiro da proposta não foi alterado nesta conversa. Está em estado **pendente**, por decisão do utilizador (ver AGENTS.md §8). Identificadas:
-- Contagens da divisão: 86/19/18 trajetórias no texto vs 87/18/18 no manifesto.
-- Descreve implementações que **não existem no repositório**: pipeline com BiGRU, quatro baselines, normalização por mediana e IQR de seis características, feature `t_rel`, janelas de 30 minutos com 50% de sobreposição. O repositório atual não contém código deste tipo.
-- Características: o texto lista seis características (`x`, `y`, `signed_turn`, `time_gap`, `euc_speed`, `distanceToShore`). `docs/00` define quatro entradas iniciais (`speed_calc_mps`, `signed_turn`, `time_gap_calc_s`, `distanceToShore`). Não são a mesma lista.
-- Número de viagens: o texto diz 123, em linha com o ficheiro. Não há conflito neste ponto.
-
-Decisão necessária do utilizador: se o LaTeX deve ser revisto para refletir o plano atual (`docs/`) ou se as partes implementadas são de outra versão de trabalho.
+- O `.tex` foi reescrito a partir de `latex/proposta_IAHC_DINIS_ROSA.pdf`, por pedido do utilizador. Removidas as cores de tentativas anteriores (verde, amarelo, roxo) e mantido o vermelho.
+- Removido o texto que descrevia implementações inexistentes (BiGRU, baselines treinados, `t_rel`, janelas de 30 minutos, caso `219429000-2`, métricas de ajuste).
+- Trajetórias: **123** (o PDF dizia 128).
+- Divisão: **por ID completo**, 70/15/15, semente 42 (o PDF dizia por navio).
+- Compila com `pdflatex` e `bibtex` (3 páginas), a partir de `latex/`.
+- Pendente: `kaggleAIS` em `references.bib` sem autor (aviso do `bibtex`). E o PDF IAHC original ainda diz 128 e por navio.
+- Pendente de decisão: a proposta usa HMM e Wu et al. como baselines, mas o `AGENTS.md` fixa o mínimo sem HMM nem Wu. Confirmar qual prevalece.
 
 ## Artefactos do projeto
 
@@ -179,9 +195,10 @@ Decisão necessária do utilizador: se o LaTeX deve ser revisto para refletir o 
 |---|---|
 | `AGENTS.md`, `CLAUDE.md`, `README.md` | Existentes; atualizados em REV-004 |
 | `docs/00` a `docs/06` | Existentes; atualizados em REV-001 a REV-004 |
-| `latex/proposta_pt.tex`, `.pdf`, `references.bib` | Existentes; **não alterados**; pendentes (ver acima) |
+| `latex/proposta_pt.tex` | Reescrito a partir do PDF IAHC (REV-005); compila com pdflatex/bibtex |
+| `latex/proposta_IAHC_DINIS_ROSA.pdf`, `references.bib` | Existentes; não alterados (ver aviso `kaggleAIS` acima) |
 | `requirements.txt` | Existente; testado numa instalação limpa |
-| `REVISION_LOG.md` | Existente; REV-001 a REV-004 |
+| `REVISION_LOG.md` | Existente; REV-001 a REV-005 |
 | `PROGRESS.md` | Este ficheiro |
 | `scripts/create_split_manifest.py` | Existente; executado |
 | `scripts/check_units_train.py` | Existente; executado |

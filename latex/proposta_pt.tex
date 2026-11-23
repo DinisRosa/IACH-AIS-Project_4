@@ -1,5 +1,7 @@
 %%%% proposta_pt.tex
 %%%% Project specification paper based on the IJCAI--ECAI 26 template.
+%%%% Base: latex/proposta_IAHC_DINIS_ROSA.pdf (texto original).
+%%%% Cores: apenas vermelho mantido, por indicação do utilizador.
 
 \typeout{Project paper using IJCAI--ECAI 26 formatting}
 
@@ -8,8 +10,8 @@
 \pdfpageheight=11in
 
 % Official IJCAI--ECAI 26 style file.
-% Compile from this directory so the relative path resolves correctly.
-\usepackage{../FormattingGuidelines-IJCAI-ECAI-26/ijcai26}
+% Compile from the latex/ directory so the relative path resolves correctly.
+\usepackage{FormattingGuidelines-IJCAI-ECAI-26/ijcai26}
 
 % Packages required/recommended by the official template.
 \usepackage{times}
@@ -33,7 +35,6 @@
 \switchlinenumbers
 
 \urlstyle{same}
-\definecolor{roxo}{RGB}{128,0,128}
 
 % Optional theorem environments.
 \newtheorem{example}{Example}
@@ -63,7 +64,6 @@
 
 \begin{abstract}
 A pesca ilegal, não declarada e não regulamentada (IUU) ameaça a sustentabilidade dos oceanos. O \emph{Automatic Identification System} (AIS) permite monitorizar navios à escala global, mas converter trajetórias em deteções úteis à fiscalização exige métodos robustos e interpretáveis. Propõe-se investigar se a combinação de janelas sobrepostas e pós-processamento temporal melhora a qualidade e a estabilidade da segmentação semântica de trajetórias AIS para detetar pesca, como apoio à decisão de inspetores humanos (\textcolor{red}{\emph{human-on-the-loop}}), segundo princípios de Inteligência Artificial Centrada no Humano (HCAI): explicabilidade, confiança calibrada e decisão humana final. A avaliação usa \textcolor{red}{123} trajetórias anotadas (Kaggle), comparando com um \emph{Hidden Markov Model} (HMM) e com Wu et al.~\shortcite{wu2022} através de precisão, sensibilidade, F1 e \emph{intersection-over-union} (IoU), complementadas por análise qualitativa.
-\textcolor{green}{Até à data, foram implementadas a preparação dos dados, a divisão por trajetória, a normalização ajustada apenas ao treino, a geração de janelas temporais e a infraestrutura de batching com máscara para GRU. Foram também ajustados quatro baselines ponto a ponto exclusivamente no treino; a sua avaliação em validação e teste permanece por realizar.}
 \end{abstract}
 
 \section{Problema e Motivação}
@@ -98,7 +98,7 @@ O trabalho guia-se por três perguntas de investigação: (RQ1) em que medida as
 \section{Abordagem}
 \label{sec:abordagem}
 
-\textcolor{green}{O trabalho organiza-se num \emph{pipeline} de cinco etapas (Figura~\ref{fig:pipeline}), das quais as duas primeiras e parte da terceira já têm implementação. (1)~\emph{Ingestão e pré-processamento}: o CSV é limpo e reduzido às variáveis usadas; os rótulos originais são agregados em pesca e navegação; as trajetórias são divididas por ID completo; e as seis características contínuas são normalizadas pela mediana e pelo intervalo interquartil (IQR) calculados apenas no treino. O tempo relativo $t_{rel}$ é mantido em bruto. (2)~\emph{Janelamento}: a configuração atual usa janelas temporais de 30 minutos, sobreposição de 50\%, corte em gaps superiores a 600 segundos e um mínimo de 1 ponto por janela. Os alvos são por ponto; janelas de comprimentos diferentes são preenchidas com máscara e todos os pontos ficam cobertos. Esta configuração é provisória até à seleção com treino e validação. (3)~\emph{Classificação}: a infraestrutura de \emph{Dataset}/\emph{DataLoader}, \emph{bucketing}, perda mascarada e \emph{packing} para uma BiGRU está implementada e verificada, mas a rede sequencial ainda não foi treinada. Foram implementados quatro baselines ponto a ponto, descritos na Secção~\ref{sec:avaliacao}. (4)~\emph{Pós-processamento temporal}: a agregação das previsões sobrepostas e a regularização das fronteiras permanecem por implementar. (5)~\emph{Saída e explicabilidade}: mapas, confiança calibrada, explicações e uma interface de apoio ao inspetor são objetivos de trabalho futuro. A implementação atual usa Python, PyTorch, scikit-learn e pandas.}
+O sistema organiza-se num \emph{pipeline} de cinco etapas (Figura~\ref{fig:pipeline}). (1)~\emph{Ingestão e pré-processamento}: importação do CSV, tratamento de \emph{outliers} e \emph{gaps} temporais, normalização e cálculo de características derivadas (como a aceleração); velocidade, rumo e variação de rumo já vêm na base de dados. (2)~\emph{Janelamento}: divisão em janelas de comprimento fixo com sobreposição, dando contexto local a cada ponto e mitigando efeitos de fronteira. (3)~\emph{Classificação}: cada janela é classificada como pesca ou navegação por um modelo de aprendizagem profunda, cuja arquitetura (recorrente ou convolucional, possivelmente com atenção) será escolhida empiricamente, na linha de Cheng et al.~\shortcite{cheng2025} e Wang et al.~\shortcite{wang2026}. (4)~\emph{Pós-processamento temporal}: as predições das janelas sobrepostas são agregadas (por exemplo, votação ponderada) e suavizadas (por exemplo, via HMM ou votação por vizinhança), produzindo segmentos contíguos e estáveis. (5)~\emph{Saída e explicabilidade}: trajetória segmentada com confiança por segmento e justificações (importâncias de características) que apoiam --- e não substituem --- o inspetor. A implementação usa Python, PyTorch, scikit-learn e pandas.
 
 \begin{center}
 \begin{tikzpicture}[font=\scriptsize, >={Stealth[length=4pt]},
@@ -124,13 +124,7 @@ O trabalho guia-se por três perguntas de investigação: (RQ1) em que medida as
 \section{Materiais e Dados}
 \label{sec:materiais-dados}
 
-\textcolor{green}{Usa-se o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}, com 123 trajetórias e 1\,026\,279 pontos. As cinco classes originais são agregadas em duas: pesca (\texttt{02-fishing} e \texttt{04-fishing}) e navegação (\texttt{01-sailing}, \texttt{03-sailing} e \texttt{05-sailing}). A representação processada contém o ID, $t_{rel}$, o rótulo binário e seis características: coordenadas projetadas $x$ e $y$, variação de rumo (\texttt{signed\_turn}), intervalo temporal (\texttt{time\_gap}), velocidade (\texttt{euc\_speed}) e distância à costa (\texttt{distanceToShore}). Mantém-se a distribuição natural das classes, sem reamostragem nem pesos de classe.}
-
-\textcolor{yellow}{Na base original foi identificado um ponto isolado na trajetória \texttt{219429000-2} em que o timestamp avança 30 segundos, mas a coluna \texttt{time\_gap} contém 10 segundos. Como a decisão de projeto usa \texttt{time\_gap} como base temporal, o tempo relativo $t_{rel}$ mant\'em-se calculado pela acumula\c{c}\~ao desse valor, sem altera\c{c}\~ao silenciosa da base de dados. Esta discrep\^ancia, limitada a esse ponto confirmado, fica documentada como limita\c{c}\~ao dos dados.}
-
-\textcolor{yellow}{Os outliers não são removidos, corrigidos ou limitados. A política de janelamento garante cobertura de todos os pontos em treino, validação e teste. Segmentos inferiores à duração nominal recebem uma janela curta encostada ao fim e \texttt{min\_pontos} passa a ser 1.}
-
-\textcolor{green}{A divisão atual, com semente 42, é feita por trajetória completa, na proporção aproximada 70/15/15: 86 trajetórias e 706\,522 pontos no treino, 19 trajetórias e 173\,532 pontos na validação, e 18 trajetórias e 146\,225 pontos no teste. A proporção de pontos de pesca é, respetivamente, 75,6\%, 77,1\% e 73,5\%. Os IDs com prefixos comuns não são agrupados; a possibilidade de dependência entre conjuntos será tratada como limitação e análise de sensibilidade.}
+Será usado o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}: \textcolor{red}{123} trajetórias de pesca anotadas, cerca de 1,03 milhões de pontos (1\,026\,279 linhas), 13 colunas --- 12 atributos (identificador do navio e da viagem, instante, longitude, latitude, coordenadas projetadas, rumo, distância à costa, entre outros) e um rótulo. As cinco classes, desequilibradas (pesca: \texttt{02-fishing}, \texttt{04-fishing}; navegação: \texttt{01-sailing}, \texttt{03-sailing}, \texttt{05-sailing}), são agregadas num problema binário, mantendo o desequilíbrio natural (sem reamostragem nem pesos de classe) e as trajetórias completas.
 
 Eticamente, apesar de públicos, os dados AIS usados em fiscalização exigem cuidado: a deteção automática não deve, por si só, fundamentar sanções (a decisão humana é obrigatória); o sistema deve ser transparente e justo, evitando enviesamentos contra tipos de navio, regiões ou comunidades de pesca; e a confiança deve ser calibrada para não induzir falsa segurança.
 
@@ -139,16 +133,12 @@ Eticamente, apesar de públicos, os dados AIS usados em fiscalização exigem cu
 
 Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e por ponto), comparando com os \emph{baselines} (HMM~\cite{peel2011} e Wu et al.~\shortcite{wu2022}). Um estudo de ablação com quatro variantes isola cada componente: (i) sem sobreposição nem pós-processamento; (ii) só sobreposição; (iii) só pós-processamento; (iv) ambos (método proposto). Analisa-se também a robustez face à taxa de sobreposição (0\%, 25\%, 50\%, 75\%) e ao nível de regularização temporal. A estabilidade mede-se pela fragmentação (número de segmentos por trajetória) e pelo erro de fronteira (desvio entre início/fim previsto e real); ``estável'' designa uma segmentação que muda pouco sob pequenas alterações da janela ou do pós-processamento.
 
-\textcolor{green}{Como referência inicial já foram ajustados no treino um classificador trivial, regressão logística, random forest e HistGradientBoosting, usando seis características por ponto. No próprio conjunto de treino, os F1 de pesca foram 86,11\%, 94,46\%, 99,77\% e 99,15\%, respetivamente. Estas métricas são de ajuste (\emph{in-sample}) e não estimam generalização; nenhum destes modelos foi ainda selecionado na validação ou avaliado no teste. Os baselines HMM e Wu et al., o classificador sequencial, a reconstrução das previsões por ponto e as métricas por segmento continuam planeados.}
-
-\textcolor{yellow}{Os dados são divididos por ID completo de trajetória em treino, validação e teste (70/15/15), mantendo todos os pontos de cada trajetória no mesmo conjunto. Cada ID completo é tratado como unidade independente; IDs com prefixo comum não são agrupados, uma hipótese ainda por avaliar. Os parâmetros e hiperparâmetros serão escolhidos apenas com treino e validação. Os outliers não são removidos, corrigidos ou limitados, e a configuração atual garante cobertura de 100\% dos pontos em treino, validação e teste.}
-
-\textcolor{roxo}{A política para pontos sem janela é incluir todas as observações originais na avaliação por ponto: nenhum ponto será excluído por falta de cobertura, que é atualmente 100\% nos três conjuntos. Como a sobreposição pode colocar um ponto em várias janelas, as previsões serão reconstruídas nos índices da trajetória original e reduzidas a uma única previsão por ponto antes do cálculo das métricas. O método de agregação dessas previsões continua por definir e será tratado no pós-processamento temporal.}
+Os dados são divididos por trajetória completa (ID completo, composto pelo identificador do navio e pelo sufixo da viagem) em treino, validação e teste, na proporção 70/15/15, com semente 42 e manifesto fixo. Todas as linhas de cada trajetória ficam no mesmo conjunto. Trajetórias do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto; por isso, os resultados não são apresentados como generalização para navios inéditos. Os hiperparâmetros usam apenas treino e validação.
 
 Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos preditos sobrepostos à verdade de referência e analisar-se-ão casos de sucesso e falha. Para a dimensão HCAI~\cite{shneiderman2020}, prevê-se avaliar de forma preliminar a explicabilidade (verificando se as atribuições~\cite{lundberg2017} correspondem aos padrões de movimento esperados) e a utilidade como apoio à decisão, através de um \emph{dashboard} de prova de conceito com segmentação, confiança calibrada~\cite{guo2017} e justificações.
 
 % References may use the provided IJCAI named bibliography style.
-\bibliographystyle{../FormattingGuidelines-IJCAI-ECAI-26/named}
+\bibliographystyle{FormattingGuidelines-IJCAI-ECAI-26/named}
 \bibliography{references}
 
 \end{document}

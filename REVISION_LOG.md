@@ -16,6 +16,7 @@ Regras:
 | REV-002 | Azul | `#1565C0` | (21, 101, 192) |
 | REV-003 | Verde | `#2E7D32` | (46, 125, 50) |
 | REV-004 | Roxo | `#6A1B9A` | (106, 27, 154) |
+| REV-005 | Azul-petróleo | `#00838F` | (0, 131, 143) |
 
 ## Revisões
 
@@ -99,3 +100,26 @@ Regras:
 - **Pendentes:**
   - Decidir como tratar o LaTeX (rever ou manter a versão atual).
   - Esclarecer a discrepância 86/19/18 vs 87/18/18.
+
+### REV-005 — Reescrita de `latex/proposta_pt.tex` a partir da proposta IAHC (PDF)
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Azul-petróleo `#00838F`, RGB (0, 131, 143). Aplicada apenas no marcador do registo; o `.tex` **não** usa esta cor, por instrução do utilizador.
+- **O quê:**
+  - Reescrito `latex/proposta_pt.tex` a partir de `latex/proposta_IAHC_DINIS_ROSA.pdf` (texto original).
+  - Removidas todas as cores de tentativas anteriores: verde, amarelo e roxo. Mantido o **vermelho**, por indicação do utilizador (`human-on-the-loop`, o inspetor a supervisionar e o número 123).
+  - Removido o texto que descrevia implementações inexistentes (BiGRU, quatro baselines, normalização por mediana e IQR, `t_rel`, janelas de 30 minutos, o caso da trajetória `219429000-2`, resultados de regressão logística e random forest no treino).
+  - Número de trajetórias: **123** (PDF dizia 128).
+  - Divisão: **por ID completo**, 70/15/15, semente 42, em vez de por navio (PDF). Explicitado que trajetórias do mesmo navio podem ficar em conjuntos diferentes, sem generalização para navios inéditos.
+  - Descrição dos dados: 13 colunas, das quais 12 atributos e o rótulo (PDF dizia 13 atributos).
+  - Caminho do estilo IJCAI corrigido para `FormattingGuidelines-IJCAI-ECAI-26/` (relativo a `latex/`). O caminho `../` original não resolvia a partir de `latex/`.
+- **Porquê:** o utilizador pediu para recomeçar a partir da proposta IAHC, sem o texto de tentativas anteriores.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`.
+- **Correspondência no LaTeX:** **atualizado**. Este é o próprio ficheiro. Resolve as pendências de REV-001, REV-003 e REV-004 para o `.tex`.
+- **Validação:**
+  - Compilação com `pdflatex` e `bibtex` a partir de `latex/`, com saída para uma pasta de rascunhos fora do repositório. Resultado: 3 páginas, sem citações nem referências por resolver.
+  - Único aviso: `kaggleAIS` em `latex/references.bib` não tem autor (`Warning--to sort, need author or key`). Não alterado.
+- **Pendentes:**
+  - Decidir se o PDF IAHC deve ser atualizado (ainda diz 128 e divisão por navio).
+  - Completar a entrada `kaggleAIS` em `references.bib`.
+  - A proposta menciona HMM e Wu et al. como baselines. O `AGENTS.md` fixa o âmbito mínimo sem HMM nem Wu. Confirmar qual prevalece.
