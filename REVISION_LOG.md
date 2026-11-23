@@ -547,3 +547,24 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**. `pdflatex` sem erros e sem referências em falta (7 páginas). Páginas 5 a 7 inspecionadas.
 - **Validação:** compilação e inspeção visual; as duas figuras ficam juntas na página 7.
 - **Pendentes:** substituir as figuras pelos resultados reais; commit local por autorizar.
+
+### REV-032 — Primeira execução de treino da CNN 1D (só treino oficial)
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Rosa `#D81B60`, RGB (216, 27, 96). No `.tex`, em `\revtext{rev032}`.
+- **O quê:**
+  - Decisões aceites pelo utilizador («Podes começar»), segundo a tabela proposta: partição interna de 15 % (13 de 87 viagens, por ID, seed 42, sem estratificar); lr 1e-3, sem procura; máximo de 100 épocas; paragem antecipada na perda por ponto da monitorização interna com paciência 10 e melhor checkpoint; orçamento de 15 minutos; limiar 0,5.
+  - Código novo: `src/phase1/artifacts.py` (guardar e carregar checkpoints, só tipos simples), `config.py` (validação; só `stage=development` e ficheiro de treino), `metrics.py` (métricas por classe), `train_model` em `training.py` (paragem antecipada, orçamento, melhor checkpoint); `configs/phase1_run1.json`; `scripts/run_phase1_training.py`; `scripts/plot_phase1_run.py`. Testes novos em `tests/test_checkpoint_and_training_loop.py`.
+  - Execução: a base de treino inteira foi validada (87 viagens, 713 854 pontos; ordenação e NaN esperados), a partição interna separou 74 viagens de ajuste (637 422 pontos) e 13 de monitorização (76 432 pontos), e o normalizador foi ajustado só com o ajuste.
+  - LaTeX: nova subsecção «Primeira execução de treino» e correção das frases que diziam que não havia treino completo e que lr e épocas não estavam definidos.
+- **Resultado (dos artefactos `results/phase1_run1/`):** parou por paragem antecipada após 16 épocas em 39,4 s; melhor época 6 (perda de monitorização 0,1398). Accuracy: ajuste 92,15 %; monitorização 95,00 % (maioritária 74,46 %). Monitorização: navegação sensibilidade 0,875 e precisão 0,925; pesca sensibilidade 0,976 e precisão 0,958. Por viagem de monitorização: de 69,6 % a 99,2 %.
+- **Limitações:**
+  - A monitorização são 13 viagens do treino, não a validação oficial. A perda de monitorização oscila bastante entre épocas: o «melhor» modelo (época 6) e a paragem são sensíveis a esse ruído, e a perda estava a descer no fim (0,1478 e 0,1532 nas épocas 15 e 16).
+  - A accuracy no ajuste (92,15 %) é inferior à da monitorização (95,00 %): a rede parece subajustada.
+  - Duas viagens de monitorização (`220006000-3` e `219005909-1`) não superam a regra da classe maioritária.
+  - Hiperparâmetros iniciais, não validados. Os scripts não têm teste automático; a lógica nova de treino, checkpoints, configuração e métricas tem 19 testes sintéticos.
+  - `class_metrics` existe duas vezes (`phase1/metrics.py` e `scripts/diagnostic_fit_3_trips.py`); não unificado.
+- **Ficheiros afetados:** `src/phase1/{artifacts,config,metrics,training}.py`, `configs/phase1_run1.json`, `scripts/run_phase1_training.py`, `scripts/plot_phase1_run.py`, `tests/test_checkpoint_and_training_loop.py`, `latex/proposta_pt.tex`, `docs/05`, `handoff.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex` sem erros nem referências em falta (8 páginas). Não foi inspecionado visualmente o PDF desta revisão.
+- **Validação:** `pytest tests/` → 94 passaram (75 anteriores e 19 novos), 0 falhas; execução real do treino com checkpoint recarregado do disco para as previsões; figuras inspecionadas. Validação e teste oficiais não foram abertos.
+- **Pendentes:** decidir se se repete o treino com paciência maior ou outro lr (o critério atual pode parar cedo); medir o desfasamento e a fragmentação com código; substituir as figuras marcadoras do anexo; commit local por autorizar.

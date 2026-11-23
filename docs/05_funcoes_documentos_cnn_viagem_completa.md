@@ -7,7 +7,7 @@ Ler AGENTS.md e 00_5_orientacoes_execucao_decisoes.md antes dos passos abaixo. I
 ## 1. Objetivo e âmbito
 Guia para o agente implementar a segunda parte do projeto: a primeira fase de modelação, CNN com viagem completa. A saída é uma probabilidade de pesca por ponto, sem janelamento externo, sobreposição ou pós-processamento temporal.
 
-Este documento especifica uma API proposta. Estado (REV-024): implementadas e testadas as funções 02 a 06, 07, 08, 09, 10, 11, 12 (smoke test), 13 e 14; as restantes (config, inferência, segmentos, métricas, relatórios, checkpoints, congelamento e execução) **não** estão implementadas. A política de acesso definida na preparação comum é obrigatória e prevalece sobre exemplos de execução.
+Este documento especifica uma API proposta. Estado (REV-024, REV-032): implementadas e testadas as funções 01 (config, versão reduzida), 02 a 06, 07, 08, 09, 10, 11, 12 (smoke test), 13, 14, 15 (`train_model`), 19 (métricas por ponto, em `metrics.py`), 23 e 24 (checkpoints); a inferência (16 a 17) existe só dentro de `scripts/run_phase1_training.py`. As restantes (segmentos e métricas por segmento, relatórios, congelamento e execuções reservadas) **não** estão implementadas. A política de acesso definida na preparação comum é obrigatória e prevalece sobre exemplos de execução.
 
 ## 2. Regra de acesso aos dados
 - Durante desenvolvimento, usar exclusivamente treino oficial ou dados sintéticos independentes.

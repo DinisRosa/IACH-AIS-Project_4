@@ -16,7 +16,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - `watch_latex.sh`: visualização da proposta. Não versionado.
   - Ainda não existe código de janelamento nem de pós-processamento.
 - **Código da fase 1 (`src/phase1/`, REV-024):** `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py`. Sequências, scaler, máscaras, CNN 1D, perda e passo de época implementados e testados. **Só houve um ensaio curto de ajuste em 3 viagens de treino (REV-027); sem treino completo.**
-- **Testes:** `tests/` com 75 testes (15 de REV-016/REV-017 e 60 de REV-024), todos a passar. Ver `pytest tests/`.
+- **Testes:** `tests/` com 94 testes (15 de REV-016/REV-017, 60 de REV-024 e 19 de REV-032), todos a passar. Ver `pytest tests/`.
 - **Dados:** `data/123_fishing_trajs.csv` presente localmente, não versionado. **123 IDs únicos** e **1 026 279 linhas**, confirmados por `verify_trip_count.py` (REV-007).
 - **Bases limpas (não versionadas):** `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Soma: 1 026 279.
 - **Leituras de dados até agora:**
@@ -24,7 +24,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
   - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-031.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-032.
 
 ## Decisões do utilizador (vigentes)
 
@@ -573,3 +573,50 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 **Pendente**
 - Decisões de treino do utilizador: partição interna, lr, épocas, critério de paragem, orçamento de tempo.
 - Esta entrada fica num commit local, por enviar (push por autorização).
+
+### 2026-11-23al — Medição da velocidade de treino em CPU
+
+**Feito**
+- `scripts/benchmark_training_speed.py`: mede o tempo de treino da CNN 1D (CPU, 10 threads, seed 42, lr 1e-3) com 1 viagem, 2 viagens e a maior viagem do treino (2 épocas de aquecimento descartadas, 20 medidas, 3 repetições). Saídas em `results/benchmark_speed/` (não versionadas). Só treino oficial.
+- Medido (mediana da época): 1 viagem (5 475 pontos) 0,013 s; 2 viagens (10 853 pontos) 0,040 s; maior viagem do treino `235008380-3` (45 251 pontos) 0,151 s. Cerca de 2,4 a 3,7 µs por ponto em treino e 1,0 a 1,6 µs por ponto em avaliação.
+- Projeção por nº de pontos (estimativa, não medição): época sobre o treino todo (713 854 pontos) entre 1,7 e 2,6 s; 100 épocas entre 2,8 e 4,4 min. Pico de memória do processo medido: cerca de 822 MB.
+- A maior viagem do treino tem 45 251 pontos (não 23 151, que era a maior das 6 do ensaio).
+
+**Validado**
+- Script executado duas vezes (corrigida uma coluna enganadora da projeção). Sem teste automático.
+
+**Limitações**
+- Poucas viagens e custo assumido proporcional ao nº de pontos; variação entre épocas visível (ex.: 0,023 a 0,053 s com 2 viagens). A projeção para as 74 e 87 viagens tem de ser confirmada medindo.
+
+**Pendente**
+- Decisões do utilizador (partição interna, lr, épocas, paragem, orçamento); commit local do script e desta entrada por autorizar.
+
+### 2026-11-23am — Primeira execução de treino da CNN 1D (REV-032)
+
+**Feito**
+- Utilizador aceitou os valores propostos: partição interna 15 % (13 de 87), lr 1e-3, máx. 100 épocas, paragem antecipada (paciência 10, melhor checkpoint), orçamento 15 min.
+- Implementados checkpoints, configuração validada, métricas por classe e `train_model`; 19 testes novos (94 no total).
+- Treino real só com o treino oficial: base inteira validada; 74 viagens de ajuste e 13 de monitorização; scaler só do ajuste. Parou por paragem antecipada após 16 épocas (39,4 s); melhor época 6. Accuracy 92,15 % no ajuste e 95,00 % na monitorização (maioritária 74,46 %). Artefactos em `results/phase1_run1/` (não versionados).
+- LaTeX: subsecção «Primeira execução de treino» e correção de frases desatualizadas.
+
+**Validado**
+- `pytest`: 94 passaram. Checkpoint recarregado do disco para as previsões. `pdflatex` sem erros (8 páginas). Figuras inspecionadas. Validação e teste oficiais não abertos.
+
+**Problemas e limitações**
+- Bug apanhado pelos testes: `torch.__version__` impedia o carregamento seguro do checkpoint; corrigido.
+- Monitorização de 13 viagens é ruidosa; o critério de paragem pode ter parado cedo (perda ainda a descer nas épocas 15 e 16). Rede possivelmente subajustada (ajuste pior que monitorização). Resultados provisórios.
+- Observação visual (não quantificada): erros em blocos longos de navegação previstos como pesca e fragmentação da pesca em duas viagens.
+
+**Pendente**
+- Decidir se se repete com paciência maior ou outro lr; medir erros por tipo com código; substituir figuras do anexo; commit local por autorizar; push por autorização.
+
+### 2026-11-23an — Handoff reescrito para nova conversa
+
+**Feito**
+- `handoff.md` reescrito de raiz: como retomar, objetivo, estado atual (incluindo o que está por commitar), decisões vigentes, tabela de ficheiros, comandos úteis, ensaio curto, medição de velocidade, primeira execução de treino, o que falhou, próximos passos, regras e preferências do utilizador. Inclui a lista de cores de revisão em uso e o próximo ID livre (REV-033).
+
+**Validado**
+- Estado conferido contra `git status`, `git log`, `pytest` (94 passaram) e `REVISION_LOG.md`. Sem alterações a código nem a dados.
+
+**Pendente**
+- Commit local do trabalho de REV-032 e deste ficheiro, por autorizar. Push por autorização.
