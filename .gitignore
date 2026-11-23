@@ -1,5 +1,6 @@
 # Dados: não versionar datasets (AGENTS.md §3 e §6)
 data/
+data/123_fishing_trajs.csv
 *.csv
 *.parquet
 *.xlsx
