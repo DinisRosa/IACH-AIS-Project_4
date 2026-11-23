@@ -18,6 +18,7 @@ Regras:
 | REV-004 | Roxo | `#6A1B9A` | (106, 27, 154) |
 | REV-005 | Azul-petróleo | `#00838F` | (0, 131, 143) |
 | REV-006 | Castanho | `#6D4C41` | (109, 76, 65) |
+| REV-007 | Rosa | `#AD1457` | (173, 20, 87) |
 
 ## Revisões
 
@@ -141,3 +142,19 @@ Regras:
 - **Pendentes:**
   - Discrepância de contagens do dataset: o ficheiro Zenodo chama-se `128_fishing_trajs.csv` e a página diz 128 trajetórias. O ficheiro local tem 123 IDs únicos e o mesmo tamanho (~169,6 MB). Confirmar se o ficheiro local é o mesmo e por que razão há 123 IDs.
   - Baselines HMM e Wu et al.: decidir mais tarde.
+
+### REV-007 — Coerência após confirmação de 123 viagens e decisões de REV-006
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Rosa `#AD1457`, RGB (173, 20, 87). Só marcador do registo.
+- **O quê:**
+  - Confirmado por `scripts/verify_trip_count.py`: 123 IDs únicos, 1 026 279 linhas, igual ao manifesto.
+  - `PROGRESS.md`: reescrito com decisões vigentes, pendentes resolvidas e tabela de artefactos.
+  - `README.md`: estrutura e scripts atualizados (manifesto versionado, `verify_trip_count.py`, REV-007).
+  - `docs/00` §1 (dataset): 123 confirmados; 128 explicado como cifra do Zenodo e da proposta PDF.
+  - `AGENTS.md` §6: regra dos CSV atualizada com a exceção do manifesto (REV-006). Nenhuma regra metodológica mudou.
+- **Porquê:** após REV-006 e a verificação de contagem, havia documentos com pendências já resolvidas.
+- **Ficheiros afetados:** `PROGRESS.md`, `README.md`, `AGENTS.md`, `docs/00_contexto_projeto_dicionario_dados.md`, `REVISION_LOG.md`, `scripts/verify_trip_count.py` (novo).
+- **Correspondência no LaTeX:** **não aplicável**. O `.tex` já diz 123 e não é afetado. O PDF IAHC não se altera.
+- **Validação:** pesquisa textual por "128", "não versionado", "pendente de decisão" e "sem autor" nos MDs. As ocorrências restantes são históricas ou explicam a cifra do Zenodo.
+- **Pendentes:** nenhum para esta revisão.

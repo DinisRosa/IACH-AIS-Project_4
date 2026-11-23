@@ -15,7 +15,7 @@ As unidades não documentadas são apresentadas como hipóteses, nunca como fact
 - Problema: identificar intervalos de pesca e navegação em trajetórias AIS anotadas.
 - Tipo de tarefa: segmentação temporal binária supervisionada, com uma previsão por ponto e posterior agrupamento em segmentos.
 - Entidade operacional: viagem identificada pelo id completo, por exemplo 211477000-2.
-- Dataset: **123 IDs únicos** e **1 026 279 linhas**, verificados no ficheiro (REV-001). A proposta PDF citada aqui refere 128 viagens; o `latex/proposta_pt.tex` refere 123, em linha com o ficheiro. Ver `PROGRESS.md` sobre o LaTeX.
+- Dataset: **123 IDs únicos** e **1 026 279 linhas**, verificados no ficheiro (REV-001, confirmados por `scripts/verify_trip_count.py`, REV-007). O nome e a página do Zenodo indicam 128 (`128_fishing_trajs.csv`), mas o ficheiro local tem 123 IDs. O `latex/proposta_IAHC_DINIS_ROSA.pdf` (versão entregue ao professor, não se altera) diz 128; o `latex/proposta_pt.tex` diz 123.
 - Esquema observado: 13 colunas no total, incluindo label; portanto, 12 colunas além do rótulo, não 13 mais o rótulo.
 - Implementação: Python; KNIME pode servir como orquestrador dos componentes e nós Python Script.
 - Modelo atual: CNN 1D totalmente convolucional que devolve uma probabilidade por ponto.

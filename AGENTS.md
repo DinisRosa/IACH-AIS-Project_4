@@ -107,7 +107,7 @@ Pode verificar branch/upstream/remoto por comandos de leitura e indicar ao utili
 
 Não reescrever histórico, executar reset destrutivo/rebase arriscado ou apagar branches sem autorização. Preferir branch de trabalho quando apropriado sem mudar trabalho existente inadvertidamente.
 
-Não versionar datasets, credenciais, `iach-ais-venv-4/` (nem outros ambientes), checkpoints e resultados volumosos sem aprovação. Manifestos CSV também ficam fora do git por defeito (`*.csv` no `.gitignore`), até decisão em contrário. Manter gitignore; não remover rastreamento existente sem discutir. Se houver segredo exposto, avisar sem o repetir.
+Não versionar datasets, credenciais, `iach-ais-venv-4/` (nem outros ambientes), checkpoints e resultados volumosos sem aprovação. Os CSV ficam fora do git por defeito (`*.csv` no `.gitignore`). Exceção: o manifesto da divisão `manifests/split_manifest_seed42.csv`, versionado por decisão do utilizador (REV-006). Manter gitignore; não remover rastreamento existente sem discutir. Se houver segredo exposto, avisar sem o repetir.
 
 ## 7. Compatibilidade de ferramentas
 AGENTS.md é a fonte única das regras. Confirmar leitura na ferramenta/versão real; nenhum adaptador garante carregamento automático.
