@@ -1,0 +1,41 @@
+# Dados: não versionar datasets (AGENTS.md §3 e §6)
+data/
+*.csv
+*.parquet
+*.xlsx
+
+# Ambientes virtuais e cache Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Modelos, checkpoints e resultados volumosos (AGENTS.md §6)
+checkpoints/
+models/
+*.pt
+*.pth
+*.ckpt
+*.h5
+results/
+outputs/
+
+# Ficheiros auxiliares do LaTeX
+latex/*.aux
+latex/*.log
+latex/*.out
+latex/*.toc
+latex/*.bbl
+latex/*.blg
+latex/*.fls
+latex/*.fdb_latexmk
+latex/*.synctex.gz
+
+# Sistema operativo e editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,154 @@
+%%%% proposta_pt.tex
+%%%% Project specification paper based on the IJCAI--ECAI 26 template.
+
+\typeout{Project paper using IJCAI--ECAI 26 formatting}
+
+\documentclass{article}
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+
+% Official IJCAI--ECAI 26 style file.
+% Compile from this directory so the relative path resolves correctly.
+\usepackage{../FormattingGuidelines-IJCAI-ECAI-26/ijcai26}
+
+% Packages required/recommended by the official template.
+\usepackage{times}
+\usepackage{soul}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[small]{caption}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage[switch]{lineno}
+
+% Keep line numbers enabled for a submission. Disable for camera-ready.
+\linenumbers
+\switchlinenumbers
+
+\urlstyle{same}
+\definecolor{roxo}{RGB}{128,0,128}
+
+% Optional theorem environments.
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}
+
+% Required PDF metadata block. Keep unchanged.
+\pdfinfo{
+/TemplateVersion (IJCAI.2026.0)
+}
+
+\title{Segmenta\c{c}\~ao sem\^antica de trajet\'orias AIS para dete\c{c}\~ao de atividade de pesca usando janelas sobrepostas e p\'os-processamento temporal}
+
+% For an anonymous submission, replace this block with the track-approved
+% anonymous author declaration. For the camera-ready version, provide all
+% author and affiliation information.
+\author{
+    Dinis Soveral Botelho Rosa
+    \affiliations
+    University of Coimbra / Department of Informatics Engineering
+    \emails
+    dinisrosa22@gmail.com
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A pesca ilegal, não declarada e não regulamentada (IUU) ameaça a sustentabilidade dos oceanos. O \emph{Automatic Identification System} (AIS) permite monitorizar navios à escala global, mas converter trajetórias em deteções úteis à fiscalização exige métodos robustos e interpretáveis. Propõe-se investigar se a combinação de janelas sobrepostas e pós-processamento temporal melhora a qualidade e a estabilidade da segmentação semântica de trajetórias AIS para detetar pesca, como apoio à decisão de inspetores humanos (\textcolor{red}{\emph{human-on-the-loop}}), segundo princípios de Inteligência Artificial Centrada no Humano (HCAI): explicabilidade, confiança calibrada e decisão humana final. A avaliação usa \textcolor{red}{123} trajetórias anotadas (Kaggle), comparando com um \emph{Hidden Markov Model} (HMM) e com Wu et al.~\shortcite{wu2022} através de precisão, sensibilidade, F1 e \emph{intersection-over-union} (IoU), complementadas por análise qualitativa.
+\textcolor{green}{Até à data, foram implementadas a preparação dos dados, a divisão por trajetória, a normalização ajustada apenas ao treino, a geração de janelas temporais e a infraestrutura de batching com máscara para GRU. Foram também ajustados quatro baselines ponto a ponto exclusivamente no treino; a sua avaliação em validação e teste permanece por realizar.}
+\end{abstract}
+
+\section{Problema e Motivação}
+\label{sec:problema-motivacao}
+
+A pesca IUU representa até cerca de 20\% da captura mundial~\cite{agnew2009}, com perdas de dezenas de milhares de milhões de dólares por ano, sobre-exploração dos \emph{stocks}, degradação de habitats e condições de trabalho ilegais~\cite{chuaysi2020}. Combatê-la exige saber onde, quando e quais os navios que estão a pescar --- impossível apenas por inspeção humana, dada a escala da frota e do tráfego marítimo. O AIS transmite posição, rumo e velocidade a cada poucos segundos, sendo a principal fonte para monitorizar a pesca à escala global~\cite{natale2015,kroodsma2018}. Os padrões de movimento da pesca --- velocidades reduzidas, mudanças de rumo frequentes e zigue-zague --- distinguem-na da navegação em trânsito. O problema é, assim, \textbf{classificar automaticamente, ao longo de uma trajetória AIS, os intervalos de pesca versus navegação}, de forma robusta e interpretável.
+
+A motivação é dupla. Tecnicamente, os modelos atuais de segmentação produzem resultados ruidosos e sensíveis a pequenas perturbações, que podem ganhar consistência com janelas sobrepostas e pós-processamento temporal. Do lado humano, o sistema destina-se a apoiar agentes de fiscalização e autoridades de gestão das pescas, pelo que deve ser \textbf{fiável, explicável e concebido para cooperação humano-IA}, deixando a decisão final ao inspetor. O projeto enquadra-se na HCAI, em particular na cooperação humano-IA e na IA fiável e responsável.
+
+\section{Contexto}
+\label{sec:contexto}
+
+Os primeiros métodos de identificação de pesca usaram modelos probabilísticos sobre dados \emph{Vessel Monitoring System} (VMS): Peel e Good~\shortcite{peel2011} e Vermard et al.~\shortcite{vermard2010} propuseram HMM para distinguir estados de pesca e navegação. O AIS alargou a escala --- Natale et al.~\shortcite{natale2015} mapearam o esforço de pesca europeu e Kroodsma et al.~\shortcite{kroodsma2018} a pegada global. Mais recentemente, a segmentação semântica de trajetórias emergiu como formalismo adequado: divide-se a trajetória em segmentos homogéneos com significado, em vez de classificar pontos isolados. Soares Júnior et al.~\shortcite{soares2018} propuseram uma abordagem semi-supervisionada baseada em \emph{Minimum Description Length}, e Wu et al.~\shortcite{wu2022} aplicaram-na a trajetórias AIS para detetar atividades de pesca completas --- a referência central deste projeto. Em paralelo, dominam métodos de aprendizagem profunda: redes com atenção~\cite{cheng2025}, aprendizagem espaço-temporal local-global (FishFormer)~\cite{wang2026}, campos de Gram~\cite{hu2026} e métodos geométricos semi-supervisionados~\cite{ferreira2022}. Quanto à dimensão humana, a HCAI~\cite{shneiderman2020} defende sistemas fiáveis e explicáveis que apoiem a decisão humana em vez de a substituírem.
+
+Subsistem, porém, duas limitações. Primeiro, as predições ponto-a-ponto são ruidosas e geram fronteiras de segmento instáveis; propõe-se combinar janelas sobrepostas com pós-processamento temporal para as estabilizar e avaliar explicitamente esse efeito. Segundo, a dimensão humana é frequentemente secundarizada: em fiscalização real o sistema deve ser explicável e cooperar com o inspetor, não atuar como ``caixa preta''. Face a Wu et al.~\shortcite{wu2022}, o projeto acrescenta a avaliação da estabilidade temporal e a perspetiva de cooperação humano-IA; é nestas duas dimensões --- robustez temporal e centralidade humana --- que se posiciona.
+
+\section{Objetivos}
+\label{sec:objetivos}
+
+O objetivo principal é desenvolver um sistema de segmentação semântica de trajetórias AIS que detete pesca de forma robusta e interpretável, combinando \textbf{janelas sobrepostas} e \textbf{pós-processamento temporal}, como \textbf{apoio à decisão de inspetores} (\textcolor{red}{\emph{human-on-the-loop}}, \textcolor{red}{com o inspetor a supervisionar e a poder intervir na decisão}). Os objetivos específicos são:
+
+\begin{enumerate}
+    \item Construir um \emph{pipeline} de pré-processamento (limpeza, normalização, engenharia de características e janelamento com sobreposição).
+    \item Implementar e treinar um classificador de janelas (por exemplo, redes recorrentes ou convolucionais com atenção), com Wu et al.~\shortcite{wu2022} e um HMM~\cite{peel2011} como \emph{baselines}.
+    \item Conceber e avaliar um pós-processamento temporal que combine as predições das janelas sobrepostas e regularize as fronteiras dos segmentos.
+    \item Avaliar quantitativamente (por segmento e por ponto) e qualitativamente (visualização e casos de estudo).
+    \item Incluir explicabilidade (atribuições de importância~\cite{lundberg2017}) e confiança calibrada~\cite{guo2017} que sustentem a decisão do inspetor.
+\end{enumerate}
+
+O trabalho guia-se por três perguntas de investigação: (RQ1) em que medida as janelas sobrepostas reduzem a instabilidade das fronteiras face a janelas não sobrepostas? (RQ2) em que medida o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados? (RQ3) qual a interação entre sobreposição e pós-processamento? Será bem-sucedido se (i) caracterizar quantitativamente o efeito de ambas as componentes face aos \emph{baselines} --- aceitando como resultado válido a demonstração de que uma componente não traz ganho ---, (ii) produzir segmentações temporalmente estáveis e (iii) fornecer justificações auditáveis para validação por um inspetor. Contribuições esperadas: um método de janelas sobrepostas com pós-processamento temporal para deteção de pesca, uma avaliação que integra a perspetiva HCAI e evidência empírica sobre o valor do pós-processamento.
+
+\section{Abordagem}
+\label{sec:abordagem}
+
+\textcolor{green}{O trabalho organiza-se num \emph{pipeline} de cinco etapas (Figura~\ref{fig:pipeline}), das quais as duas primeiras e parte da terceira já têm implementação. (1)~\emph{Ingestão e pré-processamento}: o CSV é limpo e reduzido às variáveis usadas; os rótulos originais são agregados em pesca e navegação; as trajetórias são divididas por ID completo; e as seis características contínuas são normalizadas pela mediana e pelo intervalo interquartil (IQR) calculados apenas no treino. O tempo relativo $t_{rel}$ é mantido em bruto. (2)~\emph{Janelamento}: a configuração atual usa janelas temporais de 30 minutos, sobreposição de 50\%, corte em gaps superiores a 600 segundos e um mínimo de 1 ponto por janela. Os alvos são por ponto; janelas de comprimentos diferentes são preenchidas com máscara e todos os pontos ficam cobertos. Esta configuração é provisória até à seleção com treino e validação. (3)~\emph{Classificação}: a infraestrutura de \emph{Dataset}/\emph{DataLoader}, \emph{bucketing}, perda mascarada e \emph{packing} para uma BiGRU está implementada e verificada, mas a rede sequencial ainda não foi treinada. Foram implementados quatro baselines ponto a ponto, descritos na Secção~\ref{sec:avaliacao}. (4)~\emph{Pós-processamento temporal}: a agregação das previsões sobrepostas e a regularização das fronteiras permanecem por implementar. (5)~\emph{Saída e explicabilidade}: mapas, confiança calibrada, explicações e uma interface de apoio ao inspetor são objetivos de trabalho futuro. A implementação atual usa Python, PyTorch, scikit-learn e pandas.}
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize, >={Stealth[length=4pt]},
+  box/.style={draw, rounded corners, align=center, minimum height=0.8cm, minimum width=2.2cm, text width=2.0cm}]
+\node[box] (a) at (0,0) {Trajetória AIS};
+\node[box] (b) at (2.9,0) {Pré-processamento};
+\node[box] (c) at (5.8,0) {Janelas sobrepostas};
+\node[box] (d) at (0,-1.5) {Classificação das janelas};
+\node[box] (e) at (2.9,-1.5) {Pós-processamento temporal};
+\node[box] (f) at (5.8,-1.5) {Segmentos semânticos};
+\node[box] (g) at (5.8,-3.0) {Explicabilidade / decisão humana};
+\draw[->] (a) -- (b);
+\draw[->] (b) -- (c);
+\draw[->] (c.south) -- ++(0,-0.35) -| (d.north);
+\draw[->] (d) -- (e);
+\draw[->] (e) -- (f);
+\draw[->] (f) -- (g);
+\end{tikzpicture}
+\captionof{figure}{Esquema do \emph{pipeline} proposto.}
+\label{fig:pipeline}
+\end{center}
+
+\section{Materiais e Dados}
+\label{sec:materiais-dados}
+
+\textcolor{green}{Usa-se o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}, com 123 trajetórias e 1\,026\,279 pontos. As cinco classes originais são agregadas em duas: pesca (\texttt{02-fishing} e \texttt{04-fishing}) e navegação (\texttt{01-sailing}, \texttt{03-sailing} e \texttt{05-sailing}). A representação processada contém o ID, $t_{rel}$, o rótulo binário e seis características: coordenadas projetadas $x$ e $y$, variação de rumo (\texttt{signed\_turn}), intervalo temporal (\texttt{time\_gap}), velocidade (\texttt{euc\_speed}) e distância à costa (\texttt{distanceToShore}). Mantém-se a distribuição natural das classes, sem reamostragem nem pesos de classe.}
+
+\textcolor{yellow}{Na base original foi identificado um ponto isolado na trajetória \texttt{219429000-2} em que o timestamp avança 30 segundos, mas a coluna \texttt{time\_gap} contém 10 segundos. Como a decisão de projeto usa \texttt{time\_gap} como base temporal, o tempo relativo $t_{rel}$ mant\'em-se calculado pela acumula\c{c}\~ao desse valor, sem altera\c{c}\~ao silenciosa da base de dados. Esta discrep\^ancia, limitada a esse ponto confirmado, fica documentada como limita\c{c}\~ao dos dados.}
+
+\textcolor{yellow}{Os outliers não são removidos, corrigidos ou limitados. A política de janelamento garante cobertura de todos os pontos em treino, validação e teste. Segmentos inferiores à duração nominal recebem uma janela curta encostada ao fim e \texttt{min\_pontos} passa a ser 1.}
+
+\textcolor{green}{A divisão atual, com semente 42, é feita por trajetória completa, na proporção aproximada 70/15/15: 86 trajetórias e 706\,522 pontos no treino, 19 trajetórias e 173\,532 pontos na validação, e 18 trajetórias e 146\,225 pontos no teste. A proporção de pontos de pesca é, respetivamente, 75,6\%, 77,1\% e 73,5\%. Os IDs com prefixos comuns não são agrupados; a possibilidade de dependência entre conjuntos será tratada como limitação e análise de sensibilidade.}
+
+Eticamente, apesar de públicos, os dados AIS usados em fiscalização exigem cuidado: a deteção automática não deve, por si só, fundamentar sanções (a decisão humana é obrigatória); o sistema deve ser transparente e justo, evitando enviesamentos contra tipos de navio, regiões ou comunidades de pesca; e a confiança deve ser calibrada para não induzir falsa segurança.
+
+\section{Avaliação}
+\label{sec:avaliacao}
+
+Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e por ponto), comparando com os \emph{baselines} (HMM~\cite{peel2011} e Wu et al.~\shortcite{wu2022}). Um estudo de ablação com quatro variantes isola cada componente: (i) sem sobreposição nem pós-processamento; (ii) só sobreposição; (iii) só pós-processamento; (iv) ambos (método proposto). Analisa-se também a robustez face à taxa de sobreposição (0\%, 25\%, 50\%, 75\%) e ao nível de regularização temporal. A estabilidade mede-se pela fragmentação (número de segmentos por trajetória) e pelo erro de fronteira (desvio entre início/fim previsto e real); ``estável'' designa uma segmentação que muda pouco sob pequenas alterações da janela ou do pós-processamento.
+
+\textcolor{green}{Como referência inicial já foram ajustados no treino um classificador trivial, regressão logística, random forest e HistGradientBoosting, usando seis características por ponto. No próprio conjunto de treino, os F1 de pesca foram 86,11\%, 94,46\%, 99,77\% e 99,15\%, respetivamente. Estas métricas são de ajuste (\emph{in-sample}) e não estimam generalização; nenhum destes modelos foi ainda selecionado na validação ou avaliado no teste. Os baselines HMM e Wu et al., o classificador sequencial, a reconstrução das previsões por ponto e as métricas por segmento continuam planeados.}
+
+\textcolor{yellow}{Os dados são divididos por ID completo de trajetória em treino, validação e teste (70/15/15), mantendo todos os pontos de cada trajetória no mesmo conjunto. Cada ID completo é tratado como unidade independente; IDs com prefixo comum não são agrupados, uma hipótese ainda por avaliar. Os parâmetros e hiperparâmetros serão escolhidos apenas com treino e validação. Os outliers não são removidos, corrigidos ou limitados, e a configuração atual garante cobertura de 100\% dos pontos em treino, validação e teste.}
+
+\textcolor{roxo}{A política para pontos sem janela é incluir todas as observações originais na avaliação por ponto: nenhum ponto será excluído por falta de cobertura, que é atualmente 100\% nos três conjuntos. Como a sobreposição pode colocar um ponto em várias janelas, as previsões serão reconstruídas nos índices da trajetória original e reduzidas a uma única previsão por ponto antes do cálculo das métricas. O método de agregação dessas previsões continua por definir e será tratado no pós-processamento temporal.}
+
+Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos preditos sobrepostos à verdade de referência e analisar-se-ão casos de sucesso e falha. Para a dimensão HCAI~\cite{shneiderman2020}, prevê-se avaliar de forma preliminar a explicabilidade (verificando se as atribuições~\cite{lundberg2017} correspondem aos padrões de movimento esperados) e a utilidade como apoio à decisão, através de um \emph{dashboard} de prova de conceito com segmentação, confiança calibrada~\cite{guo2017} e justificações.
+
+% References may use the provided IJCAI named bibliography style.
+\bibliographystyle{../FormattingGuidelines-IJCAI-ECAI-26/named}
+\bibliography{references}
+
+\end{document}
