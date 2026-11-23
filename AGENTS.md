@@ -111,8 +111,8 @@ Não versionar datasets, credenciais, .venv, checkpoints e resultados volumosos 
 AGENTS.md é a fonte única das regras. Confirmar leitura na ferramenta/versão real; nenhum adaptador garante carregamento automático.
 - OpenCode/Codex e outros agentes compatíveis: ler este ficheiro e instruções herdadas.
 - Claude Code: CLAUDE.md pode mandar ler AGENTS.md; confirmar leitura.
-- VS Code: identificar extensão/modo; Copilot pode usar ponte em .github/copilot-instructions.md.
-- Antigravity/Gemini: GEMINI.md pode servir de ponte; verificar mecanismo da versão instalada.
+- VS Code: identificar extensão/modo; sem ponte própria no repositório, ler explicitamente este ficheiro (as pontes .github/copilot-instructions.md e GEMINI.md foram removidas).
+- Antigravity/Gemini: sem ponte no repositório; ler explicitamente este ficheiro e verificar o mecanismo da versão instalada.
 - Cursor/outras extensões: leitura explícita deste ficheiro; adaptador nativo só quando necessário.
 Não alterar configurações globais dos agentes. Se referências não forem seguidas, abrir/anexar explicitamente AGENTS.md. Nenhuma ferramenta está definitivamente escolhida.
 
