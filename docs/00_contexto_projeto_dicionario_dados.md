@@ -202,7 +202,7 @@ Manter os mesmos IDs, características e definições de métricas entre compara
 
 ## 15. Política de treino, validação e teste
 1. Antes de analisar valores, ler só o mínimo necessário para dividir pelos IDs completos.
-2. Criar manifesto fixo de aproximadamente 70/15/15 dos IDs, com seed definida e sem usar rótulos para escolher a divisão.
+2. Criar manifesto fixo de 70/15/15 dos IDs, com seed **42** (confirmada pelo utilizador), sem usar rótulos para escolher a divisão.
 3. Durante desenvolvimento, só treino ou dados sintéticos: inclui debugging, gráficos, benchmarks e inspeção de exemplos.
 4. Não ajustar normalizadores, imputadores, regras estatísticas ou outros parâmetros em dados reservados.
 5. Se necessário, criar monitorização interna apenas dentro do treino, por ID. Para independência interna, ajustar pré-processamento apenas no treino interno; caso contrário, identificar a monitorização como diagnóstica.
