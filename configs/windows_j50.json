@@ -1,0 +1,15 @@
+{
+  "stage": "development",
+  "variant": "J50",
+  "seed": 42,
+  "train_path": "data/123_fishing_trajs_clean_train.parquet",
+  "split_manifest_path": "manifests/split_manifest_seed42.csv",
+  "output_dir": "results/windows_j50",
+  "window_length": 64,
+  "overlap": 0.5,
+  "batch_size": 32,
+  "lr": 0.001,
+  "max_epochs": 300,
+  "time_budget_seconds": 2700,
+  "device": "cpu"
+}

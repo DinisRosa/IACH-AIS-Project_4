@@ -98,15 +98,30 @@ class FullTripCNN(nn.Module):
         layers.append(nn.Conv1d(in_channels, 1, out_kernel, padding=out_kernel // 2))
         self.net = nn.Sequential(*layers)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """x [B, C, N] -> logits [B, 1, N]. Sem Sigmoid."""
+    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
+        """x [B, C, N] -> logits [B, 1, N]. Sem Sigmoid.
+
+        `mask` [B, 1, N] (1 = ponto real, 0 = enchimento) é opcional e serve só para empilhar
+        janelas de comprimentos diferentes num lote (Marco 4). Se existir, as posições de
+        enchimento voltam a zero depois de cada ReLU; assim cada janela recebe, nas bordas, o
+        mesmo zero que o padding das convoluções lhe daria se fosse processada sozinha, e a
+        saída nas posições reais não depende do enchimento. Sem máscara (baseline) nada muda.
+        """
         if x.dim() != 3:
             raise ValueError(f"Entrada deve ter forma [B, C, N], recebido {tuple(x.shape)}")
         if x.shape[1] != self.n_channels:
             raise ValueError(
                 f"Esperados {self.n_channels} canais, recebidos {x.shape[1]}"
             )
-        return self.net(x)
+        if mask is None:
+            return self.net(x)
+        if mask.shape != (x.shape[0], 1, x.shape[2]):
+            raise ValueError(f"mask deve ter forma [B, 1, N], recebido {tuple(mask.shape)}")
+        for layer in self.net:
+            x = layer(x)
+            if isinstance(layer, nn.ReLU):
+                x = x * mask
+        return x
 
 
 def build_cnn(model_config: Mapping[str, Any] | None = None, n_channels: int = 7) -> nn.Module:
