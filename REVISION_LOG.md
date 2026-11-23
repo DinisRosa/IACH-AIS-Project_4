@@ -176,3 +176,4 @@ Regras:
 - **Pendentes:**
   - Confirmar o CRS de longitude/latitude (hipótese WGS84 por verificar com uma projeção de referência, p.ex. `pyproj`, se autorizado instalar).
   - Método de cálculo de `distanceToShore` (não documentado).
+- **Verificação adicional (REV-008):** MD5 do `data/123_fishing_trajs.csv` local = `c5953081f511e228b19e46ca85fe304f`, igual ao publicado no Zenodo para `128_fishing_trajs.csv`. Logo é o ficheiro oficial, e as 123 viagens são o conteúdo real. O "128" é só o nome do ficheiro e da proposta.

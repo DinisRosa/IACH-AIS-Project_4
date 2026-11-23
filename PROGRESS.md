@@ -196,3 +196,5 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 **Pendente**
 - CRS de longitude/latitude: hipótese WGS84, por verificar.
 - Método de cálculo de `distanceToShore`: não documentado.
+
+**Verificação adicional:** MD5 do CSV local = `c5953081f511e228b19e46ca85fe304f`, igual ao do Zenodo. O ficheiro é o oficial; as 123 viagens são o conteúdo real.
