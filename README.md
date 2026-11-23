@@ -7,11 +7,12 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 - `AGENTS.md`: regras e instruções do projeto (fonte única).
 - `CLAUDE.md`: instrução para o Claude Code ler o `AGENTS.md`.
 - `PROGRESS.md`: registo de progresso, validações, decisões e pendentes.
-- `REVISION_LOG.md`: registo das revisões de documentos, com ID e cor (REV-001 a REV-019).
-- `docs/`: contexto, preparação comum, especificações e funções das CNN.
-  - `00_contexto_projeto_dicionario_dados.md`: ponto de entrada e dicionário das colunas.
-  - `00_5_orientacoes_execucao_decisoes.md`: decisões consolidadas e marcos.
-  - `01_preparacao_comum.md` a `06_…`: preparação, CNN com viagem completa e CNN com janelas.
+- `REVISION_LOG.md`: registo das revisões de documentos, com ID e cor (REV-001 a REV-033).
+- `docs/`: documentação do projeto, em quatro ficheiros (fundidos em REV-033).
+  - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos e política de acesso aos dados.
+  - `01_dados_e_preparacao.md`: dicionário das colunas, unidades verificadas, entradas da CNN e preparação.
+  - `02_cnn_viagem_completa.md`: CNN de referência (Marco 3), com o que já está implementado.
+  - `03_cnn_janelamento.md`: CNN com janelas e sobreposição (Marco 4), ainda por implementar.
 - `latex/`: proposta em LaTeX (`proposta_pt.tex`, reescrita a partir de `proposta_IAHC_DINIS_ROSA.pdf`), o PDF entregue ao professor (não se altera) e a bibliografia.
 - `scripts/`: scripts executáveis do projeto.
   - `create_split_manifest.py`: cria o manifesto de divisão por ID (seed 42, 70/15/15).
@@ -53,4 +54,4 @@ iach-ais-venv-4/bin/python scripts/verify_trip_count.py
 
 ## Estado
 
-Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN 1D de referência sobre viagem completa) em curso desde REV-022: sequências, normalização, CNN e testes implementados em `src/phase1/` (REV-024); só um ensaio curto de ajuste em 3 viagens de treino (REV-027); treino completo ainda não feito. Ver `PROGRESS.md`.
+Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN 1D de referência sobre viagem completa) em curso: sequências, normalização, CNN, treino com paragem antecipada e checkpoints implementados e testados em `src/phase1/` (REV-024, REV-032); primeira execução de treino feita só com o treino oficial, com resultados provisórios. Janelamento (Marco 4) por fazer. Validação e teste oficiais por abrir. Ver `PROGRESS.md` e `handoff.md`.

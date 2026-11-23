@@ -5,7 +5,7 @@ Instruções comuns para qualquer agente que trabalhe no projeto. Implementaçã
 
 Objetivo: segmentar viagens AIS em pesca/navegação, com uma previsão por ponto. Desenvolver preparação comum, CNN com viagem completa e CNN com janelas/sobreposição; comparar também um ramo de pós-processamento simples com método aprovado. HMM, reprodução de Wu et al., dashboard, calibração e explicabilidade avançada não pertencem ao mínimo atual salvo nova instrução.
 
-Ler este ficheiro, o documento 00, as orientações 0.5, a preparação comum 01 e os contratos relevantes antes de executar. Decisões explícitas recentes do utilizador prevalecem sobre sugestões antigas, sem autorizar implicitamente dados reservados, publicação ou ações destrutivas. Perguntar quando houver conflito não resolvido.
+Ler este ficheiro, `docs/00_projeto_e_decisoes.md`, `docs/01_dados_e_preparacao.md` e o documento da fase em causa (`docs/02_…` ou `docs/03_…`) antes de executar. Decisões explícitas recentes do utilizador prevalecem sobre sugestões antigas, sem autorizar implicitamente dados reservados, publicação ou ações destrutivas. Perguntar quando houver conflito não resolvido.
 
 As funções especificadas nos documentos são contratos orientadores, não obrigação de criar módulos vazios. Implementar por marcos executáveis. Nunca simular resultados, subagentes, testes ou funcionalidades concluídas.
 

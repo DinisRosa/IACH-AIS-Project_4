@@ -6,7 +6,7 @@ Data: 2026-11-23. Documento para retomar o trabalho numa nova conversa.
 
 1. `AGENTS.md` (regras fixas; o `CLAUDE.md` manda lê-lo antes de qualquer ação).
 2. Este ficheiro.
-3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23an) e `REVISION_LOG.md` (REV-001 a REV-032).
+3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23ap) e `REVISION_LOG.md` (REV-001 a REV-033).
 4. Antes de qualquer ação: verificar `git status` e `git log` (ver «Estado atual»).
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -47,8 +47,8 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 
 **LaTeX**
 - `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**.
-- Toda a alteração ao `.tex` leva cor com `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Texto movido mantém a cor antiga. Próximo ID livre: **REV-033** (precisa de cor nova e distinta).
-- Cores já usadas no `.tex`: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev021 `#D500F9`, rev022 `#00897B`, rev023 `#0277BD`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60` (REV-029 `#BF360C` só marcador do registo).
+- Toda a alteração ao `.tex` leva cor com `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Texto movido mantém a cor antiga. Próximo ID livre: **REV-034** (precisa de cor nova e distinta).
+- Cores já usadas no `.tex`: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev021 `#D500F9`, rev022 `#00897B`, rev023 `#0277BD`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60` (REV-033 `#3E2723` só marcador Markdown, docs/; REV-029 `#BF360C` só marcador do registo).
 
 ## Ficheiros principais
 
@@ -62,7 +62,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 | Testes | `tests/` (`conftest.py` põe `src/` no path); fase 1: `test_sequences`, `test_point_alignment`, `test_access_policy`, `test_model_shapes`, `test_loss_and_gradients`, `test_integration_phase1`, `test_checkpoint_and_training_loop` |
 | Dados (não versionados) | `data/123_fishing_trajs_clean_{train,validation,test}.parquet`; manifesto versionado `manifests/split_manifest_seed42.csv` |
 | Resultados (não versionados) | `results/phase1_run1/` (checkpoint, histórico, tabelas, previsões da monitorização, scaler, divisão interna, manifesto, `figures/`), `results/diagnostic_3trips/`, `results/benchmark_speed/` |
-| Documentação | `docs/00` a `docs/06` (CNN em `docs/02` e `docs/05`; janelas em `docs/03` e `docs/06`); `docs/05` indica quais funções já existem |
+| Documentação | `docs/00_projeto_e_decisoes`, `docs/01_dados_e_preparacao`, `docs/02_cnn_viagem_completa` (tem a tabela do que já existe), `docs/03_cnn_janelamento` (fundidos em REV-033) |
 | Proposta | `latex/proposta_pt.tex`, `latex/references.bib`, `latex/figures/` |
 
 ## Comandos úteis (a partir da raiz do projeto)
@@ -114,7 +114,7 @@ Depois:
 1. Push dos commits locais, se o utilizador o autorizar (ou fazê-lo ele próprio).
 2. Medir com código os tipos de erro (blocos de navegação prevista como pesca, fragmentação, desfasamento nas fronteiras).
 3. Passo 6 do Marco 3: registar as métricas internas de referência da execução final; passo 7: pedir revisão do Marco 3.
-4. Testes automáticos dos scripts; implementar o que falta de `docs/05` (segmentos e métricas por segmento, inferência como módulo, congelamento de execução).
+4. Testes automáticos dos scripts; implementar o que falta segundo `docs/02` §4 (segmentos e métricas por segmento, inferência como módulo, congelamento de execução).
 5. Substituir as figuras do Anexo A pelas da primeira execução (decisão do utilizador) e rever a paginação das figuras de largura total.
 6. Marco 4: janelamento com sobreposição (0 % e 50 %), mesma CNN sobre janelas.
 7. Só mais tarde, e só com autorização explícita, validação oficial (seleção formal) e teste (avaliação final).

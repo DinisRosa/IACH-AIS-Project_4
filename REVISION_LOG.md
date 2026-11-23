@@ -568,3 +568,19 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**. `pdflatex` sem erros nem referências em falta (8 páginas). Não foi inspecionado visualmente o PDF desta revisão.
 - **Validação:** `pytest tests/` → 94 passaram (75 anteriores e 19 novos), 0 falhas; execução real do treino com checkpoint recarregado do disco para as previsões; figuras inspecionadas. Validação e teste oficiais não foram abertos.
 - **Pendentes:** decidir se se repete o treino com paciência maior ou outro lr (o critério atual pode parar cedo); medir o desfasamento e a fragmentação com código; substituir as figuras marcadoras do anexo; commit local por autorizar.
+
+### REV-033 — Fusão e simplificação dos documentos em `docs/`
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Castanho-escuro `#3E2723`, RGB (62, 39, 35). Só no marcador Markdown `[REV-033 | cor #3E2723]` no topo dos quatro documentos; não há alteração ao `.tex`.
+- **O quê:**
+  - Os oito documentos `docs/00_contexto…`, `00_5_orientacoes…`, `01_preparacao_comum`, `02_cnn_viagem_completa`, `03_cnn_janelamento_sobreposicao`, `04_especificacao_funcoes_preparacao`, `05_funcoes_documentos_cnn_viagem_completa` e `06_funcoes_documentos_cnn_janelamento_sobreposicao` (cerca de 1 900 linhas) passam a quatro: `00_projeto_e_decisoes`, `01_dados_e_preparacao`, `02_cnn_viagem_completa` e `03_cnn_janelamento` (386 linhas). Os sete antigos foram apagados; ficam no histórico do git.
+  - Removido o que estava cumprido ou obsoleto: o aviso «Atualização normativa» repetido em seis ficheiros; «Correções obrigatórias aos contratos antigos» e «Estado deste pacote»; as secções de integração com KNIME; o contrato de 25 funções de preparação (`data_io`, `preprocessing`, `trajectory`, `scaling`, `run_preparation`), nunca implementadas como módulos porque a preparação se fez com scripts (REV-019); as dúvidas de unidades já resolvidas.
+  - Atualizado ao estado real: nomes das características (`signed_turn_calc_deg`, 7 canais com máscaras), sobreposições prioritárias 0 % e 50 % (REV-002), pós-processamento como ramo separado (Marco 5), tabela de funções do Marco 3 com o que existe, o que está dentro de um script e o que falta, e contratos do Marco 4 marcados como não implementados.
+  - Referências corrigidas em `README.md`, `AGENTS.md` §1 (só a frase das leituras iniciais), `handoff.md`, `PROGRESS.md` (secções vivas e artefactos; as entradas datadas ficam como histórico) e nos docstrings de `scripts/check_units_train.py` e `scripts/create_split_manifest.py`.
+- **Porquê:** pedido do utilizador, para simplificar e modernizar a documentação em `docs/` depois de várias decisões terem mudado o âmbito e a forma de trabalhar.
+- **Ficheiros afetados:** `docs/*`, `README.md`, `AGENTS.md`, `handoff.md`, `PROGRESS.md`, `REVISION_LOG.md`, `scripts/check_units_train.py`, `scripts/create_split_manifest.py` (só comentários).
+- **Correspondência no LaTeX:** **não aplicável**; é só reorganização da documentação Markdown, sem mudança de metodologia, de resultados nem de decisões.
+- **Validação:** releitura dos oito documentos antigos contra o código real (`src/phase1/`, `scripts/`, `configs/`, `tests/`) e contra `PROGRESS.md`; procura de referências pendentes aos nomes antigos. Não foram executados testes nem código (só se alteraram comentários e Markdown). Os valores numéricos mantidos nos docs vêm de revisões já registadas (REV-001, REV-003, REV-007, REV-008, REV-017); nenhum cálculo novo.
+- **Limitações:** as entradas históricas do `PROGRESS.md` e do `REVISION_LOG.md` continuam a citar `docs/05`, `docs/00_5` e outros nomes antigos; mantêm-se por serem registo do que se fez então. A secção 4 de `docs/02` e o contrato de `docs/03` devem ser revistos quando o Marco 4 começar.
+- **Pendentes:** revisão do utilizador; commit local por autorizar.

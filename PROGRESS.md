@@ -15,7 +15,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - `count_anomalies_train.py`: contagem de saltos e inversões de rumo por viagem, só treino. Executado (REV-017).
   - `watch_latex.sh`: visualização da proposta. Não versionado.
   - Ainda não existe código de janelamento nem de pós-processamento.
-- **Código da fase 1 (`src/phase1/`, REV-024):** `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py`. Sequências, scaler, máscaras, CNN 1D, perda e passo de época implementados e testados. **Só houve um ensaio curto de ajuste em 3 viagens de treino (REV-027); sem treino completo.**
+- **Código da fase 1 (`src/phase1/`, REV-024, REV-032):** `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py`, `artifacts.py`, `config.py`, `metrics.py`. Sequências, scaler, máscaras, CNN 1D, perda, treino com paragem antecipada e checkpoints implementados e testados. Houve um ensaio de 3 viagens (REV-027) e uma primeira execução de treino só com o treino oficial (REV-032); resultados provisórios.
 - **Testes:** `tests/` com 94 testes (15 de REV-016/REV-017, 60 de REV-024 e 19 de REV-032), todos a passar. Ver `pytest tests/`.
 - **Dados:** `data/123_fishing_trajs.csv` presente localmente, não versionado. **123 IDs únicos** e **1 026 279 linhas**, confirmados por `verify_trip_count.py` (REV-007).
 - **Bases limpas (não versionadas):** `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Soma: 1 026 279.
@@ -24,7 +24,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
   - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-032.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-033.
 
 ## Decisões do utilizador (vigentes)
 
@@ -144,7 +144,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - 1 026 279 linhas; 123 IDs únicos no ficheiro; 123 no manifesto; sem diferenças em nenhum sentido.
 - A cifra de 128 é do nome e da página do Zenodo (`128_fishing_trajs.csv`). Não corresponde a este ficheiro local.
 
-## Pendentes (por marco, segundo `docs/00_5`)
+## Pendentes (por marco, segundo `docs/00_projeto_e_decisoes.md` §4)
 
 ### Marco 1 — Ambiente, consolidação e divisão mínima
 - [x] Ambiente `iach-ais-venv-4/` criado.
@@ -154,8 +154,8 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - [x] Manifesto `split_manifest` (id → split) com seed 42 e 70/15/15, lendo só a coluna `id`.
 - [x] Invariantes estruturais verificadas (IDs sem interseção, atribuição única, conservação de linhas).
 - [x] Número de viagens confirmado: 123.
-- [ ] Decidir se é preciso materializar ficheiros separados por conjunto, ou se basta o manifesto.
-- [ ] Criar o isolamento: `run_preparation` com `allowed_splits=["train"]` por defeito (ainda não existe código de preparação).
+- [x] Decidido em REV-019: basta o manifesto, sem ficheiros separados por conjunto.
+- [x] Decidido em REV-019: sem `run_preparation`; o isolamento faz-se com scripts e com `load_training_data` (só treino) em `src/phase1/data.py`.
 
 ### Marco 2 — Preparação auditável (só treino/sintéticos)
 - [x] Recálculo de `time_gap_calc_s`, `distance_gap_calc_m`, `bearing_calc_deg`, `signed_turn_calc_deg` e `speed_calc_mps` (REV-009; validado contra os originais em REV-009 e REV-011).
@@ -168,7 +168,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - [x] Revisão pedida e decisões registadas (REV-019). Marco 2 fechado, exceto testes de janelas, máscaras e alinhamento, que pertencem ao Marco 3.
 
 ### Marco 3 a 7
-Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
+Ver `docs/00_projeto_e_decisoes.md` §4 (estado dos marcos) e `docs/02_cnn_viagem_completa.md` §6 (próximos passos do Marco 3).
 
 ## Pendências por decidir ou confirmar
 
@@ -184,9 +184,9 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md`, `README.md` | Existentes; alinhados (REV-004, REV-007); `AGENTS.md` §5 com atualização automática de registos (REV-010) |
-| `docs/00` a `docs/06` | Existentes; atualizados (REV-001 a REV-004, REV-007, REV-024 em `docs/05`) |
-| `src/phase1/` | `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py` (REV-024); sem treino |
-| `tests/` (fase 1) | 6 ficheiros novos, 60 testes (REV-024) |
+| `docs/00` a `docs/03` | Fundidos e simplificados em REV-033: projeto e decisões, dados e preparação, CNN de viagem completa, CNN com janelas. Substituem os antigos `docs/00` a `docs/06`, que ficam no histórico do git |
+| `src/phase1/` | `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py` (REV-024); `artifacts.py`, `config.py`, `metrics.py` (REV-032) |
+| `tests/` | 94 testes (REV-016, REV-017, REV-024, REV-032) |
 | `latex/proposta_pt.tex` | Reescrito a partir do PDF IAHC (REV-005); compila com pdflatex/bibtex |
 | `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** (REV-006) |
 | `latex/references.bib` | Existente; `kaggleAIS` com autor corrigido (REV-006) |
@@ -629,3 +629,22 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 **Pendente**
 - Push, por autorização do utilizador. Decisão sobre repetir o treino (paciência maior ou outro lr).
+
+### 2026-11-23ap — Fusão e simplificação dos docs (REV-033)
+
+**Feito**
+- Leitura integral de `AGENTS.md`, `handoff.md`, `README.md` e dos oito documentos de `docs/`, comparados com o código real.
+- Os oito documentos passam a quatro (`docs/00_projeto_e_decisoes`, `01_dados_e_preparacao`, `02_cnn_viagem_completa`, `03_cnn_janelamento`), de cerca de 1 900 para 386 linhas. Removidos o texto repetido, o que já estava cumprido, o KNIME e o contrato de 25 funções de preparação nunca implementadas. Atualizados nomes das características, overlaps prioritários e estado dos marcos.
+- Referências corrigidas em `README.md`, `AGENTS.md` §1, `handoff.md`, nas secções vivas deste ficheiro e em dois docstrings. Corrigidos também pontos desatualizados do «Estado atual» e do Marco 1 neste ficheiro.
+
+**Validado**
+- Releitura contra `src/phase1/`, `scripts/`, `configs/` e `REVISION_LOG.md`; procura de referências pendentes aos nomes antigos. Não foram executados testes nem código.
+
+**Problemas e limitações**
+- Entradas históricas continuam a citar nomes antigos de `docs/`, por serem registo.
+
+**Decisões**
+- Estrutura de quatro documentos escolhida por mim, a pedido do utilizador de simplificar; sujeita a revisão.
+
+**Pendente**
+- Revisão do utilizador; commit local por autorizar; push por autorização. Decisão sobre repetir o treino (paciência maior ou outro lr).

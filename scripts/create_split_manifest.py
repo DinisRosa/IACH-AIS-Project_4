@@ -1,4 +1,4 @@
-"""Cria o manifesto de divisão por ID completo (docs/01 §2-§3, AGENTS.md §3).
+"""Cria o manifesto de divisão por ID completo (docs/00 §6, AGENTS.md §3).
 
 Lê apenas a coluna `id` do CSV. Não lê, não conta e não analisa outras colunas
 nem valores de rótulo. Atribui cada ID único a train, validation ou test com

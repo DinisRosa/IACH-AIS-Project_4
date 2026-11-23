@@ -1,6 +1,6 @@
 """Verificação de unidades e convenções, apenas com o conjunto de treino.
 
-Objetivo (docs/00 §18, docs/01 §5): confirmar hipóteses sobre unidades antes de
+Objetivo (docs/01 §2 e §9): confirmar hipóteses sobre unidades antes de
 recalcular variáveis. Não usa validação nem teste: as linhas desses conjuntos são
 descartadas logo a seguir a lerem o `id`, e nenhum valor delas é guardado.
 

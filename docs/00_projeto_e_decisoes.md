@@ -1,0 +1,91 @@
+# 00 — Projeto, decisões e política de acesso
+
+[REV-033 | cor #3E2723] Documento fundido a partir de `00_contexto…`, `00_5_orientacoes…` e da política de acesso de `01_preparacao_comum`. Ler primeiro o `AGENTS.md` (regras fixas), depois este documento, depois `01`, e `02` ou `03` conforme a fase.
+
+Este documento resume o que o projeto pretende, o que foi decidido e em que ponto está. Decisões recentes do utilizador prevalecem sobre a proposta em PDF e sobre qualquer texto antigo. Não confundir objetivos futuros com funcionalidades já implementadas.
+
+## 1. Problema e objetivo
+
+Segmentar viagens AIS de pesca em **pesca** e **navegação**, com uma previsão por ponto, usando uma CNN 1D totalmente convolucional. A entidade operacional é a viagem (`id` completo, por exemplo `211477000-2`).
+
+Fontes: proposta «Segmentação semântica de trajetórias AIS para deteção de atividade de pesca usando janelas sobrepostas e pós-processamento temporal» (Dinis Rosa), decisões do utilizador registadas em `PROGRESS.md` e `REVISION_LOG.md`, e dados do Zenodo (Song Wu, DOI 10.5281/zenodo.7283281, CC BY 4.0).
+
+Detetar comportamento compatível com pesca não demonstra ilegalidade: o modelo não verifica licenças, quotas, zonas autorizadas ou infrações. A decisão de fiscalização continua humana.
+
+## 2. Proposta original e decisões atuais
+
+| Aspeto | Proposta PDF | Decisão atual |
+|---|---|---|
+| Modelo | Recorrente ou convolucional, possivelmente com atenção | CNN 1D |
+| Divisão | Por navio | Por ID completo de viagem (70/15/15, seed 42) |
+| 1.ª experiência | Janelas e pós-processamento | Referência com a viagem completa, sem janelas |
+| 2.ª experiência | Janelas sobrepostas | Janelas com a mesma CNN; sobreposição **0 % e 50 % prioritárias**, 25 % e 75 % a decidir depois (REV-002) |
+| Saída | Classificação de janelas | Probabilidade de pesca por ponto |
+| Pós-processamento | Objetivo central | Ramo separado e identificado, depois de aprovado (Marco 5); a média das janelas é reconstrução, não suavização |
+| HMM e Wu et al. (2022) | Baselines previstas | Fora por agora (REV-006) |
+| Explicabilidade, calibração, dashboard | Previstos | Fora do mínimo atual |
+| Dados reservados | Treino/validação/teste | Desenvolvimento só em treino; validação e teste só com autorização explícita |
+
+A divisão por viagem mede generalização entre viagens. Viagens do mesmo navio podem estar em conjuntos diferentes (decisão do utilizador), por isso **não se afirma generalização para navios inéditos**.
+
+## 3. Perguntas de investigação
+
+- **RQ1:** a sobreposição reduz a instabilidade das fronteiras face a janelas sem sobreposição?
+- **RQ2:** o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados?
+- **RQ3:** como interagem sobreposição e pós-processamento?
+
+O âmbito mínimo atual só responde a RQ1. Um resultado sem melhoria também é válido: o protocolo não se altera para fabricar ganhos.
+
+## 4. Marcos e estado
+
+| # | Marco | Estado |
+|---|---|---|
+| 1 | Ambiente, divisão por ID, isolamento | Fechado |
+| 2 | Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
+| 3 | CNN 1D de referência sobre a viagem completa | **Em curso**: sequências, normalização, CNN, testes e primeira execução de treino feitos (REV-032). Faltam métricas de referência finais e a revisão do utilizador |
+| 4 | Janelamento com sobreposição e a mesma CNN | Por fazer |
+| 5 | Pós-processamento simples, em ramo separado | Por fazer; precisa de aprovação da unidade/largura do filtro e do protocolo |
+| 6 | Congelar a implementação e pedir autorização para seleção formal na validação | Por fazer |
+| 7 | Congelar modelos e pedir nova autorização para a avaliação final no teste | Por fazer |
+
+O estado detalhado, com datas e resultados, está em `PROGRESS.md`.
+
+## 5. Ambiente
+
+Python com `venv` + `pip` (`iach-ais-venv-4/`, ignorado pelo git); dependências com versões fixas em `requirements.txt`. Hardware informado: Intel i7 de 12.ª geração, 16 GB de RAM, GPU integrada. Começa-se em CPU e mede-se o custo no treino antes de prometer viabilidade. KNIME só entraria como contingência por decisão do utilizador.
+
+## 6. Política de acesso aos dados
+
+As regras completas estão no `AGENTS.md` §3. Resumo operacional:
+
+| Etapa | Dados permitidos | Condição |
+|---|---|---|
+| A — Desenvolvimento | Treino oficial ou sintéticos | Autorizada. Inclui debugging, gráficos, benchmarks, inspeção e testes de integração |
+| B — Seleção formal | Validação | Só com autorização explícita, depois de congelar a implementação |
+| C — Avaliação final | Teste | Só com nova autorização, depois de congelar modelos e lista de variantes |
+
+- A divisão foi feita antes de qualquer exploração, só com IDs e contagens técnicas; a tabela `id → split` está em `manifests/split_manifest_seed42.csv` e não se refaz.
+- Normalizadores e qualquer objeto aprendido ajustam-se só no treino (ou só no treino interno, se a monitorização tiver de ser independente).
+- Monitorização interna: separar por ID dentro do treino, antes do ajuste de transformações e da criação de janelas.
+- Uma flag no código ou uma decisão do agente nunca é autorização. Um erro numa execução reservada reproduz-se e corrige-se com treino ou sintéticos, e a exposição documenta-se.
+- Exposição já ocorrida (REV-015): validação e teste foram lidos por inteiro só para construir as bases limpas e contar linhas e viagens, sem análise de resultados nem uso para escolher modelos ou regras.
+- Nenhum valor empírico usado como evidência pode depender só de um cálculo informal do agente (`AGENTS.md` §10).
+
+## 7. Avaliação prevista
+
+- **Por ponto:** precisão, sensibilidade, F1, IoU e matriz de confusão.
+- **Por segmento:** correspondência um-para-um com limiar de IoU temporal declarado.
+- **Fronteiras:** desvios de início e fim em unidade temporal explícita.
+- **Fragmentação:** número de segmentos face à anotação; menos segmentos não é automaticamente melhor.
+- **Estabilidade:** resposta a pequenas alterações de parâmetros e janelas.
+- **Custo:** tempo, passos de treino, memória e custo de inferência.
+
+Mantêm-se os mesmos IDs, características e definições de métricas entre comparações. Declara-se se a sobreposição varia no treino, na inferência ou em ambos, e o orçamento de otimização. Variantes nunca se escolhem a partir do teste.
+
+## 8. Dimensão humana e limites
+
+A proposta prevê apoiar o inspetor com mapas, segmentos e probabilidades. Uma probabilidade bruta não é confiança calibrada. O sistema não fundamenta sanções de forma autónoma, e uma prova de conceito sem estudo com inspetores não comprova utilidade operacional.
+
+## 9. Referências da proposta
+
+Identificadas na proposta, sem verificação bibliográfica independente aqui: Wu et al. (2022), segmentação semântica de atividades completas; Peel e Good (2011), HMM; Soares Júnior et al. (2018); Kroodsma et al. (2018) e Natale et al. (2015); Shneiderman (2020); Guo et al. (2017), calibração; Lundberg e Lee (2017). Citar esta lista não valida implementações nem resultados desses métodos.
