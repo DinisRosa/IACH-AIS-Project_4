@@ -552,3 +552,15 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 **Pendente**
 - Commit local desta alteração por autorizar; push por conta do utilizador.
 - Substituir as figuras marcadoras pelos resultados reais. Decisões de treino em aberto.
+
+### 2026-11-23aj — Vigilante do LaTeX limpa o `build/`
+
+**Feito**
+- `scripts/watch_latex.sh` (não versionado, está no `.gitignore`): depois de cada compilação bem-sucedida apaga os ficheiros soltos de `latex/build/` exceto o PDF (`.aux`, `.bbl`, `.blg`, `.log`, `.out`). Se a compilação falha, mantém-nos para se ver o erro. Não toca em subpastas (`build/check/`).
+- Limpeza única dos auxiliares que já estavam em `latex/build/`.
+
+**Validado**
+- Testado numa cópia isolada do projeto (sem tocar no `build/` real): sucesso deixa só o PDF; erro mantém `.aux`, `.bbl`, `.blg`, `.log` e `.out`. Sintaxe verificada com `bash -n`.
+
+**Pendente**
+- O vigilante já em execução continua com a versão antiga até ser reiniciado (Ctrl+C e `bash scripts/watch_latex.sh`).
