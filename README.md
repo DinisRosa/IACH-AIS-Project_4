@@ -16,6 +16,7 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 - `scripts/`: scripts executáveis do projeto.
   - `create_split_manifest.py`: cria o manifesto de divisão por ID (seed 42, 70/15/15).
   - `check_units_train.py`: verifica unidades e convenções só com o conjunto de treino.
+  - `watch_latex.sh`: recompila `latex/proposta_pt.tex` quando muda; PDF em `latex/build/`.
 - `manifests/`: manifestos gerados (ex.: `split_manifest_seed42.csv`). Não versionados pela regra `*.csv` do `.gitignore`.
 - `results/`: saídas geradas (gráficos e sumários). Não versionados.
 - `data/`: dataset local (`123_fishing_trajs.csv`). Não versionado.

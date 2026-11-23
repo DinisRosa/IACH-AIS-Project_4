@@ -205,3 +205,15 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 | `manifests/split_manifest_seed42.csv` | Gerado; **não versionado** (pendente de decisão) |
 | `results/units_check_train/` | Gerado; não versionado (ignorado pelo `.gitignore`) |
 | Código de pré-processamento, modelos e testes automatizados | Ainda não criados |
+
+### 2026-11-23f — Compilação automática da proposta
+
+**Feito**
+- Criado `scripts/watch_latex.sh`: recompila `latex/proposta_pt.tex` quando o `.tex` ou o `references.bib` mudam (pdflatex, bibtex, pdflatex x2). PDF e auxiliares em `latex/build/`.
+- Acrescentado `latex/build/` ao `.gitignore`.
+
+**Validado**
+- Uma execução: compilou e gerou `latex/build/proposta_pt.pdf`. `git check-ignore` confirma que fica fora do git.
+
+**Pendente**
+- Visualização em leitor de PDF com recarregamento automático: a escolha do leitor é do utilizador.

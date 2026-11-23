@@ -41,3 +41,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# PDFs e auxiliares da proposta LaTeX gerados por scripts/watch_latex.sh
+latex/build/
