@@ -173,11 +173,14 @@ def test_table_preserves_order_ids_times_and_targets():
     model = build_cnn().eval()
     seqs = make_seqs({"a": 90, "b": 40}, seed=9)
     ws = WindowSet(seqs, 64, 0.5)
-    labels = pd.DataFrame({"point_id": ws.point_ids, "label": "x"})
+    labels = pd.DataFrame({"point_id": ws.point_ids, "label": [f"l{p}" for p in ws.point_ids]})
     tab = predict_window_table(model, ws, labels, "cpu", 0.65)
     assert len(tab) == 130 and tab["point_id"].is_unique
-    assert list(tab["id"].unique()) == ["a", "b"]
+    assert (tab["point_id"].to_numpy() == np.concatenate([s["point_ids"] for s in seqs])).all()
+    assert (tab["t"].to_numpy() == np.concatenate([s["t"] for s in seqs])).all()
+    assert (tab["id"].to_numpy() == np.array(["a"] * 90 + ["b"] * 40)).all()
     assert (tab["target"].to_numpy() == np.concatenate([s["y"][0] for s in seqs])).all()
+    assert (tab["label"].to_numpy() == np.array([f"l{p}" for p in tab["point_id"]])).all()
     assert (tab["predicted"] == (tab["p_fishing"] >= 0.65).astype(int)).all()
     assert tab["n_windows"].min() >= 1
 
@@ -185,7 +188,8 @@ def test_table_preserves_order_ids_times_and_targets():
 def test_reconstructed_loss_known_values():
     loss = reconstructed_loss_per_point(np.array([0.5, 0.5]), np.array([0, 1]))
     assert loss == pytest.approx(np.log(2))
-    assert np.isfinite(reconstructed_loss_per_point(np.array([0.0, 1.0]), np.array([1, 0])))
+    # probabilidade totalmente errada: a perda fica limitada pelo recorte de 1e-12
+    assert reconstructed_loss_per_point(np.array([0.0, 1.0]), np.array([1, 0])) == pytest.approx(-np.log(1e-12))
 
 
 def test_train_epoch_runs_with_finite_loss_and_counts_steps():
@@ -236,3 +240,39 @@ def test_config_accepts_valid_and_rejects_reserved(tmp_path):
         p.write_text(json.dumps(bad))
         with pytest.raises(ValueError):
             load_window_config(p)
+
+
+def test_mask_zeroes_nonzero_input_padding():
+    """O valor do enchimento da entrada não pode influenciar as posições reais."""
+    torch.manual_seed(0)
+    model = build_cnn().eval()
+    x = torch.randn(1, 7, 20)
+    mask = torch.zeros(1, 1, 20)
+    mask[..., :10] = 1
+    dirty = x.clone()
+    dirty[..., 10:] = 5.0
+    with torch.no_grad():
+        alone = model(x[:, :, :10])
+        torch.testing.assert_close(model(dirty, mask=mask)[:, :, :10], alone, atol=1e-5, rtol=1e-5)
+
+
+def test_validate_window_coverage_rejects_bad_input():
+    ws = WindowSet(make_seqs({"a": 130}), 64, 0.0)
+    ws.win_len[0] = 10  # cria pontos sem janela
+    with pytest.raises(ValueError, match="sem nenhuma janela"):
+        validate_window_coverage(ws)
+    ws2 = WindowSet(make_seqs({"b": 20, "a": 130}), 64, 0.0)
+    ws2.win_len[0] = 64  # a janela da viagem curta "b" passa a invadir a viagem "a"
+    with pytest.raises(ValueError, match="atravessa viagens"):
+        validate_window_coverage(ws2)
+
+
+def test_windowset_rejects_inconsistent_sequences():
+    seqs = make_seqs({"a": 30})
+    seqs[0]["y"] = seqs[0]["y"][:, :29]
+    with pytest.raises(ValueError, match="comprimentos"):
+        WindowSet(seqs, 16, 0.0)
+    dup = make_seqs({"a": 20, "b": 20})
+    dup[1]["id"] = "a"
+    with pytest.raises(ValueError, match="mesmo id"):
+        WindowSet(dup, 16, 0.0)

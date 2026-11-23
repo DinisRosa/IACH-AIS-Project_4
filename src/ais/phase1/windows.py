@@ -111,6 +111,11 @@ class WindowSet:
         for s in sequences:
             if "X" not in s:
                 raise ValueError(f"Sequência '{s.get('id')}' sem 'X'; aplicar apply_scaler primeiro.")
+            n = s["X"].shape[1]
+            if not (s["y"].shape == (1, n) and len(s["point_ids"]) == n and len(s["t"]) == n):
+                raise ValueError(f"Sequência '{s['id']}': X, y, point_ids e t têm comprimentos diferentes.")
+        if len({s["id"] for s in sequences}) != len(sequences):
+            raise ValueError("Há viagens com o mesmo id; cada viagem tem de ser uma só sequência.")
         self.window_length = int(window_length)
         self.overlap = float(overlap)
         self.stride = calculate_stride(window_length, overlap)

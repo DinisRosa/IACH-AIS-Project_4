@@ -117,6 +117,7 @@ class FullTripCNN(nn.Module):
             return self.net(x)
         if mask.shape != (x.shape[0], 1, x.shape[2]):
             raise ValueError(f"mask deve ter forma [B, 1, N], recebido {tuple(mask.shape)}")
+        x = x * mask  # o enchimento da entrada também fica a zero, qualquer que seja o seu valor
         for layer in self.net:
             x = layer(x)
             if isinstance(layer, nn.ReLU):

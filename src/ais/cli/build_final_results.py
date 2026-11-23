@@ -137,7 +137,10 @@ def collect() -> dict:
         "epoca_e_limiar_congelados_iguais_aos_da_selecao":
             frz["epoca"] == sel["epoca_escolhida"] and frz["limiar"] == sel["limiar_escolhido"],
         "validation_nunca_aberto": not any(e.get("split") == "validation" for e in log),
-        "test_aberto_so_uma_vez": sum(1 for e in log if e.get("event") == "open" and e.get("split") == "test") == 1,
+        # Uma abertura ao abrigo da autorização da baseline (REV-046: existe uma segunda abertura, ao
+        # abrigo da autorização das janelas, contada em `build_window_results`).
+        "test_aberto_so_uma_vez": sum(1 for e in log if e.get("event") == "open" and e.get("split") == "test"
+                                      and e.get("authorization") == "test_selection_2026-11-23") == 1,
     }
     assert all(checks.values()), f"Proveniência incoerente: {checks}"
 
