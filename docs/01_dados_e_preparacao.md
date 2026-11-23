@@ -4,7 +4,7 @@
 
 ## 1. O dataset
 
-- **123 viagens (IDs únicos) e 1 026 279 linhas**, verificados por `scripts/verify_trip_count.py` (REV-007). O nome do ficheiro e a página do Zenodo dizem 128; o ficheiro local tem 123. O PDF entregue ao professor diz 128 e não se altera; o `latex/proposta_pt.tex` diz 123.
+- **123 viagens (IDs únicos) e 1 026 279 linhas**, verificados por `src/ais/cli/verify_trip_count.py` (REV-007). O nome do ficheiro e a página do Zenodo dizem 128; o ficheiro local tem 123. O PDF entregue ao professor diz 128 e não se altera; o `latex/proposta_pt.tex` diz 123.
 - Divisão por ID completo, seed 42: treino 87 viagens (713 854 linhas), validação 18 (209 016), teste 18 (103 409).
 - O `id` é uma string composta (navio + `-` + viagem). Não se converte para número, não é entrada da CNN e não se assume que o sufixo seja um contador diário.
 - Todas as linhas, sequências e janelas de um ID ficam no mesmo conjunto.
@@ -32,7 +32,7 @@ id,t,longitude,latitude,x,y,signed_turn,bearing,time_gap,distance_gap,euc_speed,
 | `distanceToShore` | float64 | Metros, à costa da Dinamarca (README do Zenodo, REV-008); método de cálculo não documentado, aceite como correto (REV-011) | Entrada da CNN |
 | `label` | string | Cinco categorias, ver §4 | Resposta; nunca entrada |
 
-As verificações de unidades foram feitas só com o treino (87 IDs, 713 767 pares consecutivos) por `scripts/check_units_train.py`, que escreve `results/units_check_train/summary.json` (não versionado).
+As verificações de unidades foram feitas só com o treino (87 IDs, 713 767 pares consecutivos) por `src/ais/cli/check_units_train.py`, que escreve `results/units_check_train/summary.json` (não versionado).
 
 ## 3. Cuidados com tipos e ausências
 
@@ -53,7 +53,7 @@ Preserva-se `label` e cria-se `target` à parte. O prefixo numérico não é int
 
 ## 5. Variáveis recalculadas
 
-Criadas por `scripts/build_clean_dataset.py` dentro de cada viagem (sem diferenças através de IDs):
+Criadas por `src/ais/cli/build_clean_dataset.py` dentro de cada viagem (sem diferenças através de IDs):
 
 | Coluna | Definição |
 |---|---|
@@ -71,7 +71,7 @@ Características, por ordem (REV-019): `speed_calc_mps`, `signed_turn_calc_deg`,
 
 - O 1.º ponto de cada viagem não tem `time_gap`, `speed` nem `signed_turn`; o 2.º não tem `signed_turn`.
 - Política (REV-022): nenhuma linha removida; preenchimento com **zero depois de normalizar**, mais uma **máscara de ausência** por característica (`speed`, `signed_turn`, `time_gap`). Não se inventa `bearing` para o 1.º ponto. Os pontos iniciais entram na perda.
-- Entrada final: **7 canais** (4 características normalizadas + 3 máscaras), definidos em `src/phase1/data.py`.
+- Entrada final: **7 canais** (4 características normalizadas + 3 máscaras), definidos em `src/ais/phase1/data.py`.
 - Normalizador: média e desvio-padrão populacional por característica, ignorando ausentes, ajustado só com o treino (ou só com o treino interno).
 
 ## 7. Como a preparação é feita
@@ -80,12 +80,12 @@ A preparação faz-se com scripts, não com os 25 módulos que as primeiras espe
 
 | Passo | Ponto de entrada | Resultado |
 |---|---|---|
-| Divisão por ID | `scripts/create_split_manifest.py` | `manifests/split_manifest_seed42.csv` (versionado) |
-| Contagem de viagens | `scripts/verify_trip_count.py` | 123 viagens e coincidência com o manifesto |
-| Unidades (só treino) | `scripts/check_units_train.py` | `results/units_check_train/` |
-| Base limpa | `scripts/build_clean_dataset.py --split train\|validation\|test` | `data/123_fishing_trajs_clean_{train,validation,test}.parquet` |
-| Anomalias (só treino) | `scripts/count_anomalies_train.py` | `results/anomalies_train/` |
-| Leitura, validação, sequências e normalização | `src/phase1/data.py` | ver `02` |
+| Divisão por ID | `src/ais/cli/create_split_manifest.py` | `manifests/split_manifest_seed42.csv` (versionado) |
+| Contagem de viagens | `src/ais/cli/verify_trip_count.py` | 123 viagens e coincidência com o manifesto |
+| Unidades (só treino) | `src/ais/cli/check_units_train.py` | `results/units_check_train/` |
+| Base limpa | `src/ais/cli/build_clean_dataset.py --split train\|validation\|test` | `data/123_fishing_trajs_clean_{train,validation,test}.parquet` |
+| Anomalias (só treino) | `src/ais/cli/count_anomalies_train.py` | `results/anomalies_train/` |
+| Leitura, validação, sequências e normalização | `src/ais/phase1/data.py` | ver `02` |
 
 Princípios mantidos: preservar originais e `point_id`; transformações devolvem cópias; diagnóstico não implica exclusão; nada de unidades ou referenciais por adivinhação; qualquer valor aprendido só no treino; versões físicas e normalizadas distinguidas. `point_id` é um inteiro estável atribuído antes de qualquer ordenação.
 
@@ -93,7 +93,7 @@ A base limpa de validação e de teste existe desde REV-015, só para preparaç�
 
 ## 8. Anomalias (só treino)
 
-Quantificadas por `scripts/count_anomalies_train.py` (REV-017): 55 saltos acima de 30 nós em 4 viagens; 3 717 inversões de rumo acima de 170° em 70 viagens, 68 % delas em duas viagens. Mantidas tal como estão (REV-012); a limpeza por IQR foi retirada (REV-019). Assinalar uma anomalia não prova erro nem autoriza exclusão. Robustez a anomalias não é estudo próprio.
+Quantificadas por `src/ais/cli/count_anomalies_train.py` (REV-017): 55 saltos acima de 30 nós em 4 viagens; 3 717 inversões de rumo acima de 170° em 70 viagens, 68 % delas em duas viagens. Mantidas tal como estão (REV-012); a limpeza por IQR foi retirada (REV-019). Assinalar uma anomalia não prova erro nem autoriza exclusão. Robustez a anomalias não é estudo próprio.
 
 ## 9. Dúvidas ainda abertas
 

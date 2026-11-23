@@ -6,7 +6,7 @@ CUSTO: não avalia a qualidade do modelo. Só lê o parquet de treino; não abre
 As projeções assumem custo proporcional ao nº de pontos: são estimativas, não medições.
 
 Execução (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/benchmark_training_speed.py
+    iach-ais-venv-4/bin/python -m ais.cli.benchmark_training_speed
 Saídas em results/benchmark_speed/ (não versionadas): benchmark.json, benchmark.csv.
 """
 from __future__ import annotations
@@ -15,7 +15,6 @@ import json
 import platform
 import resource
 import statistics as st
-import sys
 import time
 from pathlib import Path
 
@@ -23,18 +22,17 @@ import pandas as pd
 import pyarrow.parquet as pq
 import torch
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+ROOT = Path(__file__).resolve().parents[3]
 
-from phase1.data import (  # noqa: E402
+from ais.phase1.data import (  # noqa: E402
     FEATURE_COLS, N_INPUT_CHANNELS, apply_scaler, build_full_sequences,
     build_sequence_loader, fit_scaler, validate_training_data,
 )
-from phase1.model import build_cnn  # noqa: E402
-from phase1.training import (  # noqa: E402
+from ais.phase1.model import build_cnn  # noqa: E402
+from ais.phase1.training import (  # noqa: E402
     build_loss, build_optimizer, evaluate_training_subset, train_one_epoch,
 )
-from phase1.utils import select_device, set_reproducibility  # noqa: E402
+from ais.phase1.utils import select_device, set_reproducibility  # noqa: E402
 
 TRAIN = ROOT / "data" / "123_fishing_trajs_clean_train.parquet"
 MANIFEST = ROOT / "manifests" / "split_manifest_seed42.csv"

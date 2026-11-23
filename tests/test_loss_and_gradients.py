@@ -11,15 +11,15 @@ import pytest
 import torch
 from torch import nn
 
-from phase1.checks import run_training_smoke_test
-from phase1.model import build_cnn
-from phase1.training import (
+from ais.phase1.checks import run_training_smoke_test
+from ais.phase1.model import build_cnn
+from ais.phase1.training import (
     build_loss,
     build_optimizer,
     evaluate_training_subset,
     train_one_epoch,
 )
-from phase1.utils import select_device, set_reproducibility
+from ais.phase1.utils import select_device, set_reproducibility
 
 C = 7
 CPU = torch.device("cpu")

@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from phase1.data import (FEATURE_COLS, apply_scaler, build_full_sequences, fit_scaler,
+from ais.phase1.data import (FEATURE_COLS, apply_scaler, build_full_sequences, fit_scaler,
                          load_training_data, validate_training_data)
 
 REAL_TRAIN = Path(__file__).resolve().parents[1] / "data" / "123_fishing_trajs_clean_train.parquet"

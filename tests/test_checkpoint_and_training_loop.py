@@ -10,12 +10,12 @@ import numpy as np
 import pytest
 import torch
 
-from phase1.artifacts import load_checkpoint, save_checkpoint
-from phase1.config import load_phase1_config
-from phase1.data import INPUT_CHANNELS, N_INPUT_CHANNELS, build_sequence_loader
-from phase1.metrics import class_metrics
-from phase1.model import build_cnn
-from phase1.training import build_optimizer, train_model
+from ais.phase1.artifacts import load_checkpoint, save_checkpoint
+from ais.phase1.config import load_phase1_config
+from ais.phase1.data import INPUT_CHANNELS, N_INPUT_CHANNELS, build_sequence_loader
+from ais.phase1.metrics import class_metrics
+from ais.phase1.model import build_cnn
+from ais.phase1.training import build_optimizer, train_model
 
 GOOD = {"stage": "development", "seed": 42, "train_path": "data/x_clean_train.parquet",
         "split_manifest_path": "manifests/m.csv", "output_dir": "results/r",
@@ -151,7 +151,7 @@ def test_train_model_respects_time_budget():
 
 def test_monitor_never_updates_weights():
     """A monitorização usa só avaliação: os pesos não mudam durante a mesma."""
-    from phase1.training import build_loss, evaluate_training_subset
+    from ais.phase1.training import build_loss, evaluate_training_subset
     torch.manual_seed(0)
     model = build_cnn(n_channels=N_INPUT_CHANNELS)
     before = {k: v.clone() for k, v in model.state_dict().items()}

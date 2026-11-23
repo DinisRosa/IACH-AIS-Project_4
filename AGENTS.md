@@ -23,7 +23,7 @@ As funções especificadas nos documentos são contratos orientadores, não obri
 - Investigar dúvidas resolúveis com ambiente, documentação e treino; perguntar quando faltar evidência ou houver escolha relevante. Juntar perguntas relacionadas sem bloquear tarefas independentes.
 
 ## 3. Dados: regras obrigatórias
-- Há um dataset, dividido 70/15/15 pelos IDs completos das viagens, com seed 42 (confirmada pelo utilizador) e manifesto persistido em `manifests/split_manifest_seed42.csv`, gerado por `scripts/create_split_manifest.py`.
+- Há um dataset, dividido 70/15/15 pelos IDs completos das viagens, com seed 42 (confirmada pelo utilizador) e manifesto persistido em `manifests/split_manifest_seed42.csv`, gerado por `src/ais/cli/create_split_manifest.py`.
 - Todas as linhas, sequências e janelas de um ID pertencem ao mesmo conjunto. Viagens diferentes do mesmo navio podem ficar em conjuntos diferentes por decisão do utilizador.
 - Não afirmar generalização para navios inéditos: a divisão é por viagem.
 - Dividir no início, antes da exploração, usando apenas leitura técnica mínima de IDs/encaminhamento e verificações estruturais.

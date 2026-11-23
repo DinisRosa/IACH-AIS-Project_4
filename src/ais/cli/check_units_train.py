@@ -17,7 +17,7 @@ Limitação: distanceToShore não tem referência interna, por isso só é descr
 em distribuição e marcado como não confirmado.
 
 Uso (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/check_units_train.py
+    iach-ais-venv-4/bin/python -m ais.cli.check_units_train
 """
 
 from __future__ import annotations
@@ -169,7 +169,7 @@ def main() -> int:
         "meta": {
             "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "seed": SEED,
-            "script": "scripts/check_units_train.py",
+            "script": "src/ais/cli/check_units_train.py",
             "data_file": str(DATA_PATH),
             "data_sha256": sha256_of(DATA_PATH),
             "manifest_file": str(MANIFEST_PATH),

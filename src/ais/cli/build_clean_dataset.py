@@ -28,9 +28,9 @@ Sumário de diagnóstico: results/clean_<split>/summary.json.
 Usa colunas originais (time_gap, distance_gap, bearing, signed_turn) só para comparação.
 
 Uso (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/build_clean_dataset.py --split train
-    iach-ais-venv-4/bin/python scripts/build_clean_dataset.py --split validation
-    iach-ais-venv-4/bin/python scripts/build_clean_dataset.py --split test
+    iach-ais-venv-4/bin/python -m ais.cli.build_clean_dataset --split train
+    iach-ais-venv-4/bin/python -m ais.cli.build_clean_dataset --split validation
+    iach-ais-venv-4/bin/python -m ais.cli.build_clean_dataset --split test
 """
 
 from __future__ import annotations
@@ -193,7 +193,7 @@ def main() -> int:
     report = {
         "meta": {
             "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "script": "scripts/build_clean_dataset.py",
+            "script": "src/ais/cli/build_clean_dataset.py",
             "split": split,
             "raw_file": str(RAW_PATH),
             "raw_sha256": sha256_of(RAW_PATH),

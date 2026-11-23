@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-from phase1.data import (FEATURE_COLS, apply_scaler, build_full_sequences, build_sequence_loader,
+from ais.phase1.data import (FEATURE_COLS, apply_scaler, build_full_sequences, build_sequence_loader,
                          fit_scaler)
 
 

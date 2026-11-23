@@ -1,4 +1,4 @@
-"""Testes sintéticos de scripts/count_anomalies_train.py (dados inventados, sem ler data/)."""
+"""Testes sintéticos de src/ais/cli/count_anomalies_train.py (dados inventados, sem ler data/)."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 _spec = importlib.util.spec_from_file_location(
-    "count_anomalies_train", ROOT / "scripts" / "count_anomalies_train.py"
+    "count_anomalies_train", ROOT / "src" / "ais" / "cli" / "count_anomalies_train.py"
 )
 cat = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(cat)

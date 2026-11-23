@@ -8,7 +8,7 @@ Regra de arredondamento: validação e teste arredondados ao inteiro mais
 próximo; treino recebe o resto.
 
 Uso (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/create_split_manifest.py
+    iach-ais-venv-4/bin/python -m ais.cli.create_split_manifest
 """
 
 from __future__ import annotations

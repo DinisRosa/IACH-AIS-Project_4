@@ -7,7 +7,7 @@ import pytest
 import torch
 from torch import nn
 
-from phase1.model import FullTripCNN, build_cnn, count_parameters, receptive_field
+from ais.phase1.model import FullTripCNN, build_cnn, count_parameters, receptive_field
 
 C = 7
 

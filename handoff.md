@@ -6,7 +6,7 @@ Data: 2026-11-23. Documento para retomar o trabalho numa nova conversa.
 
 1. `AGENTS.md` (regras fixas; o `CLAUDE.md` manda lê-lo antes de qualquer ação).
 2. Este ficheiro.
-3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23ap) e `REVISION_LOG.md` (REV-001 a REV-033).
+3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23aq) e `REVISION_LOG.md` (REV-001 a REV-034).
 4. Antes de qualquer ação: verificar `git status` e `git log` (ver «Estado atual»).
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -28,7 +28,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 - **94 testes a passar** (`iach-ais-venv-4/bin/python -m pytest tests/`): 15 da preparação, 60 da fase 1, 19 de checkpoints, configuração, métricas e ciclo de treino. Sintéticos, mais um teste que lê 3 viagens reais de **treino**.
 - **Git:** todo o trabalho de REV-032 está **commitado localmente** (`2b5197c` código, `2a177ac` LaTeX, `e9fef3c` documentação, mais um commit final do handoff). `origin/main` está em `4ce5e53`, por isso há **commits por enviar**. Resultados (`results/`) estão no `.gitignore`.
 - **Push:** o utilizador autorizou pontualmente dois pushes (feitos por mim). A regra continua: o push é do utilizador, e cada push precisa de nova autorização explícita.
-- **LaTeX** (`latex/proposta_pt.tex`) compila sem erros, 8 páginas (verificado, mas o PDF desta revisão não foi inspecionado visualmente). O `scripts/watch_latex.sh` está ativo e, depois de cada compilação com sucesso, apaga os auxiliares de `latex/build/`, deixando só o PDF.
+- **LaTeX** (`latex/proposta_pt.tex`) compila sem erros, 8 páginas (verificado, mas o PDF desta revisão não foi inspecionado visualmente). O `latex/watch_latex.sh` está ativo e, depois de cada compilação com sucesso, apaga os auxiliares de `latex/build/`, deixando só o PDF.
 - Validação e teste oficiais **não foram abertos**. As bases limpas de validação e teste existem desde REV-015, só para preparação.
 
 ## Decisões vigentes
@@ -47,19 +47,19 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 
 **LaTeX**
 - `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**.
-- Toda a alteração ao `.tex` leva cor com `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Texto movido mantém a cor antiga. Próximo ID livre: **REV-034** (precisa de cor nova e distinta).
-- Cores já usadas no `.tex`: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev021 `#D500F9`, rev022 `#00897B`, rev023 `#0277BD`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60` (REV-033 `#3E2723` só marcador Markdown, docs/; REV-029 `#BF360C` só marcador do registo).
+- Toda a alteração ao `.tex` leva cor com `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Texto movido mantém a cor antiga. Próximo ID livre: **REV-035** (precisa de cor nova e distinta).
+- Cores já usadas no `.tex`: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev021 `#D500F9`, rev022 `#00897B`, rev023 `#0277BD`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60` (REV-033 `#3E2723` e REV-034 `#7CB342` só marcadores Markdown; REV-029 `#BF360C` só marcador do registo).
 
 ## Ficheiros principais
 
 | Área | Ficheiros |
 |---|---|
 | Regras e registo | `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md`, `REVISION_LOG.md`, `README.md` |
-| Código da fase 1 (`src/phase1/`) | `data.py` (leitura só de treino, validação, sequências, scaler, partição interna, DataLoader), `model.py`, `training.py` (perda, otimizador, época, avaliação, `train_model`), `checks.py` (smoke test), `utils.py`, `artifacts.py` (checkpoints), `config.py`, `metrics.py` (métricas por ponto) |
+| Biblioteca (`src/ais/phase1/`) | `data.py` (leitura só de treino, validação, sequências, scaler, partição interna, DataLoader), `model.py`, `training.py` (perda, otimizador, época, avaliação, `train_model`), `checks.py` (smoke test), `utils.py`, `artifacts.py` (checkpoints), `config.py`, `metrics.py` (métricas por ponto) |
 | Configuração | `configs/phase1_run1.json` |
-| Scripts de treino e análise | `run_phase1_training.py`, `plot_phase1_run.py`, `benchmark_training_speed.py`, `diagnostic_fit_3_trips.py`, `plot_diagnostic_3trips.py` |
-| Scripts de preparação | `create_split_manifest.py`, `check_units_train.py`, `verify_trip_count.py`, `build_clean_dataset.py --split train\|validation\|test`, `count_anomalies_train.py` |
-| Testes | `tests/` (`conftest.py` põe `src/` no path); fase 1: `test_sequences`, `test_point_alignment`, `test_access_policy`, `test_model_shapes`, `test_loss_and_gradients`, `test_integration_phase1`, `test_checkpoint_and_training_loop` |
+| Programas em `src/ais/cli/` (treino e análise) | `run_phase1_training.py`, `plot_phase1_run.py`, `benchmark_training_speed.py`, `diagnostic_fit_3_trips.py`, `plot_diagnostic_3trips.py` |
+| Programas em `src/ais/cli/` (preparação) | `create_split_manifest.py`, `check_units_train.py`, `verify_trip_count.py`, `build_clean_dataset.py --split train\|validation\|test`, `count_anomalies_train.py` |
+| Testes | `tests/` (o `pyproject.toml` põe `src/` no path do pytest); fase 1: `test_sequences`, `test_point_alignment`, `test_access_policy`, `test_model_shapes`, `test_loss_and_gradients`, `test_integration_phase1`, `test_checkpoint_and_training_loop` |
 | Dados (não versionados) | `data/123_fishing_trajs_clean_{train,validation,test}.parquet`; manifesto versionado `manifests/split_manifest_seed42.csv` |
 | Resultados (não versionados) | `results/phase1_run1/` (checkpoint, histórico, tabelas, previsões da monitorização, scaler, divisão interna, manifesto, `figures/`), `results/diagnostic_3trips/`, `results/benchmark_speed/` |
 | Documentação | `docs/00_projeto_e_decisoes`, `docs/01_dados_e_preparacao`, `docs/02_cnn_viagem_completa` (tem a tabela do que já existe), `docs/03_cnn_janelamento` (fundidos em REV-033) |
@@ -69,22 +69,22 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 
 ```bash
 iach-ais-venv-4/bin/python -m pytest tests/                                   # testes
-iach-ais-venv-4/bin/python scripts/run_phase1_training.py configs/phase1_run1.json   # treino
-iach-ais-venv-4/bin/python scripts/plot_phase1_run.py                         # figuras do treino
-iach-ais-venv-4/bin/python scripts/benchmark_training_speed.py                # velocidade
+iach-ais-venv-4/bin/python -m ais.cli.run_phase1_training configs/phase1_run1.json   # treino
+iach-ais-venv-4/bin/python -m ais.cli.plot_phase1_run                         # figuras do treino
+iach-ais-venv-4/bin/python -m ais.cli.benchmark_training_speed                # velocidade
 ```
 
 Compilar o LaTeX à mão **sem colidir com o vigilante** (a partir de `latex/`): usar `-output-directory=build/check` (pasta ignorada pelo git), duas passagens de `pdflatex`.
 
 ## Ensaio curto (REV-027, REV-028), só treino oficial
 
-- `scripts/diagnostic_fit_3_trips.py`: 200 épocas, lr 1e-3, seed 42; ajuste em 3 viagens (`211477000-3`, `211477000-4`, `219001039-2`) e avaliação nessas e noutras 3 (`219001125-3`, `219001149-2`, `219001522-2`); scaler só do ajuste. Cerca de 11 s.
+- `src/ais/cli/diagnostic_fit_3_trips.py`: 200 épocas, lr 1e-3, seed 42; ajuste em 3 viagens (`211477000-3`, `211477000-4`, `219001039-2`) e avaliação nessas e noutras 3 (`219001125-3`, `219001149-2`, `219001522-2`); scaler só do ajuste. Cerca de 11 s.
 - Resultados ilustrativos, sem valor estatístico: accuracy 95,71 % no ajuste e 93,01 % fora da amostra (maioritária 75,21 %). Fora da amostra, a navegação tem sensibilidade 0,736 e a pesca 0,994.
 - Estas figuras (matrizes e linhas temporais) estão no **Anexo A** do LaTeX, como marcador de resultados. Ainda são as deste ensaio, não as da primeira execução.
 
 ## Medição de velocidade (PROGRESS 2026-11-23al)
 
-`scripts/benchmark_training_speed.py`, CPU, 10 threads: 1 viagem (5 475 pontos) 0,013 s por época; 2 viagens (10 853) 0,040 s; maior viagem do treino (`235008380-3`, 45 251 pontos) 0,151 s. Cerca de 2,4 a 3,7 µs por ponto em treino e 1,0 a 1,6 µs em avaliação. Pico de memória do processo cerca de 822 MB. O custo cresce com os **pontos**, não com as viagens.
+`src/ais/cli/benchmark_training_speed.py`, CPU, 10 threads: 1 viagem (5 475 pontos) 0,013 s por época; 2 viagens (10 853) 0,040 s; maior viagem do treino (`235008380-3`, 45 251 pontos) 0,151 s. Cerca de 2,4 a 3,7 µs por ponto em treino e 1,0 a 1,6 µs em avaliação. Pico de memória do processo cerca de 822 MB. O custo cresce com os **pontos**, não com as viagens.
 
 ## Primeira execução de treino (REV-032), só treino oficial
 
@@ -103,7 +103,7 @@ Compilar o LaTeX à mão **sem colidir com o vigilante** (a partir de `latex/`):
 - Script das figuras gravava `previsto.png` por engano (variável do ciclo sobrepunha `name`); corrigido. Uma coluna enganadora na projeção de custo foi corrigida antes de ser apresentada.
 - **Corrida de compilação:** o vigilante e compilações manuais em `latex/build/` corromperam o `.aux`. Resolvido compilando à mão em `build/check/` e fazendo o vigilante limpar o `build/`.
 - Smoke test estrito: exige gradiente não nulo em todos os tensores; pode ter de ser relaxado.
-- `class_metrics` está duplicada (`phase1/metrics.py` e `scripts/diagnostic_fit_3_trips.py`), por unificar.
+- `class_metrics` está duplicada (`ais/phase1/metrics.py` e `src/ais/cli/diagnostic_fit_3_trips.py`), por unificar.
 - Os scripts (`run_phase1_training`, `diagnostic_fit_3_trips`, `plot_*`, `benchmark`) **não têm teste automático**.
 
 ## O que fazer a seguir

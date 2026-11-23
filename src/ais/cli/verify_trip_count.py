@@ -4,7 +4,7 @@ Lê apenas a coluna `id` e conta linhas e IDs distintos. Não lê outras colunas
 Compara com o manifesto de divisão, para garantir que todos os IDs estão nele.
 
 Uso (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/verify_trip_count.py
+    iach-ais-venv-4/bin/python -m ais.cli.verify_trip_count
 """
 
 from __future__ import annotations

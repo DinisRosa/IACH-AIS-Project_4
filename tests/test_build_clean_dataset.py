@@ -1,4 +1,4 @@
-"""Testes sintéticos da função de construção de scripts/build_clean_dataset.py.
+"""Testes sintéticos da função de construção de src/ais/cli/build_clean_dataset.py.
 
 Os dados são inventados e pequenos, com valores conhecidos à partida. Não leem
 data/ nem o manifesto, por isso não tocam em validação nem em teste.
@@ -18,7 +18,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 _spec = importlib.util.spec_from_file_location(
-    "build_clean_dataset", ROOT / "scripts" / "build_clean_dataset.py"
+    "build_clean_dataset", ROOT / "src" / "ais" / "cli" / "build_clean_dataset.py"
 )
 bcd = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(bcd)

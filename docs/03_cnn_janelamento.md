@@ -66,7 +66,7 @@ Tabela de correspondência: `window_id`, `id`, `sequence_id`, `point_id`, `posit
 | `evaluation` | `evaluate_reconstructed_predictions` | Reutiliza classes, segmentos e métricas de `02` |
 | `artifacts` / `reserved_evaluation` | congelar experiências; validação e teste autorizados | Fora do caminho normal de desenvolvimento |
 
-O modelo reutiliza `build_cnn` de `src/phase1/model.py`; não se duplica a arquitetura. Os módulos não são obrigatórios um a um: agrupar mantendo responsabilidades claras.
+O modelo reutiliza `build_cnn` de `src/ais/phase1/model.py`; não se duplica a arquitetura. Os módulos não são obrigatórios um a um: agrupar mantendo responsabilidades claras.
 
 ## 6. Testes obrigatórios (sintéticos ou treino)
 

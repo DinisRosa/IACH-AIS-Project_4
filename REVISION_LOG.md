@@ -584,3 +584,19 @@ Regras:
 - **Validação:** releitura dos oito documentos antigos contra o código real (`src/phase1/`, `scripts/`, `configs/`, `tests/`) e contra `PROGRESS.md`; procura de referências pendentes aos nomes antigos. Não foram executados testes nem código (só se alteraram comentários e Markdown). Os valores numéricos mantidos nos docs vêm de revisões já registadas (REV-001, REV-003, REV-007, REV-008, REV-017); nenhum cálculo novo.
 - **Limitações:** as entradas históricas do `PROGRESS.md` e do `REVISION_LOG.md` continuam a citar `docs/05`, `docs/00_5` e outros nomes antigos; mantêm-se por serem registo do que se fez então. A secção 4 de `docs/02` e o contrato de `docs/03` devem ser revistos quando o Marco 4 começar.
 - **Pendentes:** revisão do utilizador; commit local por autorizar.
+
+### REV-034 — Código unificado em `src/ais/` e `pyproject.toml`
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Verde-lima `#7CB342`, RGB (124, 179, 66). Só marcador do registo; não há alteração ao `.tex`.
+- **O quê:**
+  - `scripts/` (10 programas) e `src/phase1/` passam a um só pacote `src/ais/`: `ais/phase1/` (biblioteca, sem alterações de lógica) e `ais/cli/` (programas, corridos com `python -m ais.cli.<nome>`). `scripts/watch_latex.sh` (não versionado) foi para `latex/watch_latex.sh`.
+  - Novo `pyproject.toml` (metadados mínimos do pacote `ais` e `pythonpath` do pytest). Instalação editável só no venv do projeto, sem dependências novas; as versões continuam em `requirements.txt`.
+  - Removidos os `sys.path.insert` dos três programas e o `tests/conftest.py`. Imports `phase1` → `ais.phase1`; raiz do projeto `parents[1]` → `parents[3]`; campos `script` da proveniência e docstrings com os novos caminhos.
+  - Documentos vivos atualizados: `README.md`, `AGENTS.md`, `handoff.md`, `docs/*`, secções vivas do `PROGRESS.md`, `.gitignore` (`latex/watch_latex.sh`, `*.egg-info/`).
+- **Porquê:** pedido do utilizador: duas pastas de código (`scripts/` e `src/`) sem separação consistente (só 4 dos 10 scripts usavam a biblioteca, via `sys.path`), com a preparação num lado e a modelação no outro.
+- **Ficheiros afetados:** `src/ais/**`, `tests/*` (imports e dois caminhos), `pyproject.toml`, `.gitignore`, `latex/watch_latex.sh`, `README.md`, `AGENTS.md`, `handoff.md`, `docs/*`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável** (organização do código; o `.tex` não cita caminhos de código). Não verificado por compilação.
+- **Validação:** `pytest tests/` → 94 passaram; 20 módulos de `ais` importados; `python -m ais.cli.verify_trip_count` executado (123 viagens). Treino, figuras, benchmark e ensaio de 3 viagens **não** foram reexecutados, para não sobrescrever `results/`.
+- **Limitações:** a proveniência de artefactos antigos em `results/` continua a registar `scripts/…`; as entradas históricas de `PROGRESS.md` e `REVISION_LOG.md` mantêm os caminhos antigos. `class_metrics` continua duplicada e a lógica de preparação continua dentro de `cli/`.
+- **Pendentes:** revisão do utilizador; commit local por autorizar.

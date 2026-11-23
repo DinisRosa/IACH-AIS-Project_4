@@ -4,7 +4,7 @@ Lê SÓ os artefactos de results/phase1_run1/ (histórico, tabelas, previsões d
 Não treina, não abre parquet nem validação/teste. Percentagens são só de apresentação.
 
 Execução (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/plot_phase1_run.py [results/phase1_run1]
+    iach-ais-venv-4/bin/python -m ais.cli.plot_phase1_run [results/phase1_run1]
 Saídas: <pasta>/figures/*.png (não versionadas).
 """
 from __future__ import annotations
@@ -22,7 +22,7 @@ import pandas as pd  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
 from matplotlib.patches import Patch  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "results" / "phase1_run1"
 OUT = SRC / "figures"
 NAV, PESCA, FIT_C, MON_C = "#2a78d6", "#eb6834", "#8a8985", "#6250d6"

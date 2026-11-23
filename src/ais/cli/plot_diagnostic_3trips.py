@@ -1,11 +1,11 @@
 """Gráficos e tabelas em imagem do ensaio de ajuste em 3 viagens (REV-029).
 
-Lê SÓ os artefactos já gerados por scripts/diagnostic_fit_3_trips.py (results/diagnostic_3trips/);
+Lê SÓ os artefactos já gerados por src/ais/cli/diagnostic_fit_3_trips.py (results/diagnostic_3trips/);
 não treina, não abre os parquet nem validação/teste. Nenhum número é calculado aqui além de
 percentagens de apresentação sobre contagens guardadas.
 
 Execução (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/plot_diagnostic_3trips.py
+    iach-ais-venv-4/bin/python -m ais.cli.plot_diagnostic_3trips
 Saídas: results/diagnostic_3trips/figures/*.png (não versionadas).
 """
 from __future__ import annotations
@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 SRC = ROOT / "results" / "diagnostic_3trips"
 OUT = SRC / "figures"
 

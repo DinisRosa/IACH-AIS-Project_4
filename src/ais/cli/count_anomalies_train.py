@@ -14,8 +14,8 @@ Saídas (em results/anomalies_train/, ignoradas pelo git):
 - inversions_per_trip.png   : histograma de inversões de rumo por viagem.
 
 Uso (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/count_anomalies_train.py
-    iach-ais-venv-4/bin/python scripts/count_anomalies_train.py --threshold-kn 30
+    iach-ais-venv-4/bin/python -m ais.cli.count_anomalies_train
+    iach-ais-venv-4/bin/python -m ais.cli.count_anomalies_train --threshold-kn 30
 """
 
 from __future__ import annotations

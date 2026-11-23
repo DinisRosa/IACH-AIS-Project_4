@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 import torch
 
-from phase1.data import (
+from ais.phase1.data import (
     FEATURE_COLS, INPUT_CHANNELS, N_INPUT_CHANNELS, apply_scaler, build_full_sequences,
     build_sequence_loader, create_internal_training_split, fit_scaler, load_scaler,
     save_scaler, validate_training_data,

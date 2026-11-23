@@ -9,7 +9,7 @@ não substitui a validação oficial. Com 3 viagens é só uma ilustração, sem
 O scaler é ajustado só com as 3 viagens de ajuste e depois aplicado às outras 3.
 
 Execução (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/diagnostic_fit_3_trips.py
+    iach-ais-venv-4/bin/python -m ais.cli.diagnostic_fit_3_trips
 Saídas em results/diagnostic_3trips/ (não versionadas): predictions.csv, tables.json,
 training_history.csv, run_manifest.json.
 """
@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import json
 import platform
-import sys
 import time
 from pathlib import Path
 
@@ -26,16 +25,15 @@ import pandas as pd
 import pyarrow.parquet as pq
 import torch
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+ROOT = Path(__file__).resolve().parents[3]
 
-from phase1.data import (  # noqa: E402
+from ais.phase1.data import (  # noqa: E402
     FEATURE_COLS, N_INPUT_CHANNELS, apply_scaler, build_full_sequences,
     build_sequence_loader, fit_scaler, validate_training_data,
 )
-from phase1.model import build_cnn, count_parameters  # noqa: E402
-from phase1.training import build_loss, build_optimizer, train_one_epoch  # noqa: E402
-from phase1.utils import select_device, set_reproducibility  # noqa: E402
+from ais.phase1.model import build_cnn, count_parameters  # noqa: E402
+from ais.phase1.training import build_loss, build_optimizer, train_one_epoch  # noqa: E402
+from ais.phase1.utils import select_device, set_reproducibility  # noqa: E402
 
 TRAIN = ROOT / "data" / "123_fishing_trajs_clean_train.parquet"
 MANIFEST = ROOT / "manifests" / "split_manifest_seed42.csv"
@@ -150,7 +148,7 @@ def main() -> None:
         {"ajuste": tables_for(pred_fit), "fora_da_amostra": tables_for(pred_eval)},
         indent=2, ensure_ascii=False))
     (OUT / "run_manifest.json").write_text(json.dumps({
-        "script": "scripts/diagnostic_fit_3_trips.py", "config": CONFIG,
+        "script": "src/ais/cli/diagnostic_fit_3_trips.py", "config": CONFIG,
         "ids_ajuste": fit_ids, "ids_fora_da_amostra": eval_ids,
         "n_points_ajuste": int(len(pred_fit)), "n_points_fora_da_amostra": int(len(pred_eval)),
         "n_parameters": count_parameters(model), "scaler_ajustado_so_com": "ids_ajuste",

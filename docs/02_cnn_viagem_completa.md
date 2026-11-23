@@ -17,7 +17,7 @@
        → Conv1D 32 (k5, same) → ReLU → Conv1D 1 (k1) → logits [1, N]
 ```
 
-Campo recetivo de **13 pontos** (três kernels 5, stride 1, sem dilatação) e 21 761 parâmetros. Sem pooling global nem saída única por viagem. Implementada em `src/phase1/model.py` (`build_cnn`, `receptive_field`, `count_parameters`).
+Campo recetivo de **13 pontos** (três kernels 5, stride 1, sem dilatação) e 21 761 parâmetros. Sem pooling global nem saída única por viagem. Implementada em `src/ais/phase1/model.py` (`build_cnn`, `receptive_field`, `count_parameters`).
 
 ## 3. Treino (configuração aceite em REV-032, `configs/phase1_run1.json`)
 
@@ -40,21 +40,21 @@ Registar sempre: seed, características por ordem, configuração, versões, man
 
 | Função (contrato) | Onde | Estado |
 |---|---|---|
-| `load_phase1_config` | `src/phase1/config.py` | Feito; só aceita `stage=development` e ficheiro de treino |
-| `load_training_data`, `validate_training_data` | `src/phase1/data.py` | Feito |
-| `build_full_sequences`, `fit_scaler`, `apply_scaler`, `save_scaler`, `load_scaler` | `src/phase1/data.py` | Feito |
-| `create_internal_training_split` | `src/phase1/data.py` | Feito (por ID completo) |
-| `build_sequence_loader` | `src/phase1/data.py` | Feito (batch 1) |
-| `set_reproducibility`, `select_device` | `src/phase1/utils.py` | Feito |
-| `build_cnn` | `src/phase1/model.py` | Feito |
-| `build_loss`, `build_optimizer` | `src/phase1/training.py` | Feito |
-| `run_training_smoke_test` | `src/phase1/checks.py` | Feito (estrito: exige gradiente não nulo em todos os tensores; pode ter de relaxar) |
-| `train_one_epoch`, `evaluate_training_subset`, `train_model` | `src/phase1/training.py` | Feito, com paragem antecipada e orçamento |
-| `save_checkpoint`, `load_checkpoint` | `src/phase1/artifacts.py` | Feito |
-| Métricas por classe e por ponto (`class_metrics`) | `src/phase1/metrics.py` | Feito; existe duplicada em `scripts/diagnostic_fit_3_trips.py`, por unificar |
-| Inferência e classes por ponto | `scripts/run_phase1_training.py` | **Dentro do script**, ainda não é módulo |
-| Figuras do treino | `scripts/plot_phase1_run.py` | Script, sem teste |
-| Execução | `scripts/run_phase1_training.py` | Script, sem teste |
+| `load_phase1_config` | `src/ais/phase1/config.py` | Feito; só aceita `stage=development` e ficheiro de treino |
+| `load_training_data`, `validate_training_data` | `src/ais/phase1/data.py` | Feito |
+| `build_full_sequences`, `fit_scaler`, `apply_scaler`, `save_scaler`, `load_scaler` | `src/ais/phase1/data.py` | Feito |
+| `create_internal_training_split` | `src/ais/phase1/data.py` | Feito (por ID completo) |
+| `build_sequence_loader` | `src/ais/phase1/data.py` | Feito (batch 1) |
+| `set_reproducibility`, `select_device` | `src/ais/phase1/utils.py` | Feito |
+| `build_cnn` | `src/ais/phase1/model.py` | Feito |
+| `build_loss`, `build_optimizer` | `src/ais/phase1/training.py` | Feito |
+| `run_training_smoke_test` | `src/ais/phase1/checks.py` | Feito (estrito: exige gradiente não nulo em todos os tensores; pode ter de relaxar) |
+| `train_one_epoch`, `evaluate_training_subset`, `train_model` | `src/ais/phase1/training.py` | Feito, com paragem antecipada e orçamento |
+| `save_checkpoint`, `load_checkpoint` | `src/ais/phase1/artifacts.py` | Feito |
+| Métricas por classe e por ponto (`class_metrics`) | `src/ais/phase1/metrics.py` | Feito; existe duplicada em `src/ais/cli/diagnostic_fit_3_trips.py`, por unificar |
+| Inferência e classes por ponto | `src/ais/cli/run_phase1_training.py` | **Dentro do script**, ainda não é módulo |
+| Figuras do treino | `src/ais/cli/plot_phase1_run.py` | Script, sem teste |
+| Execução | `src/ais/cli/run_phase1_training.py` | Script, sem teste |
 | Segmentos (`extract_segments`) | — | **Por fazer** |
 | Correspondência e métricas por segmento, fronteiras, fragmentação | — | **Por fazer** |
 | Relatórios e `save_phase1_results` | — | **Por fazer** |
@@ -65,8 +65,8 @@ Comandos (a partir da raiz do projeto):
 
 ```bash
 iach-ais-venv-4/bin/python -m pytest tests/
-iach-ais-venv-4/bin/python scripts/run_phase1_training.py configs/phase1_run1.json
-iach-ais-venv-4/bin/python scripts/plot_phase1_run.py
+iach-ais-venv-4/bin/python -m ais.cli.run_phase1_training configs/phase1_run1.json
+iach-ais-venv-4/bin/python -m ais.cli.plot_phase1_run
 ```
 
 Saídas do treino em `results/phase1_run1/` (não versionadas): checkpoint, histórico, tabelas, previsões da monitorização, scaler, divisão interna, manifesto e figuras. Os resultados numéricos da execução estão em `PROGRESS.md` e `REVISION_LOG.md` (REV-032), não aqui, para não duplicar números.

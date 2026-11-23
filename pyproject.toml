@@ -1,0 +1,18 @@
+# Metadados mínimos para tornar `src/ais` importável (instalação editável no venv do projeto).
+# As versões das dependências ficam em requirements.txt, a fonte única; não se repetem aqui.
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ais"
+version = "0.1.0"
+description = "Segmentação de viagens AIS em pesca e navegação com CNN 1D"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

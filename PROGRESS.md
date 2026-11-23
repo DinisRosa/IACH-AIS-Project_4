@@ -7,15 +7,15 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 - **Marco atual:** 3 em curso (aprovado pelo utilizador, REV-022): CNN 1D de referência sobre viagem completa. Depois: janelamento com sobreposição e a mesma CNN 1D sobre janelas (Marco 4).
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU). Dependências em `requirements.txt`.
-- **Scripts (em `scripts/`):**
+- **Programas (em `src/ais/cli/`, executados com `python -m ais.cli.<nome>`; REV-034):**
   - `create_split_manifest.py`: divisão por ID (seed 42, 70/15/15). Executado.
   - `check_units_train.py`: verificação de unidades só com treino. Executado.
   - `verify_trip_count.py`: confirma 123 viagens e coincidência com o manifesto. Executado.
   - `build_clean_dataset.py --split train|validation|test`: bases limpas recalculadas. Executado para os três conjuntos (REV-009, REV-015).
   - `count_anomalies_train.py`: contagem de saltos e inversões de rumo por viagem, só treino. Executado (REV-017).
-  - `watch_latex.sh`: visualização da proposta. Não versionado.
+  - `latex/watch_latex.sh`: visualização da proposta (movido de `scripts/`). Não versionado.
   - Ainda não existe código de janelamento nem de pós-processamento.
-- **Código da fase 1 (`src/phase1/`, REV-024, REV-032):** `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py`, `artifacts.py`, `config.py`, `metrics.py`. Sequências, scaler, máscaras, CNN 1D, perda, treino com paragem antecipada e checkpoints implementados e testados. Houve um ensaio de 3 viagens (REV-027) e uma primeira execução de treino só com o treino oficial (REV-032); resultados provisórios.
+- **Código da fase 1 (`src/ais/phase1/`, REV-024, REV-032, REV-034):** `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py`, `artifacts.py`, `config.py`, `metrics.py`. Sequências, scaler, máscaras, CNN 1D, perda, treino com paragem antecipada e checkpoints implementados e testados. Houve um ensaio de 3 viagens (REV-027) e uma primeira execução de treino só com o treino oficial (REV-032); resultados provisórios.
 - **Testes:** `tests/` com 94 testes (15 de REV-016/REV-017, 60 de REV-024 e 19 de REV-032), todos a passar. Ver `pytest tests/`.
 - **Dados:** `data/123_fishing_trajs.csv` presente localmente, não versionado. **123 IDs únicos** e **1 026 279 linhas**, confirmados por `verify_trip_count.py` (REV-007).
 - **Bases limpas (não versionadas):** `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Soma: 1 026 279.
@@ -24,7 +24,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
   - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-033.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-034.
 
 ## Decisões do utilizador (vigentes)
 
@@ -185,7 +185,8 @@ Ver `docs/00_projeto_e_decisoes.md` §4 (estado dos marcos) e `docs/02_cnn_viage
 |---|---|
 | `AGENTS.md`, `CLAUDE.md`, `README.md` | Existentes; alinhados (REV-004, REV-007); `AGENTS.md` §5 com atualização automática de registos (REV-010) |
 | `docs/00` a `docs/03` | Fundidos e simplificados em REV-033: projeto e decisões, dados e preparação, CNN de viagem completa, CNN com janelas. Substituem os antigos `docs/00` a `docs/06`, que ficam no histórico do git |
-| `src/phase1/` | `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py` (REV-024); `artifacts.py`, `config.py`, `metrics.py` (REV-032) |
+| `src/ais/phase1/` | `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py` (REV-024); `artifacts.py`, `config.py`, `metrics.py` (REV-032) |
+| `pyproject.toml` | Metadados mínimos do pacote `ais` e configuração do pytest (REV-034); instalado em modo editável só no venv |
 | `tests/` | 94 testes (REV-016, REV-017, REV-024, REV-032) |
 | `latex/proposta_pt.tex` | Reescrito a partir do PDF IAHC (REV-005); compila com pdflatex/bibtex |
 | `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** (REV-006) |
@@ -648,3 +649,20 @@ Ver `docs/00_projeto_e_decisoes.md` §4 (estado dos marcos) e `docs/02_cnn_viage
 
 **Pendente**
 - Revisão do utilizador; commit local por autorizar; push por autorização. Decisão sobre repetir o treino (paciência maior ou outro lr).
+
+### 2026-11-23aq — Código unificado em `src/ais/` (REV-034)
+
+**Feito**
+- A pasta `scripts/` e o antigo `src/phase1/` passam a um só pacote: `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (os 10 programas). Movido com `git mv`, para preservar o histórico. `watch_latex.sh` (não versionado) passou para `latex/`.
+- Criado `pyproject.toml` mínimo (pacote `ais`, `pythonpath` do pytest). Instalado em modo editável **só** no `iach-ais-venv-4/`, sem rede e sem dependências novas. Removidos os três `sys.path.insert` e o `tests/conftest.py`.
+- Comandos passam a `iach-ais-venv-4/bin/python -m ais.cli.<nome>`. Imports, raízes do projeto (`parents[3]`), campos de proveniência e documentos vivos atualizados; entradas históricas deste ficheiro e do `REVISION_LOG.md` ficam com os caminhos antigos.
+
+**Validado**
+- `pytest tests/`: 94 passaram. Importados os 20 módulos de `ais`. `python -m ais.cli.verify_trip_count` correu e confirmou 123 viagens (só lê o `id`). Os restantes programas não foram executados; só mudaram imports, a raiz do projeto e textos.
+
+**Problemas e limitações**
+- Os programas de treino, figuras e benchmark não foram reexecutados (para não sobrescrever `results/`); o ajuste de raiz e imports neles está só verificado por importação.
+- Lógica de preparação continua dentro dos programas de `cli/` (ex.: `build`, `assign_splits`) e `class_metrics` continua duplicada. Não se mudou lógica.
+
+**Pendente**
+- Revisão do utilizador; commit local por autorizar. Mover a lógica de preparação reutilizável para `ais/` e unificar `class_metrics`, se o utilizador quiser.

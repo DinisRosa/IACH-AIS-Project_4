@@ -6,7 +6,7 @@ interno, treina com paragem antecipada e orçamento de tempo, restaura o melhor 
 histórico, checkpoint, previsões da monitorização, tabelas e manifesto. NÃO abre validação nem teste.
 
 Execução (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/run_phase1_training.py configs/phase1_run1.json
+    iach-ais-venv-4/bin/python -m ais.cli.run_phase1_training configs/phase1_run1.json
 """
 from __future__ import annotations
 
@@ -20,20 +20,19 @@ import numpy as np
 import pandas as pd
 import torch
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+ROOT = Path(__file__).resolve().parents[3]
 
-from phase1.artifacts import load_checkpoint  # noqa: E402
-from phase1.config import load_phase1_config  # noqa: E402
-from phase1.data import (  # noqa: E402
+from ais.phase1.artifacts import load_checkpoint  # noqa: E402
+from ais.phase1.config import load_phase1_config  # noqa: E402
+from ais.phase1.data import (  # noqa: E402
     FEATURE_COLS, INPUT_CHANNELS, N_INPUT_CHANNELS, apply_scaler, build_full_sequences,
     build_sequence_loader, create_internal_training_split, fit_scaler, load_training_data,
     save_scaler, validate_training_data,
 )
-from phase1.metrics import CLASS_NAMES, class_metrics  # noqa: E402
-from phase1.model import build_cnn, count_parameters, receptive_field  # noqa: E402
-from phase1.training import train_model  # noqa: E402
-from phase1.utils import select_device, set_reproducibility  # noqa: E402
+from ais.phase1.metrics import CLASS_NAMES, class_metrics  # noqa: E402
+from ais.phase1.model import build_cnn, count_parameters, receptive_field  # noqa: E402
+from ais.phase1.training import train_model  # noqa: E402
+from ais.phase1.utils import select_device, set_reproducibility  # noqa: E402
 
 
 @torch.no_grad()
@@ -114,7 +113,7 @@ def main(cfg_path: str) -> None:
     tables = {"monitor_interna": tables_for(pred_mon), "ajuste": tables_for(pred_tr)}
     (out / "tables.json").write_text(json.dumps(tables, indent=2, ensure_ascii=False))
     (out / "run_manifest.json").write_text(json.dumps({
-        "script": "scripts/run_phase1_training.py", "config_path": str(cfg_path), "config": cfg,
+        "script": "src/ais/cli/run_phase1_training.py", "config_path": str(cfg_path), "config": cfg,
         "n_train_trips": len(train_s), "n_monitor_trips": len(mon_s),
         "train_ids": [s["id"] for s in train_s], "monitor_ids": [s["id"] for s in mon_s],
         "n_train_points": n_tr, "n_monitor_points": n_mon, "n_parameters": count_parameters(model),

@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 import torch
 
-from phase1.checks import run_training_smoke_test
-from phase1.data import (
+from ais.phase1.checks import run_training_smoke_test
+from ais.phase1.data import (
     FEATURE_COLS,
     N_INPUT_CHANNELS,
     apply_scaler,
@@ -20,8 +20,8 @@ from phase1.data import (
     fit_scaler,
     validate_training_data,
 )
-from phase1.model import build_cnn
-from phase1.training import build_loss, build_optimizer, evaluate_training_subset, train_one_epoch
+from ais.phase1.model import build_cnn
+from ais.phase1.training import build_loss, build_optimizer, evaluate_training_subset, train_one_epoch
 
 
 def _synthetic_df(lengths, seed=0):
