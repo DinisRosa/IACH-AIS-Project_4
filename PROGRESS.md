@@ -528,3 +528,14 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 **Pendente**
 - Push, por conta do utilizador (`main` está 3 commits à frente de `origin/main`, antes deste registo).
 - Decisões de treino: partição interna, lr, épocas, critério de paragem e orçamento de tempo.
+
+### 2026-11-23ah — Atualização do ficheiro de passagem de sessão
+
+**Feito**
+- `handoff.md` reescrito para o estado atual: código da fase 1, 75 testes, decisões desta sessão (7 canais, zero depois de normalizar), ensaio curto e seus resultados ilustrativos, problemas encontrados, correção da compilação do LaTeX, pendentes e próximos passos do Marco 3.
+
+**Validado**
+- Revisão por leitura contra `PROGRESS.md`, `REVISION_LOG.md` e os artefactos do ensaio. Sem alterações a código nem a dados.
+
+**Pendente**
+- Commit de `handoff.md` e desta entrada, a pedido do utilizador. Push por conta do utilizador.
