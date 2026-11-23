@@ -44,3 +44,5 @@ Thumbs.db
 
 # PDFs e auxiliares da proposta LaTeX gerados por scripts/watch_latex.sh
 latex/build/
+# Script só de visualização da proposta (não faz parte do projeto)
+scripts/watch_latex.sh
