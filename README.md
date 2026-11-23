@@ -47,9 +47,10 @@ iach-ais-venv-4/bin/python scripts/verify_trip_count.py
 - `check_units_train.py` gera gráficos e um `summary.json` em `results/units_check_train/`, usando só o conjunto de treino.
 - `verify_trip_count.py` confirma 123 viagens e que o manifesto coincide com o ficheiro.
 - `count_anomalies_train.py`: conta saltos (acima de 30 nós) e inversões de rumo (acima de 170°) por viagem, só no treino. Saídas em `results/anomalies_train/`.
-- `tests/`: testes sintéticos da função de construção (dados inventados, sem ler `data/`). Executar: `iach-ais-venv-4/bin/python -m pytest tests/`.
+- `src/phase1/`: código da fase 1 (sequências, scaler, CNN 1D, perda, smoke test).
+- `tests/`: testes sintéticos (dados inventados; um teste lê 3 viagens de treino). Executar: `iach-ais-venv-4/bin/python -m pytest tests/`.
 - `build_clean_dataset.py --split train|validation|test`: constrói a base limpa (Parquet) de cada conjunto, com target 0/1 e grandezas recalculadas. Por defeito, treino.
 
 ## Estado
 
-Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN 1D de referência sobre viagem completa) aguarda aprovação do utilizador. Ver `PROGRESS.md`.
+Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN 1D de referência sobre viagem completa) em curso desde REV-022: sequências, normalização, CNN e testes implementados em `src/phase1/` (REV-024); só um ensaio curto de ajuste em 3 viagens de treino (REV-027); treino completo ainda não feito. Ver `PROGRESS.md`.

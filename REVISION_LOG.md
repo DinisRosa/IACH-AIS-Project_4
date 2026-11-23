@@ -407,3 +407,130 @@ Regras:
   - O primeiro ponto **mantém-se** no conjunto, com valores ausentes, por decisão do utilizador.
   - A entrada dos pontos iniciais na função de perda **não está decidida**. A versão anterior dizia que ficavam fora, sem confirmação. Fica como pendente.
 - **Decisão final (2026-11-23, mesma revisão REV-022):** o primeiro ponto tem `time_gap`, `speed` e `signed_turn` a zero, com máscara. O segundo tem `signed_turn` a zero, com máscara. Não se inventa `bearing` para o primeiro ponto, porque isso criaria uma curva falsa no segundo. Os pontos iniciais **entram** na função de perda, com as máscaras nas entradas. Proposta do utilizador, aceite após análise.
+
+### REV-023 — Reorganização do manuscrito em subsecções
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Azul `#0277BD`, RGB (2, 119, 189). No `.tex`, em `\revtext{rev023}`, só nos títulos novos.
+- **O quê:**
+  - «Abordagem» passa a ter cinco subsecções: pré-processamento e características; CNN de referência sobre a viagem completa; janelamento com sobreposição; pós-processamento temporal; saída, explicabilidade e ferramentas. A figura do *pipeline* fica logo a seguir à introdução.
+  - «Avaliação» passa a ter três subsecções: métricas e estudo de ablação; divisão dos dados e protocolo; avaliação qualitativa e dimensão humana.
+  - O texto antigo foi apenas movido e **mantém as cores originais** (REV-020, REV-021). Única alteração de redação no texto movido: retirada a numeração «(1)» a «(5)» e as etiquetas em itálico que passaram a ser títulos.
+- **Porquê:** pedido do utilizador, para o manuscrito ser mais simples de ler.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. Compilação sem erros (4 páginas).
+- **Validação:** `pdflatex` sem erros. Não foi inspecionado visualmente o PDF.
+- **Pendentes:** revisão do resultado pelo utilizador; mais secções, se pretendido.
+
+### REV-024 — Marco 3: sequências, normalização, CNN 1D e testes (sem treino)
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Castanho `#6D4C41`, RGB (109, 76, 65). No `.tex`, em `\revtext{rev024}`.
+- **O quê:**
+  - Código novo em `src/phase1/`: `data.py` (leitura só de treino, validação, sequências por viagem, scaler, aplicação com máscaras, partição interna por ID, DataLoader), `model.py` (CNN 1D), `training.py` (perda, otimizador, passo de época, avaliação diagnóstica), `checks.py` (smoke test), `utils.py` (semente, dispositivo).
+  - Decisões do utilizador desta ronda: 7 canais (4 características + 3 máscaras: speed, signed_turn, time_gap); preenchimento a zero **depois** de normalizar; testes com sintéticos mais 3 viagens reais de treino; reorganização do LaTeX (REV-023).
+  - Testes novos: `test_sequences`, `test_point_alignment`, `test_access_policy`, `test_model_shapes`, `test_loss_and_gradients`, `test_integration_phase1`.
+  - Subsecção «Verificação da implementação» e dois parágrafos na CNN de referência, no `.tex`.
+  - Trabalho delegado: `data.py` e testes ligados (Sonnet); `model.py`, `training.py`, `checks.py`, `utils.py` e testes ligados (Haiku). Integração, revisão e teste de integração por mim.
+- **Porquê:** passos 1 a 4 do Marco 3. O treino fica para depois, por decisão do utilizador.
+- **Ficheiros afetados:** `src/phase1/*`, `tests/*`, `tests/conftest.py`, `latex/proposta_pt.tex`, `docs/05_funcoes_documentos_cnn_viagem_completa.md`, `README.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado** (Abordagem). Compilação sem erros.
+- **Validação:** `pytest tests/` → 75 passaram (15 anteriores + 60 novos), 0 falhas, 0 ignorados. Um teste lê 3 viagens reais de treino (17 844 pontos); validação e teste não foram abertos. Não houve treino.
+- **Limitações:**
+  - Taxa de aprendizagem 1e-3 é um valor provisório, não validado.
+  - O smoke test exige gradiente não nulo em todos os tensores; com dados reais pode ter de ser relaxado.
+  - Ordenação global só verificada em 3 viagens reais; `validate_training_data` verifica-a sobre toda a base quando for usado no treino completo.
+  - Não existem ainda: segmentos, métricas por segmento, `run_phase1`, configuração JSON e guardar/carregar checkpoint.
+  - Não se mediu custo em CPU nem memória das 87 viagens.
+- **Pendentes:** proporção da partição interna e orçamento de tempo (decisões do utilizador); commit local por autorizar; push por conta do utilizador.
+
+### REV-025 — Secção «Especificação da CNN 1D de referência» na proposta
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Roxo `#6A1B9A`, RGB (106, 27, 154). No `.tex`, em `\revtext{rev025}`.
+- **O quê:**
+  - Nova secção 5 com sete subsecções: entrada e saída; arquitetura (tabela com canais, *kernel* e parâmetros por camada); porquê estes valores; campo recetivo (fórmula e consequências); função de perda; otimizador e treino; reprodutibilidade.
+  - Cada escolha indica o estado: *decidido*, *adotado como valor inicial sem validação* ou *ainda não definido*. Os 21 761 parâmetros (1 152 + 10 304 + 10 272 + 33) vêm de `count_parameters` no código.
+  - A justificação de 32/64/32 e *kernel* 5 declara que estes valores são os da arquitetura inicial do protocolo (`docs/02`), **sem pesquisa nem experiência**; o texto dá o raciocínio de desenho e não o apresenta como evidência. A taxa de aprendizagem 1e-3, as épocas, o critério de paragem e a semente do modelo estão declarados como **não definidos**.
+  - Correção em REV-023: quatro parágrafos movidos começavam com minúscula depois de retirada a etiqueta; passam a maiúscula (só redação, cores iguais).
+- **Porquê:** pedido do utilizador, para o relatório permitir recriar a rede com os mesmos valores.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex` sem erros (6 páginas). Páginas 3 inspecionada visualmente; as restantes não.
+- **Validação:** compilação. A tabela e os valores foram conferidos com o código (`build_cnn`, `count_parameters`, `receptive_field`).
+- **Pendentes:**
+  - Decidir taxa de aprendizagem, épocas, critério de paragem, semente do modelo e partição interna antes do treino.
+  - Linha ligeiramente larga (11 pt) no parágrafo do campo recetivo; cosmético.
+  - Se o utilizador quiser fundamentar 32/64/32 e *kernel* 5, é preciso uma comparação experimental própria (fora do âmbito atual).
+
+### REV-026 — Figura 2: desenho da CNN 1D de referência
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Verde `#2E7D32`, RGB (46, 125, 50). No `.tex`, a figura inteira (traços, texto e legenda) e a frase de remissão, em `\color{rev026}` / `\revtext{rev026}`.
+- **O quê:**
+  - Nova figura em TikZ (sem imagens externas), na subsecção «Arquitetura» da secção 5: cadeia entrada 7×N → Conv1D 7→32 → 32→64 → 64→32 (*kernel* 5, ReLU) → cabeça Conv1D 32→1 (*kernel* 1) → *logits* 1×N → σ só na inferência; abaixo, o esquema do campo recetivo (13 pontos de entrada, de i−6 a i+6, para o logit do ponto i).
+  - Frase de remissão à Figura 2 no parágrafo da arquitetura.
+  - Equação do campo recetivo simplificada (`R = 1 + 3×4 + 0 = 13`) para caber na coluna (mesmo valor e cor REV-025).
+- **Porquê:** pedido do utilizador, para visualizar a rede ao lado do esquema do *pipeline* (Figura 1).
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex`+`bibtex` sem erros, sem referências em falta, sem linhas largas (6 páginas). Figura e equação inspecionadas visualmente na página 4.
+- **Validação:** valores da figura (canais, *kernel*, 13 pontos) conferidos com a Tabela 1 e o código.
+- **Pendentes:** nenhum específico. Nota: o `watch_latex.sh` ativo e compilações manuais em `latex/build/` colidem e corrompem o `.aux`; compilar manualmente em `latex/build/check/`.
+
+### REV-027 — Ensaio curto de ajuste da CNN em 3 viagens de treino
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Lima `#AFB42B`, RGB (175, 180, 43). No `.tex`, em `\revtext{rev027}` (duas frases que corrigem «ainda não houve treino»).
+- **O quê:**
+  - Pedido do utilizador: tabelas de rótulo vs. previsão e de acertos/erros por classe nas 3 viagens do teste inicial. Como não existiam previsões (REV-024 não treinou nada), o utilizador autorizou, entre três opções, um **ensaio curto de ajuste** só nessas 3 viagens de treino.
+  - Novo `scripts/diagnostic_fit_3_trips.py`: 200 épocas (600 passos de Adam), lr 1e-3, seed 42, limiar 0,5, CPU. Scaler ajustado só com estas 3 viagens. Saídas em `results/diagnostic_3trips/` (não versionadas): `predictions.csv`, `tables.json`, `training_history.csv`, `run_manifest.json`.
+  - Viagens: `211477000-3`, `211477000-4`, `219001039-2` (17 844 pontos).
+  - Correção documental: o LaTeX e o README diziam que não houvera treino; passam a dizer que houve só este ensaio.
+- **Resultado (do artefacto, não generalização):** accuracy 95,71 % (17 078 acertos, 766 erros; a classe maioritária daria 73,45 %). Navegação: 4 349 acertos, 388 erros; pesca: 12 729 acertos, 378 erros. Por viagem: 99,09 %, 99,29 % e 90,30 %. Perda por ponto 0,6599 → 0,1058. Treino 12,0 s.
+- **Limitações:** treino e previsão nas **mesmas** viagens (sobreajuste); só rótulos 01, 02 e 03 presentes nestas viagens (sem 04 e 05); scaler de 3 viagens; lr, épocas e limiar são escolhas do ensaio, não validadas; o script não tem teste automático.
+- **Ficheiros afetados:** `scripts/diagnostic_fit_3_trips.py`, `latex/proposta_pt.tex`, `README.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado** (só a correção; resultados não entram no `.tex`). `pdflatex` sem erros.
+- **Validação:** execução do script (14 s) com os artefactos gerados; tabelas lidas dos ficheiros. Validação e teste não abertos.
+- **Pendentes:** treino a sério (partição interna, lr, épocas, orçamento); decidir se estes resultados entram no relatório; commit local por autorizar.
+
+### REV-028 — Avaliação do ensaio em 3 outras viagens de treino
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Ciano `#00ACC1`, RGB (0, 172, 193). No `.tex`, em `\revtext{rev028}` (uma frase).
+- **O quê:**
+  - Pedido do utilizador: voltar a treinar nas 3 viagens e avaliar em **outras** 3 viagens do treino, para a tabela de exemplo.
+  - `scripts/diagnostic_fit_3_trips.py` estendido: viagens de ajuste `211477000-3`, `211477000-4`, `219001039-2` (17 844 pontos) e viagens fora da amostra `219001125-3`, `219001149-2`, `219001522-2` (35 290 pontos), as 3 seguintes do manifesto marcadas treino. Scaler ajustado só com as de ajuste. Mesma configuração (200 épocas, lr 1e-3, seed 42, limiar 0,5). Os artefactos de `results/diagnostic_3trips/` foram regenerados; o conjunto de ajuste reproduz os números de REV-027 (perda 0,6599 → 0,1058).
+  - Alteração à redação do `.tex` de REV-027: o texto passa a mencionar também esta avaliação.
+- **Resultado (dos artefactos):**
+  - Ajuste: accuracy 95,71 %.
+  - Fora da amostra: accuracy 93,01 % (32 824 acertos, 2 466 erros; maioritária 75,21 %). Navegação: 6 439 acertos, 2 310 erros (sensibilidade 0,736); pesca: 26 385 acertos, 156 erros (sensibilidade 0,994). Por viagem: 86,15 %, 98,28 % e 80,17 %.
+- **Limitações:** só treino oficial (não é validação); 3 viagens sem valor estatístico; só 3 viagens de ajuste, um scaler de 3 viagens; configuração não validada; o script não tem teste automático. Viagens fora da amostra incluem os rótulos 04 e 05.
+- **Ficheiros afetados:** `scripts/diagnostic_fit_3_trips.py`, `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado** (só qualitativo; sem números). 
+- **Validação:** execução do script (cerca de 11 s); tabelas lidas dos artefactos. Validação e teste oficiais não abertos.
+- **Pendentes:** treino a sério com partição interna, lr, épocas e orçamento; commit local por autorizar.
+
+### REV-029 — Gráficos e tabelas em imagem do ensaio de 3 viagens
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Castanho-avermelhado `#BF360C`, RGB (191, 54, 12). Só marcador do registo (não houve alteração ao `.tex`).
+- **O quê:** pedido do utilizador para ver os resultados em imagem. Novo `scripts/plot_diagnostic_3trips.py`, que lê apenas os artefactos de `results/diagnostic_3trips/` (sem treinar nem abrir os parquet) e gera 6 PNG em `results/diagnostic_3trips/figures/`: curva de perda e accuracy por viagem; matrizes de confusão; sensibilidade, precisão e F1 por classe; rótulo original vs. previsto; linhas temporais das 6 viagens (real, previsto, erro e probabilidade); tabelas resumo, por classe e por viagem. Cores: azul = navegação e laranja = pesca (slots 1 e 2 da paleta de referência); cinza e violeta distinguem ajuste e fora da amostra.
+- **Ficheiros afetados:** `scripts/plot_diagnostic_3trips.py`, `PROGRESS.md`, `REVISION_LOG.md`. Imagens não versionadas.
+- **Correspondência no LaTeX:** **não aplicável** (as figuras não entram no relatório; decisão pendente).
+- **Validação:** execução do script e inspeção visual das 6 imagens; corrigidos 4 defeitos de layout (legendas sobrepostas, rótulo de eixo, espaço vazio nas tabelas). Os números das imagens vêm dos artefactos (percentagens só de apresentação). Sem teste automático do script.
+- **Pendentes:** decidir se alguma figura entra no relatório; treino a sério; commit local por autorizar.
+
+### REV-030 — Figuras e subsecção do ensaio preliminar no relatório
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Laranja-âmbar `#FF6F00`, RGB (255, 111, 0). No `.tex`, em `\revtext{rev030}` (títulos, texto e legendas; as imagens em si não levam cor).
+- **O quê:**
+  - Nova subsecção 7.4 «Ensaio preliminar com poucas viagens» em «Avaliação»: descreve o ensaio (200 épocas, lr 1e-3 não validado, ajuste em 3 viagens, avaliação nessas e noutras 3 de treino), os scripts que o reproduzem, e declara que é um marcador ilustrativo e provisório, sem valor estatístico nem validação oficial.
+  - Duas figuras: Figura 3 (matrizes de confusão, ajuste e fora da amostra) e Figura 4 (previsão ao longo das 3 viagens fora da amostra). Ficheiros em `latex/figures/` (`diag3_matrizes_confusao.png`, `diag3_linhas_temporais.png`), cópias das saídas de `scripts/plot_diagnostic_3trips.py`.
+  - A impressão de que os erros se concentram nas fronteiras vem da leitura visual e está declarada no texto como **não quantificada**.
+  - `scripts/plot_diagnostic_3trips.py`: matriz mais compacta, nova versão `fig5b` (só viagens fora da amostra) e correção de uma variável que gravava um ficheiro `previsto.png` por engano.
+- **Porquê:** pedido do utilizador, para ver onde ficam as figuras e o texto dos resultados.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `latex/figures/*`, `scripts/plot_diagnostic_3trips.py`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex` sem erros e sem referências em falta (7 páginas). Páginas 5, 6 e 7 inspecionadas.
+- **Validação:** compilação e inspeção visual. Os números das figuras vêm dos artefactos do ensaio; o texto não copia números.
+- **Limitações:** as figuras são marcadores e serão substituídas pelos resultados do treino completo. As duas figuras flutuantes de largura total ficam em páginas separadas (a Figura 4 sozinha na página 7); a paginação deve ser revista no fim. As PNG em `latex/figures/` não estão ignoradas pelo git e entram no próximo commit.
+- **Pendentes:** substituir as figuras pelos resultados reais; quantificar o desfasamento nas fronteiras; commit local por autorizar.

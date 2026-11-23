@@ -14,8 +14,9 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - `build_clean_dataset.py --split train|validation|test`: bases limpas recalculadas. Executado para os três conjuntos (REV-009, REV-015).
   - `count_anomalies_train.py`: contagem de saltos e inversões de rumo por viagem, só treino. Executado (REV-017).
   - `watch_latex.sh`: visualização da proposta. Não versionado.
-  - Ainda não existe código de janelamento, modelo ou pós-processamento.
-- **Testes:** `tests/` com 15 testes sintéticos (REV-016, REV-017). Ver `pytest tests/`.
+  - Ainda não existe código de janelamento nem de pós-processamento.
+- **Código da fase 1 (`src/phase1/`, REV-024):** `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py`. Sequências, scaler, máscaras, CNN 1D, perda e passo de época implementados e testados. **Só houve um ensaio curto de ajuste em 3 viagens de treino (REV-027); sem treino completo.**
+- **Testes:** `tests/` com 75 testes (15 de REV-016/REV-017 e 60 de REV-024), todos a passar. Ver `pytest tests/`.
 - **Dados:** `data/123_fishing_trajs.csv` presente localmente, não versionado. **123 IDs únicos** e **1 026 279 linhas**, confirmados por `verify_trip_count.py` (REV-007).
 - **Bases limpas (não versionadas):** `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Soma: 1 026 279.
 - **Leituras de dados até agora:**
@@ -23,7 +24,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
   - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-022.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-030.
 
 ## Decisões do utilizador (vigentes)
 
@@ -183,7 +184,9 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md`, `README.md` | Existentes; alinhados (REV-004, REV-007); `AGENTS.md` §5 com atualização automática de registos (REV-010) |
-| `docs/00` a `docs/06` | Existentes; atualizados (REV-001 a REV-004, REV-007) |
+| `docs/00` a `docs/06` | Existentes; atualizados (REV-001 a REV-004, REV-007, REV-024 em `docs/05`) |
+| `src/phase1/` | `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py` (REV-024); sem treino |
+| `tests/` (fase 1) | 6 ficheiros novos, 60 testes (REV-024) |
 | `latex/proposta_pt.tex` | Reescrito a partir do PDF IAHC (REV-005); compila com pdflatex/bibtex |
 | `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** (REV-006) |
 | `latex/references.bib` | Existente; `kaggleAIS` com autor corrigido (REV-006) |
@@ -394,3 +397,123 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Proporção da partição interna de monitorização (decisão do utilizador).
 - Orçamento de tempo para o treino (decisão do utilizador).
 - Push, por conta do utilizador.
+
+### 2026-11-23y — Ficheiro de passagem de sessão
+
+**Feito**
+- Criado `handoff.md` na raiz: objetivo, estado, ficheiros, alterações, falhas e próximos passos do Marco 3. Não altera decisões nem dados.
+
+**Pendente**
+- Nenhuma alteração ao plano. Commit de `handoff.md` e `PROGRESS.md` a pedido do utilizador.
+
+### 2026-11-23z — Reorganização do manuscrito e código da fase 1 (REV-023, REV-024)
+
+**Feito**
+- REV-023: «Abordagem» (5 subsecções) e «Avaliação» (3) reorganizadas no LaTeX; texto antigo com as cores originais.
+- REV-024: `src/phase1/` com sequências por viagem, scaler só do treino, 7 canais (4 + 3 máscaras), zero depois de normalizar, partição interna por ID, DataLoader, CNN 1D (32/64/32, kernel 5, campo recetivo 13), perda BCE sobre logits, Adam, passo de época, avaliação diagnóstica e smoke test.
+- Ordenação por `id, t, point_id`: a base já vinha ordenada (`build_clean_dataset.py`); `validate_training_data` verifica-a e rejeita se não estiver.
+- Subsecção «Verificação da implementação» e parágrafos da CNN no `.tex` (REV-024).
+- Delegação: agente Sonnet (`data.py`), agente Haiku (modelo e treino); revisão e integração minhas.
+
+**Validado**
+- `pytest tests/`: 75 passaram, 0 falharam, 0 ignorados. 3 viagens reais de treino (17 844 pontos) usadas num teste. Validação e teste não abertos.
+- `pdflatex` sem erros (4 páginas). PDF não inspecionado visualmente.
+
+**Problemas e limitações**
+- Dois testes do agente B falharam durante o desenvolvimento e foram corrigidos por ele (smoke test: ordem da verificação de forma; teste da ausência de sigmoide).
+- Taxa de aprendizagem 1e-3 provisória. Smoke test estrito (gradiente não nulo em todos os tensores).
+- Faltam `config` JSON, checkpoints, segmentos, métricas por segmento, `run_phase1` e medição de custo.
+
+**Pendente**
+- Proporção da partição interna e orçamento de tempo (utilizador); depois, treino de ensaio só com treino (passo 5) e medição de custo (passo 6).
+- Commit local por autorizar (alteração substancial, AGENTS §6). Push por conta do utilizador.
+
+### 2026-11-23aa — Secção da CNN na proposta (REV-025)
+
+**Feito**
+- Nova secção «Especificação da CNN 1D de referência» no LaTeX: entrada e saída, arquitetura com tabela de parâmetros (total 21 761), justificação das escolhas, campo recetivo de 13 pontos, perda, otimizador e reprodutibilidade.
+- Declarado no texto que 32/64/32, *kernel* 5, Adam e lr 1e-3 são valores iniciais **não validados**; épocas, paragem e semente do modelo **não definidos**.
+- Corrigidas maiúsculas em quatro parágrafos movidos em REV-023.
+
+**Validado**
+- `pdflatex` sem erros (6 páginas). Valores da tabela conferidos com o código. Só a página 3 foi vista.
+
+**Pendente**
+- Decisões do utilizador: taxa de aprendizagem, épocas, critério de paragem, partição interna, orçamento de tempo.
+- Commit local por autorizar. Push por conta do utilizador.
+
+### 2026-11-23ab — Figura do desenho da CNN (REV-026)
+
+**Feito**
+- Figura 2 em TikZ na secção da CNN: cadeia de camadas e esquema do campo recetivo de 13 pontos. Equação do campo recetivo simplificada para caber na coluna.
+
+**Validado**
+- `pdflatex` e `bibtex` sem erros nem referências em falta; sem linhas largas. Figura e equação vistas no PDF (página 4).
+
+**Problemas**
+- O `watch_latex.sh` (ativo) e as minhas compilações em `latex/build/` colidiram e corromperam o `.aux` e o PDF. Reconstruí `build/` e passei a compilar manualmente em `latex/build/check/`.
+
+**Pendente**
+- Commit local por autorizar; push por conta do utilizador. Decisões de treino em aberto (lr, épocas, paragem, partição interna, orçamento).
+
+### 2026-11-23ac — Ensaio curto de ajuste em 3 viagens (REV-027)
+
+**Feito**
+- `scripts/diagnostic_fit_3_trips.py`: 200 épocas, lr 1e-3, seed 42, só 3 viagens de treino (17 844 pontos). Resultados em `results/diagnostic_3trips/`.
+- Accuracy 95,71 % (766 erros em 17 844; maioritária 73,45 %); navegação 4 349/388, pesca 12 729/378 (acertos/erros). Perda por ponto 0,6599 → 0,1058; 12,0 s.
+- Corrigidas as frases «ainda não houve treino» no LaTeX e no README.
+
+**Validado**
+- Execução do script e leitura dos artefactos; `pdflatex` sem erros. Sem teste automático do script.
+
+**Problemas e limitações**
+- Treino e previsão nas mesmas viagens: sobreajuste, não generalização. Só rótulos 01, 02 e 03 nestas viagens. Viagem `219001039-2` é a mais difícil (90,30 %).
+
+**Pendente**
+- Partição interna, lr, épocas e orçamento para o treino a sério. Commit local por autorizar; push por conta do utilizador.
+
+### 2026-11-23ad — Ajuste em 3 viagens e avaliação noutras 3 de treino (REV-028)
+
+**Feito**
+- `scripts/diagnostic_fit_3_trips.py` estendido: ajuste em 3 viagens, avaliação em outras 3 do treino (35 290 pontos), scaler só do ajuste.
+- Fora da amostra: accuracy 93,01 % (2 466 erros; maioritária 75,21 %). Navegação com sensibilidade 0,736 (2 310 erros, muitos previstos como pesca); pesca com sensibilidade 0,994. Ajuste: 95,71 %.
+- Frase qualitativa no `.tex` (sem números).
+
+**Validado**
+- Execução do script (≈11 s) e leitura dos artefactos; ajuste reproduz REV-027. `pdflatex` a verificar na compilação seguinte.
+
+**Problemas e limitações**
+- 3 viagens: ilustrativo, sem valor estatístico. Não é validação oficial. Script sem teste automático.
+
+**Pendente**
+- Partição interna, lr, épocas e orçamento para o treino a sério. Commit local por autorizar; push por conta do utilizador.
+
+### 2026-11-23ae — Gráficos e tabelas do ensaio em imagem (REV-029)
+
+**Feito**
+- `scripts/plot_diagnostic_3trips.py`: 6 imagens em `results/diagnostic_3trips/figures/` (perda e accuracy, matrizes de confusão, métricas por classe, rótulos originais vs. previsto, linhas temporais por viagem, tabelas).
+
+**Validado**
+- Script executado e imagens inspecionadas. Sem teste automático.
+
+**Observação (das imagens)**
+- Nas viagens fora da amostra com mais erros, os erros formam blocos contínuos junto às fronteiras do segmento de pesca (a pesca prevista começa antes e acaba depois da real), e não ruído disperso. Por confirmar com código (medir o desfasamento) antes de usar como evidência.
+
+**Pendente**
+- Decidir se alguma figura vai para o relatório; treino a sério; commit local por autorizar; push por conta do utilizador.
+
+### 2026-11-23af — Figuras do ensaio preliminar no relatório (REV-030)
+
+**Feito**
+- Subsecção 7.4 «Ensaio preliminar com poucas viagens» e duas figuras (matrizes de confusão; previsão em 3 viagens não vistas) no LaTeX, como marcador dos resultados. Imagens em `latex/figures/`.
+- Corrigido no script das figuras um nome de ficheiro sobreposto por engano.
+
+**Validado**
+- `pdflatex` sem erros nem referências em falta (7 páginas); páginas 5 a 7 vistas. Nome do script no texto corrigido depois de verificado.
+
+**Problemas e limitações**
+- Resultados ilustrativos (3 viagens, sem validação oficial); declarado no texto. Paginação das figuras de largura total a rever.
+- Observação sobre fronteiras ainda não quantificada.
+
+**Pendente**
+- Quantificar o desfasamento; treino a sério e substituição das figuras; commit local por autorizar (inclui `latex/figures/`); push por conta do utilizador.
