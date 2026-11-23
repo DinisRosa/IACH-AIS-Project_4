@@ -233,3 +233,16 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 **Pendente**
 - O ficheiro Zenodo chama-se `128_fishing_trajs.csv` (página diz 128 trajetórias). O local tem 123 IDs únicos, com tamanho semelhante (~169,6 MB). Confirmar.
+
+### 2026-11-23h — Confirmação do número de viagens
+
+**Feito**
+- Criado `scripts/verify_trip_count.py`: lê só a coluna `id`, conta IDs únicos e linhas, e compara com o manifesto.
+- Executado: `iach-ais-venv-4/bin/python scripts/verify_trip_count.py`.
+
+**Validado**
+- 1 026 279 linhas; 123 IDs únicos no ficheiro; 123 no manifesto; sem diferenças em nenhum sentido.
+- Confirma as 123 viagens do ficheiro local. A cifra de 128 é do nome e da página do Zenodo e não corresponde a este ficheiro.
+
+**Pendente**
+- Nenhum para esta questão.
