@@ -39,7 +39,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 - **Conjuntos reservados:** o `test` foi aberto **uma só vez** (seleção, REV-038), registado em `results/access_log.jsonl`. O `validation` **nunca foi aberto**.
 - **Testes:** 145 a passar, todos sintéticos (mais um que lê 3 viagens de treino).
 - **LaTeX** (`latex/proposta_pt.tex`): compila, 8 páginas. Os números dos resultados vêm de macros geradas. **Cores (REV-043):** o texto estável está a preto e só o que ainda pode mudar mantém a cor da revisão.
-- **Git:** `origin/main` está em `d1f30e0` (REV-043). Os commits de REV-044 (este handoff e a limpeza dos documentos) estão **só locais**. O push precisa de autorização explícita nova.
+- **Git:** último push autorizado e feito: `1bc3d8c` (REV-044, handoff e limpeza dos documentos). Confirmar com `git status -sb` se há commits posteriores por enviar. Cada push precisa de autorização explícita nova.
 
 ## Decisões vigentes
 

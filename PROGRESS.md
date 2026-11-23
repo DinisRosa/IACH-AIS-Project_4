@@ -21,7 +21,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Testes:** 145 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
 - **LaTeX:** `latex/proposta_pt.tex` compila (8 páginas); texto estável a preto e só o que pode mudar com a cor da revisão (REV-043).
-- **Git:** `origin/main` em `d1f30e0` (REV-043). Os commits de REV-044 estão locais; cada push precisa de autorização explícita nova.
+- **Git:** último push autorizado e feito: `1bc3d8c` (REV-044). Confirmar com `git status -sb` se há commits posteriores por enviar; cada push precisa de autorização explícita nova.
 - **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-044.
 
 ## Decisões do utilizador (vigentes)
@@ -764,4 +764,4 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - Nenhum documento dos `docs/` ficou inteiro por apagar: todos têm conteúdo ainda útil (o `docs/03` descreve o Marco 4, por fazer).
 
 **Pendente**
-- Pendências abertas listadas no topo deste ficheiro; push dos commits de REV-044, por autorização.
+- Pendências abertas listadas no topo deste ficheiro. Push dos commits de REV-044 feito em `d1f30e0..1bc3d8c`, autorizado pelo utilizador.

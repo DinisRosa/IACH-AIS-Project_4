@@ -755,5 +755,5 @@ Regras:
 - **Ficheiros afetados:** `handoff.md`, `PROGRESS.md`, `README.md`, `docs/00_projeto_e_decisoes.md`, `docs/02_cnn_viagem_completa.md`, `docs/03_cnn_janelamento.md`, `REVISION_LOG.md`.
 - **Correspondência no LaTeX:** **não aplicável** (documentação Markdown; o `.tex` não foi alterado).
 - **Validação:** releitura de todos os documentos e procura de contradições (estado dos marcos, contagem de testes, caminhos, números de REV, configurações); os números citados no handoff vêm de `results/baseline_frozen/final_results.json`; `pytest tests/` → 145 passaram. Código e LaTeX não foram alterados.
-- **Limitações:** as entradas históricas do `PROGRESS.md` e do `REVISION_LOG.md` mantêm caminhos e estados antigos (`scripts/`, «em curso»), por serem registo. Os commits desta revisão ficam locais, por enviar.
-- **Pendentes:** as pendências abertas do topo do `PROGRESS.md`; push, por autorização.
+- **Limitações:** as entradas históricas do `PROGRESS.md` e do `REVISION_LOG.md` mantêm caminhos e estados antigos (`scripts/`, «em curso»), por serem registo. Os commits desta revisão foram enviados em `d1f30e0..1bc3d8c`, com autorização do utilizador.
+- **Pendentes:** as pendências abertas do topo do `PROGRESS.md`.
