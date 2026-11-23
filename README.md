@@ -1,6 +1,6 @@
 # Projeto AIS
 
-Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto, usando uma rede neuronal convolucional unidimensional (CNN 1D). A ordem é: pré-processamento; CNN 1D de referência sobre a viagem completa (feita e fechada); a mesma CNN 1D sobre janelas com sobreposição (por começar); pós-processamento temporal (só se as janelas ajudarem).
+Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto, usando uma rede neuronal convolucional unidimensional (CNN 1D). A ordem é: pré-processamento; CNN 1D de referência sobre a viagem completa (feita e fechada); a mesma CNN 1D sobre janelas com sobreposição (feita: J0 e J50); pós-processamento temporal (só se o utilizador o decidir).
 
 ## Estado
 
