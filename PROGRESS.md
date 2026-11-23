@@ -740,3 +740,17 @@ Ver `docs/00_projeto_e_decisoes.md` §4 (estado dos marcos) e `docs/02_cnn_viage
 
 **Pendente**
 - Decisão sobre o ruído da seleção; commit local por autorizar; Marco 4.
+
+### 2026-11-23aw — Commits locais e push (REV-035 a REV-040)
+
+**Feito**
+- Oito commits locais por tema (`2d7fb39` a `3d8bc0c`), com mensagem completa e ficheiros selecionados à mão. Push de `main` para `origin` (`8f6857d..3d8bc0c`), autorizado pelo utilizador na mensagem desta sessão («dou-te permissão para dares push no final»), sem *force*.
+
+**Validado**
+- `pytest` no HEAD: 145 passaram. Só o manifesto aprovado está versionado como dados; nenhum parquet, checkpoint nem `results/`.
+
+**Problemas e limitações**
+- Os commits intermédios não foram testados isoladamente (só o estado final). A autorização de push foi pontual: o próximo push precisa de nova autorização.
+
+**Pendente**
+- Decisão sobre o ruído da seleção; Marco 4.

@@ -6,7 +6,7 @@ Data: 2026-11-23. Documento para retomar o trabalho numa nova conversa.
 
 1. `AGENTS.md` (regras fixas; o `CLAUDE.md` manda lê-lo antes de qualquer ação).
 2. Este ficheiro.
-3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23av) e `REVISION_LOG.md` (REV-001 a REV-040).
+3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23aw) e `REVISION_LOG.md` (REV-001 a REV-040).
 4. Antes de qualquer ação: verificar `git status` e `git log` (ver «Estado atual»).
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -26,7 +26,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 - Marcos 1 e 2 fechados. **Marco 3 (baseline) praticamente fechado**: treino de seleção de 300 épocas (só treino), seleção da época e do limiar no `test` numa ronda, e **baseline congelada** (época 162, limiar 0,65; `results/baseline_frozen/`). O Marco 4 só começou na ferramenta de medição por segmento.
 - **Treinos:** execução 1 (REV-032, com monitorização), treino final de 100 épocas (REV-035, é o que o LaTeX descreve hoje) e treino de seleção de 300 épocas com um checkpoint por época (REV-038, `results/phase1_select/`). A baseline congelada vem deste último.
 - **145 testes a passar** (`iach-ais-venv-4/bin/python -m pytest tests/`), todos sintéticos (mais um que lê 3 viagens de treino).
-- **Git:** último commit `8f6857d` (REV-034). Tudo o que veio depois (REV-035 a REV-039: treino final, papéis dos conjuntos, seleção, congelação, segmentos) está **por commitar**. Não há push feito desta sessão.
+- **Git:** tudo está commitado e enviado: `origin/main` em `3d8bc0c` (REV-035 a REV-040 em oito commits). O push foi autorizado pontualmente pelo utilizador; cada push futuro precisa de nova autorização explícita.
 - **Push:** o utilizador autorizou pontualmente dois pushes (feitos por mim). A regra continua: o push é do utilizador, e cada push precisa de nova autorização explícita.
 - **LaTeX** (`latex/proposta_pt.tex`) compila (7 páginas) e está **atualizado com a baseline congelada** (REV-040): treino de 300 épocas, seleção no `test`, tabela e figuras com treino e teste. Todos esses números vêm de macros geradas (`latex/generated/resultados.tex`) a partir de `results/baseline_frozen/final_results.json`. Por decisão do utilizador, o texto não acrescenta nada sobre navios partilhados.
 - **`test` aberto uma só vez** (seleção, REV-038), registado em `results/access_log.jsonl`. **`validation` não foi aberto.** Metade das viagens reservadas vem de navios que também estão no treino (`results/shared_vessels/summary.json`).
