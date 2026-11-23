@@ -76,6 +76,24 @@ def test_config_rejects_bad_values(tmp_path, change):
         load_phase1_config(f)
 
 
+def test_config_accepts_zero_monitor_fraction(tmp_path):
+    f = tmp_path / "c.json"; f.write_text(json.dumps(_cfg(internal_monitor_fraction=0.0)))
+    assert load_phase1_config(f)["internal_monitor_fraction"] == 0.0
+
+
+def test_train_model_without_monitor_stops_on_training_loss(tmp_path):
+    torch.manual_seed(0)
+    model = build_cnn(n_channels=N_INPUT_CHANNELS)
+    tr = _seqs(6, 1)
+    out = train_model(model, tr, [], _cfg(lr=1e-2, max_epochs=30, patience=30), torch.device("cpu"),
+                      {"s": 1}, INPUT_CHANNELS, checkpoint_path=tmp_path / "best.pt", log=lambda *_: None)
+    h = out["history"]
+    assert out["stop_criterion"] == "treino" and out["epochs_run"] == 30
+    assert h[-1]["monitor_loss_per_point"] < h[0]["monitor_loss_per_point"]
+    assert h[out["best_epoch"] - 1]["monitor_loss_per_point"] == pytest.approx(
+        out["best_monitor_loss_per_point"])
+
+
 def test_config_rejects_unknown_and_missing_keys(tmp_path):
     f = tmp_path / "c.json"
     f.write_text(json.dumps({**GOOD, "allow_validation": True}))
@@ -157,3 +175,23 @@ def test_monitor_never_updates_weights():
     before = {k: v.clone() for k, v in model.state_dict().items()}
     evaluate_training_subset(model, build_sequence_loader(_seqs(3, 3), False, 0), build_loss(), torch.device("cpu"))
     assert all(torch.equal(before[k], v) for k, v in model.state_dict().items())
+
+
+def test_checkpoint_every_epoch_writes_one_file_per_epoch(tmp_path):
+    torch.manual_seed(0)
+    model = build_cnn(n_channels=N_INPUT_CHANNELS)
+    cfg = _cfg(max_epochs=3, patience=3, checkpoint_every_epoch=True)
+    train_model(model, _seqs(4, 1), [], cfg, torch.device("cpu"), {"s": 1}, INPUT_CHANNELS,
+                checkpoint_path=tmp_path / "checkpoint_best.pt", log=lambda *_: None)
+    files = sorted((tmp_path / "checkpoints").glob("epoch_*.pt"))
+    assert [f.name for f in files] == ["epoch_001.pt", "epoch_002.pt", "epoch_003.pt"]
+    _, ck = load_checkpoint(files[1])
+    assert ck["epoch"] == 2
+
+
+def test_config_optional_key_defaults_to_false_and_checks_type(tmp_path):
+    f = tmp_path / "c.json"; f.write_text(json.dumps(_cfg()))
+    assert load_phase1_config(f)["checkpoint_every_epoch"] is False
+    f.write_text(json.dumps(_cfg(checkpoint_every_epoch="sim")))
+    with pytest.raises(ValueError):
+        load_phase1_config(f)

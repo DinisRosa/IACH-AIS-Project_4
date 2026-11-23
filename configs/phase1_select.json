@@ -1,0 +1,16 @@
+{
+  "stage": "development",
+  "seed": 42,
+  "train_path": "data/123_fishing_trajs_clean_train.parquet",
+  "split_manifest_path": "manifests/split_manifest_seed42.csv",
+  "output_dir": "results/phase1_select",
+  "internal_monitor_fraction": 0.0,
+  "lr": 0.001,
+  "max_epochs": 300,
+  "patience": 300,
+  "min_delta": 0.0,
+  "threshold": 0.5,
+  "time_budget_seconds": 1500,
+  "device": "cpu",
+  "checkpoint_every_epoch": true
+}

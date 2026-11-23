@@ -29,40 +29,10 @@ from ais.phase1.data import (  # noqa: E402
     build_sequence_loader, create_internal_training_split, fit_scaler, load_training_data,
     save_scaler, validate_training_data,
 )
-from ais.phase1.metrics import CLASS_NAMES, class_metrics  # noqa: E402
+from ais.phase1.inference import predict, tables_for  # noqa: E402
 from ais.phase1.model import build_cnn, count_parameters, receptive_field  # noqa: E402
 from ais.phase1.training import train_model  # noqa: E402
 from ais.phase1.utils import select_device, set_reproducibility  # noqa: E402
-
-
-@torch.no_grad()
-def predict(model, seqs, labels, device, threshold) -> pd.DataFrame:
-    """Uma probabilidade por ponto (sigmoid aplicada uma só vez, aqui) e a classe prevista."""
-    model.eval()
-    rows = []
-    for X, y, m in build_sequence_loader(seqs, shuffle=False, seed=0):
-        p = torch.sigmoid(model(X.to(device)))[0, 0].cpu().numpy()
-        rows.append(pd.DataFrame({"id": m["id"], "point_id": m["point_ids"], "t": m["t"],
-                                  "target": y[0, 0].numpy().astype(int), "p_fishing": p}))
-    pred = pd.concat(rows, ignore_index=True)
-    pred["predicted"] = (pred["p_fishing"] >= threshold).astype(int)
-    pred = pred.merge(labels, on="point_id", how="left")
-    assert pred["point_id"].is_unique and pred["label"].notna().all()
-    return pred
-
-
-def tables_for(pred: pd.DataFrame) -> dict:
-    tgt, prd = pred["target"].to_numpy(), pred["predicted"].to_numpy()
-    return {
-        "global": class_metrics(tgt, prd),
-        "por_viagem": {i: class_metrics(g["target"].to_numpy(), g["predicted"].to_numpy())
-                       for i, g in pred.groupby("id", sort=False)},
-        "rotulo_original_vs_previsto": (
-            pred.groupby(["label", "predicted"]).size().unstack(fill_value=0)
-            .rename(columns=CLASS_NAMES).reset_index().to_dict(orient="records")),
-        "matriz_confusao_linhas_real_colunas_previsto": [
-            [int(((tgt == r) & (prd == c)).sum()) for c in (0, 1)] for r in (0, 1)],
-    }
 
 
 def main(cfg_path: str) -> None:
@@ -80,16 +50,21 @@ def main(cfg_path: str) -> None:
     labels = df[["point_id", "label"]]
     seqs = build_full_sequences(df, FEATURE_COLS)
 
-    train_s, mon_s, split = create_internal_training_split(
-        seqs, cfg["internal_monitor_fraction"], cfg["seed"])
+    if cfg["internal_monitor_fraction"] > 0:
+        train_s, mon_s, split = create_internal_training_split(
+            seqs, cfg["internal_monitor_fraction"], cfg["seed"])
+    else:  # sem monitorização: as 87 viagens do treino ajustam a rede e o normalizador
+        train_s, mon_s, split = seqs, [], {s["id"]: "train_internal" for s in seqs}
     pd.Series(split, name="split_interno").rename_axis("id").to_csv(out / "internal_split.csv")
-    scaler = fit_scaler(train_s)  # só treino interno: sem vazamento da monitorização
+    scaler = fit_scaler(train_s)  # só treino interno (ou todo o treino, sem monitorização)
     save_scaler(scaler, out / "scaler.json")
     train_s = [apply_scaler(s, scaler) for s in train_s]
     mon_s = [apply_scaler(s, scaler) for s in mon_s]
     n_tr, n_mon = sum(s["y"].shape[1] for s in train_s), sum(s["y"].shape[1] for s in mon_s)
     print(f"partição interna: {len(train_s)} viagens de ajuste ({n_tr} pontos) e "
           f"{len(mon_s)} de monitorização ({n_mon} pontos); scaler ajustado só com o ajuste", flush=True)
+    if not mon_s:
+        print("sem monitorização: a paragem antecipada usa a perda de avaliação no treino", flush=True)
 
     torch.manual_seed(cfg["seed"])
     model = build_cnn(n_channels=N_INPUT_CHANNELS).to(device)
@@ -102,15 +77,19 @@ def main(cfg_path: str) -> None:
     pd.DataFrame(res["history"]).to_csv(out / "training_history.csv", index=False)
     print(f"treino terminado: {res['stop_reason']} após {res['epochs_run']} épocas em "
           f"{res['total_seconds']:.1f}s; melhor época {res['best_epoch']} "
-          f"(perda de monitorização {res['best_monitor_loss_per_point']:.4f})", flush=True)
+          f"(perda do critério '{res['stop_criterion']}' {res['best_monitor_loss_per_point']:.4f})",
+          flush=True)
 
     # Previsões com o melhor checkpoint recarregado do disco (prova que o checkpoint serve).
     best, ck = load_checkpoint(out / "checkpoint_best.pt", device)
     assert ck["epoch"] == res["best_epoch"]
-    pred_mon = predict(best, mon_s, labels, device, cfg["threshold"])
     pred_tr = predict(best, train_s, labels, device, cfg["threshold"])
-    pred_mon.to_csv(out / "predictions_monitor.csv", index=False)
-    tables = {"monitor_interna": tables_for(pred_mon), "ajuste": tables_for(pred_tr)}
+    pred_tr.to_csv(out / "predictions_train.csv", index=False)
+    tables = {"ajuste": tables_for(pred_tr)}
+    if mon_s:
+        pred_mon = predict(best, mon_s, labels, device, cfg["threshold"])
+        pred_mon.to_csv(out / "predictions_monitor.csv", index=False)
+        tables["monitor_interna"] = tables_for(pred_mon)
     (out / "tables.json").write_text(json.dumps(tables, indent=2, ensure_ascii=False))
     (out / "run_manifest.json").write_text(json.dumps({
         "script": "src/ais/cli/run_phase1_training.py", "config_path": str(cfg_path), "config": cfg,
@@ -124,9 +103,12 @@ def main(cfg_path: str) -> None:
         "aviso": "Só treino oficial. 'monitor_interna' são viagens do treino reservadas por ID; "
                  "não é validação oficial. Validação e teste não foram abertos."}, indent=2,
         ensure_ascii=False, default=str))
-    g, m = tables["ajuste"]["global"], tables["monitor_interna"]["global"]
-    print(f"accuracy: ajuste {g['accuracy']:.4f} | monitorização {m['accuracy']:.4f} "
-          f"(maioritária {m['accuracy_maioritaria']:.4f})", flush=True)
+    g = tables["ajuste"]["global"]
+    msg = f"accuracy: ajuste {g['accuracy']:.4f} (maioritária {g['accuracy_maioritaria']:.4f})"
+    if "monitor_interna" in tables:
+        m = tables["monitor_interna"]["global"]
+        msg += f" | monitorização {m['accuracy']:.4f} (maioritária {m['accuracy_maioritaria']:.4f})"
+    print(msg, flush=True)
     print(f"artefactos em {out}", flush=True)
 
 

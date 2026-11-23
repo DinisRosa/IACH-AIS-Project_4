@@ -15,6 +15,7 @@ Convenções:
 from __future__ import annotations
 
 import time
+from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 import numpy as np
@@ -213,6 +214,10 @@ def train_model(model, train_seqs, monitor_seqs, config: dict, device, scaler: d
     `time_budget_seconds` (verificado no fim de cada época). Guarda o melhor checkpoint (em
     memória e, se indicado, em disco) e restaura-o no modelo no fim.
     Devolve histórico, época do melhor modelo, motivo da paragem e tempos.
+
+    Sem monitorização (`monitor_seqs` vazio ou None) o critério de paragem e do melhor modelo é a
+    perda por ponto, em modo de avaliação, sobre as próprias `train_seqs`. As colunas `monitor_*`
+    do histórico passam então a descrever essa avaliação no treino, e `stop_criterion` regista-o.
     """
     import copy
 
@@ -221,7 +226,9 @@ def train_model(model, train_seqs, monitor_seqs, config: dict, device, scaler: d
 
     loss_fn = build_loss()
     optimizer = build_optimizer(model, {"lr": config["lr"]})
-    monitor_loader = build_sequence_loader(monitor_seqs, shuffle=False, seed=0)
+    stop_criterion = "monitor_interna" if monitor_seqs else "treino"
+    monitor_loader = build_sequence_loader(monitor_seqs if monitor_seqs else train_seqs,
+                                           shuffle=False, seed=0)
 
     history, best_loss, best_epoch, best_state, stale = [], float("inf"), 0, None, 0
     stop_reason = "max_epochs"
@@ -232,6 +239,11 @@ def train_model(model, train_seqs, monitor_seqs, config: dict, device, scaler: d
         mon = evaluate_training_subset(model, monitor_loader, loss_fn, device, config["threshold"])
         elapsed = time.perf_counter() - t0
         improved = mon["mean_loss_per_point"] < best_loss - config["min_delta"]
+        if config.get("checkpoint_every_epoch") and checkpoint_path is not None:
+            # Um checkpoint por época (candidatos para uma seleção posterior); pasta ao lado do melhor.
+            save_checkpoint(Path(checkpoint_path).parent / "checkpoints" / f"epoch_{epoch:03d}.pt",
+                            model, None, config, scaler, epoch,
+                            {"train_eval_loss_per_point": mon["mean_loss_per_point"]}, input_channels)
         if improved:
             best_loss, best_epoch, stale = mon["mean_loss_per_point"], epoch, 0
             best_state = copy.deepcopy(model.state_dict())
@@ -261,5 +273,5 @@ def train_model(model, train_seqs, monitor_seqs, config: dict, device, scaler: d
     if best_state is not None:
         model.load_state_dict(best_state)
     return {"history": history, "best_epoch": best_epoch, "best_monitor_loss_per_point": best_loss,
-            "stop_reason": stop_reason, "epochs_run": len(history),
+            "stop_reason": stop_reason, "stop_criterion": stop_criterion, "epochs_run": len(history),
             "total_seconds": time.perf_counter() - t0}
