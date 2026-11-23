@@ -19,7 +19,7 @@
 
 Campo recetivo de **13 pontos** (três kernels 5, stride 1, sem dilatação) e 21 761 parâmetros. Sem pooling global nem saída única por viagem. Implementada em `src/ais/phase1/model.py` (`build_cnn`, `receptive_field`, `count_parameters`).
 
-## 3. Treino (configuração aceite em REV-032, `configs/phase1_run1.json`)
+## 3. Treino (execução 1: REV-032, `configs/phase1_run1.json`; treino final: REV-035, `configs/phase1_final.json`)
 
 | Elemento | Valor inicial |
 |---|---|
@@ -32,7 +32,7 @@ Campo recetivo de **13 pontos** (três kernels 5, stride 1, sem dilatação) e 2
 | Limiar | 0,5 (sem escolha a partir de resultados) |
 | Dispositivo | CPU |
 
-Todos são valores iniciais, não validados. Qualquer alteração do critério de paragem, do lr ou da arquitetura é uma escolha metodológica a aprovar. A monitorização são viagens do treino: **não é a validação oficial**, e a normalização ajustada só no treino interno é a que preserva essa independência.
+Todos são valores iniciais, não validados. No **treino final** (REV-035) usam-se as 87 viagens sem monitorização interna (`internal_monitor_fraction = 0`), paciência 30 e a paragem e o melhor modelo decididos pela perda por ponto avaliada sobre o próprio treino (`stop_criterion = "treino"`). Qualquer alteração do critério de paragem, do lr ou da arquitetura é uma escolha metodológica a aprovar. A monitorização são viagens do treino: **não é a validação oficial**, e a normalização ajustada só no treino interno é a que preserva essa independência.
 
 Registar sempre: seed, características por ordem, configuração, versões, manifesto da divisão, épocas, passos e histórico. Com uma atualização por viagem, viagens longas pesam de modo diferente; declarar se a média é por ponto ou por sequência.
 
@@ -52,20 +52,26 @@ Registar sempre: seed, características por ordem, configuração, versões, man
 | `train_one_epoch`, `evaluate_training_subset`, `train_model` | `src/ais/phase1/training.py` | Feito, com paragem antecipada e orçamento |
 | `save_checkpoint`, `load_checkpoint` | `src/ais/phase1/artifacts.py` | Feito |
 | Métricas por classe e por ponto (`class_metrics`) | `src/ais/phase1/metrics.py` | Feito; existe duplicada em `src/ais/cli/diagnostic_fit_3_trips.py`, por unificar |
-| Inferência e classes por ponto | `src/ais/cli/run_phase1_training.py` | **Dentro do script**, ainda não é módulo |
-| Figuras do treino | `src/ais/cli/plot_phase1_run.py` | Script, sem teste |
+| Inferência e tabelas por ponto (`predict`, `tables_for`) | `src/ais/phase1/inference.py` | Feito (REV-038); antes estava dentro do script |
+| Acesso aos conjuntos reservados (autorização, protocolo, registo, rondas, `validation` só uma vez) | `src/ais/phase1/reserved.py` | Feito (REV-038), testado só com sintéticos |
+| Critérios de seleção (época por perda, limiar por F1 médio) | `src/ais/phase1/selection.py`; programa `src/ais/cli/select_on_test.py` | Feito e executado uma vez no `test` (REV-038) |
+| Congelar a baseline (`freeze_phase1_run`) | `src/ais/cli/freeze_baseline.py` | Feito (REV-038): `results/baseline_frozen/` |
+| Navios partilhados entre conjuntos | `src/ais/cli/count_shared_vessels.py` | Feito (REV-039), só lê o manifesto |
+| Ficheiro final de resultados, macros e figuras do LaTeX | `src/ais/cli/build_final_results.py` | Feito (REV-035; reescrito em REV-040 para partir da baseline congelada): `results/baseline_frozen/final_results.json`, `latex/generated/resultados.tex`, `latex/figures/final_*.png`. Avalia a baseline nas 87 viagens de treino e lê os números do `test` de `selection_test.json`; não abre o `test` nem o `validation` |
+| Figuras da execução 1 | `src/ais/cli/plot_phase1_run.py` | Script, sem teste |
 | Execução | `src/ais/cli/run_phase1_training.py` | Script, sem teste |
-| Segmentos (`extract_segments`) | — | **Por fazer** |
-| Correspondência e métricas por segmento, fronteiras, fragmentação | — | **Por fazer** |
+| Segmentos (`extract_segments`), correspondência, métricas por segmento, fronteiras e fragmentação | `src/ais/phase1/segments.py`; programa `src/ais/cli/segment_metrics.py` | Feito (REV-039): ferramenta de medição, **sem suavizar**; IoU 0,5, segundos, um-para-um guloso |
 | Relatórios e `save_phase1_results` | — | **Por fazer** |
-| `freeze_phase1_run` | — | **Por fazer** |
 | `run_authorized_validation`, `run_authorized_final_evaluation` | — | **Por fazer**; ficam fora do caminho normal de desenvolvimento e exigem autorização externa ao agente |
 
 Comandos (a partir da raiz do projeto):
 
 ```bash
 iach-ais-venv-4/bin/python -m pytest tests/
-iach-ais-venv-4/bin/python -m ais.cli.run_phase1_training configs/phase1_run1.json
+iach-ais-venv-4/bin/python -m ais.cli.run_phase1_training configs/phase1_select.json   # treino, um checkpoint por época
+iach-ais-venv-4/bin/python -m ais.cli.select_on_test results/phase1_select              # UMA ronda no test, com autorização
+iach-ais-venv-4/bin/python -m ais.cli.freeze_baseline
+iach-ais-venv-4/bin/python -m ais.cli.build_final_results   # final_results.json, macros e figuras do LaTeX
 iach-ais-venv-4/bin/python -m ais.cli.plot_phase1_run
 ```
 
@@ -76,16 +82,20 @@ Saídas do treino em `results/phase1_run1/` (não versionadas): checkpoint, hist
 Todos com dados sintéticos ou treino; um teste lê 3 viagens reais do treino.
 
 - **Feitos** (`tests/`): comprimentos diferentes mantêm N saídas; nada se mistura entre viagens; alinhamento de `point_id` e tempo; perda finita, gradientes e passo de otimização; carregador de desenvolvimento rejeita IDs e ficheiros reservados; checkpoint recarregado reproduz as previsões; ciclo de treino com paragem antecipada; ausência de dupla sigmoide.
-- **Por fazer:** extração de segmentos (uma só classe, alternâncias, sequências mínimas), métricas por segmento com valores esperados conhecidos (incluindo casos sem positivos), inferência a cobrir cada ponto uma única vez como módulo, e testes automáticos dos scripts.
+- **Feitos depois (REV-038, REV-039):** acesso reservado (autorização, protocolo, uma só ronda, `validation` recusado), critérios de seleção, congelação, extração de segmentos e métricas por segmento com valores calculados à mão, e navios partilhados. Conferido ainda por uma reimplementação independente sobre as previsões do treino.
+- **Por fazer:** testes automáticos dos programas de treino e de figuras, e a medição por segmento sobre a baseline congelada (precisa de autorização, por usar o `test`).
 - O sobreajuste de poucas viagens (ensaio de 3 viagens, REV-027/028) é um teste diagnóstico, não prova de generalização.
 
-## 6. Próximos passos do Marco 3
+## 6. Estado do Marco 3 e próximos passos
 
-1. Decidir se se repete o treino com paciência maior ou outro lr (a perda ainda descia nas últimas épocas da primeira execução).
-2. Medir com código os tipos de erro: blocos de navegação previstos como pesca, fragmentação, desfasamento nas fronteiras.
-3. Implementar segmentos, métricas por segmento e a inferência como módulo.
-4. Registar as métricas internas de referência da execução final e pedir a revisão do Marco 3 ao utilizador.
-5. Congelar a execução e **parar**: validação e teste só com autorização explícita.
+**Feito (REV-038):** treino de seleção (300 épocas, um checkpoint por época, só treino), seleção da época e do limiar no `test` numa só ronda, e baseline congelada em `results/baseline_frozen/` (época 162, limiar 0,65). O `validation` **não** foi aberto. Os números estão em `results/phase1_select/selection_test.json` e em `results/baseline_frozen/baseline_frozen.json`.
+
+**Cuidado:** a perda no `test` é muito ruidosa de época para época, e a época escolhida é um mínimo estreito; a seleção pode ter seguido parte desse ruído. A ronda autorizada era uma só, por isso não se repete sem nova decisão do utilizador.
+
+**Próximos passos:**
+1. O utilizador decide como lidar com o ruído da seleção (ver o relatório da sessão).
+2. Marco 4: janelas J0 e J50 (L = 64) com a mesma CNN, comparadas com a baseline congelada, por ponto e por segmento (`segments.py`).
+3. Só no fim do projeto, com todas as variantes congeladas e nova autorização, a medição final única no `validation`; ver `00` §6.
 
 ## 7. Critérios de aceitação
 

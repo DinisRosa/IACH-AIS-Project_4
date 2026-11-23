@@ -24,7 +24,7 @@ Detetar comportamento compatível com pesca não demonstra ilegalidade: o modelo
 | Pós-processamento | Objetivo central | Ramo separado e identificado, depois de aprovado (Marco 5); a média das janelas é reconstrução, não suavização |
 | HMM e Wu et al. (2022) | Baselines previstas | Fora por agora (REV-006) |
 | Explicabilidade, calibração, dashboard | Previstos | Fora do mínimo atual |
-| Dados reservados | Treino/validação/teste | Desenvolvimento só em treino; validação e teste só com autorização explícita |
+| Dados reservados | Treino/validação/teste | Desenvolvimento só em treino; os conjuntos reservados só com autorização explícita e com papéis trocados face ao habitual (§6): `test` seleciona, `validation` mede no fim |
 
 A divisão por viagem mede generalização entre viagens. Viagens do mesmo navio podem estar em conjuntos diferentes (decisão do utilizador), por isso **não se afirma generalização para navios inéditos**.
 
@@ -42,11 +42,13 @@ O âmbito mínimo atual só responde a RQ1. Um resultado sem melhoria também é
 |---|---|---|
 | 1 | Ambiente, divisão por ID, isolamento | Fechado |
 | 2 | Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
-| 3 | CNN 1D de referência sobre a viagem completa | **Em curso**: sequências, normalização, CNN, testes e primeira execução de treino feitos (REV-032). Faltam métricas de referência finais e a revisão do utilizador |
-| 4 | Janelamento com sobreposição e a mesma CNN | Por fazer |
-| 5 | Pós-processamento simples, em ramo separado | Por fazer; precisa de aprovação da unidade/largura do filtro e do protocolo |
-| 6 | Congelar a implementação e pedir autorização para seleção formal na validação | Por fazer |
-| 7 | Congelar modelos e pedir nova autorização para a avaliação final no teste | Por fazer |
+| 3 | CNN 1D de referência sobre a viagem completa | **Em curso** (REV-038): treino de seleção com um checkpoint por época, seleção da época e do limiar no `test` (uma ronda) e congelação da baseline. Métricas só por ponto. **Não toca no `validation`** |
+| 4 | Janelamento com sobreposição e a mesma CNN | Por fazer. **Começa pelas métricas por segmento** (extração de segmentos sem suavizar, fragmentação, erro de fronteira), que são a ferramenta que permite provar se a sobreposição ajuda face às previsões brutas (REV-037) |
+| 5 | Pós-processamento simples, em ramo separado | Por fazer; só avança se o Marco 4 mostrar benefício da sobreposição; precisa de aprovação da unidade/largura do filtro e do protocolo |
+| 6 | Congelar todas as variantes (baseline, janelas e, se existir, pós-processamento) | Por fazer |
+| 7 | Medição final única no conjunto `validation`, com todas as variantes de uma vez | Por fazer; nova autorização do utilizador |
+
+O pós-processamento (um filtro que altera as previsões) não é o mesmo que extrair segmentos (só agrupar pontos consecutivos da mesma classe, sem suavizar): a extração é uma ferramenta de medição e vem antes. O `validation` só se abre no fim, para todas as variantes de uma vez, e não já para a baseline.
 
 O estado detalhado, com datas e resultados, está em `PROGRESS.md`.
 
@@ -61,12 +63,14 @@ As regras completas estão no `AGENTS.md` §3. Resumo operacional:
 | Etapa | Dados permitidos | Condição |
 |---|---|---|
 | A — Desenvolvimento | Treino oficial ou sintéticos | Autorizada. Inclui debugging, gráficos, benchmarks, inspeção e testes de integração |
-| B — Seleção formal | Validação | Só com autorização explícita, depois de congelar a implementação |
-| C — Avaliação final | Teste | Só com nova autorização, depois de congelar modelos e lista de variantes |
+| B — Seleção | `test` | Só com autorização explícita (âmbito das decisões declarado), depois de congelar a implementação; pode ser consultado mais do que uma vez dentro do âmbito autorizado |
+| C — Medição final | `validation` | Só com nova autorização, **uma só vez**, depois de congelar modelo, limiar, número de épocas e lista de variantes |
 
+- **Nomes e papéis (REV-036):** os conjuntos mantêm os nomes `validation` e `test` nos ficheiros e no manifesto, mas os papéis estão trocados face ao habitual: `test` serve para **selecionar** (épocas, limiar, treinar mais, escolher entre variantes) e `validation` é a **medição final**, usada uma só vez com tudo congelado. Os resultados no `test` são otimistas por terem servido a escolher; o número final da proposta é o do `validation`.
 - A divisão foi feita antes de qualquer exploração, só com IDs e contagens técnicas; a tabela `id → split` está em `manifests/split_manifest_seed42.csv` e não se refaz.
 - Normalizadores e qualquer objeto aprendido ajustam-se só no treino (ou só no treino interno, se a monitorização tiver de ser independente).
 - Monitorização interna: separar por ID dentro do treino, antes do ajuste de transformações e da criação de janelas.
+- **Mecanismo (REV-038):** só se abre um conjunto reservado com um ficheiro de autorização escrito a partir de uma instrução do utilizador (`configs/authorizations/`), um protocolo declarado antes (`configs/selection_protocol.json`) e `ais.phase1.reserved`, que regista cada abertura em `results/access_log.jsonl`, recusa uma segunda ronda e recusa o `validation` sem autorização própria e execução congelada. É uma salvaguarda do código, não uma prova de que ninguém pode contornar.
 - Uma flag no código ou uma decisão do agente nunca é autorização. Um erro numa execução reservada reproduz-se e corrige-se com treino ou sintéticos, e a exposição documenta-se.
 - Exposição já ocorrida (REV-015): validação e teste foram lidos por inteiro só para construir as bases limpas e contar linhas e viagens, sem análise de resultados nem uso para escolher modelos ou regras.
 - Nenhum valor empírico usado como evidência pode depender só de um cálculo informal do agente (`AGENTS.md` §10).
@@ -80,7 +84,7 @@ As regras completas estão no `AGENTS.md` §3. Resumo operacional:
 - **Estabilidade:** resposta a pequenas alterações de parâmetros e janelas.
 - **Custo:** tempo, passos de treino, memória e custo de inferência.
 
-Mantêm-se os mesmos IDs, características e definições de métricas entre comparações. Declara-se se a sobreposição varia no treino, na inferência ou em ambos, e o orçamento de otimização. Variantes nunca se escolhem a partir do teste.
+Mantêm-se os mesmos IDs, características e definições de métricas entre comparações. Declara-se se a sobreposição varia no treino, na inferência ou em ambos, e o orçamento de otimização. Variantes nunca se escolhem a partir do conjunto de medição final (`validation`).
 
 ## 8. Dimensão humana e limites
 

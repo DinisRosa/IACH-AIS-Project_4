@@ -64,7 +64,7 @@ Tabela de correspondência: `window_id`, `id`, `sequence_id`, `point_id`, `posit
 | `checks` | `validate_window_coverage` | Cobertura completa, sem cruzar IDs/gaps, padding sem associação indevida |
 | `experiments` | `build_experiment_grid`, `compare_experiments` | Variantes pré-definidas; comparação no mesmo conjunto, com as mesmas métricas da baseline |
 | `evaluation` | `evaluate_reconstructed_predictions` | Reutiliza classes, segmentos e métricas de `02` |
-| `artifacts` / `reserved_evaluation` | congelar experiências; validação e teste autorizados | Fora do caminho normal de desenvolvimento |
+| `artifacts` / `reserved_evaluation` | congelar experiências; seleção no `test` e medição final no `validation`, autorizadas | Fora do caminho normal de desenvolvimento |
 
 O modelo reutiliza `build_cnn` de `src/ais/phase1/model.py`; não se duplica a arquitetura. Os módulos não são obrigatórios um a um: agrupar mantendo responsabilidades claras.
 

@@ -50,10 +50,12 @@ iach-ais-venv-4/bin/python -m ais.cli.verify_trip_count
 - `create_split_manifest.py` cria `manifests/split_manifest_seed42.csv`.
 - `check_units_train.py` gera gráficos e um `summary.json` em `results/units_check_train/`, usando só o conjunto de treino.
 - `verify_trip_count.py` confirma 123 viagens e que o manifesto coincide com o ficheiro.
+- `select_on_test.py` (seleção no `test`, uma ronda, com autorização e registo de acessos), `freeze_baseline.py` (congela a baseline), `segment_metrics.py` (segmentos e métricas por segmento, sem suavizar) e `count_shared_vessels.py` (navios partilhados entre conjuntos, só lê o manifesto).
+- `run_phase1_training.py <config>` treina a CNN 1D (só treino oficial); `build_final_results.py` junta os resultados num `final_results.json`, nas macros `latex/generated/resultados.tex` e nas figuras `latex/figures/final_*.png`.
 - `count_anomalies_train.py`: conta saltos (acima de 30 nós) e inversões de rumo (acima de 170°) por viagem, só no treino. Saídas em `results/anomalies_train/`.
 - `tests/`: testes sintéticos (dados inventados; um teste lê 3 viagens de treino). Executar: `iach-ais-venv-4/bin/python -m pytest tests/`.
 - `build_clean_dataset.py --split train|validation|test`: constrói a base limpa (Parquet) de cada conjunto, com target 0/1 e grandezas recalculadas. Por defeito, treino.
 
 ## Estado
 
-Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN 1D de referência sobre viagem completa) em curso: sequências, normalização, CNN, treino com paragem antecipada e checkpoints implementados e testados em `src/ais/phase1/` (REV-024, REV-032); primeira execução de treino feita só com o treino oficial, com resultados provisórios. Janelamento (Marco 4) por fazer. Validação e teste oficiais por abrir. Ver `PROGRESS.md` e `handoff.md`.
+Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN 1D de referência sobre viagem completa) em curso: sequências, normalização, CNN, treino com paragem antecipada e checkpoints implementados e testados em `src/ais/phase1/` (REV-024, REV-032); treino final feito só com o treino oficial (87 viagens, REV-035), com os números do LaTeX gerados por código (`ais.cli.build_final_results`); resultados medidos no próprio treino. Janelamento (Marco 4) por fazer. Validação e teste oficiais por abrir. Ver `PROGRESS.md` e `handoff.md`.

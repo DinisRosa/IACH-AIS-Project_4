@@ -29,7 +29,8 @@ As funções especificadas nos documentos são contratos orientadores, não obri
 - Dividir no início, antes da exploração, usando apenas leitura técnica mínima de IDs/encaminhamento e verificações estruturais.
 - Desenvolvimento, debugging, amostras, gráficos, inspeção, benchmarks e testes de integração: EXCLUSIVAMENTE treino ou dados sintéticos.
 - Não abrir pequenas amostras de validação/teste para verificar código.
-- Manter conjuntos reservados isolados e fora do ponto de entrada normal. Acesso à validação exige autorização explícita para seleção formal; teste exige nova autorização para avaliação final.
+- Manter conjuntos reservados isolados e fora do ponto de entrada normal.
+- **Papéis dos conjuntos reservados (decisão do utilizador, REV-036):** o conjunto `test` é o de **seleção** (número de épocas, limiar, se treinar mais compensa, escolha entre variantes) e o conjunto `validation` é a **medição final**, aberta **uma só vez** com o modelo e o protocolo congelados. Os nomes dos ficheiros e do manifesto mantêm-se. Acesso ao `test` exige autorização explícita, com o âmbito das decisões declarado; acesso ao `validation` exige nova autorização para a medição final.
 - Flags de configuração, delegação e decisões do agente não concedem autorização.
 - Ajustar normalizadores, imputadores, limites estatísticos e outros objetos aprendidos apenas no treino correspondente.
 - Monitorização interna: separar por ID dentro do treino oficial ANTES do fit de transformações e das janelas; ajustar no treino interno para independência interna.
