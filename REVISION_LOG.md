@@ -20,6 +20,7 @@ Regras:
 | REV-006 | Castanho | `#6D4C41` | (109, 76, 65) |
 | REV-007 | Rosa | `#AD1457` | (173, 20, 87) |
 | REV-008 | Verde-azulado | `#00695C` | (0, 105, 92) |
+| REV-009 | Índigo | `#283593` | (40, 53, 147) |
 
 ## Revisões
 
@@ -177,3 +178,28 @@ Regras:
   - Confirmar o CRS de longitude/latitude (hipótese WGS84 por verificar com uma projeção de referência, p.ex. `pyproj`, se autorizado instalar).
   - Método de cálculo de `distanceToShore` (não documentado).
 - **Verificação adicional (REV-008):** MD5 do `data/123_fishing_trajs.csv` local = `c5953081f511e228b19e46ca85fe304f`, igual ao publicado no Zenodo para `128_fishing_trajs.csv`. Logo é o ficheiro oficial, e as 123 viagens são o conteúdo real. O "128" é só o nome do ficheiro e da proposta.
+
+### REV-009 — Base limpa do treino com bases X, Y, T e distanceToShore
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Índigo `#283593`, RGB (40, 53, 147).
+- **O quê:**
+  - Criado `scripts/build_clean_dataset.py`. Bases copiadas do original: `x`, `y`, `t`, `distanceToShore`, `label`.
+  - Recalculados por viagem: `time_gap_calc_s`, `distance_gap_calc_m`, `bearing_calc_deg`, `signed_turn_calc_deg`, `speed_calc_mps`.
+  - `target` binário: 1 pesca (`02-fishing`, `04-fishing`), 0 navegação (`01-sailing`, `03-sailing`, `05-sailing`). Rótulo desconhecido gera erro.
+  - Saída: `data/123_fishing_trajs_clean_train.parquet`. Só conjunto de **treino** (713 854 linhas, 87 viagens).
+  - Sumário: `results/clean_train/summary.json`, com hashes de entrada e saída.
+  - Nenhuma linha removida. Primeiro ponto de cada viagem (87) com valores ausentes nas grandezas que dependem do anterior.
+  - `pyarrow==26.0.1` adicionado a `requirements.txt`, para ler e escrever Parquet.
+- **Porquê:** pedido do utilizador: base nova, limpa, ordenada por id e tempo, com X, Y, T e distanceToShore como bases.
+- **Ficheiros afetados:** `scripts/build_clean_dataset.py` (novo), `requirements.txt`, `README.md`, `REVISION_LOG.md`, `PROGRESS.md`. Saída em `data/` (ignorada pelo git).
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação (só treino):**
+  - `time_gap` recalculado difere do original em mais de 1e-6 s em **1,4·10⁻⁶** dos pares (cerca de 10 pares). As anomalias de 1/3 eram casos pontuais.
+  - `distance_gap` recalculado (distância plana de x,y) difere do original em mais de 1e-3 m na mesma fração. Mediana da diferença 1,5·10⁻⁹ m: o original foi calculado a partir de x e y.
+  - `signed_turn` recalculado difere do original em mais de 1° em **2,8·10⁻⁶** dos pares.
+  - `bearing` recalculado a partir de x,y difere do original em mais de 1° em **54 %** dos pares (mediana 1,08°, percentil 95 de 2,58°). É o esperado: `bearing` original está em norte verdadeiro (lat/lon) e o recalculado em norte da grelha UTM. A diferença é a convergência de meridianos. `signed_turn` não é afetado, porque a convergência é quase constante dentro de cada viagem e cancela na variação.
+- **Pendentes:**
+  - Decidir a base de `bearing`: manter o da grelha (x,y, consistente com as outras features), ou usar o original (norte verdadeiro). Não é o mesmo ângulo.
+  - Validação e teste: só depois de autorização explícita do utilizador. Não foram processados.
+  - Decidir a regra das anomalias restantes (poucas, ~10 pares de tempo). A limpeza por remoção ou marcação continua pendente.

@@ -20,7 +20,8 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Validação e teste: só o `id` e as contagens de linhas. Nenhum valor de validação ou teste foi lido ou analisado.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
 - **Conjuntos de validação e teste:** bloqueados para desenvolvimento.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-008.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-009.
+- **Base limpa do treino:** `data/123_fishing_trajs_clean_train.parquet` (713 854 linhas, 87 viagens), gerada por `scripts/build_clean_dataset.py` (REV-009). Validação e teste **não** processados.
 
 ## Decisões do utilizador (vigentes)
 
@@ -176,7 +177,9 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 | `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** (REV-006) |
 | `latex/references.bib` | Existente; `kaggleAIS` com autor corrigido (REV-006) |
 | `requirements.txt` | Existente; testado numa instalação limpa |
-| `REVISION_LOG.md` | Existente; REV-001 a REV-008 |
+| `REVISION_LOG.md` | Existente; REV-001 a REV-009 |
+| `scripts/build_clean_dataset.py` | Existente; executado só com treino (REV-009) |
+| `data/123_fishing_trajs_clean_train.parquet` | Gerado; não versionado; só treino |
 | `PROGRESS.md` | Este ficheiro |
 | `scripts/create_split_manifest.py` | Existente; executado |
 | `scripts/check_units_train.py` | Existente; executado |
@@ -198,3 +201,18 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Método de cálculo de `distanceToShore`: não documentado.
 
 **Verificação adicional:** MD5 do CSV local = `c5953081f511e228b19e46ca85fe304f`, igual ao do Zenodo. O ficheiro é o oficial; as 123 viagens são o conteúdo real.
+
+### 2026-11-23j — Base limpa do treino (REV-009)
+
+**Feito**
+- `scripts/build_clean_dataset.py`: bases X, Y, T, distanceToShore; recalculados time_gap, distance_gap, bearing, signed_turn e speed; `target` 0/1.
+- Gerado `data/123_fishing_trajs_clean_train.parquet` (só treino).
+
+**Validado (só treino)**
+- `time_gap`, `distance_gap` e `signed_turn` recalculados coincidem com os originais em todos os pares, exceto ~10⁻⁶ (anomalias pontuais).
+- `bearing` difere do original em 54 % dos pares (mediana 1,08°): norte da grelha UTM versus norte verdadeiro. É a convergência de meridianos.
+
+**Pendente**
+- Decidir a base de `bearing` (grelha ou norte verdadeiro).
+- Autorização explícita para processar validação e teste.
+- Regra para as anomalias restantes.
