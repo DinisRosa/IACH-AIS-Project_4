@@ -202,7 +202,7 @@ Manter os mesmos IDs, características e definições de métricas entre compara
 
 ## 15. Política de treino, validação e teste
 1. Antes de analisar valores, ler só o mínimo necessário para dividir pelos IDs completos.
-2. Criar manifesto fixo de 70/15/15 dos IDs, com seed **42** (confirmada pelo utilizador), sem usar rótulos para escolher a divisão.
+2. [REV-001 | cor #C62828] Criar manifesto fixo de 70/15/15 dos IDs, com seed **42** (confirmada pelo utilizador), sem usar rótulos para escolher a divisão.
 3. Durante desenvolvimento, só treino ou dados sintéticos: inclui debugging, gráficos, benchmarks e inspeção de exemplos.
 4. Não ajustar normalizadores, imputadores, regras estatísticas ou outros parâmetros em dados reservados.
 5. Se necessário, criar monitorização interna apenas dentro do treino, por ID. Para independência interna, ajustar pré-processamento apenas no treino interno; caso contrário, identificar a monitorização como diagnóstica.
@@ -237,6 +237,22 @@ Em caso de contradição, aplicar as decisões mais recentes do utilizador e a p
 - Proveniência das anotações e convenções dos intervalos.
 
 Nenhuma destas incertezas autoriza abrir validação ou teste durante desenvolvimento.
+
+### Estado das dúvidas (atualizado por REV-002 e REV-003)
+- [REV-002 | cor #1565C0] **Fuso horário de `t`:** ignorado por decisão do utilizador. Não é necessário para o projeto.
+- [REV-003 | cor #2E7D32] **Verificado no treino (87 IDs, 713 767 pares consecutivos)**, com `scripts/check_units_train.py` e `results/units_check_train/summary.json` (gerado, não versionado):
+  - `x`, `y` e `distance_gap` estão na mesma unidade. A distância plana entre pontos consecutivos é igual a `distance_gap` (mediana da razão = 1,0000). A distância plana é ≈1,002 vezes a haversine de lat/lon, pelo que x/y estão **em metros** num referencial plano. O CRS exato continua por confirmar.
+  - `distance_gap` está **em metros**: mediana da razão com a haversine = 1,0022, mesma escala que x/y.
+  - `time_gap` está **em segundos**: mediana da razão com a diferença de `t` = 1,0.
+  - `euc_speed` está **em nós**: `euc_speed` = (distance_gap / time_gap) × 1,94384 (mediana e percentis 5 a 95 praticamente iguais a 1,94384).
+  - `bearing` está **em graus**, azimute a partir do norte, e corresponde ao azimute inicial entre o ponto anterior e o ponto atual (diferença mediana ~3·10⁻¹⁰ °).
+  - `signed_turn` está **em graus** e é a diferença de `bearing` entre pontos consecutivos, normalizada para (-180, 180]. Mediana e percentil 95 da diferença absoluta são ~0.
+  - `distanceToShore`: unidade **não confirmada**. Mediana ~18,7 mil; máximo ~79 mil. Não pode ser quilómetros (o máximo excederia o semieixo da Terra). Metros é a hipótese mais plausível, mas não está verificado com referência externa.
+- **Anomalias a quantificar** (não foram excluídas nem assumidas):
+  - `distance_gap` mínimo de ~0,48 da haversine, e `time_gap` mínimo de 1/3 de `dt`, em alguns pares. Existem casos fora da regra.
+  - `signed_turn` máximo de diferença absoluta de ~175° face à variação de `bearing`. Parece pontual, mas tem de ser contado.
+  - Estas anomalias ainda não estão quantificadas nem tratadas. Ficam para o marco 2 (limpeza), com contagem e regra explícitas.
+- Ainda por confirmar: CRS de longitude/latitude e de x/y; tratamento de primeiros pontos, lacunas e valores ausentes; proveniência das anotações.
 
 ## 19. Referências de contexto do PDF
 As referências abaixo são identificadas na proposta; esta síntese não constitui verificação bibliográfica independente:

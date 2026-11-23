@@ -13,7 +13,7 @@ Existe um só dataset. Dividir por ID completo antes da exploração e manter ma
 ## Protocolo e dúvidas
 A média de probabilidades de janelas é reconstrução; não equivale ao ramo de suavização temporal. Preservar previsões brutas. Propor filtro simples e pedir aprovação da unidade/largura, bordas e protocolo. Aplicar depois da reconstrução e sem atravessar gaps.
 
-Perguntar prazo/orçamento antes de execuções longas. Perguntar se 0% e 50% devem ser prioritários ou se os quatro overlaps são obrigatórios. Não bloquear estudo do treino com essas dúvidas.
+Perguntar prazo/orçamento antes de execuções longas. [REV-002 | cor #1565C0] **Decidido pelo utilizador:** os overlaps 0% e 50% são prioritários. Os overlaps 25% e 75% ficam para decisão posterior. Não bloquear estudo do treino com essas dúvidas.
 
 Campo recetivo da arquitetura ilustrativa de três kernels 5, stride 1, sem dilatação: 13 pontos. Entrada completa não implica contexto global. Registar orçamento, passos, épocas e diferenças de batch; overlap no treino e na inferência são decisões distintas.
 

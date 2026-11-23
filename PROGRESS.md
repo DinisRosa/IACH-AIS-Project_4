@@ -76,6 +76,33 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - Validar a instalação do `requirements.txt` (já feita, ver entrada anterior).
 - Definir a estrutura de pacote e de testes quando começarem os marcos seguintes (ainda sem código).
 
+### 2026-11-23c — REVISION_LOG, decisões e verificação de unidades
+
+**Feito**
+- Criado `REVISION_LOG.md` com REV-001 (seed/divisão), REV-002 (decisões de âmbito) e REV-003 (unidades).
+- Decisões do utilizador registadas em REV-002: overlaps 0% e 50% prioritários; fuso horário ignorado.
+- Criado `scripts/check_units_train.py`, que só usa o treino. Gera gráficos e `summary.json` em `results/units_check_train/` (ignorado pelo git).
+- Adicionado `matplotlib==3.10.9` ao `requirements.txt` (necessário para os gráficos). Instalado no `iach-ais-venv-4`.
+- Executado: `iach-ais-venv-4/bin/python scripts/check_units_train.py`.
+
+**Validado (só treino: 87 IDs, 713 854 linhas, 713 767 pares consecutivos)**
+- `x`/`y` em metros: distância plana / haversine ≈ 1,002. `distance_gap` / distância plana = 1,0000.
+- `time_gap` em segundos: razão com Δt = 1,0.
+- `euc_speed` em nós: razão com `distance_gap/time_gap` em m/s = 1,94384 (percentis 5 e 95 iguais).
+- `bearing` em graus a partir do norte: igual ao azimute inicial entre pontos consecutivos.
+- `signed_turn` em graus: igual à variação de `bearing`, normalizada para (-180, 180].
+
+**Problemas e limitações**
+- Anomalias não quantificadas: `distance_gap` com razão mínima ~0,48; `time_gap` com razão 1/3; `signed_turn` com diferença máxima ~175°. Ficam para o marco 2.
+- `distanceToShore`: unidade **não confirmada**. Não pode ser quilómetros pelo valor máximo (~79 mil). Metros é a hipótese mais plausível.
+- CRS exato de x/y e de lat/lon: por confirmar. A escala de ~1,002 face à haversine indica um referencial plano em metros, sem identificar o CRS.
+- Gráfico 03 (velocidade): a distribuição fica numa única linha de largura quase nula, ou seja, a razão é praticamente exata. A leitura visual é pouco informativa, mas a estatística é clara.
+
+**Pendente**
+- Quantificar e tratar as anomalias no marco 2.
+- Definir o protocolo para `distanceToShore` e para o CRS.
+- Atualizar `latex/proposta_pt.tex` com as unidades e a divisão por viagem (REV-001 e REV-003 marcadas como pendentes no LaTeX).
+
 ## Pendentes (por marco, segundo `docs/00_5`)
 
 ### Marco 1 — Ambiente, consolidação e divisão mínima
@@ -91,7 +118,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ### Marco 2 — Preparação auditável (só treino/sintéticos)
 - [ ] Recálculo de `time_gap_calc_s`, `distance_gap_calc_m` e `speed_calc_mps`.
-- [ ] Confirmar no treino as unidades de `distance_gap`, `euc_speed` e `signed_turn`.
+- [x] Confirmar no treino as unidades de `distance_gap`, `euc_speed`, `time_gap`, `bearing`, `signed_turn` (REV-003). `distanceToShore` ainda por confirmar.
 - [ ] Limpeza com auditoria e limites IQR só no treino.
 - [ ] Codificação de rótulos (`target`) e features (`speed_calc_mps`, `signed_turn`, `time_gap_calc_s`, `distanceToShore`).
 - [ ] Testes com dados sintéticos (gaps, janelas, máscaras, alinhamento).
@@ -100,13 +127,21 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 ### Marco 3 a 7
 Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
-## Pendências de decisão (perguntar ao utilizador)
+## Pendências de decisão
 
-- Overlaps 0% e 50% prioritários, ou os quatro obrigatórios?
+**Decididas pelo utilizador** (ver REV-002 em `REVISION_LOG.md`)
+- Overlaps **0% e 50% prioritários**. Os 25% e 75% ficam para decisão posterior.
+- Fuso horário de `t`: **ignorado**, não é necessário para o projeto.
+
+**Por decidir**
 - Unidade, largura e bordas do pós-processamento simples (aprovação).
 - Orçamento de tempo para execuções longas (AGENTS.md §2).
-- Unidades e CRS de `x/y`, `distance_gap`, `distanceToShore`, `signed_turn` e `euc_speed` (hipótese: nós).
-- Fuso horário de `t`.
+- Se os overlaps 25% e 75% entram no âmbito (decisão posterior).
+- Se o manifesto de divisão deve ser versionado (ver entrada 2026-11-23b).
+
+**Verificadas no treino** (ver REV-003)
+- Unidades de `x`, `y` e `distance_gap` (metros), `time_gap` (segundos), `euc_speed` (nós), `bearing` e `signed_turn` (graus).
+- Por confirmar: unidade de `distanceToShore` (metros é a hipótese mais plausível) e CRS de x/y e de lat/lon.
 
 ## Artefactos ainda por criar
 

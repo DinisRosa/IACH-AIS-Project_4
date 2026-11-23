@@ -40,8 +40,8 @@ Não executar study_csv no dataset completo. Não mostrar exemplos, estatística
 - Cada id completo representa uma viagem independente.
 - Viagens diferentes do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto.
 - Todas as linhas, sequências e futuras janelas do mesmo ID ficam no mesmo conjunto.
-- Proporções **confirmadas pelo utilizador**: 70% dos IDs para treino, 15% para validação e 15% para teste.
-- Semente **confirmada pelo utilizador**: `42`.
+- [REV-001 | cor #C62828] Proporções **confirmadas pelo utilizador**: 70% dos IDs para treino, 15% para validação e 15% para teste.
+- [REV-001 | cor #C62828] Semente **confirmada pelo utilizador**: `42`.
 - Regra de arredondamento do número de IDs por conjunto: a definir antes de gerar o manifesto e registada nele.
 - A semente e as proporções ficam fixadas antes de analisar os resultados.
 - Guardar a tabela id → split e reutilizá-la em todas as fases e experiências.
