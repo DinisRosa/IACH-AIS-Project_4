@@ -6,7 +6,7 @@ Data: 2026-11-23. Documento para retomar o trabalho numa nova conversa.
 
 1. `AGENTS.md` (regras fixas; o `CLAUDE.md` manda lê-lo antes de qualquer ação).
 2. Este ficheiro.
-3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23aq) e `REVISION_LOG.md` (REV-001 a REV-034).
+3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23av) e `REVISION_LOG.md` (REV-001 a REV-040).
 4. Antes de qualquer ação: verificar `git status` e `git log` (ver «Estado atual»).
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -23,13 +23,13 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 
 ## Estado atual
 
-- Marcos 1 e 2 fechados. **Marco 3: passos 1 a 5 feitos** (sequências, normalização, CNN, testes, primeira execução de treino). Passo 6 em parte (custo medido). Passo 7 (pedir revisão do Marco 3 ao utilizador) por fazer.
-- **A CNN 1D está treinada** numa primeira execução (REV-032), só com o treino oficial. Resultados provisórios: ver «Primeira execução de treino».
-- **94 testes a passar** (`iach-ais-venv-4/bin/python -m pytest tests/`): 15 da preparação, 60 da fase 1, 19 de checkpoints, configuração, métricas e ciclo de treino. Sintéticos, mais um teste que lê 3 viagens reais de **treino**.
-- **Git:** todo o trabalho de REV-032 está **commitado localmente** (`2b5197c` código, `2a177ac` LaTeX, `e9fef3c` documentação, mais um commit final do handoff). `origin/main` está em `4ce5e53`, por isso há **commits por enviar**. Resultados (`results/`) estão no `.gitignore`.
+- Marcos 1 e 2 fechados. **Marco 3 (baseline) praticamente fechado**: treino de seleção de 300 épocas (só treino), seleção da época e do limiar no `test` numa ronda, e **baseline congelada** (época 162, limiar 0,65; `results/baseline_frozen/`). O Marco 4 só começou na ferramenta de medição por segmento.
+- **Treinos:** execução 1 (REV-032, com monitorização), treino final de 100 épocas (REV-035, é o que o LaTeX descreve hoje) e treino de seleção de 300 épocas com um checkpoint por época (REV-038, `results/phase1_select/`). A baseline congelada vem deste último.
+- **145 testes a passar** (`iach-ais-venv-4/bin/python -m pytest tests/`), todos sintéticos (mais um que lê 3 viagens de treino).
+- **Git:** último commit `8f6857d` (REV-034). Tudo o que veio depois (REV-035 a REV-039: treino final, papéis dos conjuntos, seleção, congelação, segmentos) está **por commitar**. Não há push feito desta sessão.
 - **Push:** o utilizador autorizou pontualmente dois pushes (feitos por mim). A regra continua: o push é do utilizador, e cada push precisa de nova autorização explícita.
-- **LaTeX** (`latex/proposta_pt.tex`) compila sem erros, 8 páginas (verificado, mas o PDF desta revisão não foi inspecionado visualmente). O `latex/watch_latex.sh` está ativo e, depois de cada compilação com sucesso, apaga os auxiliares de `latex/build/`, deixando só o PDF.
-- Validação e teste oficiais **não foram abertos**. As bases limpas de validação e teste existem desde REV-015, só para preparação.
+- **LaTeX** (`latex/proposta_pt.tex`) compila (7 páginas) e está **atualizado com a baseline congelada** (REV-040): treino de 300 épocas, seleção no `test`, tabela e figuras com treino e teste. Todos esses números vêm de macros geradas (`latex/generated/resultados.tex`) a partir de `results/baseline_frozen/final_results.json`. Por decisão do utilizador, o texto não acrescenta nada sobre navios partilhados.
+- **`test` aberto uma só vez** (seleção, REV-038), registado em `results/access_log.jsonl`. **`validation` não foi aberto.** Metade das viagens reservadas vem de navios que também estão no treino (`results/shared_vessels/summary.json`).
 
 ## Decisões vigentes
 
@@ -47,8 +47,8 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 
 **LaTeX**
 - `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**.
-- Toda a alteração ao `.tex` leva cor com `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Texto movido mantém a cor antiga. Próximo ID livre: **REV-035** (precisa de cor nova e distinta).
-- Cores já usadas no `.tex`: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev021 `#D500F9`, rev022 `#00897B`, rev023 `#0277BD`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60` (REV-033 `#3E2723` e REV-034 `#7CB342` só marcadores Markdown; REV-029 `#BF360C` só marcador do registo).
+- Toda a alteração ao `.tex` leva cor com `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Texto movido mantém a cor antiga. Próximo ID livre: **REV-041** (precisa de cor nova e distinta).
+- Cores já usadas no `.tex`: rev013 `#808000`, rev018 `#5C6BC0`, rev020 `#607D8B`, rev021 `#D500F9`, rev022 `#00897B`, rev023 `#0277BD`, rev024 `#6D4C41`, rev025 `#6A1B9A`, rev026 `#2E7D32`, rev027 `#AFB42B`, rev028 `#00ACC1`, rev030 `#FF6F00`, rev031 `#006064`, rev032 `#D81B60`, rev035 `#6200EA`, rev036 `#00C853`; REV-037 `#FFAB00`, REV-038 `#304FFE` e REV-039 `#1DE9B6` só marcadores Markdown, rev040 `#7F0000` no `.tex` (REV-033 `#3E2723` e REV-034 `#7CB342` só marcadores Markdown; REV-029 `#BF360C` só marcador do registo).
 
 ## Ficheiros principais
 
@@ -70,7 +70,8 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 ```bash
 iach-ais-venv-4/bin/python -m pytest tests/                                   # testes
 iach-ais-venv-4/bin/python -m ais.cli.run_phase1_training configs/phase1_run1.json   # treino
-iach-ais-venv-4/bin/python -m ais.cli.plot_phase1_run                         # figuras do treino
+iach-ais-venv-4/bin/python -m ais.cli.run_phase1_training configs/phase1_final.json   # treino final
+iach-ais-venv-4/bin/python -m ais.cli.build_final_results                     # ficheiro final, macros e figuras do LaTeX
 iach-ais-venv-4/bin/python -m ais.cli.benchmark_training_speed                # velocidade
 ```
 
@@ -80,13 +81,20 @@ Compilar o LaTeX à mão **sem colidir com o vigilante** (a partir de `latex/`):
 
 - `src/ais/cli/diagnostic_fit_3_trips.py`: 200 épocas, lr 1e-3, seed 42; ajuste em 3 viagens (`211477000-3`, `211477000-4`, `219001039-2`) e avaliação nessas e noutras 3 (`219001125-3`, `219001149-2`, `219001522-2`); scaler só do ajuste. Cerca de 11 s.
 - Resultados ilustrativos, sem valor estatístico: accuracy 95,71 % no ajuste e 93,01 % fora da amostra (maioritária 75,21 %). Fora da amostra, a navegação tem sensibilidade 0,736 e a pesca 0,994.
-- Estas figuras (matrizes e linhas temporais) estão no **Anexo A** do LaTeX, como marcador de resultados. Ainda são as deste ensaio, não as da primeira execução.
+- Este ensaio foi retirado do LaTeX em REV-035 (texto e Anexo A); os programas e as PNG `latex/figures/diag3_*` ficam no repositório, sem uso.
 
 ## Medição de velocidade (PROGRESS 2026-11-23al)
 
 `src/ais/cli/benchmark_training_speed.py`, CPU, 10 threads: 1 viagem (5 475 pontos) 0,013 s por época; 2 viagens (10 853) 0,040 s; maior viagem do treino (`235008380-3`, 45 251 pontos) 0,151 s. Cerca de 2,4 a 3,7 µs por ponto em treino e 1,0 a 1,6 µs em avaliação. Pico de memória do processo cerca de 822 MB. O custo cresce com os **pontos**, não com as viagens.
 
-## Primeira execução de treino (REV-032), só treino oficial
+## Treino final (REV-035), só treino oficial
+
+- Configuração `configs/phase1_final.json`: as 87 viagens ajustam a rede e o normalizador; sem monitorização interna; Adam lr 1e-3, máx. 100 épocas, paciência 30 sobre a perda por ponto avaliada no próprio treino, orçamento 15 min, seed 42. Interpretação minha da instrução «paciência 30 e 0 % de monitorização».
+- Terminou ao atingir 100 épocas em cerca de 6 min; melhor época 95. **Superado:** o LaTeX passou a descrever o treino de seleção de 300 épocas (REV-040).
+- **Ficheiro final e LaTeX:** `iach-ais-venv-4/bin/python -m ais.cli.build_final_results` lê a execução e escreve `final_results.json`, `latex/generated/resultados.tex` (macros `\res...`, `\rv{}`) e `latex/figures/final_*.png`. O `.tex` não tem números da execução escritos à mão. Para regenerar os números do LaTeX: `iach-ais-venv-4/bin/python -m ais.cli.build_final_results` (a seleção no `test` só se corre uma vez).
+
+
+## Primeira execução de treino (REV-032), só treino oficial (substituída no LaTeX por REV-035)
 
 - Base de treino validada (87 viagens, 713 854 pontos; ordenação e NaN esperados). 74 viagens de ajuste (637 422 pontos) e 13 de monitorização (76 432 pontos); scaler só do ajuste.
 - Parou por paragem antecipada após **16 épocas, 39,4 s** (cerca de 2,3 s por época); melhor época **6** (perda de monitorização 0,1398).
@@ -108,20 +116,19 @@ Compilar o LaTeX à mão **sem colidir com o vigilante** (a partir de `latex/`):
 
 ## O que fazer a seguir
 
-**Decisão imediata do utilizador:** o critério de paragem pode ter parado cedo. Repetir com paciência maior (por exemplo 30), ou outro lr? Repetir custa cerca de 40 s a 2 min. Qualquer alteração do critério ou do modelo é uma escolha metodológica a aprovar. Outras direções possíveis (também a aprovar, nenhuma decidida): mais contexto (kernels ou dilatação), pesos de classe (a política atual é sem eles), mais capacidade.
+**Navios partilhados:** o utilizador decidiu manter a divisão por viagem e **desconsiderar** a questão (sem quantificar, sem refazer, sem declarar no texto).
+
+**Decisão imediata do utilizador:** a perda no `test` é muito ruidosa de época para época (por exemplo, 0,18 na época 162 e 0,30 na 200) e o mínimo escolhido é estreito, por isso a seleção pode ter seguido ruído. A ronda autorizada era uma só e o protocolo manda congelar, o que foi feito. Opções (todas precisam de autorização/decisão): (a) aceitar a baseline como está; (b) nova autorização com um critério menos sensível ao ruído (por exemplo, média da perda em janelas de épocas, ou média de pesos); (c) mudar o treino (taxa de aprendizagem com decaimento) e repetir a seleção.
 
 Depois:
-1. Push dos commits locais, se o utilizador o autorizar (ou fazê-lo ele próprio).
-2. Medir com código os tipos de erro (blocos de navegação prevista como pesca, fragmentação, desfasamento nas fronteiras).
-3. Passo 6 do Marco 3: registar as métricas internas de referência da execução final; passo 7: pedir revisão do Marco 3.
-4. Testes automáticos dos scripts; implementar o que falta segundo `docs/02` §4 (segmentos e métricas por segmento, inferência como módulo, congelamento de execução).
-5. Substituir as figuras do Anexo A pelas da primeira execução (decisão do utilizador) e rever a paginação das figuras de largura total.
-6. Marco 4: janelamento com sobreposição (0 % e 50 %), mesma CNN sobre janelas.
-7. Só mais tarde, e só com autorização explícita, validação oficial (seleção formal) e teste (avaliação final).
+1. Commit local de REV-035 a REV-039, se o utilizador autorizar. Push só pelo utilizador.
+3. Marco 4: J0 e J50 (L = 64) com a mesma CNN, comparadas com a baseline congelada por ponto e por segmento (`ais.cli.segment_metrics`). Usar o `test` para selecionar exige nova autorização e protocolo declarado antes.
+4. Marco 5 só se o Marco 4 mostrar benefício da sobreposição. Marcos 6 e 7: congelar todas as variantes e abrir o `validation` uma só vez, no fim, com autorização nova.
+5. Testes automáticos dos programas de treino e de figuras.
 
 ## Regras a não esquecer
 
-- Desenvolvimento só com treino ou dados sintéticos. Validação e teste só com autorização explícita; uma flag no código não é autorização.
+- Desenvolvimento só com treino ou dados sintéticos. Validação e teste só com autorização explícita (`test` = seleção, `validation` = medição final única); uma flag no código não é autorização.
 - Todo o número usado como evidência vem de código versionado e executável (AGENTS §10). Não afirmar resultados que não foram medidos; distinguir feito, validado e pendente.
 - Nunca `git push` sem autorização explícita **nova** do utilizador. Commits locais após explicação; alterações substanciais com mensagem completa (O quê, Porquê, Como, Impacto, Validação, Pendente) e a linha de coautoria da sessão. Selecionar ficheiros explicitamente.
 - No fim de cada interação que altere ficheiros, atualizar `PROGRESS.md` e `REVISION_LOG.md` (REV novo, cor nova, marcador `[REV-NNN | cor #HEX]`) e confirmar que `README.md`, `docs/` e o LaTeX não se contradizem.

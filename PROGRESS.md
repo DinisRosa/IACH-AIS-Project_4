@@ -16,7 +16,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - `latex/watch_latex.sh`: visualização da proposta (movido de `scripts/`). Não versionado.
   - Ainda não existe código de janelamento nem de pós-processamento.
 - **Código da fase 1 (`src/ais/phase1/`, REV-024, REV-032, REV-034):** `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py`, `artifacts.py`, `config.py`, `metrics.py`. Sequências, scaler, máscaras, CNN 1D, perda, treino com paragem antecipada e checkpoints implementados e testados. Houve um ensaio de 3 viagens (REV-027) e uma primeira execução de treino só com o treino oficial (REV-032); resultados provisórios.
-- **Testes:** `tests/` com 94 testes (15 de REV-016/REV-017, 60 de REV-024 e 19 de REV-032), todos a passar. Ver `pytest tests/`.
+- **Testes:** `tests/` com 145 testes (15 de REV-016/REV-017, 60 de REV-024, 19 de REV-032, 5 de REV-035 e 46 de REV-038/REV-039), todos a passar. Ver `pytest tests/`.
 - **Dados:** `data/123_fishing_trajs.csv` presente localmente, não versionado. **123 IDs únicos** e **1 026 279 linhas**, confirmados por `verify_trip_count.py` (REV-007).
 - **Bases limpas (não versionadas):** `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Soma: 1 026 279.
 - **Leituras de dados até agora:**
@@ -24,7 +24,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
   - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-034.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-040.
 
 ## Decisões do utilizador (vigentes)
 
@@ -187,7 +187,8 @@ Ver `docs/00_projeto_e_decisoes.md` §4 (estado dos marcos) e `docs/02_cnn_viage
 | `docs/00` a `docs/03` | Fundidos e simplificados em REV-033: projeto e decisões, dados e preparação, CNN de viagem completa, CNN com janelas. Substituem os antigos `docs/00` a `docs/06`, que ficam no histórico do git |
 | `src/ais/phase1/` | `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py` (REV-024); `artifacts.py`, `config.py`, `metrics.py` (REV-032) |
 | `pyproject.toml` | Metadados mínimos do pacote `ais` e configuração do pytest (REV-034); instalado em modo editável só no venv |
-| `tests/` | 94 testes (REV-016, REV-017, REV-024, REV-032) |
+| `tests/` | 99 testes (REV-016, REV-017, REV-024, REV-032, REV-035) |
+| `results/phase1_final/` + `latex/generated/` | Treino final (REV-035): `final_results.json` (fonte única dos números), macros LaTeX e figuras `latex/figures/final_*.png` |
 | `latex/proposta_pt.tex` | Reescrito a partir do PDF IAHC (REV-005); compila com pdflatex/bibtex |
 | `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** (REV-006) |
 | `latex/references.bib` | Existente; `kaggleAIS` com autor corrigido (REV-006) |
@@ -666,3 +667,76 @@ Ver `docs/00_projeto_e_decisoes.md` §4 (estado dos marcos) e `docs/02_cnn_viage
 
 **Pendente**
 - Revisão do utilizador; commit local por autorizar. Mover a lógica de preparação reutilizável para `ais/` e unificar `class_metrics`, se o utilizador quiser.
+
+### 2026-11-23ar — Treino final com todo o treino e números do LaTeX gerados (REV-035)
+
+**Feito**
+- Treino final da CNN 1D com as 87 viagens do treino oficial, sem monitorização interna (`configs/phase1_final.json`: seed 42, lr 1e-3, máx. 100 épocas, paciência 30 sobre a perda no treino). Terminou ao atingir as 100 épocas (melhor época 95) em cerca de 361 s; accuracy no treino 94,6 % contra 75,4 % da maioritária.
+- `ais.cli.build_final_results` escreve o ficheiro único `results/phase1_final/final_results.json`, as macros `latex/generated/resultados.tex` e três figuras. O LaTeX passou a usar essas macros; removidos o ensaio de 3 viagens e o Anexo A. A subsecção do treino foi reescrita.
+
+**Validado**
+- `pytest tests/`: 99 passaram. Hash da base de treino e do manifesto confere com os sumários da preparação. `pdflatex` + `bibtex` sem erros (7 páginas), páginas inspecionadas. Validação e teste oficiais não foram abertos.
+
+**Problemas e limitações**
+- Métricas medidas no próprio treino (ajuste, não generalização). A paragem antecipada não disparou: a rede pode não ter convergido.
+- «Paciência 30 e 0 % de monitorização» exigiu uma interpretação (critério = perda no treino); a monitorização com os 15 % reservados fica para a etapa de validação, com autorização.
+
+**Decisões**
+- Todos os números do LaTeX vindos de código passam a macros geradas; nenhum se escreve à mão.
+
+**Pendente**
+- Decidir se se treina mais épocas; commit local por autorizar; push por autorização.
+
+### 2026-11-23as — Papéis dos conjuntos reservados (REV-036)
+
+**Feito**
+- Atualizada a regra dos conjuntos reservados a pedido do utilizador: `test` = seleção (épocas, limiar, treinar mais, variantes); `validation` = medição final única com o modelo congelado. `AGENTS.md` §3, `docs/00`, `docs/02`, `docs/03`, `handoff.md` e a subsecção do protocolo no LaTeX alinhados.
+
+**Validado**
+- Procura de contradições nos documentos; `pdflatex` + `bibtex` sem erros (7 páginas). Nada foi aberto: validação e teste continuam por abrir (exceto o que consta em REV-015).
+
+**Problemas e limitações**
+- Resultados no `test` serão otimistas por terem servido a selecionar. O `test` é mais pequeno que o `validation`, logo a seleção é mais ruidosa.
+
+**Decisões**
+- Papéis trocados face ao habitual, por decisão do utilizador; nomes dos ficheiros mantidos.
+
+**Pendente**
+- Autorização explícita para abrir o `test`, com o âmbito declarado; programa de avaliação reservada com registo de acessos; plano da seleção; commit local por autorizar.
+
+### 2026-11-23au — Fases 1 a 5 do plano: seleção no `test`, baseline congelada e métricas por segmento (REV-037 a REV-039)
+
+**Feito**
+- Plano atualizado (REV-037). Protocolo de seleção e autorização gravados antes de abrir o `test` (`configs/selection_protocol.json`, `configs/authorizations/test_selection.json`).
+- Treino de seleção: só treino (87 viagens), 300 épocas, um checkpoint por época (1164 s). Seleção no `test` numa só ronda: época 162, limiar 0,65 (`results/phase1_select/selection_test.json`). Baseline congelada em `results/baseline_frozen/`. O `validation` **não** foi aberto.
+- Código de acesso reservado, seleção, congelação e inferência como módulo (REV-038). Subagentes: métricas por segmento (Sonnet) e navios partilhados (Haiku), ambos revistos e conferidos por mim (REV-039).
+
+**Validado**
+- `pytest`: 145 passaram. Verificação do hash do checkpoint congelado. Contagens de navios recalculadas com lógica independente; segmentos reimplementados com loops puros e iguais à ferramenta sobre as previsões do treino.
+
+**Problemas e limitações**
+- A perda no `test` é muito ruidosa entre épocas; a época 162 é um mínimo estreito e a seleção usa só 18 viagens. Os resultados no `test` são otimistas.
+- O `test` tem 61 % de pesca e o treino 75 %. Metade das viagens reservadas vem de navios presentes no treino.
+- LaTeX desatualizado em relação à baseline congelada (pendente).
+- Durante o treino, testes e subagentes em paralelo abrandaram-no muito; o orçamento chegou, mas foi apertado.
+
+**Decisões**
+- Autorização lida a partir da instrução do utilizador e registada com a citação literal; o âmbito ficou limitado a uma ronda no `test`.
+
+**Pendente**
+- O utilizador decide como lidar com o ruído da seleção; atualizar o LaTeX; commit local por autorizar; Marco 4 (janelas) fica por iniciar, como pedido.
+
+### 2026-11-23av — LaTeX atualizado com a baseline congelada (REV-040)
+
+**Feito**
+- Decisão do utilizador: manter a divisão por viagem e desconsiderar os navios partilhados (sem quantificar, sem refazer, sem declarar no texto).
+- `build_final_results` reescrito para a baseline congelada. LaTeX reescrito: 300 épocas, seleção no `test`, tabela e figuras com treino e teste, todos os números vindos de macros geradas de `results/baseline_frozen/final_results.json`.
+
+**Validado**
+- Verificações de proveniência (hashes, `validation` por abrir, `test` aberto uma só vez) a passar; PDF compilado (7 páginas) e inspecionado; sem macros indefinidas; `pytest` 145 passaram.
+
+**Problemas e limitações**
+- Resultados do `test` otimistas e perda do `test` ruidosa (ambos escritos no texto). O gerador só tem teste das funções de formatação.
+
+**Pendente**
+- Decisão sobre o ruído da seleção; commit local por autorizar; Marco 4.

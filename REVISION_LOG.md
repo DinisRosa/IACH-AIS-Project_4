@@ -600,3 +600,100 @@ Regras:
 - **Validação:** `pytest tests/` → 94 passaram; 20 módulos de `ais` importados; `python -m ais.cli.verify_trip_count` executado (123 viagens). Treino, figuras, benchmark e ensaio de 3 viagens **não** foram reexecutados, para não sobrescrever `results/`.
 - **Limitações:** a proveniência de artefactos antigos em `results/` continua a registar `scripts/…`; as entradas históricas de `PROGRESS.md` e `REVISION_LOG.md` mantêm os caminhos antigos. `class_metrics` continua duplicada e a lógica de preparação continua dentro de `cli/`.
 - **Pendentes:** revisão do utilizador; commit local por autorizar.
+
+### REV-035 — Treino final com todo o treino e números do LaTeX gerados por código
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Violeta `#6200EA`, RGB (98, 0, 234). No `.tex`, em `\revtext{rev035}` e `\rv{...}`.
+- **O quê:**
+  - Treino final da CNN 1D (viagem completa, sem janelas) com **as 87 viagens do treino oficial** e sem monitorização interna (pedido do utilizador): `configs/phase1_final.json` (seed 42, Adam lr 1e-3, máx. 100 épocas, **paciência 30**, orçamento 15 min, limiar 0,5). Sem viagens de fora, a paragem antecipada e o melhor modelo usam a perda por ponto avaliada sobre o próprio treino (interpretação minha da instrução «paciência 30 e 0 % de monitorização»; ver Limitações).
+  - Código: `internal_monitor_fraction` aceita 0 em `config.py`; `train_model` suporta monitor vazio (`stop_criterion`); `run_phase1_training` trata esse caso e grava `predictions_train.csv`. Novo `src/ais/cli/build_final_results.py`: lê só artefactos já gerados, confirma por hash que os sumários da preparação correspondem à base de treino e ao manifesto, e escreve `results/phase1_final/final_results.json` (fonte única), `latex/generated/resultados.tex` (macros `\res...`) e `latex/figures/final_{perda,matriz,viagens}.png`. Testes novos: configuração com 0, treino sem monitor, formatação dos números.
+  - LaTeX: a subsecção «Primeira execução de treino» (REV-032) passa a «Treino final e resultados no treino», com tabela e três figuras; removidos o ensaio de 3 viagens (REV-027, REV-028, REV-030) e o Anexo A (REV-031). Números do texto que vêm de código (viagens e linhas, parâmetros, campo recetivo, versão do PyTorch, coincidência com os originais, rumo, configuração e resultados do treino) passam a macros. Referências a `phase1_run1` e à «primeira execução» corrigidas.
+- **Resultado (de `results/phase1_final/final_results.json`):** terminou ao atingir o **máximo de 100 épocas**, sem disparar a paragem antecipada, em cerca de 361 s; melhor época 95; accuracy no treino 94,6 % contra 75,4 % da classe maioritária; 1 das 87 viagens (`219429000-2`) não supera a regra da classe maioritária da viagem. Os valores completos e a proveniência estão no ficheiro.
+- **Limitações:**
+  - As métricas são medidas **nas mesmas viagens que ajustaram a rede**: são ajuste, não generalização. Validação e teste oficiais não foram abertos.
+  - A rede não convergiu no sentido do critério: a melhor época é a 95 de 100 e a perda ainda variava no fim. Mais épocas (com orçamento maior) podem melhorar o ajuste; é decisão do utilizador.
+  - A instrução «paciência 30 com 0 % de monitorização» não define sozinha o critério; usei a perda no treino. A monitorização com os 15 % reservados fica para a etapa de validação, que só se abre com autorização explícita.
+  - Os sumários da preparação (`results/clean_*`, `anomalies_train`) são de 2026-11-23, verificados por hash, mas não foram regenerados nesta revisão.
+  - Os programas do ensaio (`diagnostic_fit_3_trips`, `plot_diagnostic_3trips`), as PNG `latex/figures/diag3_*` e `results/phase1_run1/` ficam no repositório/disco, já sem uso no texto.
+- **Ficheiros afetados:** `src/ais/phase1/{config,training}.py`, `src/ais/cli/{run_phase1_training,build_final_results}.py`, `configs/phase1_final.json`, `tests/test_checkpoint_and_training_loop.py`, `tests/test_final_results_format.py`, `latex/proposta_pt.tex`, `latex/generated/resultados.tex`, `latex/figures/final_*.png`, `PROGRESS.md`, `REVISION_LOG.md`, `handoff.md`, `docs/02_cnn_viagem_completa.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex` + `bibtex` sem erros nem referências em falta (7 páginas); páginas 5 e 6 inspecionadas visualmente.
+- **Validação:** `pytest tests/` → 99 passaram (94 anteriores, mais 5 novos); treino real com checkpoint recarregado do disco para as previsões; verificação por hash da base de treino e do manifesto; figuras e PDF inspecionados.
+- **Pendentes:** decidir se se treina mais tempo (aumentar épocas/orçamento); validação e teste só com autorização; commit local por autorizar; remover os restos do ensaio, se o utilizador quiser.
+
+### REV-036 — Papéis dos conjuntos reservados: `test` seleciona, `validation` mede no fim
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Verde `#00C853`, RGB (0, 200, 83). No `.tex`, em `\revtext{rev036}`.
+- **O quê:** por decisão do utilizador, os papéis dos conjuntos reservados ficam **trocados face ao habitual**: o conjunto `test` (18 viagens) é o de **seleção** (número de épocas, limiar, se treinar mais compensa, escolha entre variantes) e o conjunto `validation` (18 viagens) é a **medição final**, aberta **uma só vez** com o modelo e o protocolo congelados. Os nomes dos ficheiros e do manifesto não mudam (renomear mudaria os hashes). Os marcos 6 e 7 e as etapas B e C foram reescritos em conformidade.
+- **Porquê:** pedido do utilizador; a regra anterior (validação seleciona, teste mede) estava escrita no `AGENTS.md`, em `docs/00` e no LaTeX.
+- **Ficheiros afetados:** `AGENTS.md` §3 (única regra alterada; nota no padrão de «Papéis dos conjuntos reservados»), `docs/00_projeto_e_decisoes.md`, `docs/02_cnn_viagem_completa.md`, `docs/03_cnn_janelamento.md`, `handoff.md`, `latex/proposta_pt.tex` (subsecção «Divisão dos dados e protocolo» e a frase final do treino), `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex` + `bibtex` sem erros nem referências em falta (7 páginas). Não foi inspecionado visualmente o PDF desta revisão.
+- **Validação:** revisão manual e procura de contradições nos documentos. Nada foi executado nem aberto: nem o `test` nem o `validation` foram lidos além do que já constava (REV-015).
+- **Limitações:** o código e os comentários só falam genericamente em «validação/teste» (recusa de ambos no desenvolvimento) e continuam corretos. Resultados no `test` serão otimistas por terem servido para escolher; o número final da proposta será o do `validation`. O `test` tem menos pontos (103 409) do que o `validation` (209 016), o que torna a seleção mais ruidosa. Esta revisão **não é autorização** para abrir nenhum dos conjuntos.
+- **Pendentes:** autorização explícita para abrir o `test` (com âmbito e critérios declarados), programa de avaliação reservada com registo de acesso, decisão sobre treinar mais, commit local por autorizar.
+
+### REV-037 — Plano atualizado: segmentos no início do Marco 4 e medição final só no fim
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Âmbar `#FFAB00`, RGB (255, 171, 0). Só marcador do registo; não há alteração ao `.tex`.
+- **O quê:** por decisão do utilizador, as métricas por segmento não entram na baseline: ficam para o **início do Marco 4**, como ferramenta de medição (extrair segmentos sem suavizar, fragmentação, erro de fronteira), distinta do pós-processamento, que só avança no Marco 5 se o Marco 4 mostrar benefício da sobreposição. A medição final no `validation` passa a ser **uma só vez, no fim, com todas as variantes congeladas** (e não já para a baseline). `docs/00` §4 reescrito em conformidade.
+- **Porquê:** a prova de que a sobreposição ajuda é sobre fronteiras e fragmentação (RQ1), e abrir o `validation` já para a baseline obrigaria a reabri-lo depois.
+- **Ficheiros afetados:** `docs/00_projeto_e_decisoes.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável** (plano; sem mudança de metodologia descrita no `.tex`).
+- **Validação:** revisão manual. Nada foi aberto nem executado.
+- **Pendentes:** nenhum além dos de REV-038 e REV-039.
+
+### REV-038 — Acesso reservado, seleção no `test` e baseline congelada
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Índigo `#304FFE`, RGB (48, 79, 254). Só marcador do registo.
+- **O quê:**
+  - Código novo: `ais/phase1/reserved.py` (autorização, protocolo, registo de acessos em `results/access_log.jsonl`, uma só ronda, `validation` recusado sem autorização própria e execução congelada, só uma abertura), `selection.py` (época pela menor perda por ponto; limiar da grelha 0,05 a 0,95 pelo F1 médio), `inference.py` (a inferência saiu do script de treino), e os programas `select_on_test` e `freeze_baseline`. `train_model` e a configuração passam a aceitar um checkpoint por época (`checkpoint_every_epoch`).
+  - Antes de abrir qualquer conjunto: protocolo declarado (`configs/selection_protocol.json`) e autorização (`configs/authorizations/test_selection.json`, com a citação literal do utilizador, o âmbito `test`, finalidade seleção e 1 ronda).
+  - Treino de seleção (`configs/phase1_select.json`): só treino (87 viagens), 300 épocas, paragem antecipada desativada (a escolha da época passou para o `test`), um checkpoint por época; 1164 s.
+  - Seleção no `test` (uma ronda, 18 viagens, 103 409 pontos): **época 162 de 300**, **limiar 0,65**. Resultados em `results/phase1_select/selection_test.json`; baseline congelada em `results/baseline_frozen/` (hash do checkpoint conferido).
+- **Resultado (de `selection_test.json`):** no `test`, com o limiar escolhido, accuracy 94,7 % contra 61,2 % da classe maioritária; navegação sensibilidade 0,971, precisão 0,900, F1 0,934; pesca sensibilidade 0,931, precisão 0,981, F1 0,955. **Otimistas**, por terem servido a escolher.
+- **Limitações:**
+  - A perda no `test` oscila muito entre épocas (0,18 na época 162; 0,30 na 200; a época 52 empata com a 162). O mínimo escolhido é estreito, pelo que a escolha pode ter seguido ruído, e a seleção usa só 18 viagens. A ronda era uma só, por isso não se repetiu. Decisão do utilizador pendente.
+  - A distribuição de classes do `test` (61 % de pesca) difere do treino (75 %).
+  - O `test` foi aberto uma vez, sob autorização escrita a partir da instrução do utilizador («Concordo com tudo o que disseste… podes parar»); o utilizador pode considerar a autorização demasiado implícita.
+  - O mecanismo de acesso é uma salvaguarda do código, não impede quem tenha acesso ao disco de ler os ficheiros.
+  - **O `validation` não foi aberto.**
+- **Ficheiros afetados:** `src/ais/phase1/{reserved,selection,inference,config,training}.py`, `src/ais/cli/{select_on_test,freeze_baseline,run_phase1_training}.py`, `configs/{phase1_select,selection_protocol}.json`, `configs/authorizations/test_selection.json`, `tests/{test_reserved_access,test_checkpoint_and_training_loop}.py`, `docs/00`, `docs/02`, `README.md`, `handoff.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **pendente**. O `.tex` ainda descreve o treino de 100 épocas e métricas no treino (REV-035) e não menciona a seleção no `test`, a baseline congelada nem os navios partilhados; falta decidir o que apresentar, face ao ruído da seleção.
+- **Validação:** `pytest tests/` → 145 passaram (política de acesso, uma só ronda, recusa do `validation`, protocolo e finalidade, ficheiro errado, ids fora do conjunto, checkpoint escolhido, congelação com deteção de alteração); execução real da seleção e da congelação com verificação do hash.
+- **Pendentes:** decisão sobre o ruído da seleção; atualizar o LaTeX; commit local por autorizar.
+
+### REV-039 — Métricas por segmento e navios partilhados (subagentes)
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Verde-água `#1DE9B6`, RGB (29, 233, 182). Só marcador do registo.
+- **O quê:**
+  - `ais/phase1/segments.py` e `ais/cli/segment_metrics.py` (subagente Sonnet): extração de segmentos **sem suavizar**, IoU temporal em segundos com intervalo meio-aberto, emparelhamento um-para-um guloso com IoU ≥ 0,5, precisão/sensibilidade/F1 por segmento, erro de fronteira com sinal e fragmentação; agregação micro; divisões por zero dão `None`.
+  - `ais/cli/count_shared_vessels.py` (subagente Haiku): lê só o manifesto. Resultado: 9 das 18 viagens de `validation` e 8 das 18 de `test` têm navio presente no treino; 2 navios partilhados entre `validation` e `test` (`results/shared_vessels/summary.json`).
+  - Revistos por mim: li `segments.py`, conferi à mão o exemplo de 34 pontos (2 referências, 3 previstos, 2 pares, F1 0,8, fragmentação 1,5, erros de início 0 e 2 s, de fim −5 e 0 s), recalculei as contagens dos navios com lógica independente e reimplementei os segmentos com loops puros: sobre as previsões do **treino** da execução de 100 épocas dá o mesmo que a ferramenta (pesca: 88 referências, 1 459 previstos, 59 pares).
+- **Porquê:** plano aprovado (REV-037); a prova do Marco 4 precisa destas medidas.
+- **Ficheiros afetados:** `src/ais/phase1/segments.py`, `src/ais/cli/{segment_metrics,count_shared_vessels}.py`, `tests/{test_segments_and_metrics,test_count_shared_vessels}.py`, `docs/02`, `README.md`, `handoff.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **pendente** (as definições de segmento e os navios partilhados ainda não estão no texto).
+- **Validação:** `pytest tests/` → 145 passaram (24 de segmentos e 11 dos navios, sintéticos). Só treino e manifesto foram lidos.
+- **Limitações:** as métricas por segmento **não foram calculadas sobre a baseline congelada** (precisa de autorização, por usar o `test`); o teste de fumo foi só sobre previsões do treino de outra execução e serve para validar a ferramenta, não como resultado. Os subagentes não atualizaram os registos (limitados a poucos ficheiros).
+- **Pendentes:** commit local por autorizar; medição por segmento da baseline no Marco 4.
+
+### REV-040 — LaTeX atualizado com a baseline congelada (300 épocas, seleção no `test`)
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Castanho-avermelhado `#7F0000`, RGB (127, 0, 0). No `.tex`, em `\revtext{rev040}` e na cor da tabela.
+- **O quê:**
+  - `src/ais/cli/build_final_results.py` reescrito: parte da baseline congelada (`results/baseline_frozen/`) e do treino de seleção (`results/phase1_select/`). Confirma por hash a coerência do manifesto, dos sumários, do checkpoint e da seleção, e que o `validation` nunca foi aberto e o `test` só uma vez (`access_log.jsonl`). Avalia a baseline nas 87 viagens de treino (permitido) e lê os números do `test` de `selection_test.json`, sem abrir o parquet do `test`. Escreve `results/baseline_frozen/final_results.json`, `latex/generated/resultados.tex` e `latex/figures/final_{perda,matriz,viagens}.png`.
+  - LaTeX: a subsecção do treino passa a «Treino, seleção e resultados»: 300 épocas sem paragem antecipada, escolha da época e do limiar no `test` com critérios declarados antes, tabela por classe com treino e teste, matrizes de confusão (treino e teste), perda por época (treino e teste) e exatidão por viagem de teste. Frases sobre 100 épocas, paragem antecipada, `phase1_final.json` e «validação e teste não foram abertos» corrigidas (o `test` serviu para escolher; o `validation` não foi aberto). Substitui o texto e as figuras de REV-035.
+  - Por decisão do utilizador, **não** se acrescentou ao texto nada sobre navios partilhados entre conjuntos; a frase já existente (não afirmar generalização para navios inéditos) mantém-se.
+- **Porquê:** pedido do utilizador: valores recentes, calculados por código e consistentes com a baseline congelada, em vez dos do treino de 100 épocas.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `latex/generated/resultados.tex`, `latex/figures/final_*.png`, `src/ais/cli/build_final_results.py`, `docs/02_cnn_viagem_completa.md`, `handoff.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex` + `bibtex` sem erros nem referências em falta (7 páginas); páginas 5 e 6 inspecionadas. Dois avisos de «overfull» pequenos (5,8 e 16 pt). Sem macros indefinidas.
+- **Validação:** `build_final_results` executado com as verificações de proveniência a passar; o registo de acessos manteve 2 entradas (a geração não abriu nenhum conjunto); figuras e PDF inspecionados. `pytest tests/` → 145 passaram depois da revisão (o gerador só tem teste das funções de formatação).
+- **Limitações:**
+  - Os resultados do `test` são **otimistas** (esse conjunto serviu para escolher); o texto di-lo. A perda no `test` oscila muito entre épocas e o texto também o refere.
+  - A medição final no `validation` ainda não existe. As métricas por segmento ainda não estão no texto.
+  - O gerador não tem teste automático além das funções de formatação.
+- **Pendentes:** decisão do utilizador sobre o ruído da seleção; commit local por autorizar; Marco 4.
