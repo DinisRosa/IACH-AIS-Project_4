@@ -20,7 +20,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Validação e teste: só o `id` e as contagens de linhas. Nenhum valor de validação ou teste foi lido ou analisado.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
 - **Conjuntos de validação e teste:** bloqueados para desenvolvimento.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-007.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-008.
 
 ## Decisões do utilizador (vigentes)
 
@@ -147,7 +147,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ### Marco 2 — Preparação auditável (só treino/sintéticos)
 - [ ] Recálculo de `time_gap_calc_s`, `distance_gap_calc_m` e `speed_calc_mps`.
-- [x] Unidades confirmadas no treino: `distance_gap`, `euc_speed`, `time_gap`, `bearing`, `signed_turn` (REV-003). `distanceToShore` ainda por confirmar.
+- [x] Unidades confirmadas no treino: `distance_gap`, `euc_speed`, `time_gap`, `bearing`, `signed_turn` (REV-003). `distanceToShore` em metros confirmado pelo README oficial (REV-008).
 - [ ] Quantificar e tratar as anomalias de `distance_gap`, `time_gap` e `signed_turn`.
 - [ ] Limpeza com auditoria e limites IQR só no treino.
 - [ ] Codificação de rótulos (`target`) e features (`speed_calc_mps`, `signed_turn`, `time_gap_calc_s`, `distanceToShore`).
@@ -159,8 +159,8 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 ## Pendências por decidir ou confirmar
 
-- Unidade de `distanceToShore` (metros é a hipótese mais plausível).
-- CRS de x/y e de longitude/latitude.
+- CRS de longitude/latitude (x/y já indicado como SRID 25832 pelo README oficial, REV-008).
+- Método de cálculo de `distanceToShore` (não documentado; a unidade em metros está confirmada, REV-008).
 - Unidade, largura e bordas do pós-processamento simples (aprovação do utilizador).
 - Orçamento de tempo para execuções longas (AGENTS.md §2).
 - Se os overlaps 25% e 75% entram no âmbito (decisão posterior).
@@ -176,7 +176,7 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 | `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** (REV-006) |
 | `latex/references.bib` | Existente; `kaggleAIS` com autor corrigido (REV-006) |
 | `requirements.txt` | Existente; testado numa instalação limpa |
-| `REVISION_LOG.md` | Existente; REV-001 a REV-007 |
+| `REVISION_LOG.md` | Existente; REV-001 a REV-008 |
 | `PROGRESS.md` | Este ficheiro |
 | `scripts/create_split_manifest.py` | Existente; executado |
 | `scripts/check_units_train.py` | Existente; executado |
@@ -186,3 +186,13 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 | `results/units_check_train/` | Gerado; não versionado |
 | `latex/build/` | Gerado; não versionado |
 | Código de pré-processamento, modelos e testes automatizados | Ainda não criados |
+
+### 2026-11-23i — Unidades confirmadas pelo README oficial (REV-008)
+
+**Feito**
+- `distanceToShore` em metros (distância à costa da Dinamarca), confirmado pelo README do Zenodo.
+- `x`/`y` em SRID 25832 (ETRS89 / UTM 32N), segundo o mesmo README.
+
+**Pendente**
+- CRS de longitude/latitude: hipótese WGS84, por verificar.
+- Método de cálculo de `distanceToShore`: não documentado.

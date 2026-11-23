@@ -89,7 +89,7 @@ Nota de leitura: um CSV armazena texto; os tipos abaixo são os tipos lógicos r
 | time_gap | float64, mesmo que haja valores inteiros | Intervalo temporal entre pontos, segundo a definição original | Segundos; igual à diferença de t entre pontos consecutivos (verificado, REV-003); anomalia com razão 1/3 por quantificar | 4 | Preservar original e comparar com recálculo |
 | distance_gap | float64 | Distância associada a um intervalo entre pontos | Metros (verificado, REV-003); coincide com a distância plana entre pontos consecutivos | 2.979796558 | Calcular velocidade apenas após confirmar unidade e alinhamento |
 | euc_speed | float64 | Velocidade calculada segundo a definição original | Nós: euc_speed = (distance_gap / time_gap) × 1,94384 (verificado, REV-003) | 1.448065282 | Comparação com velocidade recalculada |
-| distanceToShore | float64 | Distância à costa | Unidade não confirmada. Não é quilómetros (o máximo no treino excederia o semieixo da Terra); metros é a hipótese mais plausível, sem referência externa | 6.726539723 | Feature inicial proposta; preservar nome original na leitura |
+| distanceToShore | float64 | Distância à costa | **Metros**, distância à costa da Dinamarca (confirmado pelo README oficial do Zenodo, REV-008) | 6.726539723 | Feature inicial proposta; preservar nome original na leitura |
 | label | string categórica | Anotação original do estado nesse ponto da viagem | Cinco categorias descritas na proposta; sem unidade | 01-sailing | Resposta supervisionada; nunca entrada preditiva |
 
 ### Notas sobre tipos
@@ -230,7 +230,8 @@ Em caso de contradição, aplicar as decisões mais recentes do utilizador e a p
 ## 18. Lista de dúvidas a resolver apenas com treino ou documentação
 - CRS de longitude/latitude e de x/y. (Unidades de x/y verificadas em metros, REV-003.)
 - Definição exata de distance_gap. (Unidade verificada em metros, REV-003.)
-- Unidade e método de obtenção de distanceToShore. (Por confirmar.)
+- Unidade de distanceToShore: **metros**, confirmada pelo README oficial (REV-008). Método de cálculo: não documentado no README, por confirmar.
+- x e y: **SRID 25832** segundo o README oficial (ETRS89 / UTM zona 32N, EPSG:25832). Longitude e latitude: CRS não indicado; hipótese WGS84 (EPSG:4326), por confirmar.
 - Alinhamento temporal de signed_turn e bearing. (Unidades e convenção verificadas, REV-003.)
 - Hipótese de euc_speed em nós: verificada (REV-003).
 - Tratamento dos primeiros pontos, lacunas e valores ausentes.
@@ -247,7 +248,7 @@ Nenhuma destas incertezas autoriza abrir validação ou teste durante desenvolvi
   - `euc_speed` está **em nós**: `euc_speed` = (distance_gap / time_gap) × 1,94384 (mediana e percentis 5 a 95 praticamente iguais a 1,94384).
   - `bearing` está **em graus**, azimute a partir do norte, e corresponde ao azimute inicial entre o ponto anterior e o ponto atual (diferença mediana ~3·10⁻¹⁰ °).
   - `signed_turn` está **em graus** e é a diferença de `bearing` entre pontos consecutivos, normalizada para (-180, 180]. Mediana e percentil 95 da diferença absoluta são ~0.
-  - `distanceToShore`: unidade **não confirmada**. Mediana ~18,7 mil; máximo ~79 mil. Não pode ser quilómetros (o máximo excederia o semieixo da Terra). Metros é a hipótese mais plausível, mas não está verificado com referência externa.
+  - `distanceToShore`: **metros**, confirmado pelo README oficial do Zenodo (`128_fishing_trajs_README.txt`: "distance (in meters) to the Denmark Coast"), REV-008. Mediana ~18,7 mil; máximo ~79 mil. Coerente com a leitura no treino.
 - **Anomalias a quantificar** (não foram excluídas nem assumidas):
   - `distance_gap` mínimo de ~0,48 da haversine, e `time_gap` mínimo de 1/3 de `dt`, em alguns pares. Existem casos fora da regra.
   - `signed_turn` máximo de diferença absoluta de ~175° face à variação de `bearing`. Parece pontual, mas tem de ser contado.

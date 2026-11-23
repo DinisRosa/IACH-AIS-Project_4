@@ -19,6 +19,7 @@ Regras:
 | REV-005 | Azul-petróleo | `#00838F` | (0, 131, 143) |
 | REV-006 | Castanho | `#6D4C41` | (109, 76, 65) |
 | REV-007 | Rosa | `#AD1457` | (173, 20, 87) |
+| REV-008 | Verde-azulado | `#00695C` | (0, 105, 92) |
 
 ## Revisões
 
@@ -158,3 +159,20 @@ Regras:
 - **Correspondência no LaTeX:** **não aplicável**. O `.tex` já diz 123 e não é afetado. O PDF IAHC não se altera.
 - **Validação:** pesquisa textual por "128", "não versionado", "pendente de decisão" e "sem autor" nos MDs. As ocorrências restantes são históricas ou explicam a cifra do Zenodo.
 - **Pendentes:** nenhum para esta revisão.
+
+### REV-008 — Unidades e CRS confirmados pelo README oficial do Zenodo
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Verde-azulado `#00695C`, RGB (0, 105, 92).
+- **O quê:** `docs/00` atualizado com a fonte oficial:
+  - `distanceToShore` em **metros**, distância à costa da Dinamarca (confirmado).
+  - `x` e `y` em **SRID 25832** (ETRS89 / UTM zona 32N, EPSG:25832).
+  - Longitude e latitude: CRS não indicado; hipótese WGS84 (EPSG:4326), por confirmar.
+  - `euc_speed`: o README diz "knots/hour", o que confirma nós (a unidade "por hora" é redundante).
+- **Porquê:** o utilizador pediu confirmação de `distanceToShore` e a explicação dos CRS. O README do Zenodo (`128_fishing_trajs_README.txt`, 602 bytes, publicado com o dataset) é a fonte primária.
+- **Ficheiros afetados:** `docs/00_contexto_projeto_dicionario_dados.md` (tabela §8, §18), `REVISION_LOG.md`, `PROGRESS.md` (a seguir).
+- **Correspondência no LaTeX:** **não aplicável**. A proposta não especifica unidades.
+- **Validação:** README obtido em `https://zenodo.org/records/7283281/files/128_fishing_trajs_README.txt` (HTTP 200). Coerente com o treino: distâncias em metros (REV-003) e nós (REV-003).
+- **Pendentes:**
+  - Confirmar o CRS de longitude/latitude (hipótese WGS84 por verificar com uma projeção de referência, p.ex. `pyproj`, se autorizado instalar).
+  - Método de cálculo de `distanceToShore` (não documentado).
