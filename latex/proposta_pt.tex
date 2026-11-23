@@ -34,6 +34,8 @@
 % REV-021 — cor #D500F9, RGB (213, 0, 249) (mesma do REVISION_LOG.md).
 % REV-022 — cor #00897B, RGB (0, 137, 123) (mesma do REVISION_LOG.md).
 % REV-023 — cor #0277BD, RGB (2, 119, 189) (mesma do REVISION_LOG.md). Títulos de subsecções novos.
+% REV-042 — cor #0A3D62, RGB (10, 61, 98) (mesma do REVISION_LOG.md). HMM e Wu et al. deixam de ser comparações (resumo, objetivos, avaliação, pós-processamento).
+% REV-041 — cor #FF1744, RGB (255, 23, 68) (mesma do REVISION_LOG.md). Baseline fechada; CNN de referência única (secções 4 e 5) e secção de Resultados.
 % REV-040 — cor #7F0000, RGB (127, 0, 0) (mesma do REVISION_LOG.md). Baseline congelada: treino de 300 épocas, seleção no teste e resultados regenerados por código.
 % REV-036 — cor #00C853, RGB (0, 200, 83) (mesma do REVISION_LOG.md). Papéis dos conjuntos reservados: teste seleciona, validação mede no fim.
 % REV-035 — cor #6200EA, RGB (98, 0, 234) (mesma do REVISION_LOG.md). Resultados do treino final, números gerados por código.
@@ -62,6 +64,8 @@
 \definecolor{rev035}{RGB}{98,0,234}
 \definecolor{rev036}{RGB}{0,200,83}
 \definecolor{rev040}{RGB}{127,0,0}
+\definecolor{rev041}{RGB}{255,23,68}
+\definecolor{rev042}{RGB}{10,61,98}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 % Números gerados por ais.cli.build_final_results (REV-035): \rv{\resXxx} mostra o valor na cor da revisão.
 \input{generated/resultados}
@@ -101,7 +105,7 @@
 \maketitle
 
 \begin{abstract}
-A pesca ilegal, não declarada e não regulamentada (IUU) ameaça a sustentabilidade dos oceanos. O \emph{Automatic Identification System} (AIS) permite monitorizar navios à escala global, mas converter trajetórias em deteções úteis à fiscalização exige métodos robustos e interpretáveis. Propõe-se investigar se a combinação de janelas sobrepostas e pós-processamento temporal melhora a qualidade e a estabilidade da segmentação semântica de trajetórias AIS para detetar pesca, como apoio à decisão de inspetores humanos (\textcolor{red}{\emph{human-on-the-loop}}), segundo princípios de Inteligência Artificial Centrada no Humano (HCAI): explicabilidade, confiança calibrada e decisão humana final. A avaliação usa \rv{\resDadosViagens} trajetórias anotadas (Kaggle), comparando com um \emph{Hidden Markov Model} (HMM) e com Wu et al.~\shortcite{wu2022} através de precisão, sensibilidade, F1 e \emph{intersection-over-union} (IoU), complementadas por análise qualitativa.
+A pesca ilegal, não declarada e não regulamentada (IUU) ameaça a sustentabilidade dos oceanos. O \emph{Automatic Identification System} (AIS) permite monitorizar navios à escala global, mas converter trajetórias em deteções úteis à fiscalização exige métodos robustos e interpretáveis. Propõe-se investigar se a combinação de janelas sobrepostas e pós-processamento temporal melhora a qualidade e a estabilidade da segmentação semântica de trajetórias AIS para detetar pesca, como apoio à decisão de inspetores humanos (\textcolor{red}{\emph{human-on-the-loop}}), segundo princípios de Inteligência Artificial Centrada no Humano (HCAI): explicabilidade, confiança calibrada e decisão humana final. A avaliação usa \rv{\resDadosViagens} trajetórias anotadas (Kaggle), \revtext{rev042}{comparando a CNN sobre a viagem completa com a CNN sobre janelas sobrepostas} através de precisão, sensibilidade, F1 e \emph{intersection-over-union} (IoU), complementadas por análise qualitativa.
 \end{abstract}
 
 \section{Problema e Motivação}
@@ -125,13 +129,13 @@ O objetivo principal é desenvolver um sistema de segmentação semântica de tr
 
 \begin{enumerate}
     \item \revtext{rev021}{Construir um \emph{pipeline} de pré-processamento auditável, que recalcula as grandezas derivadas e seleciona as características, sem remover anomalias.}
-    \item \revtext{rev021}{Implementar e treinar uma \emph{rede neuronal convolucional} unidimensional (CNN 1D) que devolve uma probabilidade por ponto: primeiro sobre a viagem completa, como referência, e depois sobre janelas com sobreposição. Como \emph{baselines}, Wu et al.~\shortcite{wu2022} e um HMM~\cite{peel2011}.}
+    \item \revtext{rev021}{Implementar e treinar uma \emph{rede neuronal convolucional} unidimensional (CNN 1D) que devolve uma probabilidade por ponto: primeiro sobre a viagem completa, como referência, e depois, \revtext{rev041}{com a mesma rede,} sobre janelas com sobreposição. \revtext{rev042}{A CNN sobre a viagem completa é a referência com que se compara a CNN sobre janelas.}}
     \item Conceber e avaliar um pós-processamento temporal que combine as predições das janelas sobrepostas e regularize as fronteiras dos segmentos.
     \item Avaliar quantitativamente (por segmento e por ponto) e qualitativamente (visualização e casos de estudo).
     \item Incluir explicabilidade (atribuições de importância~\cite{lundberg2017}) e confiança calibrada~\cite{guo2017} que sustentem a decisão do inspetor.
 \end{enumerate}
 
-O trabalho guia-se por três perguntas de investigação: (RQ1) em que medida as janelas sobrepostas reduzem a instabilidade das fronteiras face a janelas não sobrepostas? (RQ2) em que medida o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados? (RQ3) qual a interação entre sobreposição e pós-processamento? Será bem-sucedido se (i) caracterizar quantitativamente o efeito de ambas as componentes face aos \emph{baselines} --- aceitando como resultado válido a demonstração de que uma componente não traz ganho ---, (ii) produzir segmentações temporalmente estáveis e (iii) fornecer justificações auditáveis para validação por um inspetor. Contribuições esperadas: um método de janelas sobrepostas com pós-processamento temporal para deteção de pesca, uma avaliação que integra a perspetiva HCAI e evidência empírica sobre o valor do pós-processamento.
+O trabalho guia-se por três perguntas de investigação: (RQ1) em que medida as janelas sobrepostas reduzem a instabilidade das fronteiras face a janelas não sobrepostas? (RQ2) em que medida o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados? (RQ3) qual a interação entre sobreposição e pós-processamento? Será bem-sucedido se (i) caracterizar quantitativamente o efeito de ambas as componentes face \revtext{rev042}{à CNN de referência} --- aceitando como resultado válido a demonstração de que uma componente não traz ganho ---, (ii) produzir segmentações temporalmente estáveis e (iii) fornecer justificações auditáveis para validação por um inspetor. Contribuições esperadas: um método de janelas sobrepostas com pós-processamento temporal para deteção de pesca, uma avaliação que integra a perspetiva HCAI e evidência empírica sobre o valor do pós-processamento.
 
 \section{Abordagem}
 \label{sec:abordagem}
@@ -146,7 +150,7 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 \node[box] (b) at (2.9,0) {Pré-processamento};
 \node[ref] (c) at (5.8,0) {CNN 1D de referência (viagem completa)};
 \node[box] (d) at (5.8,-1.7) {Janelas sobrepostas};
-\node[box] (e) at (2.9,-1.7) {CNN 1D sobre janelas};
+\node[box] (e) at (2.9,-1.7) {\revtext{rev041}{Mesma CNN 1D sobre janelas}};
 \node[box] (f) at (0,-1.7) {Pós-processamento temporal};
 \node[box] (g) at (0,-3.4) {Segmentos semânticos};
 \node[box] (h) at (2.9,-3.4) {Explicabilidade / decisão humana};
@@ -158,7 +162,7 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 \draw[->] (f) -- (g);
 \draw[->] (g) -- (h);
 \end{tikzpicture}
-\captionof{figure}{Esquema do \emph{pipeline} proposto: a CNN 1D é usada primeiro sobre viagens completas (referência) e depois sobre janelas com sobreposição.}
+\captionof{figure}{Esquema do \emph{pipeline} proposto: a CNN 1D é usada primeiro sobre viagens completas (referência) e depois, \revtext{rev041}{a mesma rede,} sobre janelas com sobreposição.}
 \label{fig:pipeline}
 \end{center}
 
@@ -167,14 +171,14 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 
 \revtext{rev020}{Importação do CSV e recálculo, por viagem, dos intervalos temporais, distâncias, rumos, variações de rumo e velocidades a partir de $x$, $y$ e $t$, sem remoção de anomalias; seleção das características (velocidade, variação de rumo, intervalo temporal e distância à costa).}
 
-\subsection{\texorpdfstring{\revtext{rev023}{CNN de referência sobre a viagem completa}}{CNN de referência sobre a viagem completa}}
+\subsection{\texorpdfstring{\revtext{rev041}{CNN de referência}}{CNN de referência}}
 \label{sec:abordagem-cnn-completa}
 
-\revtext{rev021}{A CNN recebe a sequência completa de cada viagem e devolve uma probabilidade por ponto. Esta fase estabelece os valores de referência do modelo, sem janelas e sem sobreposição.}
+\revtext{rev041}{O modelo de referência é uma CNN 1D totalmente convolucional que recebe uma sequência de pontos e devolve uma probabilidade de pesca por ponto. É a \emph{mesma} rede nas duas experiências do trabalho: primeiro sobre a viagem completa, que é a referência propriamente dita e está fechada, e depois sobre janelas com sobreposição (Subsecção~\ref{sec:abordagem-janelas}). Manter a rede igual é o que permite atribuir qualquer diferença de desempenho ao janelamento e à sobreposição, e não a uma mudança do modelo.}
 
-\revtext{rev024}{Cada viagem é uma sequência única, ordenada por instante e identificador do ponto, sem janelas, sem truncar e sem preenchimento de comprimento (uma viagem por passo de treino). A entrada tem sete canais: as quatro características normalizadas (velocidade, variação de rumo, intervalo temporal e distância à costa) e três indicadores de ausência, para a velocidade, a variação de rumo e o intervalo temporal. A normalização (média e desvio-padrão por característica, ignorando os valores em falta) é ajustada apenas com as viagens de treino e guardada com a ordem das características; os valores em falta são postos a zero depois de normalizar, para que o zero signifique ``valor médio'' e a ausência fique registada no indicador. Se for usada uma partição interna de monitorização, separada por viagem completa dentro do treino, a normalização é ajustada só com o treino interno.}
+\revtext{rev041}{Escolheu-se uma CNN pequena e simples como referência por três razões de desenho, que não são evidência: devolve naturalmente uma previsão por ponto, que é o que a segmentação exige; é leve (\resModParametros{} parâmetros), o que permite treinar e iterar só com CPU; e o seu contexto é local e conhecido (campo recetivo de \resModCampo{} pontos), o que facilita perceber o que o janelamento acrescenta ou não. A arquitetura é a proposta inicial do projeto, adotada como ponto de partida e não otimizada.}
 
-\revtext{rev024}{A rede é totalmente convolucional: três camadas Conv1D (32, 64 e 32 filtros, \emph{kernel} 5, \emph{padding} que preserva o comprimento, ativação ReLU) e uma camada final de \emph{kernel} 1 que devolve um \emph{logit} por ponto. Não há \emph{pooling}, \emph{stride}, dilatação nem camada que reduza a viagem a uma só classe. Cada saída depende apenas dos \rv{\resModCampo} pontos em seu redor, pelo que entrada completa não significa contexto global. A perda é a entropia cruzada binária sobre os \emph{logits}, sem pesos de classe nem reamostragem, e a sigmoide só é aplicada na inferência. O otimizador é o Adam.} \revtext{rev040}{No treino, a taxa de aprendizagem é $10^{-3}$ e a rede é treinada durante \resTrEpocas{} épocas, sem paragem antecipada; a época a usar é escolhida depois, no conjunto de teste (Subsecção~\ref{sec:cnn-treino}). Estes valores são iniciais e não foram validados.}
+\revtext{rev041}{A entrada tem sete canais (quatro características normalizadas e três indicadores de ausência), e a normalização é ajustada apenas com as viagens de treino. Na viagem completa, cada viagem é uma sequência única, sem janelas, sem truncar e sem preenchimento de comprimento, com uma viagem por passo de treino. A especificação da rede, da perda e do treino está na Secção~\ref{sec:cnn-especificacao}, e os resultados da referência sobre a viagem completa na Secção~\ref{sec:resultados}.}
 
 \subsection{\texorpdfstring{\revtext{rev024}{Verificação da implementação}}{Verificação da implementação}}
 \label{sec:abordagem-verificacao}
@@ -184,12 +188,12 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 \subsection{\texorpdfstring{\revtext{rev023}{Janelamento com sobreposição}}{Janelamento com sobreposição}}
 \label{sec:abordagem-janelas}
 
-\revtext{rev021}{A mesma arquitetura é treinada e avaliada sobre janelas de comprimento fixo com sobreposição, para medir o efeito da sobreposição na estabilidade das fronteiras; cada ponto recebe a média das predições das janelas em que aparece.}
+\revtext{rev041}{A mesma CNN de referência (Secção~\ref{sec:cnn-especificacao}), sem alterações à arquitetura, é treinada e avaliada sobre janelas de comprimento fixo $L$ com sobreposição, para medir se o janelamento e a sobreposição melhoram a segmentação face à viagem completa. Começa-se com $L=64$ pontos e com sobreposição de 0\,\% (controlo, que separa o efeito do janelamento do efeito da sobreposição) e de 50\,\%; depois testa-se se aumentar ou diminuir $L$ compensa. Cada janela devolve uma probabilidade por ponto, e cada ponto original recebe a média das probabilidades das janelas em que aparece; a avaliação conta uma previsão por ponto original, e o preenchimento da última janela é ignorado na perda, na média e nas métricas. A divisão dos dados, as características, o normalizador e as métricas mantêm-se, para que a única diferença seja o janelamento. Ficam por decidir se a sobreposição se aplica no treino, na inferência ou em ambos, e o orçamento de treino, porque a mesma quantidade de épocas não dá o mesmo número de passos. Esta fase ainda não foi implementada.}
 
 \subsection{\texorpdfstring{\revtext{rev023}{Pós-processamento temporal}}{Pós-processamento temporal}}
 \label{sec:abordagem-pos}
 
-\revtext{rev021}{As probabilidades por ponto são suavizadas (por exemplo, via HMM ou votação por vizinhança), produzindo segmentos contíguos e estáveis.}
+\revtext{rev021}{As probabilidades por ponto são suavizadas (por exemplo, por votação por vizinhança\revtext{rev042}{, com a unidade e a largura por definir}), produzindo segmentos contíguos e estáveis.}
 
 \subsection{\texorpdfstring{\revtext{rev023}{Saída, explicabilidade e ferramentas}}{Saída, explicabilidade e ferramentas}}
 \label{sec:abordagem-saida}
@@ -199,11 +203,11 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 \section{\texorpdfstring{\revtext{rev025}{Especificação da CNN 1D de referência}}{Especificação da CNN 1D de referência}}
 \label{sec:cnn-especificacao}
 
-\revtext{rev025}{Esta secção descreve a rede com o detalhe necessário para a recriar com os mesmos valores. Indica-se também, para cada escolha, o motivo e o seu estado: o que foi \emph{decidido}, o que foi \emph{adotado como valor inicial} sem validação, e o que \emph{ainda não está definido}. Nenhum valor desta secção foi otimizado com os dados: a arquitetura é a proposta inicial do protocolo do projeto, declarada ``por validar''.} \revtext{rev040}{O treino, a seleção da época e do limiar e os resultados estão descritos na Subsecção~\ref{sec:cnn-treino}.}
+\revtext{rev025}{Esta secção descreve a rede com o detalhe necessário para a recriar com os mesmos valores. Indica-se também, para cada escolha, o motivo e o seu estado: o que foi \emph{decidido}, o que foi \emph{adotado como valor inicial} sem validação, e o que \emph{ainda não está definido}. Nenhum valor desta secção foi otimizado com os dados: a arquitetura é a proposta inicial do protocolo do projeto, declarada ``por validar''.} \revtext{rev041}{A especificação vale para as duas experiências, a viagem completa e as janelas. Os resultados estão na Secção~\ref{sec:resultados}.}
 
 \subsection{\texorpdfstring{\revtext{rev025}{Entrada e saída}}{Entrada e saída}}
 
-\revtext{rev025}{A rede processa uma viagem de cada vez. A entrada é uma matriz $X\in\mathbf{R}^{7\times N}$, em que $N$ é o número de pontos da viagem (varia de viagem para viagem) e as sete linhas, por esta ordem, são: velocidade (\texttt{speed\_calc\_mps}), variação de rumo com sinal (\texttt{signed\_turn\_calc\_deg}), intervalo temporal (\texttt{time\_gap\_calc\_s}), distância à costa (\texttt{distanceToShore}), e os indicadores de ausência da velocidade, da variação de rumo e do intervalo temporal (1 se o valor original faltava, 0 caso contrário). As quatro primeiras linhas são normalizadas com a média e o desvio-padrão populacional de cada característica, calculados só com as viagens de treino e ignorando valores em falta; depois de normalizar, os valores em falta ficam a zero (a média). Os identificadores, os instantes, $x$ e $y$ não são entradas. A saída é um vetor de $N$ \emph{logits}, um por ponto original, $z\in\mathbf{R}^{N}$; a probabilidade de pesca é $p_i=\sigma(z_i)=1/(1+e^{-z_i})$, calculada só na inferência. Não há janelas, truncagem nem preenchimento de comprimento: o lote tem sempre uma só viagem.}
+\revtext{rev025}{A rede processa \revtext{rev041}{uma sequência de cada vez: a viagem completa ou, na experiência com janelamento, uma janela.} A entrada é uma matriz $X\in\mathbf{R}^{7\times N}$, em que $N$ é o número de pontos da \revtext{rev041}{sequência (varia de viagem para viagem; numa janela é o comprimento fixo $L$)} e as sete linhas, por esta ordem, são: velocidade (\texttt{speed\_calc\_mps}), variação de rumo com sinal (\texttt{signed\_turn\_calc\_deg}), intervalo temporal (\texttt{time\_gap\_calc\_s}), distância à costa (\texttt{distanceToShore}), e os indicadores de ausência da velocidade, da variação de rumo e do intervalo temporal (1 se o valor original faltava, 0 caso contrário). As quatro primeiras linhas são normalizadas com a média e o desvio-padrão populacional de cada característica, calculados só com as viagens de treino e ignorando valores em falta; depois de normalizar, os valores em falta ficam a zero (a média). Os identificadores, os instantes, $x$ e $y$ não são entradas. A saída é um vetor de $N$ \emph{logits}, um por ponto original, $z\in\mathbf{R}^{N}$; a probabilidade de pesca é $p_i=\sigma(z_i)=1/(1+e^{-z_i})$, calculada só na inferência. \revtext{rev041}{Na viagem completa não há janelas, truncagem nem preenchimento de comprimento, e o lote tem sempre uma só viagem; com janelas, o preenchimento da última janela é marcado e ignorado na perda.}}
 
 \subsection{\texorpdfstring{\revtext{rev025}{Arquitetura}}{Arquitetura}}
 
@@ -259,7 +263,7 @@ Total & & & \rv{\resModParametros} \\
 \node[font=\tiny] at (6.42,-2.95) {$i$};
 \node[font=\tiny] at (8.94,-2.95) {$i{+}6$};
 \end{tikzpicture}}
-\caption{\revtext{rev026}{Desenho da CNN 1D de referência. Em cima, a cadeia de camadas: a viagem inteira ($N$ pontos, 7 canais) passa por três Conv1D com \emph{kernel} 5 (32, 64 e 32 filtros, ReLU) e por uma cabeça de \emph{kernel} 1, que devolve um \emph{logit} por ponto; a sigmoide só se aplica na inferência. O comprimento $N$ mantém-se em todas as camadas. Em baixo, o campo recetivo: cada saída depende dos \rv{\resModCampo} pontos de entrada entre $i-6$ e $i+6$.}}
+\caption{\revtext{rev026}{Desenho da CNN 1D de referência. Em cima, a cadeia de camadas: \revtext{rev041}{uma sequência de $N$ pontos (a viagem inteira ou uma janela), com 7 canais,} passa por três Conv1D com \emph{kernel} 5 (32, 64 e 32 filtros, ReLU) e por uma cabeça de \emph{kernel} 1, que devolve um \emph{logit} por ponto; a sigmoide só se aplica na inferência. O comprimento $N$ mantém-se em todas as camadas. Em baixo, o campo recetivo: cada saída depende dos \rv{\resModCampo} pontos de entrada entre $i-6$ e $i+6$.}}
 \label{fig:cnn-desenho}
 \end{figure*}
 
@@ -283,7 +287,7 @@ Isto significa que a previsão para o ponto $i$ depende dos pontos $i-6,\dots,i+
 
 \subsection{\texorpdfstring{\revtext{rev025}{Função de perda}}{Função de perda}}
 
-\revtext{rev025}{A perda é a entropia cruzada binária aplicada aos \emph{logits}, com média sobre os pontos da viagem:
+\revtext{rev025}{A perda é a entropia cruzada binária aplicada aos \emph{logits}, com média sobre os pontos da \revtext{rev041}{sequência (uma viagem ou uma janela)}:
 \begin{equation}
 \mathcal{L}=-\frac1N\sum_{i=1}^{N}\Big[y_i\log\sigma(z_i)+(1-y_i)\log\big(1-\sigma(z_i)\big)\Big],
 \end{equation}
@@ -291,14 +295,53 @@ com $y_i=1$ para pesca e $0$ para navegação. Usa-se a versão que recebe \emph
 
 \subsection{\texorpdfstring{\revtext{rev025}{Otimizador e treino}}{Otimizador e treino}}
 
-\revtext{rev025}{O otimizador previsto é o Adam, que adapta o passo de cada parâmetro e costuma funcionar sem grande ajuste, o que o torna uma escolha razoável para uma referência. Está implementado sem decaimento de pesos nem calendário de taxa de aprendizagem. A taxa de aprendizagem $10^{-3}$ no código é apenas o valor por omissão do Adam, usado como \emph{marcador}: \textbf{não foi escolhida nem validada} e será fixada na configuração de execução. Os restantes parâmetros foram fixados na configuração do treino (Subsecção~\ref{sec:cnn-treino}) \revtext{rev040}{e são igualmente iniciais e não validados.} Cada passo de otimização usa uma viagem completa (\emph{batch} de tamanho 1), em ordem aleatória reprodutível.}
+\revtext{rev025}{O otimizador previsto é o Adam, que adapta o passo de cada parâmetro e costuma funcionar sem grande ajuste, o que o torna uma escolha razoável para uma referência. Está implementado sem decaimento de pesos nem calendário de taxa de aprendizagem. A taxa de aprendizagem $10^{-3}$ no código é apenas o valor por omissão do Adam, usado como \emph{marcador}: \textbf{não foi escolhida nem validada} e será fixada na configuração de execução. Os restantes parâmetros foram fixados na configuração do treino (Subsecção~\ref{sec:cnn-treino}) \revtext{rev040}{e são igualmente iniciais e não validados.} Cada passo de otimização usa uma viagem completa (\emph{batch} de tamanho 1), em ordem aleatória reprodutível. \revtext{rev041}{Na experiência com janelas, o tamanho do lote e o orçamento de treino ainda estão por definir.}}
 
 \subsection{\texorpdfstring{\revtext{rev025}{Reprodutibilidade}}{Reprodutibilidade}}
 
 \revtext{rev025}{Os pesos iniciais são os da inicialização por omissão do PyTorch (\rv{\resTrTorch}, CPU) para camadas convolucionais, e a semente do gerador (Python, NumPy e PyTorch) é fixada na execução; a semente da divisão dos dados é 42. A ordem de treino das viagens usa um gerador com semente própria. O código regista a semente, as versões e o número de \emph{threads}, mas não garante resultados idênticos entre máquinas diferentes. } \revtext{rev040}{A configuração do treino (semente \resTrSemente{} e os valores acima) está no ficheiro \texttt{configs/phase1\_select.json}. Cada execução grava a semente, as versões, o normalizador e os hashes dos ficheiros usados. A escolha da época e do limiar segue um protocolo declarado antes de abrir o conjunto de teste e fica registada, e todos os números desta secção vêm do ficheiro \texttt{results/baseline\_frozen/final\_results.json}, gerado por \texttt{build\_final\_results.py}.}
 
-\subsection{\texorpdfstring{\revtext{rev040}{Treino, seleção e resultados}}{Treino, seleção e resultados}}
+\section{Materiais e Dados}
+\label{sec:materiais-dados}
+
+Será usado o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}: \rv{\resDadosViagens} trajetórias de pesca anotadas, com \rv{\resDadosLinhas} pontos (linhas), 13 colunas --- 12 atributos (identificador do navio e da viagem, instante, longitude, latitude, coordenadas projetadas, rumo, distância à costa, entre outros) e um rótulo. As cinco classes, desequilibradas (pesca: \texttt{02-fishing}, \texttt{04-fishing}; navegação: \texttt{01-sailing}, \texttt{03-sailing}, \texttt{05-sailing}), são agregadas num problema binário, mantendo o desequilíbrio natural (sem reamostragem nem pesos de classe) e as trajetórias completas.
+
+Eticamente, apesar de públicos, os dados AIS usados em fiscalização exigem cuidado: a deteção automática não deve, por si só, fundamentar sanções (a decisão humana é obrigatória); o sistema deve ser transparente e justo, evitando enviesamentos contra tipos de navio, regiões ou comunidades de pesca; e a confiança deve ser calibrada para não induzir falsa segurança.
+
+\subsection{Tratamento dos dados}
+\label{sec:tratamento-dados}
+
+\revtext{rev018}{Os dados são usados tal como existem, sem remoção de linhas. As anomalias (saltos de posição, \emph{gaps} temporais longos e inversões de rumo) são mantidas, porque o sistema visa dados AIS ao momento, onde estes erros ocorrem; removê-las na preparação tornaria a avaliação otimista, e a robustez a estas anomalias faz parte do que se avalia. Uma função de preparação recalcula, por viagem (mesmo identificador), as grandezas derivadas a partir das bases $x$, $y$, $t$ e distância à costa: intervalo temporal (\texttt{time\_gap}, em segundos), distância entre pontos consecutivos (\texttt{distance\_gap}, em metros), rumo (\texttt{bearing}, em graus, medido a partir do eixo $y$ da grelha UTM), variação de rumo com sinal (\texttt{signed\_turn}, em graus, no intervalo (-180, 180]) e velocidade (em nós). O rótulo binário (\texttt{target}) resulta do mapeamento das cinco classes em pesca e navegação. O primeiro ponto de cada viagem não tem anterior e fica com valores ausentes nas grandezas que dependem dele. Os valores recalculados coincidem com os originais do conjunto em \rv{\resPrepCoincide} dos pares (no mínimo, entre as três grandezas comparadas). O rumo da grelha difere do rumo em norte verdadeiro em \rv{\resPrepBearingMediana}\textdegree{} (mediana), pela convergência dos meridianos. A distância à costa é usada tal como vem no conjunto, sem verificação externa. A preparação aplica-se a cada conjunto separadamente, a partir do manifesto de divisão, e é verificada com testes sintéticos.}
+
+\revtext{rev022}{Na CNN, o primeiro ponto de cada viagem não tem \texttt{time\_gap}, \texttt{speed} nem \texttt{signed\_turn}, e o segundo não tem \texttt{signed\_turn}. Esses valores em falta são preenchidos com zero e marcados por um indicador de ausência, para distinguir ausência de valor zero. Estes pontos entram na função de perda. Nenhuma linha é removida.}
+
+\section{Avaliação}
+\label{sec:avaliacao}
+
+\subsection{\texorpdfstring{\revtext{rev023}{Métricas e estudo de ablação}}{Métricas e estudo de ablação}}
+\label{sec:avaliacao-metricas}
+
+Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e por ponto), \revtext{rev042}{comparando a CNN sobre janelas com a CNN de referência sobre a viagem completa}. Um estudo de ablação com quatro variantes isola cada componente: (i) sem sobreposição nem pós-processamento; (ii) só sobreposição; (iii) só pós-processamento; (iv) ambos (método proposto). Analisa-se também a robustez face à taxa de sobreposição (0\%, 25\%, 50\%, 75\%) e ao nível de regularização temporal. A estabilidade mede-se pela fragmentação (número de segmentos por trajetória) e pelo erro de fronteira (desvio entre início/fim previsto e real); ``estável'' designa uma segmentação que muda pouco sob pequenas alterações da janela ou do pós-processamento.
+
+\subsection{\texorpdfstring{\revtext{rev023}{Divisão dos dados e protocolo}}{Divisão dos dados e protocolo}}
+\label{sec:avaliacao-protocolo}
+
+Os dados são divididos por trajetória completa (ID completo, composto pelo identificador do navio e pelo sufixo da viagem) em treino, validação e teste, na proporção 70/15/15, com semente 42 e manifesto fixo. Todas as linhas de cada trajetória ficam no mesmo conjunto. Trajetórias do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto; por isso, os resultados não são apresentados como generalização para navios inéditos. \revtext{rev036}{Os hiperparâmetros e as restantes escolhas (número de épocas, limiar, variantes) usam apenas o treino e o conjunto de teste, que serve para selecionar; o conjunto de validação é reservado à medição final, feita uma só vez com o modelo e o protocolo congelados.}
+
+\subsection{\texorpdfstring{\revtext{rev023}{Avaliação qualitativa e dimensão humana}}{Avaliação qualitativa e dimensão humana}}
+\label{sec:avaliacao-qualitativa}
+
+Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos preditos sobrepostos à verdade de referência e analisar-se-ão casos de sucesso e falha. Para a dimensão HCAI~\cite{shneiderman2020}, prevê-se avaliar de forma preliminar a explicabilidade (verificando se as atribuições~\cite{lundberg2017} correspondem aos padrões de movimento esperados) e a utilidade como apoio à decisão, através de um \emph{dashboard} de prova de conceito com segmentação, confiança calibrada~\cite{guo2017} e justificações.
+
+\section{\texorpdfstring{\revtext{rev041}{Resultados}}{Resultados}}
+\label{sec:resultados}
+
+\revtext{rev041}{Esta secção reúne os resultados da CNN de referência: sobre a viagem completa (Subsecção~\ref{sec:cnn-treino}) e, depois, com janelamento (Subsecção~\ref{sec:resultados-janelas}). A rede é a mesma em todos os casos, para que as diferenças se devam só ao janelamento e à sobreposição.}
+
+\subsection{\texorpdfstring{\revtext{rev041}{CNN de referência sobre a viagem completa}}{CNN de referência sobre a viagem completa}}
 \label{sec:cnn-treino}
+
+\revtext{rev041}{Esta é a CNN de referência sobre a viagem completa, e está fechada: o modelo, a época e o limiar não voltam a mudar, e os valores abaixo são o termo de comparação com a CNN com janelamento.}
 
 \revtext{rev040}{O treino usou todo o conjunto de treino oficial (\resTrViagens{} viagens, \resTrPontos{} pontos), sem monitorização interna: o normalizador foi ajustado com essas viagens e todas serviram para ajustar a rede. Usou-se o Adam (taxa de aprendizagem $10^{-3}$) durante \resTrEpocas{} épocas, sem paragem antecipada, com a semente \resTrSemente{}, e guardou-se um modelo no fim de cada época. O treino durou cerca de \resTrSegundos{} minutos num CPU (cerca de \resTrSegPorEpoca{} segundos por época). Estes valores são iniciais e não foram validados.}
 
@@ -345,37 +388,10 @@ Teste & Pesca & \resTestePescaReal & \resTestePescaPrec & \resTestePescaSens & \
 \label{fig:final-viagens}
 \end{figure*}
 
-\section{Materiais e Dados}
-\label{sec:materiais-dados}
+\subsection{\texorpdfstring{\revtext{rev041}{CNN de referência com janelamento}}{CNN de referência com janelamento}}
+\label{sec:resultados-janelas}
 
-Será usado o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}: \rv{\resDadosViagens} trajetórias de pesca anotadas, com \rv{\resDadosLinhas} pontos (linhas), 13 colunas --- 12 atributos (identificador do navio e da viagem, instante, longitude, latitude, coordenadas projetadas, rumo, distância à costa, entre outros) e um rótulo. As cinco classes, desequilibradas (pesca: \texttt{02-fishing}, \texttt{04-fishing}; navegação: \texttt{01-sailing}, \texttt{03-sailing}, \texttt{05-sailing}), são agregadas num problema binário, mantendo o desequilíbrio natural (sem reamostragem nem pesos de classe) e as trajetórias completas.
-
-Eticamente, apesar de públicos, os dados AIS usados em fiscalização exigem cuidado: a deteção automática não deve, por si só, fundamentar sanções (a decisão humana é obrigatória); o sistema deve ser transparente e justo, evitando enviesamentos contra tipos de navio, regiões ou comunidades de pesca; e a confiança deve ser calibrada para não induzir falsa segurança.
-
-\subsection{Tratamento dos dados}
-\label{sec:tratamento-dados}
-
-\revtext{rev018}{Os dados são usados tal como existem, sem remoção de linhas. As anomalias (saltos de posição, \emph{gaps} temporais longos e inversões de rumo) são mantidas, porque o sistema visa dados AIS ao momento, onde estes erros ocorrem; removê-las na preparação tornaria a avaliação otimista, e a robustez a estas anomalias faz parte do que se avalia. Uma função de preparação recalcula, por viagem (mesmo identificador), as grandezas derivadas a partir das bases $x$, $y$, $t$ e distância à costa: intervalo temporal (\texttt{time\_gap}, em segundos), distância entre pontos consecutivos (\texttt{distance\_gap}, em metros), rumo (\texttt{bearing}, em graus, medido a partir do eixo $y$ da grelha UTM), variação de rumo com sinal (\texttt{signed\_turn}, em graus, no intervalo (-180, 180]) e velocidade (em nós). O rótulo binário (\texttt{target}) resulta do mapeamento das cinco classes em pesca e navegação. O primeiro ponto de cada viagem não tem anterior e fica com valores ausentes nas grandezas que dependem dele. Os valores recalculados coincidem com os originais do conjunto em \rv{\resPrepCoincide} dos pares (no mínimo, entre as três grandezas comparadas). O rumo da grelha difere do rumo em norte verdadeiro em \rv{\resPrepBearingMediana}\textdegree{} (mediana), pela convergência dos meridianos. A distância à costa é usada tal como vem no conjunto, sem verificação externa. A preparação aplica-se a cada conjunto separadamente, a partir do manifesto de divisão, e é verificada com testes sintéticos.}
-
-\revtext{rev022}{Na CNN, o primeiro ponto de cada viagem não tem \texttt{time\_gap}, \texttt{speed} nem \texttt{signed\_turn}, e o segundo não tem \texttt{signed\_turn}. Esses valores em falta são preenchidos com zero e marcados por um indicador de ausência, para distinguir ausência de valor zero. Estes pontos entram na função de perda. Nenhuma linha é removida.}
-
-\section{Avaliação}
-\label{sec:avaliacao}
-
-\subsection{\texorpdfstring{\revtext{rev023}{Métricas e estudo de ablação}}{Métricas e estudo de ablação}}
-\label{sec:avaliacao-metricas}
-
-Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e por ponto), comparando com os \emph{baselines} (HMM~\cite{peel2011} e Wu et al.~\shortcite{wu2022}). Um estudo de ablação com quatro variantes isola cada componente: (i) sem sobreposição nem pós-processamento; (ii) só sobreposição; (iii) só pós-processamento; (iv) ambos (método proposto). Analisa-se também a robustez face à taxa de sobreposição (0\%, 25\%, 50\%, 75\%) e ao nível de regularização temporal. A estabilidade mede-se pela fragmentação (número de segmentos por trajetória) e pelo erro de fronteira (desvio entre início/fim previsto e real); ``estável'' designa uma segmentação que muda pouco sob pequenas alterações da janela ou do pós-processamento.
-
-\subsection{\texorpdfstring{\revtext{rev023}{Divisão dos dados e protocolo}}{Divisão dos dados e protocolo}}
-\label{sec:avaliacao-protocolo}
-
-Os dados são divididos por trajetória completa (ID completo, composto pelo identificador do navio e pelo sufixo da viagem) em treino, validação e teste, na proporção 70/15/15, com semente 42 e manifesto fixo. Todas as linhas de cada trajetória ficam no mesmo conjunto. Trajetórias do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto; por isso, os resultados não são apresentados como generalização para navios inéditos. \revtext{rev036}{Os hiperparâmetros e as restantes escolhas (número de épocas, limiar, variantes) usam apenas o treino e o conjunto de teste, que serve para selecionar; o conjunto de validação é reservado à medição final, feita uma só vez com o modelo e o protocolo congelados.}
-
-\subsection{\texorpdfstring{\revtext{rev023}{Avaliação qualitativa e dimensão humana}}{Avaliação qualitativa e dimensão humana}}
-\label{sec:avaliacao-qualitativa}
-
-Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos preditos sobrepostos à verdade de referência e analisar-se-ão casos de sucesso e falha. Para a dimensão HCAI~\cite{shneiderman2020}, prevê-se avaliar de forma preliminar a explicabilidade (verificando se as atribuições~\cite{lundberg2017} correspondem aos padrões de movimento esperados) e a utilidade como apoio à decisão, através de um \emph{dashboard} de prova de conceito com segmentação, confiança calibrada~\cite{guo2017} e justificações.
+\revtext{rev041}{Ainda não foram feitos. Quando existirem, esta subsecção apresenta os resultados da mesma CNN de referência sobre janelas de $L=64$ pontos, com sobreposição de 0\,\% e de 50\,\%, comparados com os da subsecção anterior com as mesmas métricas e a mesma divisão, e depois o efeito de aumentar ou diminuir $L$. É esta comparação com a viagem completa que responde à RQ1 (Secção~\ref{sec:objetivos}).}
 
 % References may use the provided IJCAI named bibliography style.
 \bibliographystyle{FormattingGuidelines-IJCAI-ECAI-26/named}
