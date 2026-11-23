@@ -815,3 +815,17 @@ Regras:
 - **Validação:** compilação (ver REV-047).
 - **Limitações:** **não** alterei o que o utilizador adiou ou que muda o âmbito (explicabilidade, calibração e *dashboard* no resumo, objetivo 5, 4.6 e 7.3; título com «OOI»; texto a vermelho «human-on-the-loop»). O texto a preto de REV-043 que descreve a referência manteve-se.
 - **Pendentes:** as passagens adiadas acima.
+
+### REV-049 — Gráfico de diagnóstico de uma viagem do `test`
+
+- **Data:** 2026-11-23, 23:40 WET.
+- **Cor:** Salmão `#FF8A80`, RGB (255, 138, 128). Só marcador do registo; não há alteração ao `.tex`.
+- **O quê:** novo programa `src/ais/cli/plot_trip_diagnostic.py`, pedido pelo utilizador para ver porque a exatidão de J0 na viagem `219001624-2` é baixa. Lê só as previsões por ponto já geradas na abertura autorizada do `test` e desenha a classe real e a prevista pela referência, J0 e J50, e as probabilidades de pesca (`results/diagnostic_trip/219001624-2_classes.png`, não versionado).
+- **Observado (apenas desta viagem, 1 053 pontos, 633 de pesca real):** exatidão da referência 83,7 %, de J0 42,0 % e de J50 80,4 %. As três curvas de probabilidade têm a mesma forma (sobem no início da pesca e descem nas mesmas pausas), mas em J0 a probabilidade na fase de pesca fica por volta de 0,3 a 0,5, abaixo do seu limiar de 0,60, pelo que J0 prevê quase tudo como navegação; a referência (cerca de 0,7, limiar 0,65) e J50 (cerca de 0,8 a 0,9, limiar 0,75) ficam acima do limiar. As três partem o segmento real de pesca em pedaços nas mesmas pausas. Não se sabe, só com este gráfico, o que representam as pausas.
+- **Porquê:** diagnóstico pedido pelo utilizador. Não serve para escolher nada nem altera resultados.
+- **Não feito:** o gráfico das coordenadas `x` por `y` desta viagem. Exige ler o ficheiro do `test`, um uso novo do conjunto reservado que a autorização das janelas (uma só abertura, já usada) não cobre; fica à espera de autorização explícita do utilizador.
+- **Ficheiros afetados:** `src/ais/cli/plot_trip_diagnostic.py`, `README.md`, `PROGRESS.md`, `handoff.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável** (o `.tex` não foi alterado).
+- **Validação:** o gráfico foi gerado e inspecionado; as exatidões saem do próprio programa. `pytest tests/`: 181 passaram (23:40 WET). O programa não tem teste automático.
+- **Limitações:** uma única viagem, sem valor estatístico.
+- **Pendentes:** autorização para as coordenadas.

@@ -54,6 +54,7 @@ Executar a partir da raiz do projeto, por exemplo `iach-ais-venv-4/bin/python -m
 | `run_window_training <config>` | Treina a mesma CNN sobre janelas (`configs/windows_j0.json`, `windows_j50.json`), só com o treino; um checkpoint por época e limite de tempo. |
 | `select_windows_on_test` | **Uma só abertura** do `test`: escolhe época e limiar de J0 e J50, mede por segmento a baseline, J0 e J50 e congela as duas variantes. Já executado; não repetir. |
 | `build_window_results` | Gera `results/windows_final/final_results_windows.json`, as macros `latex/generated/resultados_janelas.tex` e as figuras `latex/figures/janelas_*.png`. |
+| `plot_trip_diagnostic <id da viagem>` | Gráfico de diagnóstico de uma viagem do `test` (classe real e prevista pela referência, J0 e J50, e probabilidades), só a partir das previsões já geradas (REV-049). Sem teste automático. |
 | `segment_metrics <previsões.csv>` | Extrai segmentos (sem suavizar) e calcula métricas por segmento. |
 | `count_shared_vessels` | Conta navios partilhados entre conjuntos (só lê o manifesto). |
 | `plot_phase1_run`, `benchmark_training_speed`, `diagnostic_fit_3_trips`, `plot_diagnostic_3trips` | Figuras e medições de execuções antigas; sem uso no relatório. |

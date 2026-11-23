@@ -23,7 +23,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
 - **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15). Texto estável a preto (REV-043); o novo (4.4, Secção 5 em partes, 7.1, Secção 6 e 8.2 a 8.4) tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C` e REV-048 `#1B5E20`.
 - **Git:** os commits locais de REV-046 a REV-048 (a partir de `9896021`) **não foram enviados**; o último estado em `origin/main` no início desta sessão era `696fed2`. Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-048.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-049.
 
 ## Decisões do utilizador (vigentes)
 
@@ -800,3 +800,17 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Decisão do utilizador: manter o critério de seleção ou mudar (novo protocolo e autorização); Marco 5 (só com decisão); Marcos 6 e 7 (autorização). Passagens adiadas do LaTeX (explicabilidade, calibração e *dashboard*, título «OOI», «human-on-the-loop»). Push dos commits locais, por autorização do utilizador.
+
+### 2026-11-23bd — Gráfico de diagnóstico da viagem 219001624-2 (REV-049), 2026-11-23 23:40 WET
+
+**Feito**
+- `plot_trip_diagnostic.py` e o gráfico da viagem `219001624-2` (classe real e prevista pela referência, J0 e J50, mais probabilidades), só com as previsões já geradas.
+
+**Validado**
+- Gráfico inspecionado; exatidões calculadas pelo programa (83,7 %, 42,0 % e 80,4 %); `pytest`: 181 passaram.
+
+**Problemas e limitações**
+- Em J0 a probabilidade na fase de pesca fica abaixo do limiar escolhido (0,60), por isso quase tudo sai como navegação; a forma da curva é igual à da referência. Uma só viagem. O programa não tem teste automático.
+
+**Pendente**
+- O gráfico de `x` por `y` precisa de autorização explícita do utilizador (leitura do ficheiro do `test`, fora do âmbito da autorização das janelas).

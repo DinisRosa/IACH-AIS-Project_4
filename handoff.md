@@ -1,12 +1,12 @@
 # Handoff — Projeto AIS
 
-**Data e hora desta atualização:** 2026-11-23 23:37 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
+**Data e hora desta atualização:** 2026-11-23 23:41 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
 
 ### Última validação (registada neste handoff)
 
 | Verificação | Resultado | Data e hora (WET) |
 |---|---|---|
-| Testes (`pytest tests/`) | 181 passaram | 2026-11-23 23:36 |
+| Testes (`pytest tests/`) | 181 passaram | 2026-11-23 23:40 |
 | LaTeX (`pdflatex` + `bibtex`) | 11 páginas (limite de 15); 0 erros; 0 referências indefinidas | 2026-11-23 23:36 |
 | Git | `main` cinco commits à frente de `origin/main` (último em `origin/main`: `696fed2`); **nada enviado** | 2026-11-23 23:36 |
 | Treino de J0 e de J50 | os dois completos (300 épocas), 9,8 min e 21,3 min | 22:58 a 23:28 |
@@ -34,7 +34,7 @@ O commit deste handoff vem a seguir e não está na tabela.
 1. `AGENTS.md`: regras fixas. O `CLAUDE.md` manda lê-lo antes de qualquer ação.
 2. Este ficheiro.
 3. `docs/00_projeto_e_decisoes.md`, `docs/02_cnn_viagem_completa.md` e `docs/03_cnn_janelamento.md` (decisões e contratos do Marco 4, já implementado); `docs/01_dados_e_preparacao.md` se for preciso.
-4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23bc) e `REVISION_LOG.md` (REV-001 a REV-048).
+4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23bc) e `REVISION_LOG.md` (REV-001 a REV-049).
 5. Antes de qualquer ação: `git status` e `git log`, e `iach-ais-venv-4/bin/python -m pytest tests/` (181 testes a passar).
 
 Mensagem sugerida para abrir a nova sessão: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -89,7 +89,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 
 **Âmbito e LaTeX**
 - HMM e Wu et al. **não** são comparações. Explicabilidade, calibração e *dashboard* estão fora do mínimo atual.
-- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-049**. As cores já usadas estão no `REVISION_LOG.md` (verificar antes de escolher: duas escolhas iniciais já eram de REV-007 e REV-011).
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-050**. As cores já usadas estão no `REVISION_LOG.md` (verificar antes de escolher: duas escolhas iniciais já eram de REV-007 e REV-011).
 - Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`. Outras estão definidas, sem uso (rev013, rev018, rev020, rev022, rev024 a rev028, rev030 a rev032, rev035, rev036). Só marcadores Markdown: REV-029, REV-033, REV-034, REV-037, REV-038, REV-039, REV-044, REV-045.
 
 ## Ficheiros principais
@@ -100,7 +100,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 | Documentação | `docs/00_projeto_e_decisoes`, `docs/01_dados_e_preparacao`, `docs/02_cnn_viagem_completa`, `docs/03_cnn_janelamento` (decisões e contratos do Marco 4, implementado) |
 | Biblioteca (`src/ais/phase1/`) | `data.py`, `model.py` (com máscara opcional), `training.py`, `checks.py`, `utils.py`, `artifacts.py`, `config.py`, `metrics.py`, `inference.py`, `reserved.py`, `selection.py`, `segments.py`, **`windows.py`** |
 | Programas, baseline | `run_phase1_training.py`, `select_on_test.py`, `freeze_baseline.py` (com `label`), `build_final_results.py`, `segment_metrics.py`, `plot_phase1_run.py`, `benchmark_training_speed.py` |
-| Programas, janelas (REV-046, REV-047) | `run_window_training.py`, `select_windows_on_test.py`, `build_window_results.py` |
+| Programas, janelas (REV-046, REV-047, REV-049) | `run_window_training.py`, `select_windows_on_test.py`, `build_window_results.py`, `plot_trip_diagnostic.py` |
 | Programas, preparação | `create_split_manifest.py`, `check_units_train.py`, `verify_trip_count.py`, `build_clean_dataset.py --split train\|validation\|test`, `count_anomalies_train.py`, `count_shared_vessels.py` |
 | Programas do ensaio antigo (sem uso) | `diagnostic_fit_3_trips.py`, `plot_diagnostic_3trips.py` |
 | Configuração | `configs/phase1_select.json` (baseline), `selection_protocol.json`, `authorizations/test_selection.json`; **`windows_j0.json`, `windows_j50.json`, `selection_protocol_windows.json`, `authorizations/test_selection_windows.json`**; históricos: `phase1_run1.json`, `phase1_final.json` |
@@ -141,7 +141,8 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
    - Quando fazer os **Marcos 6 e 7** (congelar tudo e medir no `validation`, uma só vez, com autorização nova).
 2. **LaTeX, passagens ainda abertas** (o utilizador adiou-as): explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o título começa por «OOI» e há texto a vermelho «human-on-the-loop»; o texto das subsecções 5.3 a 5.6 e 6.1 não foi relido pelo utilizador; a 7.1 ainda descreve a ablação completa.
 3. **Arrumação:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas, se o utilizador quiser.
-4. **Push:** os cinco commits locais só seguem quando o utilizador autorizar.
+4. **Gráfico `x` por `y` da viagem `219001624-2` (REV-049):** o utilizador pediu-o; falta autorização explícita para ler o ficheiro do `test` (uso novo, fora da autorização das janelas). O gráfico das classes já está feito (J0 acerta 42,0 % nesta viagem por a probabilidade na pesca ficar abaixo do limiar de 0,60).
+5. **Push:** os cinco commits locais só seguem quando o utilizador autorizar.
 
 ## Regras a não esquecer
 
