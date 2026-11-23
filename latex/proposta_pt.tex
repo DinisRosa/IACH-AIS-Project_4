@@ -34,6 +34,9 @@
 % REV-021 — cor #D500F9, RGB (213, 0, 249) (mesma do REVISION_LOG.md).
 % REV-022 — cor #00897B, RGB (0, 137, 123) (mesma do REVISION_LOG.md).
 % REV-023 — cor #0277BD, RGB (2, 119, 189) (mesma do REVISION_LOG.md). Títulos de subsecções novos.
+% REV-040 — cor #7F0000, RGB (127, 0, 0) (mesma do REVISION_LOG.md). Baseline congelada: treino de 300 épocas, seleção no teste e resultados regenerados por código.
+% REV-036 — cor #00C853, RGB (0, 200, 83) (mesma do REVISION_LOG.md). Papéis dos conjuntos reservados: teste seleciona, validação mede no fim.
+% REV-035 — cor #6200EA, RGB (98, 0, 234) (mesma do REVISION_LOG.md). Resultados do treino final, números gerados por código.
 % REV-032 — cor #D81B60, RGB (216, 27, 96) (mesma do REVISION_LOG.md). Primeira execução de treino.
 % REV-031 — cor #006064, RGB (0, 96, 100) (mesma do REVISION_LOG.md). Anexo com as figuras do ensaio preliminar.
 % REV-030 — cor #FF6F00, RGB (255, 111, 0) (mesma do REVISION_LOG.md). Subsecção e figuras do ensaio preliminar (marcador de resultados).
@@ -56,7 +59,13 @@
 \definecolor{rev030}{RGB}{255,111,0}
 \definecolor{rev031}{RGB}{0,96,100}
 \definecolor{rev032}{RGB}{216,27,96}
+\definecolor{rev035}{RGB}{98,0,234}
+\definecolor{rev036}{RGB}{0,200,83}
+\definecolor{rev040}{RGB}{127,0,0}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
+% Números gerados por ais.cli.build_final_results (REV-035): \rv{\resXxx} mostra o valor na cor da revisão.
+\input{generated/resultados}
+\newcommand{\rv}[1]{\revtext{rev035}{#1}}
 \usepackage[switch]{lineno}
 
 % Keep line numbers enabled for a submission. Disable for camera-ready.
@@ -92,7 +101,7 @@
 \maketitle
 
 \begin{abstract}
-A pesca ilegal, não declarada e não regulamentada (IUU) ameaça a sustentabilidade dos oceanos. O \emph{Automatic Identification System} (AIS) permite monitorizar navios à escala global, mas converter trajetórias em deteções úteis à fiscalização exige métodos robustos e interpretáveis. Propõe-se investigar se a combinação de janelas sobrepostas e pós-processamento temporal melhora a qualidade e a estabilidade da segmentação semântica de trajetórias AIS para detetar pesca, como apoio à decisão de inspetores humanos (\textcolor{red}{\emph{human-on-the-loop}}), segundo princípios de Inteligência Artificial Centrada no Humano (HCAI): explicabilidade, confiança calibrada e decisão humana final. A avaliação usa \textcolor{red}{123} trajetórias anotadas (Kaggle), comparando com um \emph{Hidden Markov Model} (HMM) e com Wu et al.~\shortcite{wu2022} através de precisão, sensibilidade, F1 e \emph{intersection-over-union} (IoU), complementadas por análise qualitativa.
+A pesca ilegal, não declarada e não regulamentada (IUU) ameaça a sustentabilidade dos oceanos. O \emph{Automatic Identification System} (AIS) permite monitorizar navios à escala global, mas converter trajetórias em deteções úteis à fiscalização exige métodos robustos e interpretáveis. Propõe-se investigar se a combinação de janelas sobrepostas e pós-processamento temporal melhora a qualidade e a estabilidade da segmentação semântica de trajetórias AIS para detetar pesca, como apoio à decisão de inspetores humanos (\textcolor{red}{\emph{human-on-the-loop}}), segundo princípios de Inteligência Artificial Centrada no Humano (HCAI): explicabilidade, confiança calibrada e decisão humana final. A avaliação usa \rv{\resDadosViagens} trajetórias anotadas (Kaggle), comparando com um \emph{Hidden Markov Model} (HMM) e com Wu et al.~\shortcite{wu2022} através de precisão, sensibilidade, F1 e \emph{intersection-over-union} (IoU), complementadas por análise qualitativa.
 \end{abstract}
 
 \section{Problema e Motivação}
@@ -165,12 +174,12 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 
 \revtext{rev024}{Cada viagem é uma sequência única, ordenada por instante e identificador do ponto, sem janelas, sem truncar e sem preenchimento de comprimento (uma viagem por passo de treino). A entrada tem sete canais: as quatro características normalizadas (velocidade, variação de rumo, intervalo temporal e distância à costa) e três indicadores de ausência, para a velocidade, a variação de rumo e o intervalo temporal. A normalização (média e desvio-padrão por característica, ignorando os valores em falta) é ajustada apenas com as viagens de treino e guardada com a ordem das características; os valores em falta são postos a zero depois de normalizar, para que o zero signifique ``valor médio'' e a ausência fique registada no indicador. Se for usada uma partição interna de monitorização, separada por viagem completa dentro do treino, a normalização é ajustada só com o treino interno.}
 
-\revtext{rev024}{A rede é totalmente convolucional: três camadas Conv1D (32, 64 e 32 filtros, \emph{kernel} 5, \emph{padding} que preserva o comprimento, ativação ReLU) e uma camada final de \emph{kernel} 1 que devolve um \emph{logit} por ponto. Não há \emph{pooling}, \emph{stride}, dilatação nem camada que reduza a viagem a uma só classe. Cada saída depende apenas dos 13 pontos em seu redor, pelo que entrada completa não significa contexto global. A perda é a entropia cruzada binária sobre os \emph{logits}, sem pesos de classe nem reamostragem, e a sigmoide só é aplicada na inferência. O otimizador é o Adam.} \revtext{rev032}{Na primeira execução de treino, a taxa de aprendizagem é $10^{-3}$ e o máximo é de 100 épocas, com paragem antecipada (Subsecção~\ref{sec:cnn-treino}); estes valores são iniciais e não foram validados.}
+\revtext{rev024}{A rede é totalmente convolucional: três camadas Conv1D (32, 64 e 32 filtros, \emph{kernel} 5, \emph{padding} que preserva o comprimento, ativação ReLU) e uma camada final de \emph{kernel} 1 que devolve um \emph{logit} por ponto. Não há \emph{pooling}, \emph{stride}, dilatação nem camada que reduza a viagem a uma só classe. Cada saída depende apenas dos \rv{\resModCampo} pontos em seu redor, pelo que entrada completa não significa contexto global. A perda é a entropia cruzada binária sobre os \emph{logits}, sem pesos de classe nem reamostragem, e a sigmoide só é aplicada na inferência. O otimizador é o Adam.} \revtext{rev040}{No treino, a taxa de aprendizagem é $10^{-3}$ e a rede é treinada durante \resTrEpocas{} épocas, sem paragem antecipada; a época a usar é escolhida depois, no conjunto de teste (Subsecção~\ref{sec:cnn-treino}). Estes valores são iniciais e não foram validados.}
 
 \subsection{\texorpdfstring{\revtext{rev024}{Verificação da implementação}}{Verificação da implementação}}
 \label{sec:abordagem-verificacao}
 
-\revtext{rev024}{O código desta fase foi verificado com testes automáticos sobre dados sintéticos e, para a leitura e a construção das sequências, sobre três viagens do conjunto de treino. Os testes confirmam: o alinhamento de cada previsão com o ponto e o instante de origem; que nenhum ponto passa de uma viagem para outra; o padrão esperado de valores em falta e das máscaras; a ausência de vazamento da monitorização interna para a normalização; a rejeição de ficheiros e identificadores de validação e teste; as dimensões da saída para comprimentos diferentes; o campo recetivo de 13 pontos; e que a perda, os gradientes e um passo do otimizador funcionam. Estes testes verificam o código e não medem a qualidade do modelo.} \revtext{rev027}{Fez-se apenas um ensaio curto de ajuste (200 épocas, taxa de aprendizagem $10^{-3}$) em três viagens de treino, como diagnóstico da capacidade de ajuste: a rede é treinada e avaliada nas mesmas viagens, pelo que o resultado mostra sobreajuste e não generalização.} \revtext{rev028}{A rede foi também aplicada a outras três viagens do conjunto de treino, que nem ela nem o normalizador tinham visto: o desempenho foi pior do que nas viagens de ajuste, sobretudo na classe navegação, que foi frequentemente prevista como pesca. Com apenas três viagens, este resultado é ilustrativo e não tem valor estatístico, e não substitui a validação oficial.} \revtext{rev032}{Houve depois uma primeira execução de treino sobre o conjunto de treino (Subsecção~\ref{sec:cnn-treino}); a validação e o teste não foram abertos.}
+\revtext{rev024}{O código desta fase foi verificado com testes automáticos sobre dados sintéticos e, para a leitura e a construção das sequências, sobre três viagens do conjunto de treino. Os testes confirmam: o alinhamento de cada previsão com o ponto e o instante de origem; que nenhum ponto passa de uma viagem para outra; o padrão esperado de valores em falta e das máscaras; a ausência de vazamento da monitorização interna para a normalização; a rejeição de ficheiros e identificadores de validação e teste; as dimensões da saída para comprimentos diferentes; o campo recetivo de \rv{\resModCampo} pontos; e que a perda, os gradientes e um passo do otimizador funcionam. Estes testes verificam o código e não medem a qualidade do modelo.} \revtext{rev040}{Os resultados estão na Subsecção~\ref{sec:cnn-treino}; o conjunto de teste serviu apenas para escolher a época e o limiar, e o de validação não foi aberto.}
 
 \subsection{\texorpdfstring{\revtext{rev023}{Janelamento com sobreposição}}{Janelamento com sobreposição}}
 \label{sec:abordagem-janelas}
@@ -190,7 +199,7 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 \section{\texorpdfstring{\revtext{rev025}{Especificação da CNN 1D de referência}}{Especificação da CNN 1D de referência}}
 \label{sec:cnn-especificacao}
 
-\revtext{rev025}{Esta secção descreve a rede com o detalhe necessário para a recriar com os mesmos valores. Indica-se também, para cada escolha, o motivo e o seu estado: o que foi \emph{decidido}, o que foi \emph{adotado como valor inicial} sem validação, e o que \emph{ainda não está definido}. Nenhum valor desta secção foi otimizado com os dados: a arquitetura é a proposta inicial do protocolo do projeto, declarada ``por validar''.} \revtext{rev027}{Só houve um ensaio curto de ajuste em três viagens de treino (ver Subsecção~\ref{sec:abordagem-verificacao}).} \revtext{rev032}{A primeira execução de treino sobre o conjunto de treino está descrita na Subsecção~\ref{sec:cnn-treino}.}
+\revtext{rev025}{Esta secção descreve a rede com o detalhe necessário para a recriar com os mesmos valores. Indica-se também, para cada escolha, o motivo e o seu estado: o que foi \emph{decidido}, o que foi \emph{adotado como valor inicial} sem validação, e o que \emph{ainda não está definido}. Nenhum valor desta secção foi otimizado com os dados: a arquitetura é a proposta inicial do protocolo do projeto, declarada ``por validar''.} \revtext{rev040}{O treino, a seleção da época e do limiar e os resultados estão descritos na Subsecção~\ref{sec:cnn-treino}.}
 
 \subsection{\texorpdfstring{\revtext{rev025}{Entrada e saída}}{Entrada e saída}}
 
@@ -198,7 +207,7 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 
 \subsection{\texorpdfstring{\revtext{rev025}{Arquitetura}}{Arquitetura}}
 
-\revtext{rev025}{A rede é totalmente convolucional e está resumida na Tabela~\ref{tab:cnn-arquitetura}. Todas as convoluções têm \emph{stride} 1, dilatação 1 e \emph{padding} de zeros de $\lfloor k/2\rfloor$ posições em cada extremo, de modo que o comprimento $N$ se mantém. Não existem camadas de \emph{pooling}, normalização de lote, \emph{dropout} nem sigmoide. O número de parâmetros de uma convolução é $C_\text{in}\,C_\text{out}\,k+C_\text{out}$; o total é 21\,761, obtido por contagem no código.} \revtext{rev026}{A Figura~\ref{fig:cnn-desenho} mostra o desenho da rede e o campo recetivo.}
+\revtext{rev025}{A rede é totalmente convolucional e está resumida na Tabela~\ref{tab:cnn-arquitetura}. Todas as convoluções têm \emph{stride} 1, dilatação 1 e \emph{padding} de zeros de $\lfloor k/2\rfloor$ posições em cada extremo, de modo que o comprimento $N$ se mantém. Não existem camadas de \emph{pooling}, normalização de lote, \emph{dropout} nem sigmoide. O número de parâmetros de uma convolução é $C_\text{in}\,C_\text{out}\,k+C_\text{out}$; o total é \rv{\resModParametros}, obtido por contagem no código.} \revtext{rev026}{A Figura~\ref{fig:cnn-desenho} mostra o desenho da rede e o campo recetivo.}
 
 \begin{table}[t]
 \centering\small\color{rev025}
@@ -206,12 +215,12 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 \toprule
 Camada & Canais (entrada$\to$saída) & $k$ & Parâm. \\
 \midrule
-Conv1D + ReLU & $7\to32$  & 5 & 1\,152 \\
-Conv1D + ReLU & $32\to64$ & 5 & 10\,304 \\
-Conv1D + ReLU & $64\to32$ & 5 & 10\,272 \\
-Conv1D (cabeça) & $32\to1$  & 1 & 33 \\
+Conv1D + ReLU & $7\to32$  & 5 & \rv{\resModParamA} \\
+Conv1D + ReLU & $32\to64$ & 5 & \rv{\resModParamB} \\
+Conv1D + ReLU & $64\to32$ & 5 & \rv{\resModParamC} \\
+Conv1D (cabeça) & $32\to1$  & 1 & \rv{\resModParamD} \\
 \midrule
-Total & & & 21\,761 \\
+Total & & & \rv{\resModParametros} \\
 \bottomrule
 \end{tabular}
 \caption{\revtext{rev025}{Arquitetura da CNN 1D de referência. A saída são \emph{logits} de forma $1\times N$.}}
@@ -250,15 +259,15 @@ Total & & & 21\,761 \\
 \node[font=\tiny] at (6.42,-2.95) {$i$};
 \node[font=\tiny] at (8.94,-2.95) {$i{+}6$};
 \end{tikzpicture}}
-\caption{\revtext{rev026}{Desenho da CNN 1D de referência. Em cima, a cadeia de camadas: a viagem inteira ($N$ pontos, 7 canais) passa por três Conv1D com \emph{kernel} 5 (32, 64 e 32 filtros, ReLU) e por uma cabeça de \emph{kernel} 1, que devolve um \emph{logit} por ponto; a sigmoide só se aplica na inferência. O comprimento $N$ mantém-se em todas as camadas. Em baixo, o campo recetivo: cada saída depende dos 13 pontos de entrada entre $i-6$ e $i+6$.}}
+\caption{\revtext{rev026}{Desenho da CNN 1D de referência. Em cima, a cadeia de camadas: a viagem inteira ($N$ pontos, 7 canais) passa por três Conv1D com \emph{kernel} 5 (32, 64 e 32 filtros, ReLU) e por uma cabeça de \emph{kernel} 1, que devolve um \emph{logit} por ponto; a sigmoide só se aplica na inferência. O comprimento $N$ mantém-se em todas as camadas. Em baixo, o campo recetivo: cada saída depende dos \rv{\resModCampo} pontos de entrada entre $i-6$ e $i+6$.}}
 \label{fig:cnn-desenho}
 \end{figure*}
 
 \subsection{\texorpdfstring{\revtext{rev025}{Porquê estes valores}}{Porquê estes valores}}
 
-\revtext{rev025}{\textbf{Número de camadas e filtros (32, 64, 32).} Estes valores \emph{não} resultam de uma pesquisa nem de experiências: são os da arquitetura ilustrativa do protocolo do projeto, adotados como ponto de partida e declarados por validar. O raciocínio que os suporta é de desenho, não uma evidência: três camadas convolucionais dão à rede capacidade para combinar velocidade, curvatura, intervalo e distância à costa em padrões locais de movimento, e a forma ``alargar e voltar a estreitar'' (32, 64, 32) cria uma representação intermédia mais rica antes de a cabeça a resumir num único \emph{logit}. A rede é pequena (21\,761 parâmetros) de propósito: o equipamento disponível tem apenas CPU e 16~GB de memória, e um modelo pequeno permite iterar sem GPU. Se este tamanho é suficiente ou excessivo para este problema, não se sabe; só uma comparação com outras larguras ou profundidades, que não faz parte do âmbito atual, o poderia dizer.}
+\revtext{rev025}{\textbf{Número de camadas e filtros (32, 64, 32).} Estes valores \emph{não} resultam de uma pesquisa nem de experiências: são os da arquitetura ilustrativa do protocolo do projeto, adotados como ponto de partida e declarados por validar. O raciocínio que os suporta é de desenho, não uma evidência: três camadas convolucionais dão à rede capacidade para combinar velocidade, curvatura, intervalo e distância à costa em padrões locais de movimento, e a forma ``alargar e voltar a estreitar'' (32, 64, 32) cria uma representação intermédia mais rica antes de a cabeça a resumir num único \emph{logit}. A rede é pequena (\rv{\resModParametros} parâmetros) de propósito: o equipamento disponível tem apenas CPU e 16~GB de memória, e um modelo pequeno permite iterar sem GPU. Se este tamanho é suficiente ou excessivo para este problema, não se sabe; só uma comparação com outras larguras ou profundidades, que não faz parte do âmbito atual, o poderia dizer.}
 
-\revtext{rev025}{\textbf{\emph{Kernel} 5.} Um \emph{kernel} ímpar permite um \emph{padding} simétrico que preserva o comprimento sem deslocar a previsão em relação ao ponto. O valor 5 é o da arquitetura inicial do protocolo; com três camadas determina o campo recetivo de 13 pontos (abaixo). É um valor adotado, não ajustado. Note-se que o campo recetivo é medido em \emph{pontos} e não em tempo: como o intervalo entre pontos varia, 13 pontos não correspondem a uma duração fixa.}
+\revtext{rev025}{\textbf{\emph{Kernel} 5.} Um \emph{kernel} ímpar permite um \emph{padding} simétrico que preserva o comprimento sem deslocar a previsão em relação ao ponto. O valor 5 é o da arquitetura inicial do protocolo; com três camadas determina o campo recetivo de \rv{\resModCampo} pontos (abaixo). É um valor adotado, não ajustado. Note-se que o campo recetivo é medido em \emph{pontos} e não em tempo: como o intervalo entre pontos varia, \rv{\resModCampo} pontos não correspondem a uma duração fixa.}
 
 \revtext{rev025}{\textbf{Cabeça com \emph{kernel} 1.} A última camada combina, em cada ponto, os 32 canais num só \emph{logit}, sem olhar para pontos vizinhos. Assim, todo o contexto temporal vem das três camadas anteriores e a cabeça não aumenta o campo recetivo. Um \emph{kernel} 1 devolve um valor por ponto, como exigido; uma camada final que reduzisse a viagem a um só valor seria incompatível com uma previsão por ponto.}
 
@@ -270,7 +279,7 @@ Total & & & 21\,761 \\
 \begin{equation}
 R = 1+\sum_{i}(k_i-1) = 1+3\times4+0 = 13 .
 \end{equation}
-Isto significa que a previsão para o ponto $i$ depende dos pontos $i-6,\dots,i+6$ e de mais nenhum. Está verificado por teste: perturbar a entrada num ponto altera as saídas apenas nesses 13 pontos. Consequência importante: \emph{entrada completa não significa contexto global}. Embora a viagem inteira entre na rede, cada previsão usa uma vizinhança curta; comportamentos longos (por exemplo, um percurso de pesca com horas de duração) só são vistos através de vizinhanças locais. Nos primeiros e últimos seis pontos, o \emph{padding} de zeros faz a rede ver ``pontos fictícios'' com todas as características e indicadores a zero, o que, no espaço normalizado, equivale a valores médios sem ausência; é uma escolha por omissão da biblioteca, cujo efeito nas fronteiras não foi estudado.}
+Isto significa que a previsão para o ponto $i$ depende dos pontos $i-6,\dots,i+6$ e de mais nenhum. Está verificado por teste: perturbar a entrada num ponto altera as saídas apenas nesses \rv{\resModCampo} pontos. Consequência importante: \emph{entrada completa não significa contexto global}. Embora a viagem inteira entre na rede, cada previsão usa uma vizinhança curta; comportamentos longos (por exemplo, um percurso de pesca com horas de duração) só são vistos através de vizinhanças locais. Nos primeiros e últimos seis pontos, o \emph{padding} de zeros faz a rede ver ``pontos fictícios'' com todas as características e indicadores a zero, o que, no espaço normalizado, equivale a valores médios sem ausência; é uma escolha por omissão da biblioteca, cujo efeito nas fronteiras não foi estudado.}
 
 \subsection{\texorpdfstring{\revtext{rev025}{Função de perda}}{Função de perda}}
 
@@ -282,30 +291,71 @@ com $y_i=1$ para pesca e $0$ para navegação. Usa-se a versão que recebe \emph
 
 \subsection{\texorpdfstring{\revtext{rev025}{Otimizador e treino}}{Otimizador e treino}}
 
-\revtext{rev025}{O otimizador previsto é o Adam, que adapta o passo de cada parâmetro e costuma funcionar sem grande ajuste, o que o torna uma escolha razoável para uma referência. Está implementado sem decaimento de pesos nem calendário de taxa de aprendizagem. A taxa de aprendizagem $10^{-3}$ no código é apenas o valor por omissão do Adam, usado como \emph{marcador}: \textbf{não foi escolhida nem validada} e será fixada na configuração de execução. Os restantes parâmetros foram fixados na primeira execução de treino (Subsecção~\ref{sec:cnn-treino}) e são igualmente iniciais e não validados. Cada passo de otimização usa uma viagem completa (\emph{batch} de tamanho 1), em ordem aleatória reprodutível.}
+\revtext{rev025}{O otimizador previsto é o Adam, que adapta o passo de cada parâmetro e costuma funcionar sem grande ajuste, o que o torna uma escolha razoável para uma referência. Está implementado sem decaimento de pesos nem calendário de taxa de aprendizagem. A taxa de aprendizagem $10^{-3}$ no código é apenas o valor por omissão do Adam, usado como \emph{marcador}: \textbf{não foi escolhida nem validada} e será fixada na configuração de execução. Os restantes parâmetros foram fixados na configuração do treino (Subsecção~\ref{sec:cnn-treino}) \revtext{rev040}{e são igualmente iniciais e não validados.} Cada passo de otimização usa uma viagem completa (\emph{batch} de tamanho 1), em ordem aleatória reprodutível.}
 
 \subsection{\texorpdfstring{\revtext{rev025}{Reprodutibilidade}}{Reprodutibilidade}}
 
-\revtext{rev025}{Os pesos iniciais são os da inicialização por omissão do PyTorch (2.15, CPU) para camadas convolucionais, e a semente do gerador (Python, NumPy e PyTorch) é fixada na execução; a semente da divisão dos dados é 42. A ordem de treino das viagens usa um gerador com semente própria. O código regista a semente, as versões e o número de \emph{threads}, mas não garante resultados idênticos entre máquinas diferentes. } \revtext{rev032}{A configuração da primeira execução de treino (semente 42 e os valores acima) está no ficheiro \texttt{configs/phase1\_run1.json}, e cada execução grava a semente, as versões, o normalizador e a divisão interna.}
+\revtext{rev025}{Os pesos iniciais são os da inicialização por omissão do PyTorch (\rv{\resTrTorch}, CPU) para camadas convolucionais, e a semente do gerador (Python, NumPy e PyTorch) é fixada na execução; a semente da divisão dos dados é 42. A ordem de treino das viagens usa um gerador com semente própria. O código regista a semente, as versões e o número de \emph{threads}, mas não garante resultados idênticos entre máquinas diferentes. } \revtext{rev040}{A configuração do treino (semente \resTrSemente{} e os valores acima) está no ficheiro \texttt{configs/phase1\_select.json}. Cada execução grava a semente, as versões, o normalizador e os hashes dos ficheiros usados. A escolha da época e do limiar segue um protocolo declarado antes de abrir o conjunto de teste e fica registada, e todos os números desta secção vêm do ficheiro \texttt{results/baseline\_frozen/final\_results.json}, gerado por \texttt{build\_final\_results.py}.}
 
-\subsection{\texorpdfstring{\revtext{rev032}{Primeira execução de treino}}{Primeira execução de treino}}
+\subsection{\texorpdfstring{\revtext{rev040}{Treino, seleção e resultados}}{Treino, seleção e resultados}}
 \label{sec:cnn-treino}
 
-\revtext{rev032}{A primeira execução de treino usou apenas o conjunto de treino oficial (87 viagens, 713\,854 pontos). Separaram-se, por identificador de viagem completo e com a semente 42, 13 viagens (15\,\%) para monitorização interna; o normalizador foi ajustado só com as outras 74 viagens, que serviram para ajustar a rede. O treino usou o Adam (taxa de aprendizagem $10^{-3}$), com paragem antecipada quando a perda por ponto na monitorização interna não melhora durante 10 épocas (máximo de 100 épocas) e um orçamento de 15 minutos; o melhor modelo é o guardado. A execução parou por paragem antecipada ao fim de 16 épocas, em cerca de 39 segundos num CPU, e o melhor modelo é o da época 6. A exatidão por ponto foi de 92,2\,\% nas viagens de ajuste e de 95,0\,\% nas de monitorização (uma regra que prevê sempre a classe maioritária daria 74,5\,\% na monitorização); a sensibilidade da classe navegação (0,875) ficou abaixo da da pesca (0,976). Os valores vêm de \texttt{run\_phase1\_training.py} com \texttt{configs/phase1\_run1.json} e ficam em \texttt{results/phase1\_run1/}.}
+\revtext{rev040}{O treino usou todo o conjunto de treino oficial (\resTrViagens{} viagens, \resTrPontos{} pontos), sem monitorização interna: o normalizador foi ajustado com essas viagens e todas serviram para ajustar a rede. Usou-se o Adam (taxa de aprendizagem $10^{-3}$) durante \resTrEpocas{} épocas, sem paragem antecipada, com a semente \resTrSemente{}, e guardou-se um modelo no fim de cada época. O treino durou cerca de \resTrSegundos{} minutos num CPU (cerca de \resTrSegPorEpoca{} segundos por época). Estes valores são iniciais e não foram validados.}
 
-\revtext{rev032}{Estes resultados são \textbf{provisórios}. A monitorização interna são 13 viagens do próprio treino reservadas por identificador, e não a validação oficial. A perda de monitorização oscilou bastante entre épocas, pelo que o ponto de paragem e o melhor modelo são sensíveis a esse ruído. Além disso, a exatidão nas viagens de ajuste foi inferior à da monitorização, o que sugere que a rede ainda não ajusta bem os dados de treino. A validação e o teste oficiais não foram abertos.}
+\revtext{rev040}{A época e o limiar de classificação foram escolhidos no conjunto de teste (\resSelViagens{} viagens, \resSelPontos{} pontos), numa única ronda e com critérios declarados antes de o abrir: a época com a menor perda por ponto entre as \resSelNCand{} candidatas e, nessa época, o limiar entre \resSelGrelhaMin{} e \resSelGrelhaMax{} (passo 0,05) que maximiza a média dos F1 das duas classes. Resultaram a época \resSelEpoca{} e o limiar \resSelLimiar{}, e o modelo ficou congelado. O conjunto de validação não foi aberto e fica reservado à medição final, que será feita uma só vez no fim do trabalho.}
+
+\revtext{rev040}{A Tabela~\ref{tab:resultados} e a Figura~\ref{fig:final-matriz} mostram o desempenho por ponto do modelo congelado nas viagens de treino e nas de teste. Os do treino medem o ajuste; os do teste são \textbf{otimistas}, porque esse conjunto serviu para escolher a época e o limiar, e não substituem a medição final no conjunto de validação. No teste, a exatidão foi \resTesteAcc{} (\resTesteErros{} erros em \resTestePontos{} pontos), contra \resTesteAccMaj{} de uma regra que prevê sempre a classe maioritária (pesca, \resTestePercPesca{} dos pontos do teste); no treino foi \resTreinoAcc{}, contra \resTreinoAccMaj{}. Por viagem de teste (Figura~\ref{fig:final-viagens}), a exatidão vai de \resTesteViagMin{} (viagem \resTestePiorViagem) a \resTesteViagMax{}, com mediana de \resTesteViagMed{}; o número de viagens de teste em que a CNN não supera a regra da classe maioritária dessa viagem é \resTesteNViagNaoSuperam{}.}
+
+\revtext{rev040}{A perda por ponto no teste oscila muito de época para época (Figura~\ref{fig:final-perda}): na época escolhida vale \resSelPerdaTeste{}, mas desde a época 100 chega a \resSelPerdaTesteMax{}, enquanto no treino vale \resSelPerdaTreino{} na mesma época e varia menos. A escolha da época é, por isso, sensível a essa oscilação, e o conjunto de teste tem só \resSelViagens{} viagens.}
+
+\begin{table}[t]
+\centering\footnotesize\color{rev040}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Conjunto & Classe & Pontos & Prec. & Sensib. & F1 & IoU \\
+\midrule
+Treino & Navegação & \resTreinoNavReal & \resTreinoNavPrec & \resTreinoNavSens & \resTreinoNavF & \resTreinoNavIoU \\
+Treino & Pesca & \resTreinoPescaReal & \resTreinoPescaPrec & \resTreinoPescaSens & \resTreinoPescaF & \resTreinoPescaIoU \\
+Teste & Navegação & \resTesteNavReal & \resTesteNavPrec & \resTesteNavSens & \resTesteNavF & \resTesteNavIoU \\
+Teste & Pesca & \resTestePescaReal & \resTestePescaPrec & \resTestePescaSens & \resTestePescaF & \resTestePescaIoU \\
+\bottomrule
+\end{tabular}
+\caption{\revtext{rev040}{Métricas por ponto e por classe do modelo congelado (época \resSelEpoca{}, limiar \resSelLimiar{}). ``Pontos'' são os pontos reais de cada classe. Os resultados do teste são otimistas (esse conjunto serviu para escolher).}}
+\label{tab:resultados}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/final_perda.png}
+\caption{\revtext{rev040}{Perda por ponto (entropia cruzada binária) ao longo das épocas, avaliada no fim de cada época nas viagens de treino e nas de teste. A linha tracejada marca a época escolhida no teste.}}
+\label{fig:final-perda}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/final_matriz.png}
+\caption{\revtext{rev040}{Matrizes de confusão por ponto do modelo congelado: percentagem da classe real (linha) prevista em cada classe, nas viagens de treino e nas de teste.}}
+\label{fig:final-matriz}
+\end{figure}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/final_viagens.png}
+\caption{\revtext{rev040}{Exatidão por viagem do conjunto de teste (barras, por ordem crescente) e exatidão de uma regra que prevê sempre a classe maioritária dessa viagem (pontos).}}
+\label{fig:final-viagens}
+\end{figure*}
 
 \section{Materiais e Dados}
 \label{sec:materiais-dados}
 
-Será usado o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}: \textcolor{red}{123} trajetórias de pesca anotadas, cerca de 1,03 milhões de pontos (1\,026\,279 linhas), 13 colunas --- 12 atributos (identificador do navio e da viagem, instante, longitude, latitude, coordenadas projetadas, rumo, distância à costa, entre outros) e um rótulo. As cinco classes, desequilibradas (pesca: \texttt{02-fishing}, \texttt{04-fishing}; navegação: \texttt{01-sailing}, \texttt{03-sailing}, \texttt{05-sailing}), são agregadas num problema binário, mantendo o desequilíbrio natural (sem reamostragem nem pesos de classe) e as trajetórias completas.
+Será usado o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}: \rv{\resDadosViagens} trajetórias de pesca anotadas, com \rv{\resDadosLinhas} pontos (linhas), 13 colunas --- 12 atributos (identificador do navio e da viagem, instante, longitude, latitude, coordenadas projetadas, rumo, distância à costa, entre outros) e um rótulo. As cinco classes, desequilibradas (pesca: \texttt{02-fishing}, \texttt{04-fishing}; navegação: \texttt{01-sailing}, \texttt{03-sailing}, \texttt{05-sailing}), são agregadas num problema binário, mantendo o desequilíbrio natural (sem reamostragem nem pesos de classe) e as trajetórias completas.
 
 Eticamente, apesar de públicos, os dados AIS usados em fiscalização exigem cuidado: a deteção automática não deve, por si só, fundamentar sanções (a decisão humana é obrigatória); o sistema deve ser transparente e justo, evitando enviesamentos contra tipos de navio, regiões ou comunidades de pesca; e a confiança deve ser calibrada para não induzir falsa segurança.
 
 \subsection{Tratamento dos dados}
 \label{sec:tratamento-dados}
 
-\revtext{rev018}{Os dados são usados tal como existem, sem remoção de linhas. As anomalias (saltos de posição, \emph{gaps} temporais longos e inversões de rumo) são mantidas, porque o sistema visa dados AIS ao momento, onde estes erros ocorrem; removê-las na preparação tornaria a avaliação otimista, e a robustez a estas anomalias faz parte do que se avalia. Uma função de preparação recalcula, por viagem (mesmo identificador), as grandezas derivadas a partir das bases $x$, $y$, $t$ e distância à costa: intervalo temporal (\texttt{time\_gap}, em segundos), distância entre pontos consecutivos (\texttt{distance\_gap}, em metros), rumo (\texttt{bearing}, em graus, medido a partir do eixo $y$ da grelha UTM), variação de rumo com sinal (\texttt{signed\_turn}, em graus, no intervalo (-180, 180]) e velocidade (em nós). O rótulo binário (\texttt{target}) resulta do mapeamento das cinco classes em pesca e navegação. O primeiro ponto de cada viagem não tem anterior e fica com valores ausentes nas grandezas que dependem dele. Os valores recalculados coincidem com os originais do conjunto em mais de 99,99\,\% dos pares. O rumo da grelha difere do rumo em norte verdadeiro em cerca de 1\textdegree{}, pela convergência dos meridianos. A distância à costa é usada tal como vem no conjunto, sem verificação externa. A preparação aplica-se a cada conjunto separadamente, a partir do manifesto de divisão, e é verificada com testes sintéticos.}
+\revtext{rev018}{Os dados são usados tal como existem, sem remoção de linhas. As anomalias (saltos de posição, \emph{gaps} temporais longos e inversões de rumo) são mantidas, porque o sistema visa dados AIS ao momento, onde estes erros ocorrem; removê-las na preparação tornaria a avaliação otimista, e a robustez a estas anomalias faz parte do que se avalia. Uma função de preparação recalcula, por viagem (mesmo identificador), as grandezas derivadas a partir das bases $x$, $y$, $t$ e distância à costa: intervalo temporal (\texttt{time\_gap}, em segundos), distância entre pontos consecutivos (\texttt{distance\_gap}, em metros), rumo (\texttt{bearing}, em graus, medido a partir do eixo $y$ da grelha UTM), variação de rumo com sinal (\texttt{signed\_turn}, em graus, no intervalo (-180, 180]) e velocidade (em nós). O rótulo binário (\texttt{target}) resulta do mapeamento das cinco classes em pesca e navegação. O primeiro ponto de cada viagem não tem anterior e fica com valores ausentes nas grandezas que dependem dele. Os valores recalculados coincidem com os originais do conjunto em \rv{\resPrepCoincide} dos pares (no mínimo, entre as três grandezas comparadas). O rumo da grelha difere do rumo em norte verdadeiro em \rv{\resPrepBearingMediana}\textdegree{} (mediana), pela convergência dos meridianos. A distância à costa é usada tal como vem no conjunto, sem verificação externa. A preparação aplica-se a cada conjunto separadamente, a partir do manifesto de divisão, e é verificada com testes sintéticos.}
 
 \revtext{rev022}{Na CNN, o primeiro ponto de cada viagem não tem \texttt{time\_gap}, \texttt{speed} nem \texttt{signed\_turn}, e o segundo não tem \texttt{signed\_turn}. Esses valores em falta são preenchidos com zero e marcados por um indicador de ausência, para distinguir ausência de valor zero. Estes pontos entram na função de perda. Nenhuma linha é removida.}
 
@@ -320,44 +370,15 @@ Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e p
 \subsection{\texorpdfstring{\revtext{rev023}{Divisão dos dados e protocolo}}{Divisão dos dados e protocolo}}
 \label{sec:avaliacao-protocolo}
 
-Os dados são divididos por trajetória completa (ID completo, composto pelo identificador do navio e pelo sufixo da viagem) em treino, validação e teste, na proporção 70/15/15, com semente 42 e manifesto fixo. Todas as linhas de cada trajetória ficam no mesmo conjunto. Trajetórias do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto; por isso, os resultados não são apresentados como generalização para navios inéditos. Os hiperparâmetros usam apenas treino e validação.
+Os dados são divididos por trajetória completa (ID completo, composto pelo identificador do navio e pelo sufixo da viagem) em treino, validação e teste, na proporção 70/15/15, com semente 42 e manifesto fixo. Todas as linhas de cada trajetória ficam no mesmo conjunto. Trajetórias do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto; por isso, os resultados não são apresentados como generalização para navios inéditos. \revtext{rev036}{Os hiperparâmetros e as restantes escolhas (número de épocas, limiar, variantes) usam apenas o treino e o conjunto de teste, que serve para selecionar; o conjunto de validação é reservado à medição final, feita uma só vez com o modelo e o protocolo congelados.}
 
 \subsection{\texorpdfstring{\revtext{rev023}{Avaliação qualitativa e dimensão humana}}{Avaliação qualitativa e dimensão humana}}
 \label{sec:avaliacao-qualitativa}
 
 Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos preditos sobrepostos à verdade de referência e analisar-se-ão casos de sucesso e falha. Para a dimensão HCAI~\cite{shneiderman2020}, prevê-se avaliar de forma preliminar a explicabilidade (verificando se as atribuições~\cite{lundberg2017} correspondem aos padrões de movimento esperados) e a utilidade como apoio à decisão, através de um \emph{dashboard} de prova de conceito com segmentação, confiança calibrada~\cite{guo2017} e justificações.
 
-\subsection{\texorpdfstring{\revtext{rev030}{Ensaio preliminar com poucas viagens}}{Ensaio preliminar com poucas viagens}}
-\label{sec:avaliacao-preliminar}
-
-\revtext{rev030}{Esta subsecção mostra, como marcador do tipo de resultados que o relatório final irá apresentar, um ensaio curto feito apenas com viagens do conjunto de treino. A CNN da Secção~\ref{sec:cnn-especificacao} foi treinada durante 200 épocas (taxa de aprendizagem $10^{-3}$, valores não validados) em três viagens, e as previsões foram avaliadas nessas três e em outras três viagens de treino que nem a rede nem o normalizador tinham visto. O ensaio é reproduzível pelos \emph{scripts} \texttt{diagnostic\_fit\_3\_trips.py} (ajuste e previsão) e \texttt{plot\_diagnostic\_3trips.py} (figuras), que lêem apenas o conjunto de treino. A Figura~\ref{fig:diag-matrizes} compara as classes previstas com as reais e a Figura~\ref{fig:diag-linhas} mostra, para cada viagem não vista, a probabilidade de pesca ao longo do tempo, as classes real e prevista e os pontos errados.} \revtext{rev031}{As duas figuras encontram-se no Anexo~\ref{app:figuras-preliminares}, para não interromper a leitura do texto.}
-
-\revtext{rev030}{Estes resultados são \textbf{ilustrativos e provisórios}: três viagens não têm valor estatístico, a configuração da rede não foi otimizada, e não foram usados a validação nem o teste oficiais. Servem para antecipar o formato das figuras e do texto, e serão substituídos pelos resultados do treino completo. Pela leitura visual da Figura~\ref{fig:diag-linhas}, uma parte importante dos erros parece concentrar-se junto às fronteiras dos segmentos de pesca, em blocos contínuos, e não espalhada pelos pontos; esta impressão ainda não foi quantificada e não deve ser tomada como resultado.}
-
 % References may use the provided IJCAI named bibliography style.
 \bibliographystyle{FormattingGuidelines-IJCAI-ECAI-26/named}
 \bibliography{references}
-
-\appendix
-
-\section{\texorpdfstring{\revtext{rev031}{Figuras do ensaio preliminar}}{Figuras do ensaio preliminar}}
-\label{app:figuras-preliminares}
-
-\revtext{rev031}{Este anexo reúne as figuras do ensaio preliminar descrito na Subsecção~\ref{sec:avaliacao-preliminar}: as matrizes de confusão (Figura~\ref{fig:diag-matrizes}) e a previsão ao longo de três viagens de treino não vistas (Figura~\ref{fig:diag-linhas}). São marcadores de resultados, com apenas três viagens de treino e sem validação oficial, e serão substituídas pelos resultados do treino completo.}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.62\textwidth]{figures/diag3_matrizes_confusao.png}
-\caption{\revtext{rev030}{Ensaio preliminar (marcador de resultados): matrizes de confusão, por ponto, nas três viagens de ajuste e nas três viagens de treino não vistas. Cada célula mostra a contagem e a percentagem da linha (classe real). Treino de apenas três viagens, sem validação oficial.}}
-\label{fig:diag-matrizes}
-\end{figure*}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.82\textwidth]{figures/diag3_linhas_temporais.png}
-\caption{\revtext{rev030}{Ensaio preliminar (marcador de resultados): previsão da CNN em três viagens de treino não vistas. Em cada viagem, a curva é a probabilidade de pesca, a faixa ``real'' e a faixa ``previsto'' mostram a classe por ponto (azul: navegação; laranja: pesca) e a faixa ``erro'' marca os pontos errados.}}
-\label{fig:diag-linhas}
-\end{figure*}
-
 
 \end{document}
