@@ -740,3 +740,20 @@ Regras:
 - **Validação:** comparação de texto antes e depois e inspeção visual. Nenhum código nem número alterado.
 - **Limitações:** a classificação «estável» é minha; o utilizador não leu em pormenor as subsecções 5.3 a 5.6 nem a 6.1 depois das alterações, por isso a preto não significa «revisto». O texto original sem cor (por exemplo, as quatro taxas de sobreposição e a ablação na 7.1) continua a preto sem estar fechado; fica na lista de pendentes. As cores antigas continuam definidas no preâmbulo, sem uso.
 - **Pendentes:** passagens abertas de REV-041 e REV-042; decisões do Marco 4.
+
+### REV-044 — Handoff reescrito e documentos alinhados
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Cinzento `#9E9E9E`, RGB (158, 158, 158). Só marcador do registo e dos documentos; não há alteração ao `.tex`.
+- **O quê:**
+  - `handoff.md` reescrito de raiz para outra sessão: data, como retomar, objetivo, estado (marcos, baseline, conjuntos reservados, testes, LaTeX, git), decisões vigentes, ficheiros principais, comandos, resultados e ensaios, o que falhou, próximos passos, regras e preferências do utilizador. Corrigidas as incoerências do anterior (estado do git, duas linhas de push, lista partida, 7 páginas em vez de 8).
+  - `PROGRESS.md`: estado, decisões, pendências e artefactos passam para o topo e foram atualizados; removidos os blocos antigos a meio do histórico (pendentes por marco, pendências e tabela de artefactos, com itens como «Marco 3 em curso», `scripts/` e «código ainda não criado»). As entradas datadas ficam como estavam.
+  - `README.md` reescrito: estado, estrutura, ambiente e tabela de todos os programas.
+  - `docs/00` (marco 4 «por começar»), `docs/02` (§3 passa a descrever o treino da baseline; apagadas a descrição da execução com monitorização, as linhas «Por fazer» substituídas e a referência ao ensaio retirado; §6 passa a «Marco 3: fechado») e `docs/03` (janelamento por implementar, mas a ferramenta de segmentos existe; fluxo final alinhado com os papéis dos conjuntos).
+- **O que se eliminou dos `docs/`:** só passagens já feitas ou obsoletas (acima). Nenhum dos quatro ficheiros ficou inteiramente por apagar: todos têm conteúdo ainda em uso, incluindo o `docs/03` (Marco 4, por fazer).
+- **Porquê:** pedido do utilizador: um handoff para outra sessão e todos os ficheiros coerentes entre si.
+- **Ficheiros afetados:** `handoff.md`, `PROGRESS.md`, `README.md`, `docs/00_projeto_e_decisoes.md`, `docs/02_cnn_viagem_completa.md`, `docs/03_cnn_janelamento.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável** (documentação Markdown; o `.tex` não foi alterado).
+- **Validação:** releitura de todos os documentos e procura de contradições (estado dos marcos, contagem de testes, caminhos, números de REV, configurações); os números citados no handoff vêm de `results/baseline_frozen/final_results.json`; `pytest tests/` → 145 passaram. Código e LaTeX não foram alterados.
+- **Limitações:** as entradas históricas do `PROGRESS.md` e do `REVISION_LOG.md` mantêm caminhos e estados antigos (`scripts/`, «em curso»), por serem registo. Os commits desta revisão ficam locais, por enviar.
+- **Pendentes:** as pendências abertas do topo do `PROGRESS.md`; push, por autorização.

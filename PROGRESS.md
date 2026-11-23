@@ -1,48 +1,62 @@
 # PROGRESS — Projeto AIS
 
-Registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
+Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual
+## Estado atual (REV-044)
 
-- **Marco atual:** 3 em curso (aprovado pelo utilizador, REV-022): CNN 1D de referência sobre viagem completa. Depois: janelamento com sobreposição e a mesma CNN 1D sobre janelas (Marco 4).
-- **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU). Dependências em `requirements.txt`.
-- **Programas (em `src/ais/cli/`, executados com `python -m ais.cli.<nome>`; REV-034):**
-  - `create_split_manifest.py`: divisão por ID (seed 42, 70/15/15). Executado.
-  - `check_units_train.py`: verificação de unidades só com treino. Executado.
-  - `verify_trip_count.py`: confirma 123 viagens e coincidência com o manifesto. Executado.
-  - `build_clean_dataset.py --split train|validation|test`: bases limpas recalculadas. Executado para os três conjuntos (REV-009, REV-015).
-  - `count_anomalies_train.py`: contagem de saltos e inversões de rumo por viagem, só treino. Executado (REV-017).
-  - `latex/watch_latex.sh`: visualização da proposta (movido de `scripts/`). Não versionado.
-  - Ainda não existe código de janelamento nem de pós-processamento.
-- **Código da fase 1 (`src/ais/phase1/`, REV-024, REV-032, REV-034):** `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py`, `artifacts.py`, `config.py`, `metrics.py`. Sequências, scaler, máscaras, CNN 1D, perda, treino com paragem antecipada e checkpoints implementados e testados. Houve um ensaio de 3 viagens (REV-027) e uma primeira execução de treino só com o treino oficial (REV-032); resultados provisórios.
-- **Testes:** `tests/` com 145 testes (15 de REV-016/REV-017, 60 de REV-024, 19 de REV-032, 5 de REV-035 e 46 de REV-038/REV-039), todos a passar. Ver `pytest tests/`.
-- **Dados:** `data/123_fishing_trajs.csv` presente localmente, não versionado. **123 IDs únicos** e **1 026 279 linhas**, confirmados por `verify_trip_count.py` (REV-007).
-- **Bases limpas (não versionadas):** `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Soma: 1 026 279.
-- **Leituras de dados até agora:**
-  - Coluna `id` para a divisão e a contagem de viagens.
-  - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
-  - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
-- **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-043.
+| Marco | Estado |
+|---|---|
+| 1 Ambiente, divisão por ID, isolamento | Fechado |
+| 2 Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
+| 3 CNN 1D de referência sobre a viagem completa | **Fechado por decisão do utilizador (REV-041)** |
+| 4 Janelamento com a mesma CNN (L = 64; 0 % e 50 %) | **Por começar**: só decisões e a ferramenta de medição por segmento |
+| 5 Pós-processamento | Por fazer; condicional ao Marco 4 |
+| 6 e 7 Congelar tudo e medição final no `validation` | Por fazer; precisam de autorização |
+
+- **Baseline (CNN de referência):** treinada só com o treino oficial (87 viagens, 300 épocas, um checkpoint por época). **Época 162 e limiar 0,65**, escolhidos no `test` numa só ronda e congelados em `results/baseline_frozen/` (REV-038). Números em `results/baseline_frozen/final_results.json` e, no LaTeX, em macros geradas (REV-040). Os resultados do `test` são otimistas (serviram a escolher) e a perda no `test` é ruidosa entre épocas.
+- **Conjuntos reservados:** o `test` foi aberto **uma só vez** (seleção), registado em `results/access_log.jsonl`; o `validation` **nunca foi aberto**. Validação e teste foram lidos por inteiro só para construir as bases limpas (REV-015).
+- **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU), pacote `ais` instalado em modo editável (REV-034). Dependências em `requirements.txt`.
+- **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. Ainda não existe código de janelamento nem de pós-processamento.
+- **Testes:** 145 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
+- **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
+- **LaTeX:** `latex/proposta_pt.tex` compila (8 páginas); texto estável a preto e só o que pode mudar com a cor da revisão (REV-043).
+- **Git:** `origin/main` em `d1f30e0` (REV-043). Os commits de REV-044 estão locais; cada push precisa de autorização explícita nova.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-044.
 
 ## Decisões do utilizador (vigentes)
 
-- Seed `42`; proporções 70/15/15 por ID completo; arredondamento de validação e teste ao inteiro mais próximo, treino com o resto (REV-001).
-- Overlaps **0% e 50% prioritários**; 25% e 75% para decisão posterior (REV-002).
-- Fuso horário de `t`: **ignorado** (REV-002).
-- `latex/proposta_IAHC_DINIS_ROSA.pdf`: **não se altera**; é a versão entregue ao professor (REV-006).
-- HMM e Wu et al. como baselines: **fora por agora**, por falta de tempo. O `AGENTS.md` mantém-se como fonte fixa (REV-006).
-- Manifesto da divisão: **versionado** no git (REV-006).
-- Autor do dataset: **Song Wu**, Zenodo DOI 10.5281/zenodo.7283281 (CC BY 4.0). O Kaggle é espelho (REV-006).
+- **Divisão (REV-001, REV-002):** seed 42; 70/15/15 por ID completo (viagem); validação e teste arredondados ao inteiro mais próximo. Fuso horário de `t` ignorado. Viagens do mesmo navio podem estar em conjuntos diferentes; **a questão dos navios partilhados foi desconsiderada** (sem quantificar, sem refazer, sem declarar no texto).
+- **Dados (REV-012, REV-019, REV-011, REV-022):** limpeza IQR retirada; anomalias mantidas; `bearing` pela grelha UTM; `distanceToShore` aceite como correto; características `speed`, `signed_turn`, `time_gap` e `distanceToShore` (`x` e `y` fora); valores em falta a zero depois de normalizar, mais máscara.
+- **Baseline fechada (REV-041):** a CNN sobre a viagem completa fica como está (época 162, limiar 0,65); só volta na comparação com as janelas e na escolha final.
+- **Papéis dos conjuntos reservados (REV-036):** `test` seleciona; `validation` é a medição final, aberta uma só vez, no fim, com todas as variantes congeladas (REV-037).
+- **Marco 4 (REV-041):** mesma CNN sobre janelas, começando com L = 64 e sobreposição de 0 % (controlo) e 50 %; depois testar outros L; 25 % e 75 % para depois (REV-002). As métricas por segmento (sem suavizar) vêm primeiro.
+- **Âmbito (REV-006, REV-042):** HMM e Wu et al. não são comparações (só literatura). Explicabilidade, calibração e *dashboard* fora do mínimo atual.
+- **LaTeX (REV-006, REV-043):** `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera; texto estável a preto, o que pode mudar mantém a cor. Manifesto da divisão versionado. Autor do dataset: Song Wu, Zenodo DOI 10.5281/zenodo.7283281 (CC BY 4.0); o Kaggle é espelho.
 
-- Limpeza IQR retirada; os dados ficam tal como estão (REV-012, REV-019).
-- Anomalias mantidas, incluindo inversões de rumo da viagem `219028021-2` (REV-012, REV-019).
-- Robustez a anomalias não é estudo próprio; fica implícita nas métricas globais (REV-019).
-- Features da CNN: `speed`, `signed_turn`, `time_gap` e `distanceToShore`. `x` e `y` ficam de fora (REV-019).
-- `bearing` a partir de x, y (grelha UTM); `distanceToShore` aceite como correto (REV-011).
-- Marco 1: fica só o manifesto de divisão, sem ficheiros separados por conjunto nem `run_preparation` (REV-019).
-- Texto da subsecção «Tratamento dos dados» na proposta confirmado (REV-018, REV-019).
+## Pendências abertas
+
+- **Antes do Marco 4:** se a sobreposição se aplica no treino, na inferência ou em ambos; orçamento de treino; usar o mesmo critério de seleção da baseline; autorização para medir a baseline por segmento no `test`.
+- **LaTeX (adiado pelo utilizador):** as quatro taxas de sobreposição e a ablação (7.1); explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); título com «OOI» e o texto a vermelho «human-on-the-loop»; Secção 6 no futuro; subsecções 5.3 a 5.6 e 6.1 por reler.
+- **Pós-processamento (Marco 5):** unidade, largura e bordas do filtro a aprovar, só se o Marco 4 mostrar benefício.
+- **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
+- **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
+
+## Artefactos do projeto
+
+| Ficheiro | Estado |
+|---|---|
+| `AGENTS.md`, `CLAUDE.md`, `README.md`, `handoff.md` | Alinhados em REV-044; `AGENTS.md` §3 com os papéis dos conjuntos (REV-036) |
+| `docs/00` a `docs/03` | Fundidos em REV-033; atualizados em REV-036, REV-038, REV-041 e REV-044 |
+| `src/ais/phase1/`, `src/ais/cli/` | Código do projeto (REV-034 a REV-040) |
+| `pyproject.toml` | Pacote `ais` e configuração do pytest (REV-034) |
+| `tests/` | 145 testes |
+| `configs/` | `phase1_select.json` (baseline), `selection_protocol.json`, `authorizations/test_selection.json`; históricos `phase1_run1.json` e `phase1_final.json` |
+| `manifests/split_manifest_seed42.csv` | Gerado; **versionado** (REV-006) |
+| `latex/proposta_pt.tex`, `latex/references.bib`, `latex/figures/`, `latex/generated/resultados.tex` | Proposta; macros e figuras geradas por `build_final_results` |
+| `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** |
+| `data/`, `results/`, `latex/build/` | Gerados; não versionados |
+| `results/baseline_frozen/`, `results/phase1_select/`, `results/access_log.jsonl` | Baseline, seleção e registo de acessos (REV-038) |
 
 ## Entradas do registo
 
@@ -143,68 +157,6 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 **Validado**
 - 1 026 279 linhas; 123 IDs únicos no ficheiro; 123 no manifesto; sem diferenças em nenhum sentido.
 - A cifra de 128 é do nome e da página do Zenodo (`128_fishing_trajs.csv`). Não corresponde a este ficheiro local.
-
-## Pendentes (por marco, segundo `docs/00_projeto_e_decisoes.md` §4)
-
-### Marco 1 — Ambiente, consolidação e divisão mínima
-- [x] Ambiente `iach-ais-venv-4/` criado.
-- [x] Dependências mínimas instaladas e versões registadas.
-- [x] `requirements.txt` criado e testado numa instalação limpa.
-- [x] `PROGRESS.md` criado.
-- [x] Manifesto `split_manifest` (id → split) com seed 42 e 70/15/15, lendo só a coluna `id`.
-- [x] Invariantes estruturais verificadas (IDs sem interseção, atribuição única, conservação de linhas).
-- [x] Número de viagens confirmado: 123.
-- [x] Decidido em REV-019: basta o manifesto, sem ficheiros separados por conjunto.
-- [x] Decidido em REV-019: sem `run_preparation`; o isolamento faz-se com scripts e com `load_training_data` (só treino) em `src/phase1/data.py`.
-
-### Marco 2 — Preparação auditável (só treino/sintéticos)
-- [x] Recálculo de `time_gap_calc_s`, `distance_gap_calc_m`, `bearing_calc_deg`, `signed_turn_calc_deg` e `speed_calc_mps` (REV-009; validado contra os originais em REV-009 e REV-011).
-- [x] Unidades confirmadas no treino: `distance_gap`, `euc_speed`, `time_gap`, `bearing`, `signed_turn` (REV-003). `distanceToShore` em metros confirmado pelo README oficial (REV-008).
-- [x] Quantificar as anomalias (REV-017). Tratamento: não tratar, por decisão do utilizador (REV-012). Aguarda revisão.
-- [x] Limpeza IQR retirada (REV-019), por decisão do utilizador: os dados ficam tal como estão (REV-012).
-- [x] Codificação de rótulos (`target`, REV-009).
-- [x] Features da CNN (REV-019): `speed`, `signed_turn`, `time_gap` e `distanceToShore`. `x` e `y` ficam de fora.
-- [x] Testes com dados sintéticos de construção e contagem (REV-016, REV-017). Pendentes: janelas, máscaras e alinhamento (ainda não existem no código).
-- [x] Revisão pedida e decisões registadas (REV-019). Marco 2 fechado, exceto testes de janelas, máscaras e alinhamento, que pertencem ao Marco 3.
-
-### Marco 3 a 7
-Ver `docs/00_projeto_e_decisoes.md` §4 (estado dos marcos) e `docs/02_cnn_viagem_completa.md` §6 (próximos passos do Marco 3).
-
-## Pendências por decidir ou confirmar
-
-- CRS de longitude/latitude (x/y já indicado como SRID 25832 pelo README oficial, REV-008).
-- Método de cálculo de `distanceToShore` (não documentado; a unidade em metros está confirmada, REV-008).
-- Unidade, largura e bordas do pós-processamento simples (aprovação do utilizador).
-- Orçamento de tempo para execuções longas (AGENTS.md §2).
-- Se os overlaps 25% e 75% entram no âmbito (decisão posterior).
-- Se HMM e Wu et al. entram como baselines (decisão posterior; ficam fora por agora).
-
-## Artefactos do projeto
-
-| Ficheiro | Estado |
-|---|---|
-| `AGENTS.md`, `CLAUDE.md`, `README.md` | Existentes; alinhados (REV-004, REV-007); `AGENTS.md` §5 com atualização automática de registos (REV-010) |
-| `docs/00` a `docs/03` | Fundidos e simplificados em REV-033: projeto e decisões, dados e preparação, CNN de viagem completa, CNN com janelas. Substituem os antigos `docs/00` a `docs/06`, que ficam no histórico do git |
-| `src/ais/phase1/` | `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py` (REV-024); `artifacts.py`, `config.py`, `metrics.py` (REV-032) |
-| `pyproject.toml` | Metadados mínimos do pacote `ais` e configuração do pytest (REV-034); instalado em modo editável só no venv |
-| `tests/` | 99 testes (REV-016, REV-017, REV-024, REV-032, REV-035) |
-| `results/phase1_final/` + `latex/generated/` | Treino final (REV-035): `final_results.json` (fonte única dos números), macros LaTeX e figuras `latex/figures/final_*.png` |
-| `latex/proposta_pt.tex` | Reescrito a partir do PDF IAHC (REV-005); compila com pdflatex/bibtex |
-| `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** (REV-006) |
-| `latex/references.bib` | Existente; `kaggleAIS` com autor corrigido (REV-006) |
-| `requirements.txt` | Existente; testado numa instalação limpa |
-| `REVISION_LOG.md` | Existente; REV-001 a REV-010 |
-| `scripts/build_clean_dataset.py` | Existente; executado só com treino (REV-009) |
-| `data/123_fishing_trajs_clean_train.parquet` | Gerado; não versionado; só treino |
-| `PROGRESS.md` | Este ficheiro |
-| `scripts/create_split_manifest.py` | Existente; executado |
-| `scripts/check_units_train.py` | Existente; executado |
-| `scripts/verify_trip_count.py` | Existente; executado |
-| `scripts/watch_latex.sh` | Existente; não versionado (só visualização) |
-| `manifests/split_manifest_seed42.csv` | Gerado; **versionado** (REV-006) |
-| `results/units_check_train/` | Gerado; não versionado |
-| `latex/build/` | Gerado; não versionado |
-| Código de pré-processamento, modelos e testes automatizados | Ainda não criados |
 
 ### 2026-11-23i — Unidades confirmadas pelo README oficial (REV-008)
 
@@ -797,3 +749,19 @@ Ver `docs/00_projeto_e_decisoes.md` §4 (estado dos marcos) e `docs/02_cnn_viage
 
 **Pendente**
 - Passagens abertas de REV-041 e REV-042; decisões do Marco 4.
+
+### 2026-11-23ba — Handoff reescrito e documentos alinhados (REV-044)
+
+**Feito**
+- `handoff.md` reescrito de raiz para outra sessão (data, como retomar, objetivo, estado, decisões, ficheiros, comandos, resultados e ensaios, o que falhou, próximos passos, regras e preferências).
+- `PROGRESS.md`: estado, decisões, pendências e artefactos passam para o topo e foram atualizados; removidos os blocos antigos (pendentes por marco, pendências e tabela de artefactos) que estavam a meio do histórico.
+- `README.md` reescrito; `docs/00`, `docs/02` e `docs/03` limpos: apagados a descrição da execução antiga (§3 do `docs/02`), as linhas «Por fazer» de coisas já substituídas e a referência ao ensaio retirado.
+
+**Validado**
+- Procura de contradições entre README, PROGRESS, handoff e docs (estado dos marcos, contagem de testes, caminhos, REV); `pytest`: 145 passaram. Código e LaTeX não foram alterados.
+
+**Problemas e limitações**
+- Nenhum documento dos `docs/` ficou inteiro por apagar: todos têm conteúdo ainda útil (o `docs/03` descreve o Marco 4, por fazer).
+
+**Pendente**
+- Pendências abertas listadas no topo deste ficheiro; push dos commits de REV-044, por autorização.
