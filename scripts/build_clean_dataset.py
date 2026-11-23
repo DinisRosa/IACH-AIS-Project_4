@@ -13,24 +13,29 @@ Valores recalculados a partir dessas bases, por viagem (mesmo id):
                           (01-sailing, 03-sailing, 05-sailing). Qualquer outro rótulo gera erro.
 
 Regras:
-- Só o conjunto de TREINO é processado. Validação e teste exigem autorização explícita
-  do utilizador (AGENTS.md §3 e docs/01 §8) e não são lidos por este script.
+- Conjuntos processáveis: train, validation e test (REV-015, autorização explícita do
+  utilizador em 2026-11-23). Por defeito processa só train. Cada conjunto gera o seu
+  próprio ficheiro e sumário. Cada conjunto é construído só com as suas viagens, a partir
+  do manifesto; nunca se misturam conjuntos.
 - Nenhuma linha é removida. O primeiro ponto de cada viagem fica com valores ausentes
   (NaN) nas grandezas que dependem do anterior. Remover ou marcar anomalias é uma decisão
   separada, com regra registada.
 - Dados ordenados por id, t e point_id.
 - point_id = número da linha de dados no CSV original (1 = primeira linha de dados).
 
-Saída: data/123_fishing_trajs_clean_train.parquet (formato Parquet).
-Sumário de diagnóstico: results/clean_train/summary.json.
+Saída: data/123_fishing_trajs_clean_<split>.parquet (formato Parquet).
+Sumário de diagnóstico: results/clean_<split>/summary.json.
 Usa colunas originais (time_gap, distance_gap, bearing, signed_turn) só para comparação.
 
 Uso (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python scripts/build_clean_dataset.py
+    iach-ais-venv-4/bin/python scripts/build_clean_dataset.py --split train
+    iach-ais-venv-4/bin/python scripts/build_clean_dataset.py --split validation
+    iach-ais-venv-4/bin/python scripts/build_clean_dataset.py --split test
 """
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import sys
@@ -41,11 +46,9 @@ import numpy as np
 import pandas as pd
 
 SEED = 42
-SPLIT = "train"  # único conjunto permitido sem autorização explícita
+SPLITS = ("train", "validation", "test")
 RAW_PATH = Path("data/123_fishing_trajs.csv")
 MANIFEST_PATH = Path("manifests/split_manifest_seed42.csv")
-OUTPUT_PATH = Path("data/123_fishing_trajs_clean_train.parquet")
-SUMMARY_DIR = Path("results/clean_train")
 
 LABEL_TO_TARGET = {
     "02-fishing": 1,
@@ -90,7 +93,7 @@ def wrap_180(angle: pd.Series) -> pd.Series:
     return (angle + 180.0) % 360.0 - 180.0
 
 
-def build(frame: pd.DataFrame) -> pd.DataFrame:
+def build(frame: pd.DataFrame, split: str) -> pd.DataFrame:
     grouped = frame.groupby("id", sort=False)
     x_prev = grouped["x"].shift(1)
     y_prev = grouped["y"].shift(1)
@@ -100,7 +103,7 @@ def build(frame: pd.DataFrame) -> pd.DataFrame:
         {
             "point_id": frame["point_id"].astype("int64"),
             "id": frame["id"],
-            "split": SPLIT,
+            "split": split,
             "t": frame["t"],
             "x": frame["x"].astype("float64"),
             "y": frame["y"].astype("float64"),
@@ -160,40 +163,52 @@ def diagnostics(out: pd.DataFrame, raw: pd.DataFrame) -> dict:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Constrói a base limpa de um conjunto (train, validation ou test).")
+    parser.add_argument("--split", choices=SPLITS, default="train")
+    args = parser.parse_args()
+    split = args.split
+
     if not RAW_PATH.exists() or not MANIFEST_PATH.exists():
         print("Ficheiro de dados ou manifesto não encontrado.", file=sys.stderr)
         return 1
 
-    train_ids = load_split_ids(MANIFEST_PATH, SPLIT)
-    raw = load_raw(RAW_PATH, train_ids)
-    out = build(raw)
+    split_ids = load_split_ids(MANIFEST_PATH, split)
+    raw = load_raw(RAW_PATH, split_ids)
+    out = build(raw, split)
     summary = diagnostics(out, raw)
 
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    out.to_parquet(OUTPUT_PATH, index=False)
+    if set(out["id"].unique()) != split_ids:
+        print(f"Erro: viagens do manifesto em falta ou extra no conjunto {split}.", file=sys.stderr)
+        return 2
+    summary["viagens_do_manifesto_encontradas"] = len(split_ids)
 
-    SUMMARY_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = Path(f"data/123_fishing_trajs_clean_{split}.parquet")
+    summary_dir = Path(f"results/clean_{split}")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    out.to_parquet(output_path, index=False)
+
+    summary_dir.mkdir(parents=True, exist_ok=True)
     report = {
         "meta": {
             "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "script": "scripts/build_clean_dataset.py",
-            "split": SPLIT,
+            "split": split,
             "raw_file": str(RAW_PATH),
             "raw_sha256": sha256_of(RAW_PATH),
             "manifest_file": str(MANIFEST_PATH),
             "manifest_sha256": sha256_of(MANIFEST_PATH),
-            "output_file": str(OUTPUT_PATH),
-            "output_sha256": sha256_of(OUTPUT_PATH),
+            "output_file": str(output_path),
+            "output_sha256": sha256_of(output_path),
             "seed": SEED,
         },
         "diagnostics": summary,
     }
-    with (SUMMARY_DIR / "summary.json").open("w", encoding="utf-8") as handle:
+    with (summary_dir / "summary.json").open("w", encoding="utf-8") as handle:
         json.dump(report, handle, ensure_ascii=False, indent=2)
 
     print(json.dumps(report["diagnostics"], ensure_ascii=False, indent=2))
-    print(f"\nBase gravada: {OUTPUT_PATH}")
-    print(f"Sumário: {SUMMARY_DIR / 'summary.json'}")
+    print(f"\nBase gravada: {output_path}")
+    print(f"Sumário: {summary_dir / 'summary.json'}")
     return 0
 
 

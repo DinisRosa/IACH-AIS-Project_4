@@ -17,7 +17,7 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
   - `create_split_manifest.py`: cria o manifesto de divisão por ID (seed 42, 70/15/15).
   - `check_units_train.py`: verifica unidades e convenções só com o conjunto de treino.
   - `verify_trip_count.py`: confirma o número de viagens (123) e a coincidência com o manifesto.
-- `data/123_fishing_trajs_clean_train.parquet`: base limpa do treino (gerada, não versionada).
+- `data/123_fishing_trajs_clean_{train,validation,test}.parquet`: bases limpas de cada conjunto (geradas, não versionadas).
 - `manifests/`: manifesto da divisão por ID, `split_manifest_seed42.csv` (versionado).
 - `results/`: saídas geradas (gráficos e sumários). Não versionados.
 - `data/`: dataset local (`123_fishing_trajs.csv`). Não versionado.
@@ -46,7 +46,7 @@ iach-ais-venv-4/bin/python scripts/verify_trip_count.py
 - `create_split_manifest.py` cria `manifests/split_manifest_seed42.csv`.
 - `check_units_train.py` gera gráficos e um `summary.json` em `results/units_check_train/`, usando só o conjunto de treino.
 - `verify_trip_count.py` confirma 123 viagens e que o manifesto coincide com o ficheiro.
-- `build_clean_dataset.py`: constrói a base limpa (Parquet) só com o treino, com target 0/1 e grandezas recalculadas.
+- `build_clean_dataset.py --split train|validation|test`: constrói a base limpa (Parquet) de cada conjunto, com target 0/1 e grandezas recalculadas. Por defeito, treino.
 
 ## Estado
 

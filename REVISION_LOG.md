@@ -22,6 +22,11 @@ Regras:
 | REV-008 | Verde-azulado | `#00695C` | (0, 105, 92) |
 | REV-009 | Índigo | `#283593` | (40, 53, 147) |
 | REV-010 | Ocre | `#8D6E00` | (141, 110, 0) |
+| REV-011 | Laranja | `#E65100` | (230, 81, 0) |
+| REV-012 | Cinzento-ardósia | `#455A64` | (69, 90, 100) |
+| REV-013 | Oliva | `#808000` | (128, 128, 0) |
+| REV-014 | Lilás | `#9575CD` | (149, 117, 205) |
+| REV-015 | Turquesa | `#26A69A` | (38, 166, 154) |
 
 ## Revisões
 
@@ -215,3 +220,79 @@ Regras:
 - **Correspondência no LaTeX:** **não aplicável**.
 - **Validação:** leitura da alteração em `AGENTS.md`. Não há código.
 - **Pendentes:** nenhum.
+
+### REV-011 — Decisões de base: bearing pela grelha e distanceToShore aceite
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Laranja `#E65100`, RGB (230, 81, 0). Só marcador do registo.
+- **O quê:**
+  - `bearing` mantém-se calculado a partir de x,y (norte da grelha UTM). Não se usa o `bearing` original (norte verdadeiro).
+  - `distanceToShore` aceite como correto tal como está no dataset. Não se procura o mapa da costa nem se verifica a sua origem.
+- **Porquê:** decisão do utilizador. Coerência com x,y. Verificar `distanceToShore` exigiria mapa de costa e posição, com custo de recursos que o projeto não comporta.
+- **Verificação (só treino):** a base limpa do treino não tem anomalias criadas pelo cálculo. `time_gap` e `distance_gap` recalculados coincidem com os originais (diferença acima de 1e-6 em 1,4·10⁻⁶ dos pares). As anomalias existentes estão nos próprios x, y, t, não no cálculo:
+  - 87 primeiros pontos sem anterior (já documentados).
+  - `time_gap` até 47 172 s (cerca de 13 h) e mínimo 1 s. Nenhum valor ≤ 0. Nenhum `(id, t)` repetido.
+  - `distance_gap` máximo 14 797 m num único passo. Velocidade máxima implícita cerca de 90,7 kn; p99,9 de 15,3 kn.
+  - `signed_turn`: 3 717 pares com |variação| > 170°, o que indica inversões de rumo reais ou saltos de posição. Nenhum valor fora de (-180, 180].
+- **Ficheiros afetados:** `REVISION_LOG.md`, `PROGRESS.md`.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Pendentes:**
+  - Definir a regra para as anomalias de `time_gap`, `distance_gap` e `signed_turn` (marcar, remover ou manter). Esta regra é o Marco 2.
+  - Validação e teste: só depois de autorização explícita.
+
+### REV-012 — Anomalias mantidas como estão nos dados
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Cinzento-ardósia `#455A64`, RGB (69, 90, 100). Só marcador do registo.
+- **O quê:** nenhuma anomalia é removida, marcada ou corrigida em `time_gap`, `distance_gap`, `signed_turn` ou `speed`. Um gap de 13 h fica como gap de 13 h. Uma velocidade de 90 nós fica como 90 nós. O dataset é tratado como ele próprio.
+- **Porquê:** decisão do utilizador. As anomalias são poucas e isoladas, e o modelo deve aprender com dados tal como existem na prática, sem limpeza adicional.
+- **Ressalva registada:** a frequência ainda não está medida. Há 3 717 pares com `signed_turn` acima de 170° no treino (cerca de 0,5 %). A contagem de saltos acima de um limiar de velocidade não foi feita. Se estes números forem altos, a decisão deve ser revista.
+- **Ficheiros afetados:** `REVISION_LOG.md`, `PROGRESS.md`.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Pendentes:**
+  - Medir a frequência de saltos e de inversões de rumo no treino, para confirmar que são poucos.
+  - Validação e teste: só depois de autorização explícita.
+
+### REV-013 — Anomalias explícitas no relatório como teste de robustez
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Oliva `#808000`, RGB (128, 128, 0). Aplicada no `.tex` pela macro `\revtext{rev013}` (parágrafo de Materiais e Dados). Corrigida de `#556B2F` porque essa cor não era visível de forma fiável no PDF; `#808000` é a cor oliva padrão do LaTeX (`olive`).
+- **O quê:** `latex/proposta_pt.tex`, secção Materiais e Dados: acrescentado um parágrafo que declara que as anomalias são mantidas, sem limpeza, e que a robustez a elas faz parte da avaliação.
+- **Porquê:** decisão do utilizador. O sistema destina-se a dados AIS ao momento, onde estes erros ocorrem. Tratá-los na preparação tornaria a avaliação otimista.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `REVISION_LOG.md`, `PROGRESS.md`. O PDF entregue ao professor (`latex/proposta_IAHC_DINIS_ROSA.pdf`) não foi alterado.
+- **Correspondência no LaTeX:** `latex/proposta_pt.tex` alterado. Parágrafo novo em Materiais e Dados, em cor `rev013`, com a macro `\revtext`. Compilação verificada sem erros (`latex/build/`, ignorado pelo git).
+- **Pendentes:**
+  - Compilação verificada: `pdflatex` sem erros, em `latex/build/`.
+  - Decidir se a avaliação de robustez a anomalias entra como estudo próprio na secção Avaliação.
+
+### REV-014 — Regra explícita: toda a alteração ao LaTeX leva cor
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Lilás `#9575CD`, RGB (149, 117, 205). Só marcador do registo.
+- **O quê:** `AGENTS.md` §8 passa a dizer de forma explícita que toda a alteração ao `.tex` (texto novo ou substituído) é colorida com a cor do seu ID, pela macro `\revtext`, e que nenhuma revisão fica com cor por atribuir. REV-011 e REV-012 passam a ter cor (laranja e cinzento-ardósia). Antes estavam marcadas "a atribuir". O preâmbulo de `latex/proposta_pt.tex` define `\definecolor{rev013}` e `\revtext`.
+- **Porquê:** pedido do utilizador: a regra já tinha sido dada, mas não estava escrita no `AGENTS.md`.
+- **Ficheiros afetados:** `AGENTS.md` §8, `REVISION_LOG.md`, `PROGRESS.md`, `latex/proposta_pt.tex` (preâmbulo e parágrafo REV-013).
+- **Correspondência no LaTeX:** **não aplicável** a esta revisão. É uma regra do processo, sem texto da proposta. O parágrafo REV-013 já foi atualizado.
+- **Validação:** `pdflatex` sem erros após a alteração.
+- **Pendentes:** nenhum.
+
+### REV-015 — Bases limpas de validação e teste
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Turquesa `#26A69A`, RGB (38, 166, 154). Só marcador do registo.
+- **O quê:**
+  - `scripts/build_clean_dataset.py` aceita `--split train|validation|test` (por defeito, `train`). Cada conjunto gera o seu ficheiro e o seu sumário.
+  - Gerados `data/123_fishing_trajs_clean_validation.parquet` e `data/123_fishing_trajs_clean_test.parquet`, além do treino.
+  - Cada conjunto é construído só com as viagens do seu split, segundo o manifesto. O script falha se as viagens não coincidirem com o manifesto.
+- **Porquê:** autorização explícita do utilizador em 2026-11-23 para processar validação e teste. O utilizador considera que não há fuga de dados, porque nenhum valor de validação ou teste é usado para ajustar o processamento.
+- **Ficheiros afetados:** `scripts/build_clean_dataset.py`, `README.md`, `REVISION_LOG.md`, `PROGRESS.md`. Saídas em `data/` e `results/` (ignoradas pelo git).
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação (contagens, sem análise de resultados):**
+  - Total de linhas: 713 854 (treino) + 209 016 (validação) + 103 409 (teste) = 1 026 279, igual ao CSV original.
+  - Viagens: 87 + 18 + 18 = 123, iguais ao manifesto.
+  - Sem `time_gap` nulo ou negativo fora do primeiro ponto de cada viagem.
+  - Proporção de pesca (`target` = 1): treino 0,754; validação 0,832; teste 0,612. Diferença natural entre conjuntos, não corrigida.
+- **Pendentes:**
+  - Testes sintéticos da função de construção.
+  - Medir a frequência de saltos e de inversões de rumo.
+  - Push: feito pelo utilizador.

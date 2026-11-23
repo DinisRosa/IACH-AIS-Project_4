@@ -224,3 +224,56 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 **Pendente**
 - Nenhum.
+
+### 2026-11-23l — Bearing pela grelha e distanceToShore aceite (REV-011)
+
+**Feito**
+- Decidido: `bearing` a partir de x,y (grelha UTM). `distanceToShore` aceite como correto, sem verificação externa.
+- Verificação no treino: a base limpa não tem anomalias criadas pelo cálculo. As anomalias estão nos dados (gaps até 13 h, saltos até 14,8 km, 3 717 inversões de rumo acima de 170°).
+
+**Pendente**
+- Regra para as anomalias de `time_gap`, `distance_gap` e `signed_turn` (Marco 2).
+- Autorização explícita para validação e teste.
+- Push dos commits locais, só com confirmação explícita.
+
+### 2026-11-23m — Anomalias mantidas como estão (REV-012)
+
+**Feito**
+- Decidido: nenhuma anomalia de tempo, distância, velocidade ou rumo é removida ou marcada. O dataset é tratado como ele próprio.
+
+**Pendente**
+- Medir a frequência de saltos e de inversões de rumo no treino, para confirmar que são poucos (3 717 inversões acima de 170° já contadas, cerca de 0,5 %).
+- Autorização explícita para validação e teste.
+- Push dos commits locais, só com confirmação explícita.
+
+### 2026-11-23n — Anomalias declaradas no relatório (REV-013)
+
+**Feito**
+- `latex/proposta_pt.tex`: parágrafo em Materiais e Dados que declara a manutenção das anomalias como teste de robustez para dados ao momento. Cor REV-013 (oliva `#808000`, RGB 128,128,0) aplicada com `\revtext`.
+
+**Pendente**
+- Decidir se a robustez a anomalias entra como estudo na secção Avaliação.
+- Medir a frequência de saltos e de inversões de rumo no treino.
+- Autorização explícita para validação e teste. Push só com confirmação explícita.
+
+### 2026-11-23o — Regra de cor para alterações ao LaTeX (REV-014)
+
+**Feito**
+- `AGENTS.md` §8: toda a alteração ao `.tex` leva cor do seu ID, pela macro `\revtext`. Sem cor por atribuir.
+- REV-011 (laranja), REV-012 (cinzento-ardósia) e REV-013 (verde-oliva) com cores atribuídas.
+- REV-013 aplicado no `.tex` com `\revtext{rev013}`. Compila sem erros.
+
+**Pendente**
+- Medir a frequência de saltos e de inversões de rumo no treino.
+- Autorização explícita para validação e teste. Push só com confirmação explícita.
+
+### 2026-11-23p — Bases limpas de validação e teste (REV-015)
+
+**Feito**
+- Autorização explícita para processar validação e teste.
+- `scripts/build_clean_dataset.py --split` gera as três bases. Contagens verificadas: 1 026 279 linhas e 123 viagens, iguais ao CSV e ao manifesto.
+
+**Pendente**
+- Testes sintéticos da função de construção.
+- Medir a frequência de saltos e de inversões de rumo.
+- Push feito pelo utilizador.

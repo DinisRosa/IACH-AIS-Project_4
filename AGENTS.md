@@ -125,7 +125,7 @@ Não alterar configurações globais dos agentes. Se referências não forem seg
 
 ## 8. Revisões por cor entre Markdown e LaTeX
 ### Regra
-Cada revisão lógica dos documentos recebe um ID e uma cor. Se originar alteração no .tex, usar EXATAMENTE a mesma cor e o mesmo ID. Cor pertence à revisão lógica, não a cada comando/commit; uma revisão pode abranger vários ficheiros e commits. Correções para concluir a mesma revisão mantêm ID/cor salvo decisão diferente.
+Cada revisão lógica dos documentos recebe um ID e uma cor. Se originar alteração no .tex, usar EXATAMENTE a mesma cor e o mesmo ID. Toda a alteração ao `.tex` (texto novo ou substituído) é colorida com a cor do seu ID, usando a macro `\revtext`; não há alteração ao `.tex` sem cor. Cada revisão tem cor atribuída antes de terminar a interação, nunca "a atribuir". Cor pertence à revisão lógica, não a cada comando/commit; uma revisão pode abranger vários ficheiros e commits. Correções para concluir a mesma revisão mantêm ID/cor salvo decisão diferente.
 
 ### Antes de editar
 Ler os documentos de acompanhamento e o .tex real quando fornecido. Identificar macros, cores, pacotes e convenções existentes; não recolorir revisões anteriores. Se o significado das cores não for claro, perguntar. Não reconstruir cronologia/autoria por adivinhação.
