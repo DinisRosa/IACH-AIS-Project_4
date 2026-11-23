@@ -28,8 +28,10 @@
 \usepackage{booktabs}
 \usepackage{algorithm}
 \usepackage{algorithmic}
-% REV-013 — cor #808000, RGB (128, 128, 0) (mesma do REVISION_LOG.md). Macro \revtext definida para as revisões coloridas.
+% REV-013 — cor #808000, RGB (128, 128, 0) (mesma do REVISION_LOG.md). Texto movido para REV-018.
+% REV-018 — cor #5C6BC0, RGB (92, 107, 192) (mesma do REVISION_LOG.md). Macro \revtext para as revisões coloridas.
 \definecolor{rev013}{RGB}{128,128,0}
+\definecolor{rev018}{RGB}{92,107,192}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 \usepackage[switch]{lineno}
 
@@ -131,12 +133,17 @@ Será usado o conjunto público \emph{Detailed Labelled Fishing Trajectories fro
 
 Eticamente, apesar de públicos, os dados AIS usados em fiscalização exigem cuidado: a deteção automática não deve, por si só, fundamentar sanções (a decisão humana é obrigatória); o sistema deve ser transparente e justo, evitando enviesamentos contra tipos de navio, regiões ou comunidades de pesca; e a confiança deve ser calibrada para não induzir falsa segurança.
 
+\subsection{Tratamento dos dados}
+\label{sec:tratamento-dados}
+
+\revtext{rev018}{Os dados são usados tal como existem, sem remoção de linhas. As anomalias (saltos de posição, \emph{gaps} temporais longos e inversões de rumo) são mantidas, porque o sistema visa dados AIS ao momento, onde estes erros ocorrem; removê-las na preparação tornaria a avaliação otimista, e a robustez a estas anomalias faz parte do que se avalia. Uma função de preparação recalcula, por viagem (mesmo identificador), as grandezas derivadas a partir das bases $x$, $y$, $t$ e distância à costa: intervalo temporal (\texttt{time\_gap}, em segundos), distância entre pontos consecutivos (\texttt{distance\_gap}, em metros), rumo (\texttt{bearing}, em graus, medido a partir do eixo $y$ da grelha UTM), variação de rumo com sinal (\texttt{signed\_turn}, em graus, no intervalo (-180, 180]) e velocidade (em nós). O rótulo binário (\texttt{target}) resulta do mapeamento das cinco classes em pesca e navegação. O primeiro ponto de cada viagem não tem anterior e fica com valores ausentes nas grandezas que dependem dele. Os valores recalculados coincidem com os originais do conjunto em mais de 99,99\,\% dos pares. O rumo da grelha difere do rumo em norte verdadeiro em cerca de 1\textdegree{}, pela convergência dos meridianos. A distância à costa é usada tal como vem no conjunto, sem verificação externa. A preparação aplica-se a cada conjunto separadamente, a partir do manifesto de divisão, e é verificada com testes sintéticos.}
+
 \section{Avaliação}
 \label{sec:avaliacao}
 
 Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e por ponto), comparando com os \emph{baselines} (HMM~\cite{peel2011} e Wu et al.~\shortcite{wu2022}). Um estudo de ablação com quatro variantes isola cada componente: (i) sem sobreposição nem pós-processamento; (ii) só sobreposição; (iii) só pós-processamento; (iv) ambos (método proposto). Analisa-se também a robustez face à taxa de sobreposição (0\%, 25\%, 50\%, 75\%) e ao nível de regularização temporal. A estabilidade mede-se pela fragmentação (número de segmentos por trajetória) e pelo erro de fronteira (desvio entre início/fim previsto e real); ``estável'' designa uma segmentação que muda pouco sob pequenas alterações da janela ou do pós-processamento.
 
-Os dados são divididos por trajetória completa (ID completo, composto pelo identificador do navio e pelo sufixo da viagem) em treino, validação e teste, na proporção 70/15/15, com semente 42 e manifesto fixo. Todas as linhas de cada trajetória ficam no mesmo conjunto. Trajetórias do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto; por isso, os resultados não são apresentados como generalização para navios inéditos. Os hiperparâmetros usam apenas treino e validação. \revtext{rev013}{As anomalias dos dados são mantidas, sem limpeza adicional: saltos de posição, \emph{gaps} temporais longos e inversões de rumo fazem parte da entrada. Esta escolha é deliberada. O objetivo é um sistema que opere com dados AIS ao momento, onde estes erros ocorrem; removê-los na preparação tornaria a avaliação otimista. A robustez a estas anomalias é, assim, parte do que se avalia.}
+Os dados são divididos por trajetória completa (ID completo, composto pelo identificador do navio e pelo sufixo da viagem) em treino, validação e teste, na proporção 70/15/15, com semente 42 e manifesto fixo. Todas as linhas de cada trajetória ficam no mesmo conjunto. Trajetórias do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto; por isso, os resultados não são apresentados como generalização para navios inéditos. Os hiperparâmetros usam apenas treino e validação.
 
 Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos preditos sobrepostos à verdade de referência e analisar-se-ão casos de sucesso e falha. Para a dimensão HCAI~\cite{shneiderman2020}, prevê-se avaliar de forma preliminar a explicabilidade (verificando se as atribuições~\cite{lundberg2017} correspondem aos padrões de movimento esperados) e a utilidade como apoio à decisão, através de um \emph{dashboard} de prova de conceito com segmentação, confiança calibrada~\cite{guo2017} e justificações.
 

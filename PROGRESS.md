@@ -147,12 +147,13 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - [ ] Criar o isolamento: `run_preparation` com `allowed_splits=["train"]` por defeito (ainda não existe código de preparação).
 
 ### Marco 2 — Preparação auditável (só treino/sintéticos)
-- [ ] Recálculo de `time_gap_calc_s`, `distance_gap_calc_m` e `speed_calc_mps`.
+- [x] Recálculo de `time_gap_calc_s`, `distance_gap_calc_m`, `bearing_calc_deg`, `signed_turn_calc_deg` e `speed_calc_mps` (REV-009; validado contra os originais em REV-009 e REV-011).
 - [x] Unidades confirmadas no treino: `distance_gap`, `euc_speed`, `time_gap`, `bearing`, `signed_turn` (REV-003). `distanceToShore` em metros confirmado pelo README oficial (REV-008).
-- [ ] Quantificar e tratar as anomalias de `distance_gap`, `time_gap` e `signed_turn`.
-- [ ] Limpeza com auditoria e limites IQR só no treino.
-- [ ] Codificação de rótulos (`target`) e features (`speed_calc_mps`, `signed_turn`, `time_gap_calc_s`, `distanceToShore`).
-- [ ] Testes com dados sintéticos (gaps, janelas, máscaras, alinhamento).
+- [x] Quantificar as anomalias (REV-017). Tratamento: não tratar, por decisão do utilizador (REV-012). Aguarda revisão.
+- [ ] Limpeza com auditoria e limites IQR só no treino. Pendente: conflita com a decisão REV-012; confirmar se fica sem efeito.
+- [x] Codificação de rótulos (`target`, REV-009).
+- [ ] Lista final de features (`speed_calc_mps`, `signed_turn_calc_deg`, `time_gap_calc_s`, `distanceToShore`, e possivelmente x, y) por confirmar.
+- [x] Testes com dados sintéticos de construção e contagem (REV-016, REV-017). Pendentes: janelas, máscaras e alinhamento (ainda não existem no código).
 - [ ] Pedir revisão antes de avançar.
 
 ### Marco 3 a 7
@@ -298,3 +299,13 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Decidir se as inversões concentradas são erro ou comportamento real.
 - Revisão do Marco 2 pelo utilizador.
 - Commits das alterações desde 2f24970 ainda não feitos.
+
+### 2026-11-23s — Proposta: subsecção «Tratamento dos dados» (REV-018)
+
+**Feito**
+- `latex/proposta_pt.tex`: nova subsecção em Materiais e Dados. O parágrafo de REV-013 foi movido para lá, em cor REV-018 (azul-ardósia `#5C6BC0`).
+- Compila sem erros.
+
+**Pendente**
+- Confirmação do utilizador sobre o texto da subsecção.
+- Push de `2f24970` e `562e7ee`, por conta do utilizador.

@@ -29,6 +29,7 @@ Regras:
 | REV-015 | Turquesa | `#26A69A` | (38, 166, 154) |
 | REV-016 | Amarelo-torrado | `#F57F17` | (245, 127, 23) |
 | REV-017 | Rosa-choque | `#FF4081` | (255, 64, 129) |
+| REV-018 | Azul-ardósia | `#5C6BC0` | (92, 107, 192) |
 
 ## Revisões
 
@@ -330,3 +331,14 @@ Regras:
 - **Pendentes:**
   - Decidir se as inversões concentradas em poucas viagens são erro ou comportamento real (por exemplo, pesca em zigue-zague). Só contar não o distingue.
   - Revisão do Marco 2 pelo utilizador antes do Marco 3.
+
+### REV-018 — Subsecção «Tratamento dos dados» na proposta
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Azul-ardósia `#5C6BC0`, RGB (92, 107, 192).
+- **O quê:** `latex/proposta_pt.tex` ganha a subsecção «Tratamento dos dados», dentro de Materiais e Dados, antes de Avaliação. Descreve: manutenção das anomalias (REV-012 e REV-013); a função de recálculo por viagem (`time_gap`, `distance_gap`, `bearing`, `signed_turn`, velocidade em nós e `target`); o tratamento do primeiro ponto; a concordância com os valores originais acima de 99,99 % dos pares; a convergência de cerca de 1° no rumo; a distância à costa usada sem verificação; e a aplicação por conjunto com base no manifesto e testes sintéticos.
+- **Porquê:** pedido do utilizador: o texto sobre gaps (REV-013) pertence aos dados, e a proposta deve descrever o tratamento feito.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `REVISION_LOG.md`, `PROGRESS.md`.
+- **Correspondência no LaTeX:** **atualizado**. O parágrafo de REV-013 foi movido para esta subsecção, e o texto novo está em cor REV-018. O texto anterior de REV-013 fica no histórico do Git e no registo.
+- **Validação:** `pdflatex` sem erros. A cor azul-ardósia aparece no PDF (página com a subsecção).
+- **Pendentes:** confirmar com o utilizador o texto da subsecção antes de a considerar final.
