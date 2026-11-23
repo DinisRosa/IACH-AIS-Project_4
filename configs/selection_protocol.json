@@ -1,0 +1,19 @@
+{
+  "id": "selecao_baseline_v1",
+  "declarado_antes_de_abrir_o_test": true,
+  "conjunto": "test",
+  "autorizacao": "configs/authorizations/test_selection.json",
+  "candidatos": "checkpoints epoch_001.pt a epoch_300.pt de results/phase1_select/checkpoints (CNN 1D, 87 viagens de treino, seed 42, sem monitorizacao interna)",
+  "criterio_epoca": "menor perda por ponto (entropia cruzada binaria) sobre todos os pontos do conjunto test; empate: a menor epoca",
+  "criterio_limiar": "no checkpoint escolhido, o limiar da grelha 0,05 a 0,95 (passo 0,05) que maximiza a media dos F1 de navegacao e de pesca no conjunto test; empate: o mais proximo de 0,5",
+  "rondas": 1,
+  "regra_de_fronteira": "se a epoca escolhida for >= 291, regista-se que a rede possivelmente nao convergiu e NAO se prolonga o treino sem nova decisao do utilizador",
+  "metricas_reportadas": "por ponto: accuracy, precisao, sensibilidade, F1 e IoU por classe, matriz de confusao, curva da perda por epoca; sem metricas por segmento",
+  "proibido": [
+    "alterar criterios depois de ver resultados",
+    "segunda ronda no test",
+    "abrir o validation",
+    "escolher variantes pelo validation"
+  ],
+  "limiar_inicial": 0.5
+}

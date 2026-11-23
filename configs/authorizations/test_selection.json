@@ -1,0 +1,18 @@
+{
+  "id": "test_selection_2026-11-23",
+  "concedida_por": "utilizador (mensagem no chat, 2026-11-23)",
+  "conjuntos_autorizados": [
+    "test"
+  ],
+  "finalidade": "selecao",
+  "decisoes_cobertas": [
+    "numero de epocas (escolha de checkpoint)",
+    "limiar de classificacao"
+  ],
+  "protocolo": "configs/selection_protocol.json",
+  "max_rondas": 1,
+  "validation_autorizado": false,
+  "citacao_literal": "Concordo com tudo o que disseste. Quero que aciones vários subagentes e comeces a trabalhar autonomamente. No final de teres feito até à parte de medição por segmento, início do marco 5, podes parar.",
+  "contexto": "O plano aprovado (fases 1 a 5) inclui a fase 3: selecionar época e limiar no conjunto test, com critérios declarados antes. O conjunto validation continua fechado: só se abre no fim do projeto, uma só vez, com nova autorização.",
+  "nota": "Esta autorização cobre apenas uma ronda no conjunto test para estas duas decisões. Não cobre o validation nem uma segunda ronda."
+}
