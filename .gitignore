@@ -2,6 +2,8 @@
 data/
 data/123_fishing_trajs.csv
 *.csv
+# Manifesto da divisão por ID: versionado (decisão do utilizador, REV-006)
+!manifests/split_manifest_seed42.csv
 *.parquet
 *.xlsx
 

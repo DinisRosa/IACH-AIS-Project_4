@@ -18,7 +18,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Validação e teste: só o `id` e as contagens de linhas. Nenhum valor de validação ou teste foi lido ou analisado.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e não versionado (ver 2026-11-23b).
 - **Conjuntos de validação e teste:** bloqueados para desenvolvimento.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-005.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-006.
 
 ## Entradas do registo
 
@@ -217,3 +217,19 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 **Pendente**
 - Visualização em leitor de PDF com recarregamento automático: a escolha do leitor é do utilizador.
+
+### 2026-11-23g — Decisões do utilizador e autor do dataset (REV-006)
+
+**Decisões**
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera (versão entregue ao professor).
+- HMM e Wu et al. como baselines ficam fora por agora (tempo). O `AGENTS.md` mantém-se.
+- O manifesto `manifests/split_manifest_seed42.csv` é versionado (exceção no `.gitignore`).
+
+**Feito**
+- `kaggleAIS` em `latex/references.bib`: autor Song Wu, Zenodo DOI 10.5281/zenodo.7283281, CC BY 4.0, 2022. O Kaggle é espelho.
+
+**Validado**
+- `git check-ignore`: manifesto não ignorado. Recompilação com `bibtex` sem avisos de autor.
+
+**Pendente**
+- O ficheiro Zenodo chama-se `128_fishing_trajs.csv` (página diz 128 trajetórias). O local tem 123 IDs únicos, com tamanho semelhante (~169,6 MB). Confirmar.

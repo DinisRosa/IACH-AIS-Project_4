@@ -17,6 +17,7 @@ Regras:
 | REV-003 | Verde | `#2E7D32` | (46, 125, 50) |
 | REV-004 | Roxo | `#6A1B9A` | (106, 27, 154) |
 | REV-005 | Azul-petróleo | `#00838F` | (0, 131, 143) |
+| REV-006 | Castanho | `#6D4C41` | (109, 76, 65) |
 
 ## Revisões
 
@@ -123,3 +124,20 @@ Regras:
   - Decidir se o PDF IAHC deve ser atualizado (ainda diz 128 e divisão por navio).
   - Completar a entrada `kaggleAIS` em `references.bib`.
   - A proposta menciona HMM e Wu et al. como baselines. O `AGENTS.md` fixa o âmbito mínimo sem HMM nem Wu. Confirmar qual prevalece.
+
+### REV-006 — Decisões do utilizador: PDF IAHC intocado, baselines fora por agora, manifesto versionado, autor do dataset
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Castanho `#6D4C41`, RGB (109, 76, 65). Só marcador do registo.
+- **O quê:**
+  - `latex/proposta_IAHC_DINIS_ROSA.pdf`: **não alterar**. É a versão entregue ao professor.
+  - HMM e Wu et al. como baselines: **ficam de fora por agora** por falta de tempo. O `AGENTS.md` mantém-se como fonte fixa. Se houver tempo, retomam-se.
+  - `.gitignore`: o manifesto `manifests/split_manifest_seed42.csv` passa a ser versionado, com exceção explícita à regra `*.csv`.
+  - `latex/references.bib`, entrada `kaggleAIS`: autor corrigido. A fonte original é o Zenodo, com autor Song Wu (Université Libre de Bruxelles), DOI 10.5281/zenodo.7283281, licença CC BY 4.0, publicado em 2022-11-04. O Kaggle é um espelho (utilizador `thedevastator`). O ano 2026 anterior estava errado.
+- **Porquê:** pedido do utilizador.
+- **Ficheiros afetados:** `.gitignore`, `latex/references.bib`, `REVISION_LOG.md`, `PROGRESS.md`.
+- **Correspondência no LaTeX:** **atualizado** na bibliografia. O texto do `.tex` não muda com esta revisão. A referência de dados passa a `[Wu, 2022]`.
+- **Validação:** `git check-ignore` confirma que o manifesto não está ignorado. Recompilação com `bibtex` sem avisos de autor; a citação `[Wu, 2022]` resolve-se no PDF.
+- **Pendentes:**
+  - Discrepância de contagens do dataset: o ficheiro Zenodo chama-se `128_fishing_trajs.csv` e a página diz 128 trajetórias. O ficheiro local tem 123 IDs únicos e o mesmo tamanho (~169,6 MB). Confirmar se o ficheiro local é o mesmo e por que razão há 123 IDs.
+  - Baselines HMM e Wu et al.: decidir mais tarde.
