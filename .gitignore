@@ -8,6 +8,7 @@ data/123_fishing_trajs.csv
 # Ambientes virtuais e cache Python
 .venv/
 venv/
+iach-ais-venv-4/
 __pycache__/
 *.py[cod]
 .pytest_cache/

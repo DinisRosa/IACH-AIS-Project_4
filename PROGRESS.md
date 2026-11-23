@@ -17,13 +17,15 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Feito**
 - Leitura integral de `AGENTS.md`, `CLAUDE.md`, `README.md`, `.gitignore`, `docs/00` a `docs/03`, cabeçalhos de `docs/04` a `docs/06` e `latex/proposta_pt.tex`.
-- Criado o ambiente `.venv/` com `python3 -m venv` (Python 3.14.4, `/usr/bin/python3`). Python global não alterado.
-- Instaladas dependências mínimas no `.venv`: `numpy`, `pandas`, `pytest` e `torch` em CPU (`--index-url https://download.pytorch.org/whl/cpu`).
+- Criado o ambiente `iach-ais-venv-4/` com `python3 -m venv` (Python 3.14.4, `/usr/bin/python3`). Python global não alterado.
+- Instaladas dependências mínimas no `iach-ais-venv-4/` a partir do `requirements.txt`: `numpy`, `pandas`, `pytest` e `torch` em CPU (índice `https://download.pytorch.org/whl/cpu`).
+- Um primeiro ambiente chamado `.venv/` foi criado por engano, sem nome indicado pelo utilizador. Substituído por `iach-ais-venv-4/` e removido.
 - Criado `requirements.txt` com versões fixas.
 - Criado este `PROGRESS.md`.
 
 **Validado**
-- `.venv/bin/python --version` → Python 3.14.4.
+- `iach-ais-venv-4/bin/python --version` → Python 3.14.4.
+- Instalação limpa de `requirements.txt` na `iach-ais-venv-4/` concluída sem erros.
 - Importação de `numpy 2.5.5`, `pandas 3.1.1`, `torch 2.15.0+cpu`, `pytest 9.2.0`.
 - `torch.cuda.is_available()` → `False` (esperado: GPU integrada, começar em CPU).
 
@@ -32,19 +34,19 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - `requirements.txt` ainda não foi testado numa instalação limpa a partir do zero.
 
 **Problemas**
-- Nenhum. `.venv/` já estava coberto por `.gitignore` (linhas 9 e 10), por isso não foi alterado.
+- O `.gitignore` tinha `.venv/` e `venv/`, mas não cobria `iach-ais-venv-4/`. Acrescentada a linha `iach-ais-venv-4/`.
 
 **Decisões**
-- Ambiente em `.venv/` com venv+pip. Conda não usado (AGENTS.md §4).
+- Ambiente em `iach-ais-venv-4/` com venv+pip. Conda não usado (AGENTS.md §4). Nome indicado pelo utilizador, com `-4` no fim, em minúsculas.
 - Torch apenas em CPU, sem CUDA (AGENTS.md §4).
 - Versões fixas em `requirements.txt` para reprodutibilidade (AGENTS.md §4).
 
 ## Pendentes (por marco, segundo `docs/00_5`)
 
 ### Marco 1 — Ambiente, consolidação e divisão mínima
-- [x] Ambiente `.venv` criado.
+- [x] Ambiente `iach-ais-venv-4/` criado.
 - [x] Dependências mínimas instaladas e versões registadas.
-- [x] `requirements.txt` criado.
+- [x] `requirements.txt` criado e testado numa instalação limpa.
 - [x] `PROGRESS.md` criado.
 - [ ] Commit local destes ficheiros.
 - [ ] Criar `split_manifest` (id → split) com seed e proporções fixas (~70/15/15), lendo apenas a coluna `id`.
