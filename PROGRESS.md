@@ -3,26 +3,27 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-044)
+## Estado atual (REV-048)
 
 | Marco | Estado |
 |---|---|
 | 1 Ambiente, divisão por ID, isolamento | Fechado |
 | 2 Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
 | 3 CNN 1D de referência sobre a viagem completa | **Fechado por decisão do utilizador (REV-041)** |
-| 4 Janelamento com a mesma CNN (L = 64; 0 % e 50 %) | **Por começar**: só decisões e a ferramenta de medição por segmento |
-| 5 Pós-processamento | Por fazer; condicional ao Marco 4 |
+| 4 Janelamento com a mesma CNN (L = 64; 0 % e 50 %) | **Feito (REV-046, REV-047)**: J0 e J50 treinadas, selecionadas no `test` numa só abertura e congeladas; resultados no LaTeX (8.2 a 8.4) |
+| 5 Pós-processamento | Por fazer; só com decisão do utilizador (o Marco 4 não melhorou a exatidão por ponto; J50 reduz a fragmentação face a J0) |
 | 6 e 7 Congelar tudo e medição final no `validation` | Por fazer; precisam de autorização |
 
 - **Baseline (CNN de referência):** treinada só com o treino oficial (87 viagens, 300 épocas, um checkpoint por época). **Época 162 e limiar 0,65**, escolhidos no `test` numa só ronda e congelados em `results/baseline_frozen/` (REV-038). Números em `results/baseline_frozen/final_results.json` e, no LaTeX, em macros geradas (REV-040). Os resultados do `test` são otimistas (serviram a escolher) e a perda no `test` é ruidosa entre épocas.
-- **Conjuntos reservados:** o `test` foi aberto **uma só vez** (seleção), registado em `results/access_log.jsonl`; o `validation` **nunca foi aberto**. Validação e teste foram lidos por inteiro só para construir as bases limpas (REV-015).
+- **J0 e J50 (REV-046, REV-047):** a mesma CNN sobre janelas de 64 pontos, sem sobreposição (J0) e com 50 % (J50), 300 épocas, lote de 32 janelas. J0 em 9,8 min e 105 300 passos; J50 em 21,3 min e 208 800 passos. Escolhidas no `test` numa só abertura: **J0 época 8, limiar 0,60; J50 época 4, limiar 0,75** (a perda no `test` sobe com o treino). Exatidão por ponto no `test`: referência 94,7 %, J0 93,5 %, J50 93,8 %; J50 reduz a fragmentação face a J0 e à referência, mas o F1 de segmentos de pesca é baixo (cerca de 0,03) nas três. Congeladas em `results/windows_j0_frozen/` e `results/windows_j50_frozen/`; números em `results/windows_final/final_results_windows.json` (fonte única) e, no LaTeX, em macros geradas. Resultados otimistas (serviram a escolher).
+- **Conjuntos reservados:** o `test` foi aberto **duas vezes**, cada uma ao abrigo da sua autorização (baseline e janelas) e registada em `results/access_log.jsonl`; o `validation` **nunca foi aberto**. Validação e teste foram lidos por inteiro só para construir as bases limpas (REV-015).
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU), pacote `ais` instalado em modo editável (REV-034). Dependências em `requirements.txt`.
-- **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. Ainda não existe código de janelamento nem de pós-processamento.
-- **Testes:** 145 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
+- **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. O janelamento está em `windows.py`, `run_window_training`, `select_windows_on_test` e `build_window_results`; ainda não existe código de pós-processamento.
+- **Testes:** 181 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
-- **LaTeX:** `latex/proposta_pt.tex` compila (8 páginas); texto estável a preto e só o que pode mudar com a cor da revisão (REV-043).
-- **Git:** último push autorizado e feito: `1bc3d8c` (REV-044). Confirmar com `git status -sb` se há commits posteriores por enviar; cada push precisa de autorização explícita nova.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-045.
+- **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15). Texto estável a preto (REV-043); o novo (4.4, Secção 5 em partes, 7.1, Secção 6 e 8.2 a 8.4) tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C` e REV-048 `#1B5E20`.
+- **Git:** os commits locais de REV-046 a REV-048 (a partir de `9896021`) **não foram enviados**; o último estado em `origin/main` no início desta sessão era `696fed2`. Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-048.
 
 ## Decisões do utilizador (vigentes)
 
@@ -30,14 +31,15 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Dados (REV-012, REV-019, REV-011, REV-022):** limpeza IQR retirada; anomalias mantidas; `bearing` pela grelha UTM; `distanceToShore` aceite como correto; características `speed`, `signed_turn`, `time_gap` e `distanceToShore` (`x` e `y` fora); valores em falta a zero depois de normalizar, mais máscara.
 - **Baseline fechada (REV-041):** a CNN sobre a viagem completa fica como está (época 162, limiar 0,65); só volta na comparação com as janelas e na escolha final.
 - **Papéis dos conjuntos reservados (REV-036):** `test` seleciona; `validation` é a medição final, aberta uma só vez, no fim, com todas as variantes congeladas (REV-037).
-- **Marco 4 (REV-041):** mesma CNN sobre janelas, começando com L = 64 e sobreposição de 0 % (controlo) e 50 %; depois testar outros L; 25 % e 75 % para depois (REV-002). As métricas por segmento (sem suavizar) vêm primeiro.
+- **Marco 4 (REV-041, REV-046):** mesma CNN, mesmos valores da baseline (300 épocas, lr 1e-3, seed 42), sobre janelas de L = 64 com 0 % (J0) e 50 % (J50), lote de 32; a sobreposição é a mesma no treino e na inferência; a última janela fica mais curta (sem pontos falsos); os intervalos de tempo dentro de uma viagem não cortam a sequência; seleção no `test` numa só abertura com o critério da baseline; limite de 45 min por treino; se a época escolhida for ≥ 291 só se regista. **Ficam fora do projeto:** treinar com J0 e prever com J50, 25 % e 75 % de sobreposição, outros L (REV-002).
 - **Âmbito (REV-006, REV-042):** HMM e Wu et al. não são comparações (só literatura). Explicabilidade, calibração e *dashboard* fora do mínimo atual.
 - **LaTeX (REV-006, REV-043):** `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera; texto estável a preto, o que pode mudar mantém a cor. Manifesto da divisão versionado. Autor do dataset: Song Wu, Zenodo DOI 10.5281/zenodo.7283281 (CC BY 4.0); o Kaggle é espelho.
 
 ## Pendências abertas
 
-- **Antes do Marco 4:** se a sobreposição se aplica no treino, na inferência ou em ambos; orçamento de treino; usar o mesmo critério de seleção da baseline; autorização para medir a baseline por segmento no `test`.
-- **LaTeX (adiado pelo utilizador):** as quatro taxas de sobreposição e a ablação (7.1); explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); título com «OOI» e o texto a vermelho «human-on-the-loop»; Secção 6 no futuro; subsecções 5.3 a 5.6 e 6.1 por reler.
+- **Critério de seleção (decisão do utilizador):** a menor perda por ponto no `test` escolheu épocas muito cedo (4 e 8), porque a perda no `test` sobe com o treino; a baseline foi escolhida bem mais tarde (162). Mudar o critério (por exemplo, o F1) ou travar o treino mais cedo seria uma decisão metodológica nova, com novo protocolo e nova autorização, e obrigaria a repetir a baseline por igualdade. Por agora fica como está, registado como limitação.
+- **Marco 5 e Marcos 6 e 7:** o pós-processamento só avança se o utilizador o decidir; a medição final no `validation` precisa de autorização nova e de todas as variantes congeladas.
+- **LaTeX (adiado pelo utilizador):** explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); título com «OOI» e o texto a vermelho «human-on-the-loop»; subsecções 5.3 a 5.6 e 6.1 por reler pelo utilizador; a 7.1 ainda descreve a ablação completa (agora marcada como futura).
 - **Pós-processamento (Marco 5):** unidade, largura e bordas do filtro a aprovar, só se o Marco 4 mostrar benefício.
 - **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
 - **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
@@ -47,16 +49,17 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md`, `README.md`, `handoff.md` | Alinhados em REV-044; `AGENTS.md` §3 com os papéis dos conjuntos (REV-036) |
-| `docs/00` a `docs/03` | Fundidos em REV-033; atualizados em REV-036, REV-038, REV-041 e REV-044 |
+| `docs/00` a `docs/03` | Fundidos em REV-033; atualizados em REV-036, REV-038, REV-041, REV-044 e REV-046 (`docs/03` reescrito) |
 | `src/ais/phase1/`, `src/ais/cli/` | Código do projeto (REV-034 a REV-040) |
 | `pyproject.toml` | Pacote `ais` e configuração do pytest (REV-034) |
-| `tests/` | 145 testes |
-| `configs/` | `phase1_select.json` (baseline), `selection_protocol.json`, `authorizations/test_selection.json`; históricos `phase1_run1.json` e `phase1_final.json` |
+| `tests/` | 181 testes |
+| `configs/` | `phase1_select.json` (baseline), `selection_protocol.json`, `authorizations/test_selection.json`; `windows_j0.json`, `windows_j50.json`, `selection_protocol_windows.json`, `authorizations/test_selection_windows.json` (REV-046, REV-047); históricos `phase1_run1.json` e `phase1_final.json` |
 | `manifests/split_manifest_seed42.csv` | Gerado; **versionado** (REV-006) |
-| `latex/proposta_pt.tex`, `latex/references.bib`, `latex/figures/`, `latex/generated/resultados.tex` | Proposta; macros e figuras geradas por `build_final_results` |
+| `latex/proposta_pt.tex`, `latex/references.bib`, `latex/figures/`, `latex/generated/resultados.tex`, `latex/generated/resultados_janelas.tex` | Proposta; macros e figuras geradas por `build_final_results` e `build_window_results` |
 | `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** |
 | `data/`, `results/`, `latex/build/` | Gerados; não versionados |
 | `results/baseline_frozen/`, `results/phase1_select/`, `results/access_log.jsonl` | Baseline, seleção e registo de acessos (REV-038) |
+| `results/windows_j0/`, `results/windows_j50/`, `results/windows_j0_frozen/`, `results/windows_j50_frozen/`, `results/windows_final/` | Treinos (checkpoints por época, histórico), seleção, congelações e `final_results_windows.json` (REV-046, REV-047) |
 
 ## Entradas do registo
 
@@ -776,3 +779,24 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Pendências abertas do topo deste ficheiro; push dos commits de REV-045, por autorização.
+
+### 2026-11-23bc — Janelamento: J0 e J50 treinadas, selecionadas e na proposta (REV-046, REV-047, REV-048), 2026-11-23 23:34 WET
+
+**Feito**
+- Respostas do utilizador às dúvidas do Marco 4 registadas (mesma sobreposição no treino e na inferência; mesmos valores da baseline; última janela mais curta; lote de 32; 45 min por treino; uma abertura do `test`; `validation` fechado; fora do projeto: 25 %, 75 %, outros L e treinar com J0 e prever com J50).
+- `windows.py` e `FullTripCNN.forward` com máscara; programas de treino, de seleção e de resultados; configurações, protocolo e autorização novos. Treino de J0 (9,8 min) e de J50 (21,3 min), ambos completos.
+- **Uma só abertura do `test`** (23:28:19 WET): épocas e limiares escolhidos (J0 época 8, limiar 0,60; J50 época 4, limiar 0,75); baseline, J0 e J50 medidas por ponto e por segmento; J0 e J50 congeladas.
+- Resultados, macros e figuras gerados por código; LaTeX com as secções 8.2, 8.3 e 8.4, e 4.4, Secção 5, 7.1 e Secção 6 atualizadas. `docs/03` reescrito, `README.md`, `docs/00` e `docs/02` alinhados.
+- Commits locais por tema (código, seleção, LaTeX e documentos); **nada enviado**.
+
+**Validado**
+- 181 testes sintéticos passaram; seleção testada de ponta a ponta com dados sintéticos antes de abrir o `test` real. Revisão independente (Opus, só leitura) sem erros graves. Proveniência confirmada no `final_results_windows.json`: `test` aberto duas vezes (uma por autorização), `validation` nunca aberto, hashes coerentes.
+- `pdflatex` + `bibtex`: 11 páginas, 0 erros, 0 referências indefinidas.
+
+**Resultados e limitações**
+- J0 e J50 não superam a referência por ponto no `test` (93,5 % e 93,8 % contra 94,7 %); J50 reduz a fragmentação face a J0 e à referência, mas a segmentação continua muito fragmentada e o F1 de segmentos de pesca é baixo nas três. Os erros de fronteira na pesca não mostram padrão (5 ou 6 pares). Reportado como saiu, sem repetir nem ajustar.
+- As épocas escolhidas (4 e 8) são muito cedo: a perda no `test` sobe com o treino. O critério fixado antes é o da baseline e não foi alterado. Lote e passos diferem da baseline; J50 faz o dobro dos passos de J0. Uma semente, 18 viagens de teste, resultados otimistas.
+- Duas das cores escolhidas primeiro já pertenciam a REV-007 e REV-011 e foram trocadas antes do commit com cor.
+
+**Pendente**
+- Decisão do utilizador: manter o critério de seleção ou mudar (novo protocolo e autorização); Marco 5 (só com decisão); Marcos 6 e 7 (autorização). Passagens adiadas do LaTeX (explicabilidade, calibração e *dashboard*, título «OOI», «human-on-the-loop»). Push dos commits locais, por autorização do utilizador.

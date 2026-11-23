@@ -769,3 +769,49 @@ Regras:
 - **Validação:** `pytest tests/` → 145 passaram e `pdflatex` + `bibtex` → 8 páginas, 0 erros, às 19:41 WET (as horas da tabela são as medidas nessas execuções); horas da baseline, da congelação e da seleção lidas dos ficheiros de resultados e do `access_log`.
 - **Limitações:** a tabela fica desatualizada assim que algo mudar; o handoff diz-o. As horas anteriores a esta revisão não foram registadas nos documentos, por isso a cronologia só cobre os commits.
 - **Pendentes:** nenhum.
+
+### REV-046 — Janelamento implementado, J0 e J50 treinadas
+
+- **Data:** 2026-11-23, até às 23:34 WET (código e testes até às 23:08; treinos 22:58–23:28; commits `9896021`, `2d0ca50`, `5abf3ff`).
+- **Cor:** Azul-céu `#00B0FF`, RGB (0, 176, 255). (`#E65100` e `#AD1457`, escolhidas primeiro, já eram as de REV-011 e REV-007 e foram trocadas antes de qualquer commit com cor. A paleta está cheia: o ID é a referência permanente.)
+- **O quê:**
+  - `src/ais/phase1/windows.py`: passo, inícios das janelas, `WindowSet` (extração sob pedido, cobertura, tabela janela↔ponto), perda mascarada, época de treino, inferência e reconstrução por média das probabilidades. `FullTripCNN.forward` aceita uma máscara opcional (sem ela, a baseline não muda).
+  - `src/ais/cli/run_window_training.py` e `configs/windows_j0.json` (0 %) e `configs/windows_j50.json` (50 %): mesma CNN, seed 42, Adam lr 1e-3, 300 épocas, um checkpoint por época, lote de 32 janelas, L = 64, normalizador igual ao da baseline (verificado), 45 minutos de limite.
+  - Treinos: J0 em 9,8 min (11 201 janelas, 351 passos por época, 105 300 passos) e J50 em 21,3 min (22 265 janelas, 696 passos por época, 208 800 passos), ambos completos.
+  - Decisões do utilizador registadas: a mesma sobreposição no treino e na inferência; mesmos valores da baseline (sem aumentar épocas); a última janela fica mais curta, sem pontos falsos; os intervalos de tempo dentro de uma viagem não cortam a sequência (como na baseline); lote de 32 igual nas duas variantes; ficam fora do projeto treinar com J0 e prever com J50, as sobreposições de 25 % e 75 % e outros L.
+  - `docs/03` reescrito com as decisões e os contratos tal como implementados.
+- **Porquê:** Marco 4 (RQ1), a pedido do utilizador.
+- **Ficheiros afetados:** `src/ais/phase1/windows.py`, `src/ais/phase1/model.py`, `src/ais/cli/run_window_training.py`, `configs/windows_j0.json`, `configs/windows_j50.json`, `tests/test_windows.py`, `docs/03_cnn_janelamento.md`.
+- **Correspondência no LaTeX:** **atualizado** (4.4, entrada e saída, perda, otimizador e reprodutibilidade da Secção 5), com a cor desta revisão.
+- **Validação:** 31 testes sintéticos de janelas (equivalência do lote com enchimento e da janela isolada, cobertura, reconstrução com valores conhecidos, perda mascarada, reprodutibilidade); suite completa: 181 passaram. Revisão independente (subagente Opus, só leitura) sem erros graves; as melhorias que sugeriu foram aplicadas depois do arranque do J50, sem efeito numérico (o enchimento do lote já era zero).
+- **Limitações:** J50 faz cerca do dobro dos passos de J0 no mesmo número de épocas; o lote (32 janelas) difere do da baseline (uma viagem por passo); uma só semente; os checkpoints não guardam o otimizador. O `docs/03` ainda cita, como no desenho inicial, módulos que foram agrupados em `windows.py`.
+- **Pendentes:** os de REV-047 e REV-048.
+
+### REV-047 — Seleção de J0 e J50 no `test`, resultados e secções 8.2 a 8.4
+
+- **Data:** 2026-11-23, 23:28 a 23:34 WET (abertura do `test` às 23:28:19 WET; `selection_done` às 23:29:54; commit `867f8d8`).
+- **Cor:** Violeta escuro `#4A148C`, RGB (74, 20, 140). (`#AD1457` foi trocada por já ser a de REV-007.)
+- **O quê:**
+  - Autorização nova `configs/authorizations/test_selection_windows.json` (uma abertura do `test`) e protocolo novo `configs/selection_protocol_windows.json` (`selecao_janelas_v1`), declarados antes de abrir. Os ficheiros da baseline não se alteraram.
+  - `src/ais/cli/select_windows_on_test.py`: **uma só abertura** avaliou as 600 épocas candidatas, escolheu época e limiar de J0 e de J50, mediu por ponto e por segmento (IoU 0,5, sem suavizar) a baseline congelada, J0 e J50, e congelou J0 e J50 (`results/windows_j0_frozen`, `results/windows_j50_frozen`). Os critérios são os da baseline, aplicados às probabilidades reconstruídas.
+  - Resultado: **J0 época 8, limiar 0,60; J50 época 4, limiar 0,75.** Exatidão por ponto no `test`: referência 94,7 %, J0 93,5 %, J50 93,8 % (regra da classe maioritária: 61,2 %); J0 supera a referência em 7 das 18 viagens e J50 em 5. Por segmento, a pesca tem 18 segmentos reais e 358, 377 e 303 previstos (referência, J0, J50), com F1 de segmentos de cerca de 0,03 nas três; a razão de fragmentação na pesca é 19,9, 20,9 e 16,8, e na navegação 10,4, 11,0 e 8,8. A perda no `test` sobe com as épocas (máximos de 0,79 e 0,93 desde a época 100), o que é compatível com ajuste excessivo e explica as épocas escolhidas.
+  - `src/ais/cli/build_window_results.py`: `results/windows_final/final_results_windows.json`, `latex/generated/resultados_janelas.tex` e 7 figuras `latex/figures/janelas_*.png`. `build_final_results` passou a contar a abertura do `test` por autorização.
+  - Secções 8.2 (J0), 8.3 (J50) e nova 8.4 (comparação e resposta à RQ1).
+- **Porquê:** pedido do utilizador: treinar J0 e J50, fechá-las, medi-las no `test` e apresentar os resultados como os da referência.
+- **Ficheiros afetados:** `configs/selection_protocol_windows.json`, `configs/authorizations/test_selection_windows.json`, `src/ais/cli/select_windows_on_test.py`, `src/ais/cli/build_window_results.py`, `src/ais/cli/build_final_results.py`, `src/ais/cli/freeze_baseline.py` (parâmetro `label`), `tests/test_select_windows.py`, `latex/proposta_pt.tex`, `latex/generated/resultados_janelas.tex`, `latex/figures/janelas_*.png`.
+- **Correspondência no LaTeX:** **atualizado**; `pdflatex` + `bibtex` sem erros, 11 páginas (limite de 15), 0 referências indefinidas, páginas 9 e 10 inspecionadas; 2 caixas largas que já existiam.
+- **Validação:** 5 testes sintéticos de ponta a ponta da seleção (uma só abertura, segunda recusada, bloqueio antes de abrir se o treino estiver incompleto, faltarem checkpoints ou a baseline não conferir). Verificações de proveniência no `final_results_windows.json`: `test` aberto uma vez por autorização (duas no total), `validation` nunca aberto, hashes dos checkpoints e das seleções coincidem, normalizador igual ao da baseline. As previsões da baseline recalculadas na abertura coincidem com as da seleção anterior.
+- **Limitações:** os resultados do `test` são **otimistas** (serviram a escolher, para as três variantes, com o mesmo critério). As épocas escolhidas são muito cedo e a baseline foi escolhida bem mais tarde: parte da diferença pode vir do critério e não do janelamento. Lote e passos diferem. Uma semente e 18 viagens. O F1 de segmentos de pesca é baixo por a segmentação estar muito fragmentada e por cada viagem ter em geral um só segmento de pesca. O `test` foi aberto mais uma vez (duas aberturas no total): fica registado em `results/access_log.jsonl`.
+- **Pendentes:** decisão do utilizador sobre o critério de seleção (ver `PROGRESS.md`); Marco 5; Marcos 6 e 7.
+
+### REV-048 — Restante texto do LaTeX atualizado ao estado real
+
+- **Data:** 2026-11-23, 23:30 a 23:34 WET (commit `867f8d8`).
+- **Cor:** Verde-floresta `#1B5E20`, RGB (27, 94, 32). (`#827717`, escolhida primeiro, era demasiado próxima de `#808000`, a de REV-013.)
+- **O quê:** Secção 6 passa ao presente («Usa-se»); 7.1 passa a dizer o que se mediu (referência, J0 e J50 por ponto e por segmento) e que o estudo de ablação e as taxas de 25 % e 75 % ficam por fazer, só avançando se o janelamento mostrar benefício.
+- **Porquê:** pedido do utilizador para atualizar o resto do LaTeX no que fizesse sentido.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** compilação (ver REV-047).
+- **Limitações:** **não** alterei o que o utilizador adiou ou que muda o âmbito (explicabilidade, calibração e *dashboard* no resumo, objetivo 5, 4.6 e 7.3; título com «OOI»; texto a vermelho «human-on-the-loop»). O texto a preto de REV-043 que descreve a referência manteve-se.
+- **Pendentes:** as passagens adiadas acima.

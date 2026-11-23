@@ -43,7 +43,7 @@ O âmbito mínimo atual só responde a RQ1. Um resultado sem melhoria também é
 | 1 | Ambiente, divisão por ID, isolamento | Fechado |
 | 2 | Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
 | 3 | CNN 1D de referência sobre a viagem completa | **Fechado (REV-041)**: baseline definida por decisão do utilizador (época 162, limiar 0,65, escolhidos no `test` numa ronda). Não se altera; só volta a ser usada na comparação com as janelas |
-| 4 | Janelamento com sobreposição e a mesma CNN | **Por começar**: só há decisões (REV-041): a mesma CNN de referência, começando com L = 64 pontos e sobreposição de 0 % (controlo) e 50 %; depois testar se aumentar ou diminuir L compensa. **Começa pelas métricas por segmento** (ferramenta já feita, REV-039) aplicadas à baseline, que precisam de autorização por usarem o `test` (REV-037) |
+| 4 | Janelamento com sobreposição e a mesma CNN | **Feito (REV-046, REV-047)**: J0 (0 %) e J50 (50 %), L = 64, mesma CNN e mesmos valores da baseline, lote de 32; sobreposição igual no treino e na inferência; escolhidas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Fora do projeto: 25 %, 75 % e outros L. Resultados em `results/windows_final/final_results_windows.json` |
 | 5 | Pós-processamento simples, em ramo separado | Por fazer; só avança se o Marco 4 mostrar benefício da sobreposição; precisa de aprovação da unidade/largura do filtro e do protocolo |
 | 6 | Congelar todas as variantes (baseline, janelas e, se existir, pós-processamento) | Por fazer |
 | 7 | Medição final única no conjunto `validation`, com todas as variantes de uma vez | Por fazer; nova autorização do utilizador |

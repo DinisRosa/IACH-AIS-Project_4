@@ -81,7 +81,7 @@ Todos com dados sintéticos ou treino; um teste lê 3 viagens reais do treino.
 
 - **Feitos** (`tests/`): comprimentos diferentes mantêm N saídas; nada se mistura entre viagens; alinhamento de `point_id` e tempo; perda finita, gradientes e passo de otimização; carregador de desenvolvimento rejeita IDs e ficheiros reservados; checkpoint recarregado reproduz as previsões; ciclo de treino com paragem antecipada; ausência de dupla sigmoide.
 - **Feitos depois (REV-038, REV-039):** acesso reservado (autorização, protocolo, uma só ronda, `validation` recusado), critérios de seleção, congelação, extração de segmentos e métricas por segmento com valores calculados à mão, e navios partilhados. Conferido ainda por uma reimplementação independente sobre as previsões do treino.
-- **Por fazer:** testes automáticos dos programas de treino e de figuras, e a medição por segmento sobre a baseline congelada (precisa de autorização, por usar o `test`).
+- **Por fazer:** testes automáticos dos programas de treino e de figuras, e a medição por segmento sobre a baseline congelada, feita depois no Marco 4 com autorização (REV-047).
 
 ## 6. Estado do Marco 3: fechado
 
@@ -89,7 +89,7 @@ Todos com dados sintéticos ou treino; um teste lê 3 viagens reais do treino.
 
 **Limitação registada:** a perda no `test` é muito ruidosa de época para época e a época escolhida é um mínimo estreito; a seleção pode ter seguido parte desse ruído, e as métricas do `test` são otimistas por terem servido a escolher.
 
-**Seguinte:** Marco 4 (`03`), com métricas por segmento sobre a baseline (precisam de autorização, por usarem o `test`); a medição final única no `validation` fica para o fim; ver `00` §6.
+**Seguinte (REV-046, REV-047):** o Marco 4 (`03`) foi executado, e a baseline foi medida por segmento no `test` na mesma abertura que selecionou J0 e J50 (`results/baseline_frozen/test_segment_results.json`); a medição final única no `validation` fica para o fim; ver `00` §6.
 
 ## 7. Critérios de aceitação
 
