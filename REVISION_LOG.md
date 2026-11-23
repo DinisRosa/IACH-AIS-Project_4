@@ -15,6 +15,7 @@ Regras:
 | REV-001 | Vermelho | `#C62828` | (198, 40, 40) |
 | REV-002 | Azul | `#1565C0` | (21, 101, 192) |
 | REV-003 | Verde | `#2E7D32` | (46, 125, 50) |
+| REV-004 | Roxo | `#6A1B9A` | (106, 27, 154) |
 
 ## Revisões
 
@@ -34,7 +35,7 @@ Regras:
   - Manifesto: 123 IDs (87 treino, 18 validação, 18 teste). Cada ID num só conjunto; cobertura completa; soma das linhas = 1 026 279.
   - Reexecução do script dá o mesmo SHA-256 (`d56918bc65f9bebc6aa0a01a1e82213fda2404a9dfab9f39b3a1858c52733539`).
 - **Pendentes:**
-  - Explicar a diferença entre 128 viagens na proposta e 123 IDs no ficheiro.
+  - Diferença 128 (documentos) vs 123 (ficheiro e LaTeX): documentos corrigidos em REV-004. Por fechar no PDF da proposta, se o PDF ainda disser 128.
   - Decidir se o manifesto deve ser versionado.
 
 ### REV-002 — Decisões de âmbito: overlaps prioritários e fuso horário ignorado
@@ -79,3 +80,22 @@ Regras:
   - Quantificar e tratar as anomalias no marco 2 (limpeza).
   - `distanceToShore`: unidade não confirmada. Metros é a hipótese mais plausível.
   - CRS exato de x/y e de longitude/latitude.
+
+### REV-004 — Coerência documental após REV-001 a REV-003
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Roxo `#6A1B9A`, RGB (106, 27, 154).
+- **O quê:** alinhamento de todos os Markdown com o estado real do projeto.
+  - `PROGRESS.md`: reescrito com estado atual, artefactos e pendentes. Removido "REVISION_LOG por criar".
+  - `AGENTS.md`: exemplos de ambiente trocados de `.venv` para `iach-ais-venv-4`; referência à seed 42 e ao manifesto; referência ao `latex/proposta_pt.tex` existente.
+  - `README.md`: estrutura completa (scripts, manifests, requirements, REVISION_LOG, PROGRESS, results).
+  - `docs/00`: número de viagens corrigido (123 IDs no ficheiro); tabela de unidades atualizada com os resultados de REV-003; dúvidas atualizadas.
+  - `docs/00_5`: estado do código atualizado (executado sobre treino; modelos ainda não).
+  - `docs/01`: regra de arredondamento definida (REV-001).
+- **Porquê:** a documentação tinha afirmações que já não correspondiam ao estado do projeto, como "ainda não existe" e "hipótese" para unidades já verificadas.
+- **Ficheiros afetados:** `PROGRESS.md`, `REVISION_LOG.md`, `AGENTS.md`, `README.md`, `docs/00_contexto_projeto_dicionario_dados.md`, `docs/00_5_orientacoes_execucao_decisoes.md`, `docs/01_preparacao_comum.md`.
+- **Correspondência no LaTeX (`latex/proposta_pt.tex`):** **pendente**. O ficheiro não foi alterado. Há contagens diferentes (86/19/18 vs 87/18/18), descrições de implementações que não existem e uma lista de características diferente. Ver `PROGRESS.md`, secção "Inconsistências do LaTeX".
+- **Validação:** pesquisa por texto desatualizado (`.venv`, "ainda por criar", "128", "70/15/15", "hipótese" nas unidades) em todos os MDs, e revisão dos resultados.
+- **Pendentes:**
+  - Decidir como tratar o LaTeX (rever ou manter a versão atual).
+  - Esclarecer a discrepância 86/19/18 vs 87/18/18.

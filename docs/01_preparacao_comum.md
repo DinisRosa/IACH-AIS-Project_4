@@ -42,7 +42,7 @@ Não executar study_csv no dataset completo. Não mostrar exemplos, estatística
 - Todas as linhas, sequências e futuras janelas do mesmo ID ficam no mesmo conjunto.
 - [REV-001 | cor #C62828] Proporções **confirmadas pelo utilizador**: 70% dos IDs para treino, 15% para validação e 15% para teste.
 - [REV-001 | cor #C62828] Semente **confirmada pelo utilizador**: `42`.
-- Regra de arredondamento do número de IDs por conjunto: a definir antes de gerar o manifesto e registada nele.
+- [REV-001 | cor #C62828] Regra de arredondamento do número de IDs por conjunto: validação e teste arredondados ao inteiro mais próximo; treino recebe o resto. Registada em `scripts/create_split_manifest.py`.
 - A semente e as proporções ficam fixadas antes de analisar os resultados.
 - Guardar a tabela id → split e reutilizá-la em todas as fases e experiências.
 - Não refazer a divisão porque um resultado não agradou ou porque um conjunto ficou mais difícil.

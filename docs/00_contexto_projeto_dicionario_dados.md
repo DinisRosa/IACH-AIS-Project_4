@@ -15,7 +15,7 @@ As unidades não documentadas são apresentadas como hipóteses, nunca como fact
 - Problema: identificar intervalos de pesca e navegação em trajetórias AIS anotadas.
 - Tipo de tarefa: segmentação temporal binária supervisionada, com uma previsão por ponto e posterior agrupamento em segmentos.
 - Entidade operacional: viagem identificada pelo id completo, por exemplo 211477000-2.
-- Dataset descrito: 128 viagens e cerca de 1,03 milhões de pontos; contagens provenientes da proposta, ainda não verificadas no ficheiro completo.
+- Dataset: **123 IDs únicos** e **1 026 279 linhas**, verificados no ficheiro (REV-001). A proposta PDF citada aqui refere 128 viagens; o `latex/proposta_pt.tex` refere 123, em linha com o ficheiro. Ver `PROGRESS.md` sobre o LaTeX.
 - Esquema observado: 13 colunas no total, incluindo label; portanto, 12 colunas além do rótulo, não 13 mais o rótulo.
 - Implementação: Python; KNIME pode servir como orquestrador dos componentes e nós Python Script.
 - Modelo atual: CNN 1D totalmente convolucional que devolve uma probabilidade por ponto.
@@ -82,14 +82,14 @@ Nota de leitura: um CSV armazena texto; os tipos abaixo são os tipos lógicos r
 | t | datetime após conversão de string | Data e hora do ponto | Formato observado YYYY-MM-DD HH:MM:SS; resolução aparente de segundos; fuso não especificado | 2021-11-14 15:00:10 | Ordenação, intervalos e alinhamento; não usar como valor absoluto na configuração inicial |
 | longitude | float64 | Longitude geográfica | Graus decimais; datum/CRS a confirmar | 12.31017 | Mapa e verificação geográfica |
 | latitude | float64 | Latitude geográfica | Graus decimais; datum/CRS a confirmar | 56.127777 | Mapa e verificação geográfica |
-| x | float64 | Coordenada X de outra representação da posição | Hipótese: coordenada projetada com unidade linear; CRS e unidade não confirmados | 705723.070725276 | Guardar; distância euclidiana só com referencial conhecido |
-| y | float64 | Coordenada Y da mesma representação de x | Mesma incerteza de x; não inferir EPSG/UTM apenas pelos valores | 6225237.28619866 | Guardar; usar em conjunto com x após confirmação |
-| signed_turn | float64 | Mudança angular com sinal, associada ao movimento | Provavelmente graus; unidade, convenção de sinal, pontos usados e alinhamento a confirmar | -1.234665653 | Feature inicial proposta; pode ser negativa |
-| bearing | float64 | Direção/azimute do deslocamento | Provavelmente graus com volta de 360; origem angular, sentido e cálculo a confirmar | 309.501333116 | Feature opcional; não confundir com mudança de direção |
-| time_gap | float64, mesmo que haja valores inteiros | Intervalo temporal entre pontos, segundo a definição original | Hipótese forte: segundos; confirmar no treino pelo t atual menos anterior | 4 | Preservar original e comparar com recálculo |
-| distance_gap | float64 | Distância associada a um intervalo entre pontos | Hipótese: metros; método e associação ao ponto anterior/seguinte a confirmar | 2.979796558 | Calcular velocidade apenas após confirmar unidade e alinhamento |
-| euc_speed | float64 | Velocidade calculada segundo a definição original | Hipótese forte para a linha fornecida: nós; confirmar em vários pontos de treino | 1.448065282 | Comparação com velocidade recalculada |
-| distanceToShore | float64 | Distância à costa | Unidade e método não confirmados; metros, quilómetros ou milhas náuticas não devem ser assumidos pelo valor | 6.726539723 | Feature inicial proposta; preservar nome original na leitura |
+| x | float64 | Coordenada X de outra representação da posição | Metros num referencial plano (verificado no treino, REV-003); CRS exato por confirmar | 705723.070725276 | Guardar; distância euclidiana só com referencial conhecido |
+| y | float64 | Coordenada Y da mesma representação de x | Mesma unidade de x (verificado, REV-003); CRS exato por confirmar; não inferir EPSG/UTM apenas pelos valores | 6225237.28619866 | Guardar; usar em conjunto com x após confirmação |
+| signed_turn | float64 | Mudança angular com sinal, associada ao movimento | Graus; diferença de bearing entre pontos consecutivos, normalizada para (-180, 180] (verificado, REV-003); anomalias por quantificar | -1.234665653 | Feature inicial proposta; pode ser negativa |
+| bearing | float64 | Direção/azimute do deslocamento | Graus a partir do norte; azimute inicial do ponto anterior para o atual (verificado, REV-003) | 309.501333116 | Feature opcional; não confundir com mudança de direção |
+| time_gap | float64, mesmo que haja valores inteiros | Intervalo temporal entre pontos, segundo a definição original | Segundos; igual à diferença de t entre pontos consecutivos (verificado, REV-003); anomalia com razão 1/3 por quantificar | 4 | Preservar original e comparar com recálculo |
+| distance_gap | float64 | Distância associada a um intervalo entre pontos | Metros (verificado, REV-003); coincide com a distância plana entre pontos consecutivos | 2.979796558 | Calcular velocidade apenas após confirmar unidade e alinhamento |
+| euc_speed | float64 | Velocidade calculada segundo a definição original | Nós: euc_speed = (distance_gap / time_gap) × 1,94384 (verificado, REV-003) | 1.448065282 | Comparação com velocidade recalculada |
+| distanceToShore | float64 | Distância à costa | Unidade não confirmada. Não é quilómetros (o máximo no treino excederia o semieixo da Terra); metros é a hipótese mais plausível, sem referência externa | 6.726539723 | Feature inicial proposta; preservar nome original na leitura |
 | label | string categórica | Anotação original do estado nesse ponto da viagem | Cinco categorias descritas na proposta; sem unidade | 01-sailing | Resposta supervisionada; nunca entrada preditiva |
 
 ### Notas sobre tipos
@@ -134,7 +134,7 @@ Na linha fornecida:
 2.979796558 / 4 ≈ 0.74494914
 0.74494914 * 1.94384449 ≈ 1.44807
 ```
-Isto é compatível com distance_gap em metros, time_gap em segundos e euc_speed em nós, mas não prova a definição global nem a fórmula da distância. Verificar apenas no treino.
+Isto é compatível com distance_gap em metros, time_gap em segundos e euc_speed em nós, mas não prova a definição global nem a fórmula da distância. [REV-003 | cor #2E7D32] Verificado no treino: distance_gap em metros e euc_speed em nós (ver §18).
 
 Após excluir pontos, recalcular as características dependentes do predecessor. Não dividir uma distância original ligada ao predecessor antigo pelo intervalo até um novo predecessor.
 
@@ -170,7 +170,7 @@ signed_turn
 time_gap_calc_s
 distanceToShore
 ```
-Esta é uma seleção inicial de trabalho, não uma conclusão científica sobre a inutilidade das restantes colunas. As unidades e ausências devem estar resolvidas/documentadas antes do treino; distanceToShore e signed_turn não devem receber rótulos de unidade ainda não confirmados.
+Esta é uma seleção inicial de trabalho, não uma conclusão científica sobre a inutilidade das restantes colunas. As unidades e ausências devem estar resolvidas/documentadas antes do treino; distanceToShore não deve receber rótulo de unidade ainda não confirmado. signed_turn já tem unidade verificada (graus, REV-003).
 
 ID, target, label, timestamps absolutos e identificadores auxiliares não são features. Coordenadas e bearing ficam preservados para estudos posteriores, sem inclusão automática.
 
@@ -228,11 +228,11 @@ O sistema deve permitir revisão humana, assinalar lacunas e limitações e não
 Em caso de contradição, aplicar as decisões mais recentes do utilizador e a política restritiva de acesso. Não implementar a divisão antiga por navio do PDF. Não antecipar acesso reservado porque um workflow antigo menciona validação/teste.
 
 ## 18. Lista de dúvidas a resolver apenas com treino ou documentação
-- CRS de longitude/latitude e de x/y; unidades de x/y.
-- Unidade e definição exata de distance_gap.
-- Unidade de distanceToShore e método de obtenção.
-- Unidade, sinal e alinhamento temporal de signed_turn e bearing.
-- Confirmar a hipótese de euc_speed em nós.
+- CRS de longitude/latitude e de x/y. (Unidades de x/y verificadas em metros, REV-003.)
+- Definição exata de distance_gap. (Unidade verificada em metros, REV-003.)
+- Unidade e método de obtenção de distanceToShore. (Por confirmar.)
+- Alinhamento temporal de signed_turn e bearing. (Unidades e convenção verificadas, REV-003.)
+- Hipótese de euc_speed em nós: verificada (REV-003).
 - Tratamento dos primeiros pontos, lacunas e valores ausentes.
 - Proveniência das anotações e convenções dos intervalos.
 

@@ -23,7 +23,7 @@ As funções especificadas nos documentos são contratos orientadores, não obri
 - Investigar dúvidas resolúveis com ambiente, documentação e treino; perguntar quando faltar evidência ou houver escolha relevante. Juntar perguntas relacionadas sem bloquear tarefas independentes.
 
 ## 3. Dados: regras obrigatórias
-- Há um dataset, dividido aproximadamente 70/15/15 pelos IDs completos das viagens, com seed fixa e manifesto persistido.
+- Há um dataset, dividido 70/15/15 pelos IDs completos das viagens, com seed 42 (confirmada pelo utilizador) e manifesto persistido em `manifests/split_manifest_seed42.csv`, gerado por `scripts/create_split_manifest.py`.
 - Todas as linhas, sequências e janelas de um ID pertencem ao mesmo conjunto. Viagens diferentes do mesmo navio podem ficar em conjuntos diferentes por decisão do utilizador.
 - Não afirmar generalização para navios inéditos: a divisão é por viagem.
 - Dividir no início, antes da exploração, usando apenas leitura técnica mínima de IDs/encaminhamento e verificações estruturais.
@@ -42,16 +42,18 @@ Hardware informado: Intel Core i7 de 12.ª geração, 16 GB de RAM e GPU integra
 
 Verificar SO, Python e ambientes existentes. Conda não é requisito. Se não estiver instalado, NÃO instalar por iniciativa própria: usar normalmente venv/pip sem alterar Python global. Se Conda existir, não migrar automaticamente.
 
+Nome do ambiente do projeto: `iach-ais-venv-4` (indicado pelo utilizador). Está na raiz do projeto e fica ignorado pelo git.
+
 Exemplos a explicar e adaptar antes de executar:
 ```sh
 python --version
-python -m venv .venv
+python -m venv iach-ais-venv-4
 # Linux/macOS, após rever requirements.txt:
-.venv/bin/python -m pip install -r requirements.txt
+iach-ais-venv-4/bin/python -m pip install -r requirements.txt
 # Windows, após rever requirements.txt:
-.venv\Scripts\python.exe -m pip install -r requirements.txt
+iach-ais-venv-4\Scripts\python.exe -m pip install -r requirements.txt
 ```
-No Windows pode ser necessário `py -m venv .venv`. Se falhar, diagnosticar antes de instalar ferramentas no sistema.
+No Windows pode ser necessário `py -m venv iach-ais-venv-4`. Se falhar, diagnosticar antes de instalar ferramentas no sistema.
 
 Manter dependências mínimas e versões registadas. Não materializar todas as janelas em RAM sem necessidade; preferir extração sob pedido e agregação incremental. Evitar buscas extensas e treinos simultâneos sem orçamento.
 
@@ -105,7 +107,7 @@ Pode verificar branch/upstream/remoto por comandos de leitura e indicar ao utili
 
 Não reescrever histórico, executar reset destrutivo/rebase arriscado ou apagar branches sem autorização. Preferir branch de trabalho quando apropriado sem mudar trabalho existente inadvertidamente.
 
-Não versionar datasets, credenciais, .venv, checkpoints e resultados volumosos sem aprovação. Manter gitignore; não remover rastreamento existente sem discutir. Se houver segredo exposto, avisar sem o repetir.
+Não versionar datasets, credenciais, `iach-ais-venv-4/` (nem outros ambientes), checkpoints e resultados volumosos sem aprovação. Manifestos CSV também ficam fora do git por defeito (`*.csv` no `.gitignore`), até decisão em contrário. Manter gitignore; não remover rastreamento existente sem discutir. Se houver segredo exposto, avisar sem o repetir.
 
 ## 7. Compatibilidade de ferramentas
 AGENTS.md é a fonte única das regras. Confirmar leitura na ferramenta/versão real; nenhum adaptador garante carregamento automático.
@@ -123,7 +125,7 @@ Cada revisão lógica dos documentos recebe um ID e uma cor. Se originar altera�
 ### Antes de editar
 Ler os documentos de acompanhamento e o .tex real quando fornecido. Identificar macros, cores, pacotes e convenções existentes; não recolorir revisões anteriores. Se o significado das cores não for claro, perguntar. Não reconstruir cronologia/autoria por adivinhação.
 
-O .tex ainda não foi disponibilizado nesta conversa. Não criar um relatório substituto nem afirmar que foi atualizado. Registar atualização pendente quando aplicável.
+O ficheiro da proposta está em `latex/proposta_pt.tex` (com `latex/proposta_pt.pdf`). Não criar um relatório substituto nem afirmar que foi atualizado. Registar atualização pendente quando aplicável. O estado atual de revisão do `.tex` está em `PROGRESS.md`, secção "Inconsistências do LaTeX".
 
 ### Registo
 Criar/manter REVISION_LOG.md com:

@@ -5,11 +5,20 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Estado atual
 
-- **Marco atual:** 1 — Ambiente, consolidação e divisão mínima por ID.
-- **Código de dados:** ainda não existe.
-- **Dados:** `data/123_fishing_trajs.csv` presente localmente, não versionado. Só foi lido o cabeçalho e a primeira linha. Nenhuma estatística ou divisão foi calculada.
-- **Divisão por ID (manifesto):** criada em `manifests/split_manifest_seed42.csv` (seed 42, 70/15/15). Ver entrada de 2026-11-23b.
-- **Conjuntos de validação e teste:** bloqueados para desenvolvimento. Só foram usados IDs e contagens de linhas, nenhum valor de classe ou característica.
+- **Marco atual:** 1 — Ambiente, consolidação e divisão mínima por ID. Em curso; faltam os itens de isolamento e materialização indicados abaixo.
+- **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU). Dependências em `requirements.txt`.
+- **Scripts:**
+  - `scripts/create_split_manifest.py`: divisão por ID (seed 42, 70/15/15). Executado.
+  - `scripts/check_units_train.py`: verificação de unidades só com treino. Executado.
+  - Ainda não existe código de pré-processamento, modelo ou testes automatizados.
+- **Dados:** `data/123_fishing_trajs.csv` presente localmente, não versionado. O ficheiro tem **123 IDs únicos** e **1 026 279 linhas**.
+- **Leituras de dados até agora:**
+  - Coluna `id` para a divisão.
+  - Colunas de treino para a verificação de unidades (REV-003).
+  - Validação e teste: só o `id` e as contagens de linhas. Nenhum valor de validação ou teste foi lido ou analisado.
+- **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e não versionado (ver 2026-11-23b).
+- **Conjuntos de validação e teste:** bloqueados para desenvolvimento.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-004.
 
 ## Entradas do registo
 
@@ -19,19 +28,15 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - Leitura integral de `AGENTS.md`, `CLAUDE.md`, `README.md`, `.gitignore`, `docs/00` a `docs/03`, cabeçalhos de `docs/04` a `docs/06` e `latex/proposta_pt.tex`.
 - Criado o ambiente `iach-ais-venv-4/` com `python3 -m venv` (Python 3.14.4, `/usr/bin/python3`). Python global não alterado.
 - Instaladas dependências mínimas no `iach-ais-venv-4/` a partir do `requirements.txt`: `numpy`, `pandas`, `pytest` e `torch` em CPU (índice `https://download.pytorch.org/whl/cpu`).
-- Um primeiro ambiente chamado `.venv/` foi criado por engano, sem nome indicado pelo utilizador. Substituído por `iach-ais-venv-4/` e removido.
 - Criado `requirements.txt` com versões fixas.
 - Criado este `PROGRESS.md`.
+- Um primeiro ambiente chamado `.venv/` foi criado por engano, sem nome indicado pelo utilizador. Substituído por `iach-ais-venv-4/` e removido.
 
 **Validado**
 - `iach-ais-venv-4/bin/python --version` → Python 3.14.4.
-- Instalação limpa de `requirements.txt` na `iach-ais-venv-4/` concluída sem erros.
+- Instalação limpa de `requirements.txt` na `iach-ais-venv-4/` concluída sem erros (confirmado a 2026-11-23, depois da renomeação).
 - Importação de `numpy 2.5.5`, `pandas 3.1.1`, `torch 2.15.0+cpu`, `pytest 9.2.0`.
 - `torch.cuda.is_available()` → `False` (esperado: GPU integrada, começar em CPU).
-
-**Não validado / não feito**
-- Nenhum teste de código do projeto (ainda não existe código).
-- `requirements.txt` ainda não foi testado numa instalação limpa a partir do zero.
 
 **Problemas**
 - O `.gitignore` tinha `.venv/` e `venv/`, mas não cobria `iach-ais-venv-4/`. Acrescentada a linha `iach-ais-venv-4/`.
@@ -43,7 +48,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ### 2026-11-23b — Manifesto de divisão por ID
 
-**Decisões confirmadas pelo utilizador**
+**Decisões confirmadas pelo utilizador** (REV-001)
 - Seed `42`.
 - Proporções 70/15/15 (treino/validação/teste) por ID completo.
 - Regra de arredondamento: validação e teste arredondados ao inteiro mais próximo; treino recebe o resto.
@@ -66,15 +71,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - Reexecução: mesmo SHA-256 (`d56918bc65f9bebc6aa0a01a1e82213fda2404a9dfab9f39b3a1858c52733539`) do manifesto.
 
 **Problemas e avisos**
-- A proposta fala em **128 viagens**. O ficheiro tem **123 IDs únicos**. A diferença ainda não está explicada e fica por verificar com o utilizador. Não altero a divisão por isso.
-- A validação (209 016) e o teste (103 409) têm proporções de linhas diferentes de 15%. É esperado, porque a divisão é por viagem e as viagens têm tamanhos diferentes. Não é um erro.
-- Os 1 026 279 linhas ficam como contagem estrutural. Não confirmam ainda a proposta de ~1,03 M com precisão, mas são consistentes com ela.
-- O manifesto `manifests/split_manifest_seed42.csv` **não é versionado**: a regra `*.csv` do `.gitignore` o exclui. É regenerável com o script e a seed 42 (SHA-256 acima). Decidir se deve ser versionado ou guardado de outra forma (pendente de decisão do utilizador).
+- Número de viagens: a `docs/00` cita 128 (valor da proposta PDF). O ficheiro e o `latex/proposta_pt.tex` dizem **123**. O ficheiro tem **123 IDs únicos**, pelo que o valor 128 nos documentos está desatualizado (corrigido em REV-004).
+- A validação (209 016 linhas) e o teste (103 409 linhas) não têm 15% das linhas. É esperado, porque a divisão é por viagem.
+- O manifesto `manifests/split_manifest_seed42.csv` **não é versionado**: a regra `*.csv` do `.gitignore` o exclui. É regenerável com o script e a seed 42. Decisão pendente do utilizador (ver abaixo).
+- **Discrepância com o LaTeX:** o `latex/proposta_pt.tex` indica **86 / 19 / 18** trajetórias (treino/validação/teste) e 706 522 / 173 532 / 146 225 pontos. O manifesto dá **87 / 18 / 18** IDs e 713 854 / 209 016 / 103 409 linhas. Ambas as contagens não podem estar certas com a mesma seed e o mesmo critério. Por esclarecer.
 
 **Pendente**
-- Explicar a diferença 128 vs 123 IDs.
-- Validar a instalação do `requirements.txt` (já feita, ver entrada anterior).
-- Definir a estrutura de pacote e de testes quando começarem os marcos seguintes (ainda sem código).
+- Decidir se o manifesto deve ser versionado.
+- Esclarecer a discrepância 86/19/18 (LaTeX) vs 87/18/18 (manifesto).
 
 ### 2026-11-23c — REVISION_LOG, decisões e verificação de unidades
 
@@ -101,7 +105,21 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 **Pendente**
 - Quantificar e tratar as anomalias no marco 2.
 - Definir o protocolo para `distanceToShore` e para o CRS.
-- Atualizar `latex/proposta_pt.tex` com as unidades e a divisão por viagem (REV-001 e REV-003 marcadas como pendentes no LaTeX).
+- Atualizar `latex/proposta_pt.tex` com as unidades (ver REV-003 no `REVISION_LOG.md`).
+
+### 2026-11-23d — Coerência documental (REV-004)
+
+**Feito**
+- Corrigidos `README.md`, `AGENTS.md`, `docs/00`, `docs/00_5`, `docs/01` e este `PROGRESS.md` para refletir o estado atual.
+- Removido o item "REVISION_LOG por criar" (o ficheiro existe desde REV-001).
+- Substituído `.venv` por `iach-ais-venv-4` nos exemplos do `AGENTS.md`.
+- Atualizadas as unidades confirmadas nas tabelas de `docs/00` §8.
+
+**Validado**
+- Pesquisa por `.venv`, "ainda por criar", "128" e "70/15/15" em todos os MDs. Resultados revistos.
+
+**Pendente**
+- Atualizar o LaTeX (ver abaixo).
 
 ## Pendentes (por marco, segundo `docs/00_5`)
 
@@ -110,15 +128,16 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - [x] Dependências mínimas instaladas e versões registadas.
 - [x] `requirements.txt` criado e testado numa instalação limpa.
 - [x] `PROGRESS.md` criado.
-- [ ] Commit local destes ficheiros.
+- [ ] Commit local destes ficheiros (feito em `c055c67` e seguintes; a confirmar em cada novo commit).
 - [x] Criar `split_manifest` (id → split) com seed 42 e 70/15/15, lendo apenas a coluna `id`.
 - [ ] Materializar ficheiros separados por conjunto, sem exploração (pendente: decidir se é preciso ou se basta o manifesto).
 - [x] Verificar invariantes estruturais: IDs sem interseção, atribuição única, conservação de linhas.
-- [ ] Criar o isolamento: `run_preparation` com `allowed_splits=["train"]` por defeito.
+- [ ] Criar o isolamento: `run_preparation` com `allowed_splits=["train"]` por defeito (ainda não existe código de preparação).
 
 ### Marco 2 — Preparação auditável (só treino/sintéticos)
 - [ ] Recálculo de `time_gap_calc_s`, `distance_gap_calc_m` e `speed_calc_mps`.
 - [x] Confirmar no treino as unidades de `distance_gap`, `euc_speed`, `time_gap`, `bearing`, `signed_turn` (REV-003). `distanceToShore` ainda por confirmar.
+- [ ] Quantificar e tratar as anomalias de `distance_gap`, `time_gap` e `signed_turn`.
 - [ ] Limpeza com auditoria e limites IQR só no treino.
 - [ ] Codificação de rótulos (`target`) e features (`speed_calc_mps`, `signed_turn`, `time_gap_calc_s`, `distanceToShore`).
 - [ ] Testes com dados sintéticos (gaps, janelas, máscaras, alinhamento).
@@ -138,13 +157,34 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Orçamento de tempo para execuções longas (AGENTS.md §2).
 - Se os overlaps 25% e 75% entram no âmbito (decisão posterior).
 - Se o manifesto de divisão deve ser versionado (ver entrada 2026-11-23b).
+- Discrepância de contagens entre `latex/proposta_pt.tex` (86/19/18) e o manifesto (87/18/18).
 
 **Verificadas no treino** (ver REV-003)
 - Unidades de `x`, `y` e `distance_gap` (metros), `time_gap` (segundos), `euc_speed` (nós), `bearing` e `signed_turn` (graus).
 - Por confirmar: unidade de `distanceToShore` (metros é a hipótese mais plausível) e CRS de x/y e de lat/lon.
 
-## Artefactos ainda por criar
+## Inconsistências do LaTeX (`latex/proposta_pt.tex`) — por tratar
 
-- `REVISION_LOG.md` (AGENTS.md §8): ainda não existe, porque ainda não há revisões de documentos. Criar quando houver primeira revisão logada.
-- Manifesto de divisão por ID.
-- Código fonte e testes.
+O ficheiro da proposta não foi alterado nesta conversa. Está em estado **pendente**, por decisão do utilizador (ver AGENTS.md §8). Identificadas:
+- Contagens da divisão: 86/19/18 trajetórias no texto vs 87/18/18 no manifesto.
+- Descreve implementações que **não existem no repositório**: pipeline com BiGRU, quatro baselines, normalização por mediana e IQR de seis características, feature `t_rel`, janelas de 30 minutos com 50% de sobreposição. O repositório atual não contém código deste tipo.
+- Características: o texto lista seis características (`x`, `y`, `signed_turn`, `time_gap`, `euc_speed`, `distanceToShore`). `docs/00` define quatro entradas iniciais (`speed_calc_mps`, `signed_turn`, `time_gap_calc_s`, `distanceToShore`). Não são a mesma lista.
+- Número de viagens: o texto diz 123, em linha com o ficheiro. Não há conflito neste ponto.
+
+Decisão necessária do utilizador: se o LaTeX deve ser revisto para refletir o plano atual (`docs/`) ou se as partes implementadas são de outra versão de trabalho.
+
+## Artefactos do projeto
+
+| Ficheiro | Estado |
+|---|---|
+| `AGENTS.md`, `CLAUDE.md`, `README.md` | Existentes; atualizados em REV-004 |
+| `docs/00` a `docs/06` | Existentes; atualizados em REV-001 a REV-004 |
+| `latex/proposta_pt.tex`, `.pdf`, `references.bib` | Existentes; **não alterados**; pendentes (ver acima) |
+| `requirements.txt` | Existente; testado numa instalação limpa |
+| `REVISION_LOG.md` | Existente; REV-001 a REV-004 |
+| `PROGRESS.md` | Este ficheiro |
+| `scripts/create_split_manifest.py` | Existente; executado |
+| `scripts/check_units_train.py` | Existente; executado |
+| `manifests/split_manifest_seed42.csv` | Gerado; **não versionado** (pendente de decisão) |
+| `results/units_check_train/` | Gerado; não versionado (ignorado pelo `.gitignore`) |
+| Código de pré-processamento, modelos e testes automatizados | Ainda não criados |

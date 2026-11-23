@@ -38,4 +38,4 @@ Monitorização interna é criada só no treino, por ID e antes do fit de transf
 - Funções são contratos orientadores, não obrigação de criar dezenas de ficheiros vazios.
 
 ## Estado deste pacote
-Pacote reconstituído a partir dos sete Markdowns fornecidos, com aviso normativo comum e correções direcionadas, mais este consolidado e AGENTS.md. Não é uma reprodução byte a byte do ZIP gerado anteriormente. O código e as experiências ainda não foram executados.
+Pacote reconstituído a partir dos sete Markdowns fornecidos, com aviso normativo comum e correções direcionadas, mais este consolidado e AGENTS.md. Não é uma reprodução byte a byte do ZIP gerado anteriormente. [REV-004 | cor #6A1B9A] Estado: o código do marco 1 (divisão por ID e verificação de unidades) foi executado sobre dados, com leitura de treino apenas (REV-001, REV-003). Experiências de modelo ainda não foram executadas.
