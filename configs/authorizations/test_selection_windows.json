@@ -1,0 +1,19 @@
+{
+  "id": "test_selection_windows_2026-11-23",
+  "concedida_por": "utilizador (mensagem no chat, 2026-11-23)",
+  "conjuntos_autorizados": [
+    "test"
+  ],
+  "finalidade": "selecao",
+  "decisoes_cobertas": [
+    "numero de epocas (escolha de checkpoint) de J0 e de J50",
+    "limiar de classificacao de J0 e de J50",
+    "medicao por segmento e por ponto da baseline congelada, de J0 e de J50, para comparacao"
+  ],
+  "protocolo": "configs/selection_protocol_windows.json",
+  "max_rondas": 1,
+  "validation_autorizado": false,
+  "citacao_literal": "Sim, a base de dados de teste é o conjunto teste, não o conjunto validation. [...] Não podes usar o ficheiro antigo, deves criar um ficheiro de autorização novo. Ou seja, seria apenas uma abertura do teste. [...] Na autonomia, não deves fazer git push e o validation fica fechado. Dou-te autonomia para testares e treinares o dataset, escreveres código, escreveres o documento LaTeX e por aí. [...] autoriza a execução do código com um orçamento de 45 minutos para cada. [...] Aceito, podes começar.",
+  "contexto": "O utilizador aprovou o plano do Marco 4: duas CNNs iguais a baseline sobre janelas de 64 pontos (0 % e 50 % de sobreposicao), treinadas no treino, selecionadas no test numa so abertura e congeladas; medicao por segmento da baseline e das duas variantes no test. O conjunto validation continua fechado: so se abre no fim do projeto, uma so vez, com nova autorizacao.",
+  "nota": "Esta autorizacao cobre apenas UMA abertura do conjunto test para estas decisoes. Nao cobre o validation, nem uma segunda abertura, nem pos-processamento, nem outros valores de L."
+}

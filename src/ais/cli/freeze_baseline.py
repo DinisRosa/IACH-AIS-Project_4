@@ -28,7 +28,8 @@ def _git_commit() -> str:
                           text=True).stdout.strip()
 
 
-def freeze_baseline(run_dir, out_dir, log_path=None) -> dict:
+def freeze_baseline(run_dir, out_dir, log_path=None, label="baseline") -> dict:
+    """Congela o checkpoint escolhido. `label` dá o nome ao manifesto (`<label>_frozen.json`)."""
     run_dir, out_dir = Path(run_dir), Path(out_dir)
     sel = json.loads((run_dir / "selection_test.json").read_text(encoding="utf-8"))
     ck_name = sel["candidatos"][str(sel["epoca_escolhida"])]["ficheiro"]
@@ -53,19 +54,20 @@ def freeze_baseline(run_dir, out_dir, log_path=None) -> dict:
                     "protocolo": sel["protocolo"], "autorizacao": sel["autorizacao"],
                     "possivelmente_nao_convergiu": sel["possivelmente_nao_convergiu"]},
         "validation_aberto_ate_agora": validation_opened,
-        "aviso": "Baseline congelada. Nada muda a partir daqui (épocas, limiar, pesos). O conjunto "
+        "variante": label,
+        "aviso": f"Variante '{label}' congelada. Nada muda a partir daqui (épocas, limiar, pesos). O conjunto "
                  "`validation` só se abre no fim do projeto, uma só vez, com todas as variantes e "
                  "autorização nova do utilizador. Esta congelação não concede acesso a nenhum conjunto.",
     }
-    (out_dir / "baseline_frozen.json").write_text(
+    (out_dir / f"{label}_frozen.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
     return manifest
 
 
-def verify_frozen(out_dir) -> dict:
+def verify_frozen(out_dir, label="baseline") -> dict:
     """Confirma que o checkpoint congelado ainda corresponde ao manifesto."""
     out_dir = Path(out_dir)
-    m = json.loads((out_dir / "baseline_frozen.json").read_text(encoding="utf-8"))
+    m = json.loads((out_dir / f"{label}_frozen.json").read_text(encoding="utf-8"))
     return {"checkpoint_confere": sha256_of(out_dir / m["checkpoint"]) == m["checkpoint_sha256"],
             "epoca": m["epoca"], "limiar": m["limiar"]}
 

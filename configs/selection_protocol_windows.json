@@ -1,0 +1,25 @@
+{
+  "id": "selecao_janelas_v1",
+  "declarado_antes_de_abrir_o_test": true,
+  "conjunto": "test",
+  "autorizacao": "configs/authorizations/test_selection_windows.json",
+  "candidatos": "J0: checkpoints epoch_001.pt a epoch_300.pt de results/windows_j0/checkpoints; J50: idem em results/windows_j50/checkpoints. Ambas: CNN 1D igual a baseline, janelas de L=64 pontos, lote de 32 janelas, 87 viagens de treino, seed 42, sem monitorizacao interna. J0: sobreposicao 0 % (passo 64); J50: sobreposicao 50 % (passo 32).",
+  "criterio_epoca": "para cada variante, menor perda por ponto (entropia cruzada binaria) sobre todos os pontos originais do conjunto test, calculada DEPOIS da reconstrucao (media das probabilidades das janelas que cobrem cada ponto, recorte 1e-12); empate: a menor epoca",
+  "criterio_limiar": "para cada variante, no checkpoint escolhido, o limiar da grelha 0,05 a 0,95 (passo 0,05) que maximiza a media dos F1 de navegacao e de pesca por ponto no conjunto test, sobre as probabilidades reconstruidas; empate: o mais proximo de 0,5",
+  "baseline": "a baseline congelada (epoca 162, limiar 0,65) NAO e reselecionada nem alterada; so e medida por segmento e por ponto no mesmo conjunto test, para comparacao",
+  "aberturas_do_test": 1,
+  "rondas": 1,
+  "regra_de_fronteira": "se a epoca escolhida de uma variante for >= 291, regista-se que a rede possivelmente nao convergiu e NAO se prolonga o treino sem nova decisao do utilizador",
+  "orcamento_de_treino": "45 minutos por variante; se uma variante nao terminar as 300 epocas nesse tempo, o treino para, nao ha selecao e o utilizador e informado",
+  "metricas_reportadas": "por ponto: accuracy, precisao, sensibilidade, F1 e IoU por classe, matriz de confusao, curva da perda por epoca; por segmento (baseline, J0 e J50): IoU temporal 0,5, segundos, correspondencia um-para-um gulosa, precisao, sensibilidade, F1, IoU medio, erros de inicio e de fim, razao de fragmentacao; sem suavizacao",
+  "proibido": [
+    "alterar criterios depois de ver resultados",
+    "segunda abertura ou segunda ronda no test",
+    "reselecionar ou re-treinar a baseline",
+    "abrir o validation",
+    "escolher variantes pelo validation",
+    "pos-processamento (Marco 5) nesta ronda",
+    "mudar L, a sobreposicao ou os hiperparametros depois de ver resultados do test"
+  ],
+  "limiar_inicial": 0.5
+}
