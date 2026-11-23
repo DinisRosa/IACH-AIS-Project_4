@@ -150,11 +150,11 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - [x] Recálculo de `time_gap_calc_s`, `distance_gap_calc_m`, `bearing_calc_deg`, `signed_turn_calc_deg` e `speed_calc_mps` (REV-009; validado contra os originais em REV-009 e REV-011).
 - [x] Unidades confirmadas no treino: `distance_gap`, `euc_speed`, `time_gap`, `bearing`, `signed_turn` (REV-003). `distanceToShore` em metros confirmado pelo README oficial (REV-008).
 - [x] Quantificar as anomalias (REV-017). Tratamento: não tratar, por decisão do utilizador (REV-012). Aguarda revisão.
-- [ ] Limpeza com auditoria e limites IQR só no treino. Pendente: conflita com a decisão REV-012; confirmar se fica sem efeito.
+- [x] Limpeza IQR retirada (REV-019), por decisão do utilizador: os dados ficam tal como estão (REV-012).
 - [x] Codificação de rótulos (`target`, REV-009).
-- [ ] Lista final de features (`speed_calc_mps`, `signed_turn_calc_deg`, `time_gap_calc_s`, `distanceToShore`, e possivelmente x, y) por confirmar.
+- [x] Features da CNN (REV-019): `speed`, `signed_turn`, `time_gap` e `distanceToShore`. `x` e `y` ficam de fora.
 - [x] Testes com dados sintéticos de construção e contagem (REV-016, REV-017). Pendentes: janelas, máscaras e alinhamento (ainda não existem no código).
-- [ ] Pedir revisão antes de avançar.
+- [x] Revisão pedida e decisões registadas (REV-019). Marco 2 fechado, exceto testes de janelas, máscaras e alinhamento, que pertencem ao Marco 3.
 
 ### Marco 3 a 7
 Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
@@ -309,3 +309,14 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 **Pendente**
 - Confirmação do utilizador sobre o texto da subsecção.
 - Push de `2f24970` e `562e7ee`, por conta do utilizador.
+
+### 2026-11-23t — Decisões do utilizador e fecho do Marco 2 (REV-019)
+
+**Feito**
+- IQR retirado. Features da CNN: `speed`, `signed_turn`, `time_gap`, `distanceToShore`. `x` e `y` de fora. Inversões mantidas. Robustez não é estudo próprio. Texto da subsecção confirmado.
+- Marco 2 fechado, exceto os testes de janelas, máscaras e alinhamento, que pertencem ao Marco 3.
+
+**Pendente**
+- Aprovação do utilizador para começar o Marco 3.
+- Tratamento de valores ausentes na CNN (primeiro ponto, `time_gap` e `speed` nulos).
+- Push de `2f24970`, `562e7ee` e `d6b1289`, por conta do utilizador.
