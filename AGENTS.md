@@ -70,6 +70,7 @@ Se uma viagem não couber em memória, parar e reportar. Não truncar, excluir v
 - Registar seed, features em ordem, configurações, versões, manifesto da divisão e proveniência.
 - Atualizar documentação afetada, sem inventar resultados no Markdown/LaTeX.
 - Atualizar PROGRESS.md após marcos/sessões: feito, validado, problemas, decisões, pendentes e próximo passo.
+- **Handoff com hora (REV-045):** o `handoff.md` indica sempre a data e a hora, com fuso (obtidas com `date`, nunca estimadas), da escrita e da última validação (testes, compilação do LaTeX e estado do git), e a cronologia dos últimos commits, para o utilizador e o próximo agente saberem o que foi verificado e quando.
 - **Atualização automática no fim de cada interação (obrigatória, sem pedido do utilizador):** no fim de cada resposta que altere ficheiros, decisões, validações ou pendentes, o agente atualiza `PROGRESS.md` e `REVISION_LOG.md` antes de terminar. Regras:
   - `REVISION_LOG.md`: uma revisão por alteração lógica de documentos, com novo ID sequencial e cor (§8). Nunca renumerar.
   - `PROGRESS.md`: uma entrada datada com feito, validado, problemas, decisões e pendentes. Atualizar também o "Estado atual", o "Decisões vigentes", os pendentes dos marcos e a tabela de artefactos, para que nenhuma informação fique desatualizada.
