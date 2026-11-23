@@ -30,8 +30,10 @@
 \usepackage{algorithmic}
 % REV-013 — cor #808000, RGB (128, 128, 0) (mesma do REVISION_LOG.md). Texto movido para REV-018.
 % REV-018 — cor #5C6BC0, RGB (92, 107, 192) (mesma do REVISION_LOG.md). Macro \revtext para as revisões coloridas.
+% REV-020 — cor #607D8B, RGB (96, 125, 139) (mesma do REVISION_LOG.md).
 \definecolor{rev013}{RGB}{128,128,0}
 \definecolor{rev018}{RGB}{92,107,192}
+\definecolor{rev020}{RGB}{96,125,139}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 \usepackage[switch]{lineno}
 
@@ -103,7 +105,7 @@ O trabalho guia-se por três perguntas de investigação: (RQ1) em que medida as
 \section{Abordagem}
 \label{sec:abordagem}
 
-O sistema organiza-se num \emph{pipeline} de cinco etapas (Figura~\ref{fig:pipeline}). (1)~\emph{Ingestão e pré-processamento}: importação do CSV, tratamento de \emph{outliers} e \emph{gaps} temporais, normalização e cálculo de características derivadas (como a aceleração); velocidade, rumo e variação de rumo já vêm na base de dados. (2)~\emph{Janelamento}: divisão em janelas de comprimento fixo com sobreposição, dando contexto local a cada ponto e mitigando efeitos de fronteira. (3)~\emph{Classificação}: cada janela é classificada como pesca ou navegação por um modelo de aprendizagem profunda, cuja arquitetura (recorrente ou convolucional, possivelmente com atenção) será escolhida empiricamente, na linha de Cheng et al.~\shortcite{cheng2025} e Wang et al.~\shortcite{wang2026}. (4)~\emph{Pós-processamento temporal}: as predições das janelas sobrepostas são agregadas (por exemplo, votação ponderada) e suavizadas (por exemplo, via HMM ou votação por vizinhança), produzindo segmentos contíguos e estáveis. (5)~\emph{Saída e explicabilidade}: trajetória segmentada com confiança por segmento e justificações (importâncias de características) que apoiam --- e não substituem --- o inspetor. A implementação usa Python, PyTorch, scikit-learn e pandas.
+O sistema organiza-se num \emph{pipeline} de cinco etapas (Figura~\ref{fig:pipeline}). (1)~\emph{Ingestão e pré-processamento}: \revtext{rev020}{importação do CSV e recálculo, por viagem, dos intervalos temporais, distâncias, rumos, variações de rumo e velocidades a partir de $x$, $y$ e $t$, sem remoção de anomalias; seleção das características (velocidade, variação de rumo, intervalo temporal e distância à costa).} (2)~\emph{Janelamento}: divisão em janelas de comprimento fixo com sobreposição, dando contexto local a cada ponto e mitigando efeitos de fronteira. (3)~\emph{Classificação}: cada janela é classificada como pesca ou navegação por um modelo de aprendizagem profunda, cuja arquitetura (recorrente ou convolucional, possivelmente com atenção) será escolhida empiricamente, na linha de Cheng et al.~\shortcite{cheng2025} e Wang et al.~\shortcite{wang2026}. (4)~\emph{Pós-processamento temporal}: as predições das janelas sobrepostas são agregadas (por exemplo, votação ponderada) e suavizadas (por exemplo, via HMM ou votação por vizinhança), produzindo segmentos contíguos e estáveis. (5)~\emph{Saída e explicabilidade}: trajetória segmentada com confiança por segmento e justificações (importâncias de características) que apoiam --- e não substituem --- o inspetor. A implementação usa Python, PyTorch, scikit-learn e pandas.
 
 \begin{center}
 \begin{tikzpicture}[font=\scriptsize, >={Stealth[length=4pt]},

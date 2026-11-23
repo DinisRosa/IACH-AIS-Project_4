@@ -5,23 +5,25 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Estado atual
 
-- **Marco atual:** 1 — Ambiente, consolidação e divisão mínima por ID. Faltam o isolamento de `run_preparation` e a decisão sobre materialização (ver marco 1 abaixo).
+- **Marco atual:** 2 fechado (REV-019). Marco 3 (CNN completa mínima) aguarda aprovação do utilizador.
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU). Dependências em `requirements.txt`.
-- **Scripts (todos em `scripts/`):**
+- **Scripts (em `scripts/`):**
   - `create_split_manifest.py`: divisão por ID (seed 42, 70/15/15). Executado.
   - `check_units_train.py`: verificação de unidades só com treino. Executado.
   - `verify_trip_count.py`: confirma 123 viagens e coincidência com o manifesto. Executado.
+  - `build_clean_dataset.py --split train|validation|test`: bases limpas recalculadas. Executado para os três conjuntos (REV-009, REV-015).
+  - `count_anomalies_train.py`: contagem de saltos e inversões de rumo por viagem, só treino. Executado (REV-017).
   - `watch_latex.sh`: visualização da proposta. Não versionado.
-  - Ainda não existe código de pré-processamento, modelo ou testes automatizados.
+  - Ainda não existe código de janelamento, modelo ou pós-processamento.
+- **Testes:** `tests/` com 15 testes sintéticos (REV-016, REV-017). Ver `pytest tests/`.
 - **Dados:** `data/123_fishing_trajs.csv` presente localmente, não versionado. **123 IDs únicos** e **1 026 279 linhas**, confirmados por `verify_trip_count.py` (REV-007).
+- **Bases limpas (não versionadas):** `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Soma: 1 026 279.
 - **Leituras de dados até agora:**
-  - Coluna `id` para a divisão e para a contagem de viagens.
-  - Colunas de treino para a verificação de unidades (REV-003).
-  - Validação e teste: só o `id` e as contagens de linhas. Nenhum valor de validação ou teste foi lido ou analisado.
+  - Coluna `id` para a divisão e a contagem de viagens.
+  - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
+  - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Conjuntos de validação e teste:** bloqueados para desenvolvimento.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-010.
-- **Base limpa do treino:** `data/123_fishing_trajs_clean_train.parquet` (713 854 linhas, 87 viagens), gerada por `scripts/build_clean_dataset.py` (REV-009). Validação e teste **não** processados.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-020.
 
 ## Decisões do utilizador (vigentes)
 
@@ -32,6 +34,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - HMM e Wu et al. como baselines: **fora por agora**, por falta de tempo. O `AGENTS.md` mantém-se como fonte fixa (REV-006).
 - Manifesto da divisão: **versionado** no git (REV-006).
 - Autor do dataset: **Song Wu**, Zenodo DOI 10.5281/zenodo.7283281 (CC BY 4.0). O Kaggle é espelho (REV-006).
+
+- Limpeza IQR retirada; os dados ficam tal como estão (REV-012, REV-019).
+- Anomalias mantidas, incluindo inversões de rumo da viagem `219028021-2` (REV-012, REV-019).
+- Robustez a anomalias não é estudo próprio; fica implícita nas métricas globais (REV-019).
+- Features da CNN: `speed`, `signed_turn`, `time_gap` e `distanceToShore`. `x` e `y` ficam de fora (REV-019).
+- `bearing` a partir de x, y (grelha UTM); `distanceToShore` aceite como correto (REV-011).
+- Marco 1: fica só o manifesto de divisão, sem ficheiros separados por conjunto nem `run_preparation` (REV-019).
+- Texto da subsecção «Tratamento dos dados» na proposta confirmado (REV-018, REV-019).
 
 ## Entradas do registo
 
@@ -320,3 +330,14 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Aprovação do utilizador para começar o Marco 3.
 - Tratamento de valores ausentes na CNN (primeiro ponto, `time_gap` e `speed` nulos).
 - Push de `2f24970`, `562e7ee` e `d6b1289`, por conta do utilizador.
+
+### 2026-11-23u — Alinhamento de todos os documentos (REV-020)
+
+**Feito**
+- Documentos alinhados com REV-011 a REV-019: `docs/00`, `docs/01`, `docs/04`, `README.md`, `PROGRESS.md` e o passo 1 do pipeline em `latex/proposta_pt.tex` (cor REV-020, `#607D8B`). Compila sem erros.
+- Corrigida a falta da linha REV-019 na tabela de cores do registo.
+
+**Pendente**
+- Commit destas alterações, a pedido do utilizador.
+- Aprovação do utilizador para o Marco 3.
+- Push, por conta do utilizador.

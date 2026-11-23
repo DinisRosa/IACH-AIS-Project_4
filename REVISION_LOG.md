@@ -30,6 +30,8 @@ Regras:
 | REV-016 | Amarelo-torrado | `#F57F17` | (245, 127, 23) |
 | REV-017 | Rosa-choque | `#FF4081` | (255, 64, 129) |
 | REV-018 | Azul-ardósia | `#5C6BC0` | (92, 107, 192) |
+| REV-019 | Azul-celeste | `#0288D1` | (2, 136, 209) |
+| REV-020 | Cinzento-azulado | `#607D8B` | (96, 125, 139) |
 
 ## Revisões
 
@@ -342,3 +344,23 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**. O parágrafo de REV-013 foi movido para esta subsecção, e o texto novo está em cor REV-018. O texto anterior de REV-013 fica no histórico do Git e no registo.
 - **Validação:** `pdflatex` sem erros. A cor azul-ardósia aparece no PDF (página com a subsecção).
 - **Pendentes:** confirmar com o utilizador o texto da subsecção antes de a considerar final.
+
+### REV-020 — Alinhamento de todos os documentos com as decisões REV-011 a REV-019
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Cinzento-azulado `#607D8B`, RGB (96, 125, 139). No `.tex`, só no passo 1 do pipeline (`\revtext{rev020}`).
+- **O quê:** atualizadas as descrições que tinham ficado para trás:
+  - `latex/proposta_pt.tex`, passo 1 do pipeline: deixa de falar de tratamento de outliers e gaps e passa a descrever o recálculo a partir de x, y e t, sem remoção de anomalias, e a seleção das características.
+  - `docs/00_contexto_projeto_dicionario_dados.md`: exceção de REV-015 na política de desenvolvimento; features decididas (REV-019); distanceToShore aceite (REV-011); anomalias quantificadas (REV-017) e mantidas (REV-012); dúvidas atualizadas.
+  - `docs/01_preparacao_comum.md`: lista de características passa a «decididas» (REV-019).
+  - `docs/04_especificacao_funcoes_preparacao.md`: `feature_cols` decidida (REV-019).
+  - `README.md`: estado (Marco 2 fechado, Marco 3 à espera) e intervalo de revisões.
+  - `PROGRESS.md`: estado atual reescrito (scripts, testes, bases dos três conjuntos, leituras de validação e teste) e decisões vigentes acrescentadas.
+- **Porquê:** pedido do utilizador: os documentos devem estar todos em concordância com as decisões.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `docs/00_contexto_projeto_dicionario_dados.md`, `docs/01_preparacao_comum.md`, `docs/04_especificacao_funcoes_preparacao.md`, `README.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado** no passo 1 do pipeline. Compilação verificada sem erros.
+- **Validação:** `pdflatex` sem erros. Verificação por leitura dos textos alterados.
+- **Pendentes:**
+  - `AGENTS.md` não foi alterado (é o ficheiro fixo de regras).
+  - `docs/02`, `docs/03`, `docs/05` e `docs/06` já usam as quatro features corretas, sem alterações.
+  - Marco 3 só começa com aprovação do utilizador.

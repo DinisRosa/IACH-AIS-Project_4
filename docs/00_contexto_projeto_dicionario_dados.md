@@ -20,7 +20,7 @@ As unidades não documentadas são apresentadas como hipóteses, nunca como fact
 - Implementação: Python; KNIME pode servir como orquestrador dos componentes e nós Python Script.
 - Modelo atual: CNN 1D totalmente convolucional que devolve uma probabilidade por ponto.
 - Ordem: preparação comum → CNN com viagem completa → CNN com janelamento/sobreposição.
-- Durante desenvolvimento: apenas treino oficial ou dados sintéticos. Validação e teste ficam isolados até autorização explícita do utilizador.
+- Durante desenvolvimento: apenas treino oficial ou dados sintéticos. Validação e teste ficam isolados até autorização explícita do utilizador. Exceção autorizada (REV-015, 2026-11-23): validação e teste foram processados só para preparação (bases limpas e contagens de linhas e viagens), sem análise de resultados nem uso para escolher modelos ou regras.
 
 ## 3. Contexto e objetivo principal
 A proposta enquadra o trabalho no apoio à monitorização da atividade de pesca e à fiscalização, motivado pelo problema da pesca ilegal, não declarada e não regulamentada (IUU).
@@ -170,9 +170,9 @@ signed_turn
 time_gap_calc_s
 distanceToShore
 ```
-Esta é uma seleção inicial de trabalho, não uma conclusão científica sobre a inutilidade das restantes colunas. As unidades e ausências devem estar resolvidas/documentadas antes do treino; distanceToShore não deve receber rótulo de unidade ainda não confirmado. signed_turn já tem unidade verificada (graus, REV-003).
+Seleção decidida pelo utilizador (REV-019), não uma conclusão científica sobre a inutilidade das restantes colunas. Unidades verificadas: speed em nós, signed_turn em graus (REV-003), time_gap em segundos e distanceToShore em metros (REV-008). Ausências: o primeiro ponto de cada viagem fica sem valor em time_gap, speed e signed_turn; a política para a CNN fica para o Marco 3.
 
-ID, target, label, timestamps absolutos e identificadores auxiliares não são features. Coordenadas e bearing ficam preservados para estudos posteriores, sem inclusão automática.
+ID, target, label, timestamps absolutos e identificadores auxiliares não são features. x e y ficam fora das entradas por decisão do utilizador (REV-019), e bearing fica fora por ser função de x e y. Podem ser revistos se houver evidência de que ajudam ou de que o modelo aprende a posição absoluta.
 
 ## 13. Etapas atuais de implementação
 
@@ -230,7 +230,7 @@ Em caso de contradição, aplicar as decisões mais recentes do utilizador e a p
 ## 18. Lista de dúvidas a resolver apenas com treino ou documentação
 - CRS de longitude/latitude e de x/y. (Unidades de x/y verificadas em metros, REV-003.)
 - Definição exata de distance_gap. (Unidade verificada em metros, REV-003.)
-- Unidade de distanceToShore: **metros**, confirmada pelo README oficial (REV-008). Método de cálculo: não documentado no README, por confirmar.
+- Unidade de distanceToShore: **metros**, confirmada pelo README oficial (REV-008). Método de cálculo: não documentado; aceite como correto, sem verificação externa (REV-011).
 - x e y: **SRID 25832** segundo o README oficial (ETRS89 / UTM zona 32N, EPSG:25832). Longitude e latitude: CRS não indicado; hipótese WGS84 (EPSG:4326), por confirmar.
 - Alinhamento temporal de signed_turn e bearing. (Unidades e convenção verificadas, REV-003.)
 - Hipótese de euc_speed em nós: verificada (REV-003).
@@ -249,11 +249,8 @@ Nenhuma destas incertezas autoriza abrir validação ou teste durante desenvolvi
   - `bearing` está **em graus**, azimute a partir do norte, e corresponde ao azimute inicial entre o ponto anterior e o ponto atual (diferença mediana ~3·10⁻¹⁰ °).
   - `signed_turn` está **em graus** e é a diferença de `bearing` entre pontos consecutivos, normalizada para (-180, 180]. Mediana e percentil 95 da diferença absoluta são ~0.
   - `distanceToShore`: **metros**, confirmado pelo README oficial do Zenodo (`128_fishing_trajs_README.txt`: "distance (in meters) to the Denmark Coast"), REV-008. Mediana ~18,7 mil; máximo ~79 mil. Coerente com a leitura no treino.
-- **Anomalias a quantificar** (não foram excluídas nem assumidas):
-  - `distance_gap` mínimo de ~0,48 da haversine, e `time_gap` mínimo de 1/3 de `dt`, em alguns pares. Existem casos fora da regra.
-  - `signed_turn` máximo de diferença absoluta de ~175° face à variação de `bearing`. Parece pontual, mas tem de ser contado.
-  - Estas anomalias ainda não estão quantificadas nem tratadas. Ficam para o marco 2 (limpeza), com contagem e regra explícitas.
-- Ainda por confirmar: CRS de longitude/latitude e de x/y; tratamento de primeiros pontos, lacunas e valores ausentes; proveniência das anotações.
+- **Anomalias quantificadas no treino (REV-017):** 55 saltos acima de 30 nós em 4 viagens; 3 717 inversões de rumo acima de 170° em 70 viagens, 68 % delas em duas viagens. Mantidas tal como estão (REV-012). A limpeza IQR foi retirada (REV-019).
+- Ainda por confirmar: CRS de longitude/latitude; política de valores ausentes na CNN (Marco 3); proveniência das anotações.
 
 ## 19. Referências de contexto do PDF
 As referências abaixo são identificadas na proposta; esta síntese não constitui verificação bibliográfica independente:

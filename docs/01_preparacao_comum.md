@@ -111,7 +111,7 @@ Definir no treino a política para primeiros pontos de sequência, ausências e 
 ```
 Preservar label original. Rótulos desconhecidos geram um problema explícito.
 
-### Características iniciais propostas
+### Características (decididas, REV-019)
 ```text
 speed_calc_mps
 signed_turn

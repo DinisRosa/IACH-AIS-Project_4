@@ -35,7 +35,7 @@ PyTorch e funções de CNN/janelamento não fazem parte deste módulo de prepara
 - `issues_df`: tabela de problemas, idealmente com point_id, id, rule/check, severity e message.
 - `audit_df`: tabela de ações executadas e respetivos motivos.
 - `config`: dicionário com parâmetros explícitos e serializáveis sempre que possível.
-- `feature_cols`: lista ordenada, inicialmente proposta como speed_calc_mps, signed_turn, time_gap_calc_s e distanceToShore.
+- `feature_cols`: lista ordenada, decidida como speed_calc_mps, signed_turn, time_gap_calc_s e distanceToShore (REV-019).
 - `split_table`: tabela com id único e split em train, validation ou test.
 
 ## 01 — `load_csv(path, read_options=None)`

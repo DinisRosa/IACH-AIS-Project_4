@@ -7,7 +7,7 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 - `AGENTS.md`: regras e instruções do projeto (fonte única).
 - `CLAUDE.md`: instrução para o Claude Code ler o `AGENTS.md`.
 - `PROGRESS.md`: registo de progresso, validações, decisões e pendentes.
-- `REVISION_LOG.md`: registo das revisões de documentos, com ID e cor (REV-001 a REV-007).
+- `REVISION_LOG.md`: registo das revisões de documentos, com ID e cor (REV-001 a REV-019).
 - `docs/`: contexto, preparação comum, especificações e funções das CNN.
   - `00_contexto_projeto_dicionario_dados.md`: ponto de entrada e dicionário das colunas.
   - `00_5_orientacoes_execucao_decisoes.md`: decisões consolidadas e marcos.
@@ -52,4 +52,4 @@ iach-ais-venv-4/bin/python scripts/verify_trip_count.py
 
 ## Estado
 
-Marco 1 (ambiente e divisão por ID) em curso. Ver `PROGRESS.md`.
+Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN) aguarda aprovação do utilizador. Ver `PROGRESS.md`.
