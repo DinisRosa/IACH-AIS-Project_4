@@ -1,6 +1,6 @@
 # 02 — CNN 1D sobre a viagem completa (Marco 3)
 
-[REV-033 | cor #3E2723] Documento fundido a partir de `02_cnn_viagem_completa` (workflow) e `05_funcoes_documentos_cnn_viagem_completa` (contratos). É a **baseline**: recebe a viagem inteira e devolve uma probabilidade de pesca por ponto, sem janelas, sem sobreposição e sem pós-processamento. Dados e entradas: `01`. Regras de acesso: `00` §6.
+[REV-033 | cor #3E2723] Documento fundido a partir de `02_cnn_viagem_completa` (workflow) e `05_funcoes_documentos_cnn_viagem_completa` (contratos). É a **baseline**: recebe a viagem inteira e devolve uma probabilidade de pesca por ponto, sem janelas, sem sobreposição e sem pós-processamento. Dados e entradas: `01`. Regras de acesso: `00` §6. [REV-044 | cor #9E9E9E] A baseline está **fechada** (REV-041); este documento descreve-a, o que ficou implementado e o que falta.
 
 ## 1. Contratos de dados e do modelo
 
@@ -19,22 +19,22 @@
 
 Campo recetivo de **13 pontos** (três kernels 5, stride 1, sem dilatação) e 21 761 parâmetros. Sem pooling global nem saída única por viagem. Implementada em `src/ais/phase1/model.py` (`build_cnn`, `receptive_field`, `count_parameters`).
 
-## 3. Treino (execução 1: REV-032, `configs/phase1_run1.json`; treino final: REV-035, `configs/phase1_final.json`)
+## 3. Treino da baseline (REV-038, `configs/phase1_select.json`)
 
-| Elemento | Valor inicial |
+| Elemento | Valor |
 |---|---|
+| Dados | As 87 viagens do treino oficial, sem monitorização interna; normalizador ajustado com essas viagens |
 | Perda | `BCEWithLogitsLoss`, sem pesos de classe nem reamostragem |
 | Otimizador | Adam, lr 1e-3, sem procura |
 | Lote | Uma viagem por passo |
-| Monitorização interna | 15 % das viagens do treino (13 de 87), por ID, seed 42, aleatória, sem estratificar |
-| Paragem | Perda por ponto da monitorização; paciência 10; guarda o melhor checkpoint |
-| Limites | 100 épocas; orçamento de 15 minutos |
-| Limiar | 0,5 (sem escolha a partir de resultados) |
-| Dispositivo | CPU |
+| Épocas | 300, **sem paragem antecipada**, com um checkpoint por época |
+| Orçamento | 25 minutos (o treino levou cerca de 19) |
+| Seed e dispositivo | 42, CPU |
+| Seleção | **No `test`**, numa só ronda: época pela menor perda por ponto e limiar pelo F1 médio (`configs/selection_protocol.json`) |
 
-Todos são valores iniciais, não validados. No **treino final** (REV-035) usam-se as 87 viagens sem monitorização interna (`internal_monitor_fraction = 0`), paciência 30 e a paragem e o melhor modelo decididos pela perda por ponto avaliada sobre o próprio treino (`stop_criterion = "treino"`). Qualquer alteração do critério de paragem, do lr ou da arquitetura é uma escolha metodológica a aprovar. A monitorização são viagens do treino: **não é a validação oficial**, e a normalização ajustada só no treino interno é a que preserva essa independência.
+Resultado da seleção: **época 162, limiar 0,65**, congelados em `results/baseline_frozen/`. Todos os valores são iniciais e não foram validados; qualquer alteração do lr, da arquitetura ou do critério é uma escolha metodológica a aprovar, e a baseline não se treina nem se seleciona de novo (REV-041). As configurações `phase1_run1.json` (monitorização de 15 %) e `phase1_final.json` (100 épocas) são históricas.
 
-Registar sempre: seed, características por ordem, configuração, versões, manifesto da divisão, épocas, passos e histórico. Com uma atualização por viagem, viagens longas pesam de modo diferente; declarar se a média é por ponto ou por sequência.
+Registar sempre: seed, características por ordem, configuração, versões, manifesto da divisão, épocas, passos e histórico. Com uma atualização por viagem, viagens longas pesam de modo diferente: a média da perda é por ponto dentro de cada viagem.
 
 ## 4. O que está implementado
 
@@ -58,11 +58,10 @@ Registar sempre: seed, características por ordem, configuração, versões, man
 | Congelar a baseline (`freeze_phase1_run`) | `src/ais/cli/freeze_baseline.py` | Feito (REV-038): `results/baseline_frozen/` |
 | Navios partilhados entre conjuntos | `src/ais/cli/count_shared_vessels.py` | Feito (REV-039), só lê o manifesto |
 | Ficheiro final de resultados, macros e figuras do LaTeX | `src/ais/cli/build_final_results.py` | Feito (REV-035; reescrito em REV-040 para partir da baseline congelada): `results/baseline_frozen/final_results.json`, `latex/generated/resultados.tex`, `latex/figures/final_*.png`. Avalia a baseline nas 87 viagens de treino e lê os números do `test` de `selection_test.json`; não abre o `test` nem o `validation` |
-| Figuras da execução 1 | `src/ais/cli/plot_phase1_run.py` | Script, sem teste |
+| Figuras do treino com monitorização (execução 1, histórica) | `src/ais/cli/plot_phase1_run.py` | Script, sem teste; sem uso no LaTeX |
 | Execução | `src/ais/cli/run_phase1_training.py` | Script, sem teste |
 | Segmentos (`extract_segments`), correspondência, métricas por segmento, fronteiras e fragmentação | `src/ais/phase1/segments.py`; programa `src/ais/cli/segment_metrics.py` | Feito (REV-039): ferramenta de medição, **sem suavizar**; IoU 0,5, segundos, um-para-um guloso |
-| Relatórios e `save_phase1_results` | — | **Por fazer** |
-| `run_authorized_validation`, `run_authorized_final_evaluation` | — | **Por fazer**; ficam fora do caminho normal de desenvolvimento e exigem autorização externa ao agente |
+| Medição final no `validation` | — | **Por fazer** (Marco 7); fora do caminho normal de desenvolvimento, só com autorização nova e todas as variantes congeladas |
 
 Comandos (a partir da raiz do projeto):
 
@@ -72,10 +71,9 @@ iach-ais-venv-4/bin/python -m ais.cli.run_phase1_training configs/phase1_select.
 iach-ais-venv-4/bin/python -m ais.cli.select_on_test results/phase1_select              # UMA ronda no test, com autorização
 iach-ais-venv-4/bin/python -m ais.cli.freeze_baseline
 iach-ais-venv-4/bin/python -m ais.cli.build_final_results   # final_results.json, macros e figuras do LaTeX
-iach-ais-venv-4/bin/python -m ais.cli.plot_phase1_run
 ```
 
-Saídas do treino em `results/phase1_run1/` (não versionadas): checkpoint, histórico, tabelas, previsões da monitorização, scaler, divisão interna, manifesto e figuras. Os resultados numéricos da execução estão em `PROGRESS.md` e `REVISION_LOG.md` (REV-032), não aqui, para não duplicar números.
+Saídas (não versionadas): `results/phase1_select/` (checkpoints por época, histórico, `selection_test.json`), `results/baseline_frozen/` (checkpoint congelado, `baseline_frozen.json`, `final_results.json`) e `results/access_log.jsonl`. Os números da baseline estão em `final_results.json` e nas macros do LaTeX, não neste documento, para não os duplicar.
 
 ## 5. Testes
 
@@ -84,18 +82,14 @@ Todos com dados sintéticos ou treino; um teste lê 3 viagens reais do treino.
 - **Feitos** (`tests/`): comprimentos diferentes mantêm N saídas; nada se mistura entre viagens; alinhamento de `point_id` e tempo; perda finita, gradientes e passo de otimização; carregador de desenvolvimento rejeita IDs e ficheiros reservados; checkpoint recarregado reproduz as previsões; ciclo de treino com paragem antecipada; ausência de dupla sigmoide.
 - **Feitos depois (REV-038, REV-039):** acesso reservado (autorização, protocolo, uma só ronda, `validation` recusado), critérios de seleção, congelação, extração de segmentos e métricas por segmento com valores calculados à mão, e navios partilhados. Conferido ainda por uma reimplementação independente sobre as previsões do treino.
 - **Por fazer:** testes automáticos dos programas de treino e de figuras, e a medição por segmento sobre a baseline congelada (precisa de autorização, por usar o `test`).
-- O sobreajuste de poucas viagens (ensaio de 3 viagens, REV-027/028) é um teste diagnóstico, não prova de generalização.
 
-## 6. Estado do Marco 3 e próximos passos
+## 6. Estado do Marco 3: fechado
 
-**Feito (REV-038):** treino de seleção (300 épocas, um checkpoint por época, só treino), seleção da época e do limiar no `test` numa só ronda, e baseline congelada em `results/baseline_frozen/` (época 162, limiar 0,65). O `validation` **não** foi aberto. Os números estão em `results/phase1_select/selection_test.json` e em `results/baseline_frozen/baseline_frozen.json`.
+**Feito (REV-038, REV-041):** treino de 300 épocas só com o treino, seleção da época e do limiar no `test` numa só ronda (época 162, limiar 0,65) e baseline congelada. O `validation` **não** foi aberto. Por decisão do utilizador, a baseline fica como está; só volta a ser usada na comparação com as janelas e na escolha final.
 
-**Cuidado:** a perda no `test` é muito ruidosa de época para época, e a época escolhida é um mínimo estreito; a seleção pode ter seguido parte desse ruído. A ronda autorizada era uma só, por isso não se repete sem nova decisão do utilizador.
+**Limitação registada:** a perda no `test` é muito ruidosa de época para época e a época escolhida é um mínimo estreito; a seleção pode ter seguido parte desse ruído, e as métricas do `test` são otimistas por terem servido a escolher.
 
-**Próximos passos:**
-1. O utilizador decide como lidar com o ruído da seleção (ver o relatório da sessão).
-2. Marco 4: janelas J0 e J50 (L = 64) com a mesma CNN, comparadas com a baseline congelada, por ponto e por segmento (`segments.py`).
-3. Só no fim do projeto, com todas as variantes congeladas e nova autorização, a medição final única no `validation`; ver `00` §6.
+**Seguinte:** Marco 4 (`03`), com métricas por segmento sobre a baseline (precisam de autorização, por usarem o `test`); a medição final única no `validation` fica para o fim; ver `00` §6.
 
 ## 7. Critérios de aceitação
 

@@ -1,6 +1,6 @@
 # 03 — CNN 1D com janelamento e sobreposição (Marco 4)
 
-[REV-033 | cor #3E2723] Documento fundido a partir de `03_cnn_janelamento_sobreposicao` (workflow) e `06_funcoes_documentos_cnn_janelamento_sobreposicao` (contratos). **Nada disto está implementado**: não existe `src/phase2/` nem código de janelamento. Os contratos abaixo são propostas a rever quando o Marco 4 começar.
+[REV-033 | cor #3E2723] Documento fundido a partir de `03_cnn_janelamento_sobreposicao` (workflow) e `06_funcoes_documentos_cnn_janelamento_sobreposicao` (contratos). [REV-044 | cor #9E9E9E] **O janelamento não está implementado**: não existe código de janelas, de máscaras nem de reconstrução. Já existe a ferramenta de medição por segmento (`ais.phase1.segments`, REV-039). Os contratos abaixo são propostas a rever quando o Marco 4 começar.
 
 ## 1. Objetivo
 
@@ -86,7 +86,8 @@ treino preparado → sequências → partição interna por ID → grelha de exp
 → índice e correspondência das janelas → validar máscaras e cobertura
 → treinar com perda mascarada → inferir → agregar por ponto → reconstruir
 → classes e segmentos (sem suavização) → métricas e comparação com a baseline
-→ congelar → PARAR e pedir autorização para seleção formal
+→ selecionar no `test` (com autorização e protocolo declarado antes) → congelar
+→ PARAR: a medição final no `validation` fica para o fim, com todas as variantes
 ```
 
 - Um ponto reconstruído por ponto real válido; nenhuma janela atravessa IDs, gaps ou conjuntos.
