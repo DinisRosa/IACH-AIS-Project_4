@@ -448,7 +448,7 @@ manifesto de IDs → separação técnica e isolamento → carregar só treino
 ```
 
 ## Política para pontos iniciais e ausências
-O primeiro ponto de cada sequência não tem diferenças anteriores calculáveis. Antes do treino, escolher uma política única e documentada, como excluir esse ponto das entradas ou preencher características segundo uma regra definida, mantendo rastreabilidade. A escolha pode afetar também signed_turn, que pode depender de mais de um intervalo. Não preencher automaticamente todos estes casos com zero sem distinguir ausência de um valor físico zero.
+O primeiro ponto de cada sequência não tem diferenças anteriores calculáveis. O segundo não tem signed_turn, porque depende do rumo do primeiro intervalo. Política aprovada (REV-022): nenhuma linha é removida do conjunto. Nas entradas da CNN, os dois primeiros pontos de cada viagem não têm grandezas dependentes do predecessor (time_gap, speed e signed_turn). Esses valores são preenchidos com zero e marcados por um indicador de ausência (máscara) por característica, para distinguir ausência de um valor físico zero. Esses pontos ficam fora da função de perda. Em treino, validação e teste aplica-se a mesma regra.
 
 ## Condições mínimas antes de exportar para a CNN
 - IDs sem sobreposição entre conjuntos.

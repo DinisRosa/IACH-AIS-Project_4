@@ -32,6 +32,8 @@ Regras:
 | REV-018 | Azul-ardósia | `#5C6BC0` | (92, 107, 192) |
 | REV-019 | Azul-celeste | `#0288D1` | (2, 136, 209) |
 | REV-020 | Cinzento-azulado | `#607D8B` | (96, 125, 139) |
+| REV-021 | Magenta | `#D500F9` | (213, 0, 249) |
+| REV-022 | Verde-azulado escuro | `#00897B` | (0, 137, 123) |
 
 ## Revisões
 
@@ -364,3 +366,37 @@ Regras:
   - `AGENTS.md` não foi alterado (é o ficheiro fixo de regras).
   - `docs/02`, `docs/03`, `docs/05` e `docs/06` já usam as quatro features corretas, sem alterações.
   - Marco 3 só começa com aprovação do utilizador.
+
+### REV-021 — Reorganização do pipeline: CNN 1D de referência antes do janelamento
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Magenta `#D500F9`, RGB (213, 0, 249). No `.tex`, em `\revtext{rev021}`.
+- **O quê:**
+  - Decisão do utilizador: o modelo é uma **CNN 1D** que devolve uma probabilidade por ponto. A ordem de trabalho é: (1) pré-processamento, concluído; (2) CNN 1D de referência sobre a viagem completa, para obter valores de referência; (3) janelamento com sobreposição e a mesma CNN 1D sobre janelas, para estudar o efeito da sobreposição; (4) pós-processamento temporal; (5) saída e explicabilidade.
+  - `latex/proposta_pt.tex`: objetivos 1 e 2 (a CNN 1D passa a ser explícita; o janelamento sai do pré-processamento), abordagem em cinco etapas com a mesma arquitetura nas fases 2 e 3, e figura do pipeline reorganizada (fundo cinzento no bloco de referência).
+  - `docs/00_5_orientacoes_execucao_decisoes.md`: marcos 3 e 4 com a CNN 1D de referência e o janelamento.
+  - `README.md`: descrição do modelo e da ordem.
+- **Porquê:** pedido do utilizador: o pré-processamento e a limpeza estão concluídos; a CNN treina primeiro sobre viagens completas, para servir de referência, e só depois se estudam janelas e sobreposição.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `docs/00_5_orientacoes_execucao_decisoes.md`, `README.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. Compilação verificada sem erros. A figura foi inspecionada visualmente.
+- **Validação:** `pdflatex` sem erros; figura e texto verificados na página 2 do PDF.
+- **Pendentes:**
+  - Aprovação do utilizador para o Marco 3.
+  - Política de valores ausentes na CNN (proposta: excluir os 87 primeiros pontos e mascarar os restantes).
+  - Os documentos `docs/02`, `docs/03`, `docs/05` e `docs/06` já descrevem a CNN nesta ordem. Não foram alterados.
+
+### REV-022 — Política de valores ausentes na CNN e início oficial do Marco 3
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Verde-azulado escuro `#00897B`, RGB (0, 137, 123). No `.tex`, em `\revtext{rev022}`.
+- **O quê:**
+  - **Aprovado pelo utilizador:** política para valores ausentes. Nenhuma linha é removida. Os dois primeiros pontos de cada viagem não têm `time_gap`, `speed` e `signed_turn` (o segundo só não tem `signed_turn`). Esses valores são preenchidos com zero e marcados por um indicador de ausência (máscara) por característica. Esses pontos ficam fora da função de perda. A mesma regra aplica-se a treino, validação e teste.
+  - **Nota de interpretação:** a proposta aprovada falava em excluir os primeiros pontos. Os dados mostram que o segundo ponto também não tem `signed_turn` (87 casos em treino). Por isso a regra abrange os dois primeiros pontos. Se preferires excluir esses pontos das entradas em vez de preencher, diz-me.
+  - **Marco 3 oficialmente em curso**, aprovado pelo utilizador.
+- **Porquê:** decisão do utilizador. A regra evita remover dados e distingue ausência de zero físico, como exigido em `docs/04`.
+- **Ficheiros afetados:** `docs/00_contexto_projeto_dicionario_dados.md`, `docs/01_preparacao_comum.md`, `docs/04_especificacao_funcoes_preparacao.md`, `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**, na subsecção «Tratamento dos dados», em cor REV-022. Compilação verificada sem erros.
+- **Validação:** `pdflatex` sem erros. Verificação por leitura das alterações.
+- **Pendentes:**
+  - Ver a lista de próximos passos do Marco 3 em `PROGRESS.md`.
+  - Push, por conta do utilizador.

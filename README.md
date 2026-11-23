@@ -1,6 +1,6 @@
 # Projeto AIS
 
-Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto, usando redes neuronais convolucionais (CNN).
+Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto, usando uma rede neuronal convolucional unidimensional (CNN 1D). A ordem é: pré-processamento; CNN 1D de referência sobre a viagem completa; janelamento com sobreposição e a mesma CNN 1D sobre janelas; pós-processamento temporal.
 
 ## Estrutura
 
@@ -52,4 +52,4 @@ iach-ais-venv-4/bin/python scripts/verify_trip_count.py
 
 ## Estado
 
-Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN) aguarda aprovação do utilizador. Ver `PROGRESS.md`.
+Marco 2 (preparação auditável) fechado (REV-019). Marco 3 (CNN 1D de referência sobre viagem completa) aguarda aprovação do utilizador. Ver `PROGRESS.md`.

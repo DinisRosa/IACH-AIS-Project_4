@@ -5,7 +5,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Estado atual
 
-- **Marco atual:** 2 fechado (REV-019). Marco 3 (CNN completa mínima) aguarda aprovação do utilizador.
+- **Marco atual:** 3 em curso (aprovado pelo utilizador, REV-022): CNN 1D de referência sobre viagem completa. Depois: janelamento com sobreposição e a mesma CNN 1D sobre janelas (Marco 4).
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU). Dependências em `requirements.txt`.
 - **Scripts (em `scripts/`):**
   - `create_split_manifest.py`: divisão por ID (seed 42, 70/15/15). Executado.
@@ -23,7 +23,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
   - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-020.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-022.
 
 ## Decisões do utilizador (vigentes)
 
@@ -341,3 +341,34 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Commit destas alterações, a pedido do utilizador.
 - Aprovação do utilizador para o Marco 3.
 - Push, por conta do utilizador.
+
+### 2026-11-23v — Reorganização do pipeline: CNN 1D primeiro sobre viagens completas (REV-021)
+
+**Feito**
+- Decisão do utilizador: o modelo é uma CNN 1D com uma probabilidade por ponto. Ordem: pré-processamento; CNN de referência sobre a viagem completa; janelamento com sobreposição e a mesma CNN sobre janelas; pós-processamento temporal; explicabilidade.
+- `latex/proposta_pt.tex`: objetivos 1 e 2, abordagem (cinco etapas) e figura do pipeline atualizados. Texto novo em cor REV-021 (magenta `#D500F9`). Compila sem erros.
+- `docs/00_5` (marcos 3 e 4) e `README.md` alinhados.
+
+**Pendente**
+- Aprovação do utilizador para o Marco 3.
+- Política de valores ausentes na CNN (primeiro ponto, `time_gap` e `speed` nulos). Proposta: excluir os 87 primeiros pontos e mascarar os restantes casos. Decisão do utilizador.
+- Push dos commits, por conta do utilizador.
+
+### 2026-11-23w — Política de ausências aprovada e Marco 3 em curso (REV-022)
+
+**Feito**
+- Política de ausências aprovada e aplicada aos documentos e à proposta: preenchimento com zero, máscara de ausência por característica, pontos iniciais fora da perda, nenhuma linha removida. Nota: o segundo ponto de cada viagem também não tem `signed_turn`, por isso a regra cobre os dois primeiros pontos.
+- Marco 3 oficialmente em curso.
+
+**Próximos passos do Marco 3 (por ordem)**
+1. Construir as sequências por viagem só com o treino, ordenadas por `t` e `point_id`, com as quatro características na ordem decidida e as máscaras de ausência.
+2. Ajustar o normalizador (StandardScaler) só com o treino, e guardar a ordem, a média e o desvio-padrão. Os valores ausentes não entram no ajuste.
+3. Implementar a CNN 1D de referência: uma probabilidade por ponto, arquitetura conforme `docs/02`. Função de perda que ignora os pontos iniciais.
+4. Testes sintéticos: alinhamento (saída i corresponde ao ponto i), máscaras, forward e backward com tensores pequenos, e ausência de vazamento (o normalizador não vê validação nem teste).
+5. Treino de ensaio só com o treino. Se for preciso monitorizar, criar uma partição interna só dentro do treino, por ID completo. Pedir ao utilizador o orçamento de tempo antes de qualquer treino longo.
+6. Medir o custo (tempo por época e memória, em CPU) e registar as métricas de referência internas.
+7. Pedido de revisão do Marco 3 ao utilizador. Validação e teste não são usados para escolher nada antes da autorização explícita (Marco 6).
+
+**Pendente**
+- Decisão do utilizador: partição interna de monitorização dentro do treino (proporção por ID) e orçamento de tempo para treino.
+- Push dos commits, por conta do utilizador.

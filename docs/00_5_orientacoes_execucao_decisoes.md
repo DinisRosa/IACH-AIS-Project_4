@@ -20,8 +20,8 @@ Campo recetivo da arquitetura ilustrativa de três kernels 5, stride 1, sem dila
 ## Marcos
 1. Ambiente, consolidação, divisão mínima e isolamento.
 2. Preparação auditável e testes só no treino/sintéticos; pedir revisão.
-3. CNN completa mínima, forward/backward e alinhamento; medir custo.
-4. Janelas, máscaras, cobertura, reconstrução e treino conforme orçamento.
+3. CNN 1D de referência sobre a viagem completa (uma probabilidade por ponto): forward/backward, alinhamento e custo; estabelecer as métricas de referência.
+4. Janelamento com sobreposição e a mesma CNN 1D sobre janelas; comparar com a referência no mesmo conjunto. Máscaras, cobertura, reconstrução e treino conforme orçamento.
 5. Pós-processamento simples depois de aprovado, em ramo separado.
 6. Congelar implementação/protocolo e pedir autorização para seleção formal na validação.
 7. Congelar modelos/lista de variantes e pedir nova autorização para avaliação final no teste.

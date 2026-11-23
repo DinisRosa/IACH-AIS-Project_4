@@ -170,7 +170,7 @@ signed_turn
 time_gap_calc_s
 distanceToShore
 ```
-Seleção decidida pelo utilizador (REV-019), não uma conclusão científica sobre a inutilidade das restantes colunas. Unidades verificadas: speed em nós, signed_turn em graus (REV-003), time_gap em segundos e distanceToShore em metros (REV-008). Ausências: o primeiro ponto de cada viagem fica sem valor em time_gap, speed e signed_turn; a política para a CNN fica para o Marco 3.
+Seleção decidida pelo utilizador (REV-019), não uma conclusão científica sobre a inutilidade das restantes colunas. Unidades verificadas: speed em nós, signed_turn em graus (REV-003), time_gap em segundos e distanceToShore em metros (REV-008). Ausências: os dois primeiros pontos de cada viagem não têm time_gap, speed e signed_turn (ou só signed_turn, no segundo). Política decidida em REV-022: preenchimento com zero, indicador de ausência por máscara, pontos fora da perda; nenhuma linha removida.
 
 ID, target, label, timestamps absolutos e identificadores auxiliares não são features. x e y ficam fora das entradas por decisão do utilizador (REV-019), e bearing fica fora por ser função de x e y. Podem ser revistos se houver evidência de que ajudam ou de que o modelo aprende a posição absoluta.
 
@@ -234,7 +234,7 @@ Em caso de contradição, aplicar as decisões mais recentes do utilizador e a p
 - x e y: **SRID 25832** segundo o README oficial (ETRS89 / UTM zona 32N, EPSG:25832). Longitude e latitude: CRS não indicado; hipótese WGS84 (EPSG:4326), por confirmar.
 - Alinhamento temporal de signed_turn e bearing. (Unidades e convenção verificadas, REV-003.)
 - Hipótese de euc_speed em nós: verificada (REV-003).
-- Tratamento dos primeiros pontos, lacunas e valores ausentes.
+- Tratamento dos primeiros pontos e valores ausentes: decidido para a CNN (REV-022).
 - Proveniência das anotações e convenções dos intervalos.
 
 Nenhuma destas incertezas autoriza abrir validação ou teste durante desenvolvimento.
@@ -250,7 +250,7 @@ Nenhuma destas incertezas autoriza abrir validação ou teste durante desenvolvi
   - `signed_turn` está **em graus** e é a diferença de `bearing` entre pontos consecutivos, normalizada para (-180, 180]. Mediana e percentil 95 da diferença absoluta são ~0.
   - `distanceToShore`: **metros**, confirmado pelo README oficial do Zenodo (`128_fishing_trajs_README.txt`: "distance (in meters) to the Denmark Coast"), REV-008. Mediana ~18,7 mil; máximo ~79 mil. Coerente com a leitura no treino.
 - **Anomalias quantificadas no treino (REV-017):** 55 saltos acima de 30 nós em 4 viagens; 3 717 inversões de rumo acima de 170° em 70 viagens, 68 % delas em duas viagens. Mantidas tal como estão (REV-012). A limpeza IQR foi retirada (REV-019).
-- Ainda por confirmar: CRS de longitude/latitude; política de valores ausentes na CNN (Marco 3); proveniência das anotações.
+- Ainda por confirmar: CRS de longitude/latitude; proveniência das anotações.
 
 ## 19. Referências de contexto do PDF
 As referências abaixo são identificadas na proposta; esta síntese não constitui verificação bibliográfica independente:

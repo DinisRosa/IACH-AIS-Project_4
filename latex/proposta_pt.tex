@@ -31,9 +31,13 @@
 % REV-013 — cor #808000, RGB (128, 128, 0) (mesma do REVISION_LOG.md). Texto movido para REV-018.
 % REV-018 — cor #5C6BC0, RGB (92, 107, 192) (mesma do REVISION_LOG.md). Macro \revtext para as revisões coloridas.
 % REV-020 — cor #607D8B, RGB (96, 125, 139) (mesma do REVISION_LOG.md).
+% REV-021 — cor #D500F9, RGB (213, 0, 249) (mesma do REVISION_LOG.md).
+% REV-022 — cor #00897B, RGB (0, 137, 123) (mesma do REVISION_LOG.md).
 \definecolor{rev013}{RGB}{128,128,0}
 \definecolor{rev018}{RGB}{92,107,192}
 \definecolor{rev020}{RGB}{96,125,139}
+\definecolor{rev021}{RGB}{213,0,249}
+\definecolor{rev022}{RGB}{0,137,123}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 \usepackage[switch]{lineno}
 
@@ -93,8 +97,8 @@ Subsistem, porém, duas limitações. Primeiro, as predições ponto-a-ponto sã
 O objetivo principal é desenvolver um sistema de segmentação semântica de trajetórias AIS que detete pesca de forma robusta e interpretável, combinando \textbf{janelas sobrepostas} e \textbf{pós-processamento temporal}, como \textbf{apoio à decisão de inspetores} (\textcolor{red}{\emph{human-on-the-loop}}, \textcolor{red}{com o inspetor a supervisionar e a poder intervir na decisão}). Os objetivos específicos são:
 
 \begin{enumerate}
-    \item Construir um \emph{pipeline} de pré-processamento (limpeza, normalização, engenharia de características e janelamento com sobreposição).
-    \item Implementar e treinar um classificador de janelas (por exemplo, redes recorrentes ou convolucionais com atenção), com Wu et al.~\shortcite{wu2022} e um HMM~\cite{peel2011} como \emph{baselines}.
+    \item \revtext{rev021}{Construir um \emph{pipeline} de pré-processamento auditável, que recalcula as grandezas derivadas e seleciona as características, sem remover anomalias.}
+    \item \revtext{rev021}{Implementar e treinar uma \emph{rede neuronal convolucional} unidimensional (CNN 1D) que devolve uma probabilidade por ponto: primeiro sobre a viagem completa, como referência, e depois sobre janelas com sobreposição. Como \emph{baselines}, Wu et al.~\shortcite{wu2022} e um HMM~\cite{peel2011}.}
     \item Conceber e avaliar um pós-processamento temporal que combine as predições das janelas sobrepostas e regularize as fronteiras dos segmentos.
     \item Avaliar quantitativamente (por segmento e por ponto) e qualitativamente (visualização e casos de estudo).
     \item Incluir explicabilidade (atribuições de importância~\cite{lundberg2017}) e confiança calibrada~\cite{guo2017} que sustentem a decisão do inspetor.
@@ -105,26 +109,29 @@ O trabalho guia-se por três perguntas de investigação: (RQ1) em que medida as
 \section{Abordagem}
 \label{sec:abordagem}
 
-O sistema organiza-se num \emph{pipeline} de cinco etapas (Figura~\ref{fig:pipeline}). (1)~\emph{Ingestão e pré-processamento}: \revtext{rev020}{importação do CSV e recálculo, por viagem, dos intervalos temporais, distâncias, rumos, variações de rumo e velocidades a partir de $x$, $y$ e $t$, sem remoção de anomalias; seleção das características (velocidade, variação de rumo, intervalo temporal e distância à costa).} (2)~\emph{Janelamento}: divisão em janelas de comprimento fixo com sobreposição, dando contexto local a cada ponto e mitigando efeitos de fronteira. (3)~\emph{Classificação}: cada janela é classificada como pesca ou navegação por um modelo de aprendizagem profunda, cuja arquitetura (recorrente ou convolucional, possivelmente com atenção) será escolhida empiricamente, na linha de Cheng et al.~\shortcite{cheng2025} e Wang et al.~\shortcite{wang2026}. (4)~\emph{Pós-processamento temporal}: as predições das janelas sobrepostas são agregadas (por exemplo, votação ponderada) e suavizadas (por exemplo, via HMM ou votação por vizinhança), produzindo segmentos contíguos e estáveis. (5)~\emph{Saída e explicabilidade}: trajetória segmentada com confiança por segmento e justificações (importâncias de características) que apoiam --- e não substituem --- o inspetor. A implementação usa Python, PyTorch, scikit-learn e pandas.
+O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma probabilidade de pesca por ponto. O \emph{pipeline} organiza-se em cinco etapas, executadas por esta ordem (Figura~\ref{fig:pipeline}). (1)~\emph{Ingestão e pré-processamento}: \revtext{rev020}{importação do CSV e recálculo, por viagem, dos intervalos temporais, distâncias, rumos, variações de rumo e velocidades a partir de $x$, $y$ e $t$, sem remoção de anomalias; seleção das características (velocidade, variação de rumo, intervalo temporal e distância à costa).} \revtext{rev021}{(2)~\emph{CNN de referência sobre a viagem completa}: a CNN recebe a sequência completa de cada viagem e devolve uma probabilidade por ponto. Esta fase estabelece os valores de referência do modelo, sem janelas e sem sobreposição. (3)~\emph{Janelamento com sobreposição}: a mesma arquitetura é treinada e avaliada sobre janelas de comprimento fixo com sobreposição, para medir o efeito da sobreposição na estabilidade das fronteiras; cada ponto recebe a média das predições das janelas em que aparece. (4)~\emph{Pós-processamento temporal}: as probabilidades por ponto são suavizadas (por exemplo, via HMM ou votação por vizinhança), produzindo segmentos contíguos e estáveis. (5)~\emph{Saída e explicabilidade}: trajetória segmentada com confiança por segmento e justificações (importâncias de características) que apoiam --- e não substituem --- o inspetor. A divisão dos dados e as características são as mesmas em todas as fases, para que as comparações sejam diretas.} A implementação usa Python, PyTorch, scikit-learn e pandas.
 
 \begin{center}
 \begin{tikzpicture}[font=\scriptsize, >={Stealth[length=4pt]},
-  box/.style={draw, rounded corners, align=center, minimum height=0.8cm, minimum width=2.2cm, text width=2.0cm}]
+  box/.style={draw, rounded corners, align=center, minimum height=1.0cm, minimum width=2.2cm, text width=2.0cm},
+  ref/.style={box, fill=gray!12}]
 \node[box] (a) at (0,0) {Trajetória AIS};
 \node[box] (b) at (2.9,0) {Pré-processamento};
-\node[box] (c) at (5.8,0) {Janelas sobrepostas};
-\node[box] (d) at (0,-1.5) {Classificação das janelas};
-\node[box] (e) at (2.9,-1.5) {Pós-processamento temporal};
-\node[box] (f) at (5.8,-1.5) {Segmentos semânticos};
-\node[box] (g) at (5.8,-3.0) {Explicabilidade / decisão humana};
+\node[ref] (c) at (5.8,0) {CNN 1D de referência (viagem completa)};
+\node[box] (d) at (5.8,-1.7) {Janelas sobrepostas};
+\node[box] (e) at (2.9,-1.7) {CNN 1D sobre janelas};
+\node[box] (f) at (0,-1.7) {Pós-processamento temporal};
+\node[box] (g) at (0,-3.4) {Segmentos semânticos};
+\node[box] (h) at (2.9,-3.4) {Explicabilidade / decisão humana};
 \draw[->] (a) -- (b);
 \draw[->] (b) -- (c);
-\draw[->] (c.south) -- ++(0,-0.35) -| (d.north);
+\draw[->] (c) -- (d);
 \draw[->] (d) -- (e);
 \draw[->] (e) -- (f);
 \draw[->] (f) -- (g);
+\draw[->] (g) -- (h);
 \end{tikzpicture}
-\captionof{figure}{Esquema do \emph{pipeline} proposto.}
+\captionof{figure}{Esquema do \emph{pipeline} proposto: a CNN 1D é usada primeiro sobre viagens completas (referência) e depois sobre janelas com sobreposição.}
 \label{fig:pipeline}
 \end{center}
 
@@ -139,6 +146,8 @@ Eticamente, apesar de públicos, os dados AIS usados em fiscalização exigem cu
 \label{sec:tratamento-dados}
 
 \revtext{rev018}{Os dados são usados tal como existem, sem remoção de linhas. As anomalias (saltos de posição, \emph{gaps} temporais longos e inversões de rumo) são mantidas, porque o sistema visa dados AIS ao momento, onde estes erros ocorrem; removê-las na preparação tornaria a avaliação otimista, e a robustez a estas anomalias faz parte do que se avalia. Uma função de preparação recalcula, por viagem (mesmo identificador), as grandezas derivadas a partir das bases $x$, $y$, $t$ e distância à costa: intervalo temporal (\texttt{time\_gap}, em segundos), distância entre pontos consecutivos (\texttt{distance\_gap}, em metros), rumo (\texttt{bearing}, em graus, medido a partir do eixo $y$ da grelha UTM), variação de rumo com sinal (\texttt{signed\_turn}, em graus, no intervalo (-180, 180]) e velocidade (em nós). O rótulo binário (\texttt{target}) resulta do mapeamento das cinco classes em pesca e navegação. O primeiro ponto de cada viagem não tem anterior e fica com valores ausentes nas grandezas que dependem dele. Os valores recalculados coincidem com os originais do conjunto em mais de 99,99\,\% dos pares. O rumo da grelha difere do rumo em norte verdadeiro em cerca de 1\textdegree{}, pela convergência dos meridianos. A distância à costa é usada tal como vem no conjunto, sem verificação externa. A preparação aplica-se a cada conjunto separadamente, a partir do manifesto de divisão, e é verificada com testes sintéticos.}
+
+\revtext{rev022}{Na CNN, os dois primeiros pontos de cada viagem não têm grandezas dependentes do predecessor (\texttt{time\_gap}, \texttt{speed} e \texttt{signed\_turn}). Esses valores são preenchidos com zero e marcados por um indicador de ausência, para distinguir ausência de valor zero; estes pontos ficam fora da função de perda. Nenhuma linha é removida.}
 
 \section{Avaliação}
 \label{sec:avaliacao}
