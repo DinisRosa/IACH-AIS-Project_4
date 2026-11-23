@@ -7,7 +7,7 @@ Data: 2026-11-23. Documento para retomar o trabalho numa nova conversa.
 1. `AGENTS.md` (regras fixas; o `CLAUDE.md` manda lê-lo antes de qualquer ação).
 2. Este ficheiro.
 3. `PROGRESS.md` (histórico por entrada, termina em 2026-11-23an) e `REVISION_LOG.md` (REV-001 a REV-032).
-4. Antes de qualquer ação: verificar `git status` (há trabalho **por commitar**, ver «Estado atual»).
+4. Antes de qualquer ação: verificar `git status` e `git log` (ver «Estado atual»).
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
 
@@ -26,7 +26,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo, seed 42, 70/15
 - Marcos 1 e 2 fechados. **Marco 3: passos 1 a 5 feitos** (sequências, normalização, CNN, testes, primeira execução de treino). Passo 6 em parte (custo medido). Passo 7 (pedir revisão do Marco 3 ao utilizador) por fazer.
 - **A CNN 1D está treinada** numa primeira execução (REV-032), só com o treino oficial. Resultados provisórios: ver «Primeira execução de treino».
 - **94 testes a passar** (`iach-ais-venv-4/bin/python -m pytest tests/`): 15 da preparação, 60 da fase 1, 19 de checkpoints, configuração, métricas e ciclo de treino. Sintéticos, mais um teste que lê 3 viagens reais de **treino**.
-- **Git:** `main` alinhado com `origin/main` em `4ce5e53`. Estão **por commitar** (alterações de REV-032): `src/phase1/artifacts.py`, `config.py`, `metrics.py`, alterações a `training.py`, `configs/phase1_run1.json`, `scripts/run_phase1_training.py`, `plot_phase1_run.py`, `benchmark_training_speed.py`, `tests/test_checkpoint_and_training_loop.py`, `latex/proposta_pt.tex`, `docs/05`, `PROGRESS.md`, `REVISION_LOG.md` e este ficheiro. Resultados (`results/`) estão no `.gitignore`.
+- **Git:** todo o trabalho de REV-032 está **commitado localmente** (`2b5197c` código, `2a177ac` LaTeX, `e9fef3c` documentação, mais um commit final do handoff). `origin/main` está em `4ce5e53`, por isso há **commits por enviar**. Resultados (`results/`) estão no `.gitignore`.
 - **Push:** o utilizador autorizou pontualmente dois pushes (feitos por mim). A regra continua: o push é do utilizador, e cada push precisa de nova autorização explícita.
 - **LaTeX** (`latex/proposta_pt.tex`) compila sem erros, 8 páginas (verificado, mas o PDF desta revisão não foi inspecionado visualmente). O `scripts/watch_latex.sh` está ativo e, depois de cada compilação com sucesso, apaga os auxiliares de `latex/build/`, deixando só o PDF.
 - Validação e teste oficiais **não foram abertos**. As bases limpas de validação e teste existem desde REV-015, só para preparação.
@@ -111,7 +111,7 @@ Compilar o LaTeX à mão **sem colidir com o vigilante** (a partir de `latex/`):
 **Decisão imediata do utilizador:** o critério de paragem pode ter parado cedo. Repetir com paciência maior (por exemplo 30), ou outro lr? Repetir custa cerca de 40 s a 2 min. Qualquer alteração do critério ou do modelo é uma escolha metodológica a aprovar. Outras direções possíveis (também a aprovar, nenhuma decidida): mais contexto (kernels ou dilatação), pesos de classe (a política atual é sem eles), mais capacidade.
 
 Depois:
-1. Commit local do trabalho de REV-032 (pedir autorização; mensagem completa no formato do AGENTS §6).
+1. Push dos commits locais, se o utilizador o autorizar (ou fazê-lo ele próprio).
 2. Medir com código os tipos de erro (blocos de navegação prevista como pesca, fragmentação, desfasamento nas fronteiras).
 3. Passo 6 do Marco 3: registar as métricas internas de referência da execução final; passo 7: pedir revisão do Marco 3.
 4. Testes automáticos dos scripts; implementar o que falta de `docs/05` (segmentos e métricas por segmento, inferência como módulo, congelamento de execução).

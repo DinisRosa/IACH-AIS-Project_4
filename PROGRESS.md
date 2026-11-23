@@ -620,3 +620,12 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 **Pendente**
 - Commit local do trabalho de REV-032 e deste ficheiro, por autorizar. Push por autorização.
+
+### 2026-11-23ao — Commits locais de REV-032
+
+**Feito**
+- Três commits locais autorizados pelo utilizador: `2b5197c` (código, configuração, scripts e testes), `2a177ac` (LaTeX) e `e9fef3c` (registos, `docs/05` e handoff). Nenhum push.
+- `handoff.md` corrigido para refletir que o trabalho está commitado e que há commits por enviar.
+
+**Pendente**
+- Push, por autorização do utilizador. Decisão sobre repetir o treino (paciência maior ou outro lr).
