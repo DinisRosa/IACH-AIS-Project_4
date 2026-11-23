@@ -517,3 +517,14 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 **Pendente**
 - Quantificar o desfasamento; treino a sério e substituição das figuras; commit local por autorizar (inclui `latex/figures/`); push por conta do utilizador.
+
+### 2026-11-23ag — Commits locais do Marco 3
+
+**Feito**
+- Três commits locais, autorizados pelo utilizador: `fa391a5` (código, testes e scripts), `7fe7693` (LaTeX e figuras) e `11a0d97` (documentação). Nenhum push.
+- Os pendentes «commit local por autorizar» das entradas anteriores ficam resolvidos por estes commits.
+- `handoff.md` ficou fora dos commits: está desatualizado (anterior ao código da fase 1) e fica por atualizar ou descartar a pedido do utilizador.
+
+**Pendente**
+- Push, por conta do utilizador (`main` está 3 commits à frente de `origin/main`, antes deste registo).
+- Decisões de treino: partição interna, lr, épocas, critério de paragem e orçamento de tempo.
