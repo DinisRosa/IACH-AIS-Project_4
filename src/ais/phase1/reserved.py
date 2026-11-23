@@ -108,3 +108,47 @@ def load_reserved_data(split: str, data_path, manifest_path, authorization_path,
     if wrong:
         raise ValueError(f"{len(wrong)} id(s) não constam como '{split}' no manifesto (ex.: {wrong[:3]}).")
     return df
+
+
+def load_reserved_diagnostic(split: str, data_path, manifest_path, authorization_path, log_path,
+                             trip_id: str, columns) -> pd.DataFrame:
+    """Leitura de DIAGNÓSTICO de uma viagem de um conjunto reservado (REV-050): só as colunas e a
+    viagem que a autorização nomeia, para um gráfico; nunca serve para escolher nada.
+
+    É uma via separada da seleção: exige uma autorização com `finalidade = "diagnostico"`, que lista
+    `viagens_autorizadas`, `colunas_autorizadas` e `max_leituras`. Recusa o `validation` sempre. A leitura
+    fica registada ANTES de ler (evento `diagnostic_read`, distinto de `open`, que continua a contar só as
+    aberturas de seleção) e só traz as linhas dessa viagem e as colunas pedidas.
+    """
+    import pyarrow.parquet as pq
+
+    auth = _read_json(authorization_path)
+    if split != "test":
+        raise PermissionError("A leitura de diagnóstico só é possível no `test`; o `validation` fica fechado.")
+    if split not in auth.get("conjuntos_autorizados", []):
+        raise PermissionError(f"Sem autorização para ler '{split}'.")
+    if auth.get("finalidade") != "diagnostico":
+        raise PermissionError("A autorização não é de diagnóstico.")
+    if auth.get("validation_autorizado", False):
+        raise PermissionError("Uma autorização de diagnóstico não pode autorizar o `validation`.")
+    if trip_id not in auth.get("viagens_autorizadas", []):
+        raise PermissionError(f"A viagem '{trip_id}' não consta da autorização.")
+    columns = list(columns)
+    extra = sorted(set(columns) - set(auth.get("colunas_autorizadas", [])))
+    if extra:
+        raise PermissionError(f"Colunas não autorizadas: {extra}.")
+    done = [e for e in read_log(log_path)
+            if e.get("event") == "diagnostic_read" and e.get("authorization") == auth.get("id")]
+    if len(done) >= int(auth.get("max_leituras", 0)):
+        raise PermissionError(f"Leituras de diagnóstico esgotadas ({len(done)}/{auth.get('max_leituras')}).")
+    name = Path(data_path).name.lower()
+    if split not in name or "validation" in name or "train" in name:
+        raise PermissionError(f"O ficheiro '{Path(data_path).name}' não corresponde a '{split}'.")
+    manifest = pd.read_csv(manifest_path)
+    row = manifest[manifest["id"].astype(str) == str(trip_id)]
+    if row.empty or str(row["split"].iloc[0]) != split:
+        raise ValueError(f"A viagem '{trip_id}' não consta como '{split}' no manifesto.")
+    log_access(log_path, {"event": "diagnostic_read", "split": split, "authorization": auth["id"],
+                          "trip": trip_id, "columns": columns, "file": Path(data_path).name,
+                          "file_sha256": sha256_of(data_path)})
+    return pq.read_table(data_path, columns=columns, filters=[("id", "=", trip_id)]).to_pandas()

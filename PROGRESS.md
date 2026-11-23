@@ -23,7 +23,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
 - **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15). Texto estável a preto (REV-043); o novo (4.4, Secção 5 em partes, 7.1, Secção 6 e 8.2 a 8.4) tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C` e REV-048 `#1B5E20`.
 - **Git:** os commits locais de REV-046 a REV-048 (a partir de `9896021`) **não foram enviados**; o último estado em `origin/main` no início desta sessão era `696fed2`. Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-049.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-050.
 
 ## Decisões do utilizador (vigentes)
 
@@ -814,3 +814,17 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - O gráfico de `x` por `y` precisa de autorização explícita do utilizador (leitura do ficheiro do `test`, fora do âmbito da autorização das janelas).
+
+### 2026-11-23be — Leitura de diagnóstico da viagem 219001624-2: incidente (REV-050), 2026-11-23 23:43 WET
+
+**Feito**
+- Autorização `test_diagnostic_trip_219001624-2.json` (uma leitura de `id`, `point_id`, `t`, `x`, `y`), `load_reserved_diagnostic` em `reserved.py` e `--xy` no `plot_trip_diagnostic`. A leitura foi feita e registada.
+
+**Validado**
+- 6 testes novos; `pytest`: 187 passaram. Desenho testado com coordenadas falsas.
+
+**Problemas e limitações**
+- O desenho falhou depois da leitura (erro meu) e os dados não estavam guardados: a leitura única ficou gasta sem gráfico. Corrigido (os dados lidos passam a guardar-se antes de desenhar). A autorização não foi alargada por mim.
+
+**Pendente**
+- O gráfico de `x` por `y` precisa de **nova autorização** do utilizador para uma leitura.

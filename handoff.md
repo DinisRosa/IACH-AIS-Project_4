@@ -1,12 +1,12 @@
 # Handoff — Projeto AIS
 
-**Data e hora desta atualização:** 2026-11-23 23:41 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
+**Data e hora desta atualização:** 2026-11-23 23:44 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
 
 ### Última validação (registada neste handoff)
 
 | Verificação | Resultado | Data e hora (WET) |
 |---|---|---|
-| Testes (`pytest tests/`) | 181 passaram | 2026-11-23 23:40 |
+| Testes (`pytest tests/`) | 187 passaram | 2026-11-23 23:43 |
 | LaTeX (`pdflatex` + `bibtex`) | 11 páginas (limite de 15); 0 erros; 0 referências indefinidas | 2026-11-23 23:36 |
 | Git | `main` cinco commits à frente de `origin/main` (último em `origin/main`: `696fed2`); **nada enviado** | 2026-11-23 23:36 |
 | Treino de J0 e de J50 | os dois completos (300 épocas), 9,8 min e 21,3 min | 22:58 a 23:28 |
@@ -34,8 +34,8 @@ O commit deste handoff vem a seguir e não está na tabela.
 1. `AGENTS.md`: regras fixas. O `CLAUDE.md` manda lê-lo antes de qualquer ação.
 2. Este ficheiro.
 3. `docs/00_projeto_e_decisoes.md`, `docs/02_cnn_viagem_completa.md` e `docs/03_cnn_janelamento.md` (decisões e contratos do Marco 4, já implementado); `docs/01_dados_e_preparacao.md` se for preciso.
-4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23bc) e `REVISION_LOG.md` (REV-001 a REV-049).
-5. Antes de qualquer ação: `git status` e `git log`, e `iach-ais-venv-4/bin/python -m pytest tests/` (181 testes a passar).
+4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23bc) e `REVISION_LOG.md` (REV-001 a REV-050).
+5. Antes de qualquer ação: `git status` e `git log`, e `iach-ais-venv-4/bin/python -m pytest tests/` (187 testes a passar).
 
 Mensagem sugerida para abrir a nova sessão: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
 
@@ -65,7 +65,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 - **J0 e J50:** a mesma CNN (21 761 parâmetros, campo recetivo 13), mesmo normalizador, seed 42, Adam lr 1e-3, 300 épocas, **lotes de 32 janelas**, janelas de 64 pontos com passo 64 (J0) e 32 (J50). J0: 11 201 janelas, 351 passos por época, 105 300 passos, 9,8 min. J50: 22 265 janelas, 696 passos por época, 208 800 passos (o dobro), 21,3 min. Escolhidas no `test` numa só abertura: **J0 época 8, limiar 0,60; J50 época 4, limiar 0,75**. Exatidão por ponto no `test`: J0 93,5 %, J50 93,8 %, contra 94,7 % da referência. J0 supera a referência em 7 das 18 viagens e J50 em 5. Congeladas em `results/windows_j0_frozen/` e `results/windows_j50_frozen/`; números em `results/windows_final/final_results_windows.json` (fonte única).
 - **Por segmento (`test`, IoU 0,5, sem suavizar):** 18 segmentos reais de pesca; previstos 358 (referência), 377 (J0) e 303 (J50); F1 de segmentos de pesca cerca de 0,03 nas três; razão de fragmentação na pesca 19,9, 20,9 e 16,8 e na navegação 10,4, 11,0 e 8,8. **J50 reduz a fragmentação face a J0 e à referência**, mas a segmentação continua muito fragmentada. Erros de fronteira da pesca sem padrão (5 ou 6 pares correspondidos).
 - **Cuidados (limitações registadas):** os números do `test` são **otimistas** (serviram a escolher, nas três variantes com o mesmo critério). **A perda no `test` sobe com o treino** (máximos de 0,79 em J0 e 0,93 em J50 desde a época 100), por isso o critério da menor perda escolheu épocas muito cedo (4 e 8), enquanto a baseline foi escolhida na 162: parte da diferença pode vir do critério e não do janelamento. O lote difere (32 janelas contra uma viagem por passo) e J50 faz o dobro dos passos. Uma semente e 18 viagens de teste. Os resultados foram reportados como saíram, sem repetir nem ajustar.
-- **Conjuntos reservados:** o `test` foi aberto **duas vezes**, uma por autorização (baseline às 18:40 UTC; janelas às 23:28 UTC), ambas em `results/access_log.jsonl`. O `validation` **nunca foi aberto**.
+- **Conjuntos reservados:** o `test` teve ainda **uma leitura de diagnóstico** (viagem `219001624-2`, colunas `id`, `point_id`, `t`, `x`, `y`, sem escolher nada). Foi aberto **duas vezes** para seleção, uma por autorização (baseline às 18:40 UTC; janelas às 23:28 UTC), ambas em `results/access_log.jsonl`. O `validation` **nunca foi aberto**.
 - **Testes:** 181, todos sintéticos (mais um que lê 3 viagens de treino).
 - **LaTeX** (`latex/proposta_pt.tex`): 11 páginas, limite de 15. A Secção 8 tem 8.1 (referência), 8.2 (J0), 8.3 (J50) e 8.4 (comparação e RQ1), com números e figuras gerados por código. Texto novo com cor: rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`.
 - **Git:** cinco commits locais por enviar (ver cima). Cada push precisa de autorização explícita nova do utilizador.
@@ -89,7 +89,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 
 **Âmbito e LaTeX**
 - HMM e Wu et al. **não** são comparações. Explicabilidade, calibração e *dashboard* estão fora do mínimo atual.
-- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-050**. As cores já usadas estão no `REVISION_LOG.md` (verificar antes de escolher: duas escolhas iniciais já eram de REV-007 e REV-011).
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-051**. As cores já usadas estão no `REVISION_LOG.md` (verificar antes de escolher: duas escolhas iniciais já eram de REV-007 e REV-011).
 - Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`. Outras estão definidas, sem uso (rev013, rev018, rev020, rev022, rev024 a rev028, rev030 a rev032, rev035, rev036). Só marcadores Markdown: REV-029, REV-033, REV-034, REV-037, REV-038, REV-039, REV-044, REV-045.
 
 ## Ficheiros principais
@@ -141,7 +141,7 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
    - Quando fazer os **Marcos 6 e 7** (congelar tudo e medir no `validation`, uma só vez, com autorização nova).
 2. **LaTeX, passagens ainda abertas** (o utilizador adiou-as): explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o título começa por «OOI» e há texto a vermelho «human-on-the-loop»; o texto das subsecções 5.3 a 5.6 e 6.1 não foi relido pelo utilizador; a 7.1 ainda descreve a ablação completa.
 3. **Arrumação:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas, se o utilizador quiser.
-4. **Gráfico `x` por `y` da viagem `219001624-2` (REV-049):** o utilizador pediu-o; falta autorização explícita para ler o ficheiro do `test` (uso novo, fora da autorização das janelas). O gráfico das classes já está feito (J0 acerta 42,0 % nesta viagem por a probabilidade na pesca ficar abaixo do limiar de 0,60).
+4. **Gráfico `x` por `y` da viagem `219001624-2` (REV-049, REV-050):** o utilizador autorizou **uma** leitura (`configs/authorizations/test_diagnostic_trip_219001624-2.json`), mas o desenho falhou depois de a leitura ficar registada em `results/access_log.jsonl` (evento `diagnostic_read`) e os dados não estavam guardados: **a leitura está gasta e é preciso nova autorização**. O programa já guarda os dados lidos antes de desenhar. O gráfico das classes já está feito (J0 acerta 42,0 % nesta viagem por a probabilidade na pesca ficar abaixo do limiar de 0,60).
 5. **Push:** os cinco commits locais só seguem quando o utilizador autorizar.
 
 ## Regras a não esquecer

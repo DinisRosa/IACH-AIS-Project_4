@@ -829,3 +829,19 @@ Regras:
 - **Validação:** o gráfico foi gerado e inspecionado; as exatidões saem do próprio programa. `pytest tests/`: 181 passaram (23:40 WET). O programa não tem teste automático.
 - **Limitações:** uma única viagem, sem valor estatístico.
 - **Pendentes:** autorização para as coordenadas.
+
+### REV-050 — Leitura de diagnóstico de uma viagem do `test` (mecanismo e incidente)
+
+- **Data:** 2026-11-23, 23:43 WET (leitura registada às 23:42:48 UTC).
+- **Cor:** Violeta-claro `#B388FF`, RGB (179, 136, 255). Só marcador do registo; não há alteração ao `.tex`.
+- **O quê:**
+  - `ais.phase1.reserved.load_reserved_diagnostic`: via própria para ler **uma viagem e algumas colunas** de um conjunto reservado, só para diagnóstico. Exige uma autorização com `finalidade = "diagnostico"`, `viagens_autorizadas`, `colunas_autorizadas` e `max_leituras`; recusa sempre o `validation`; regista o evento `diagnostic_read` (distinto de `open`, que continua a contar só as aberturas de seleção) antes de ler; só lê as linhas dessa viagem e as colunas pedidas.
+  - `configs/authorizations/test_diagnostic_trip_219001624-2.json`: autorização escrita a partir da resposta do utilizador («sim, autorizo»), para **uma** leitura de `id`, `point_id`, `t`, `x` e `y` da viagem `219001624-2`, só para o gráfico de `x` por `y`.
+  - `plot_trip_diagnostic --xy` desenha a trajetória por classe (real, referência, J0, J50), alinhada por `point_id`.
+- **Incidente:** a leitura autorizada foi feita e registada, mas o **desenho falhou** (erro meu: opção de proporção inválida com eixos partilhados) e os dados lidos **não tinham sido guardados**. A leitura única ficou gasta sem produzir o gráfico. Não se reutilizou nem se aumentou a autorização por iniciativa própria: pediu-se nova autorização ao utilizador. O programa passou a **guardar os dados lidos antes de desenhar** (`results/diagnostic_trip/<id>_xy_lido.csv`) e o desenho foi testado com coordenadas falsas, sem dados reservados.
+- **Porquê:** pedido do utilizador, para perceber a exatidão baixa de J0 nesta viagem.
+- **Ficheiros afetados:** `src/ais/phase1/reserved.py`, `src/ais/cli/plot_trip_diagnostic.py`, `configs/authorizations/test_diagnostic_trip_219001624-2.json`, `tests/test_reserved_diagnostic.py`, `README.md`, `PROGRESS.md`, `handoff.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação:** 6 testes sintéticos novos (só a viagem e as colunas autorizadas, registo, segunda leitura recusada, recusas sem registo, finalidade errada, `validation`, ficheiro errado); `pytest tests/`: 187 passaram (23:43 WET). Exposição: o `access_log` tem um `diagnostic_read` de `219001624-2` (colunas `x`, `y`, `point_id`, `t`, `id`); nenhum valor foi visto nem usado.
+- **Limitações:** o programa de desenho continua sem teste automático (só o teste manual com dados falsos). O gráfico de `x` por `y` **ainda não existe**.
+- **Pendentes:** nova autorização do utilizador para uma leitura (com o âmbito acima).

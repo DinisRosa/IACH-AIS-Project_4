@@ -7,9 +7,14 @@ Mostra, por ponto: a classe real, a prevista por cada modelo e a probabilidade d
 cada modelo); em J0 marca as fronteiras das janelas de 64 pontos. A exatidão de cada modelo nesta viagem
 é calculada aqui. É um diagnóstico: não serve para escolher nada.
 
+Com `--xy` desenha também as coordenadas `x` por `y` da viagem, coloridas pela classe real e pela prevista
+por cada modelo. Isso exige ler as colunas `id`, `point_id`, `t`, `x` e `y` dessa viagem no ficheiro do
+`test`: só se faz com `configs/authorizations/test_diagnostic_trip_<id>.json` (finalidade `diagnostico`,
+uma leitura, registada no `access_log` por `ais.phase1.reserved.load_reserved_diagnostic`).
+
 Execução (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python -m ais.cli.plot_trip_diagnostic 219001624-2
-Saída: results/diagnostic_trip/<id>_classes.png (não versionada).
+    iach-ais-venv-4/bin/python -m ais.cli.plot_trip_diagnostic 219001624-2 [--xy]
+Saídas: results/diagnostic_trip/<id>_classes.png e, com `--xy`, <id>_xy.png (não versionadas).
 """
 from __future__ import annotations
 
@@ -81,6 +86,52 @@ def plot(trip: str, out_dir: Path | None = None) -> tuple[Path, dict]:
     return path, {"n_points": n, "accuracy": acc, "pontos_de_pesca_reais": int(target.sum())}
 
 
+def plot_xy(trip: str, xy: pd.DataFrame, out_dir: Path | None = None) -> Path:
+    """Coordenadas `x` por `y` da viagem, uma figura por modelo e a classe real, alinhadas por `point_id`."""
+    data = load_trip(trip)
+    base = data["baseline"][["point_id", "t", "target"]]
+    df = base.merge(xy[["point_id", "x", "y"]], on="point_id", how="left", validate="one_to_one")
+    assert df["x"].notna().all() and df["y"].notna().all(), "Há pontos sem coordenadas."
+    panels = [("real", df["target"].to_numpy())] + [
+        (f"{k} ({100 * float((d['predicted'].to_numpy() == df['target'].to_numpy()).mean()):.1f} % certo)",
+         d["predicted"].to_numpy()) for k, d in data.items()]
+    fig, axes = plt.subplots(2, 2, figsize=(8.0, 7.4), sharex=True, sharey=True)
+    for ax, (title, cls) in zip(axes.ravel(), panels):
+        ax.plot(df["x"], df["y"], color=INK2, lw=0.4, alpha=0.5, zorder=1)
+        ax.scatter(df["x"], df["y"], c=cls, cmap=CMAP, vmin=0, vmax=1, s=7, zorder=2)
+        ax.scatter(df["x"].iloc[0], df["y"].iloc[0], marker="^", s=45, color=INK, zorder=3)
+        ax.scatter(df["x"].iloc[-1], df["y"].iloc[-1], marker="s", s=40, color=INK, zorder=3)
+        ax.set_title(title, fontsize=9)
+        ax.set_aspect("equal", adjustable="box")
+    for ax in axes[1]:
+        ax.set_xlabel("x (m)")
+    for ax in axes[:, 0]:
+        ax.set_ylabel("y (m)")
+    fig.suptitle(f"Viagem {trip}: trajetória por classe (azul: navegação; laranja: pesca; triângulo: início; quadrado: fim)",
+                 fontsize=9)
+    fig.tight_layout()
+    out_dir = out_dir or ROOT / "results" / "diagnostic_trip"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"{trip}_xy.png"
+    fig.savefig(path, dpi=180, bbox_inches="tight")
+    plt.close(fig)
+    return path
+
+
 if __name__ == "__main__":
-    p, info = plot(sys.argv[1])
+    trip_id = sys.argv[1]
+    p, info = plot(trip_id)
     print(p, info)
+    if "--xy" in sys.argv[2:]:
+        from ais.phase1.reserved import load_reserved_diagnostic
+        xy = load_reserved_diagnostic(
+            "test", ROOT / "data" / "123_fishing_trajs_clean_test.parquet",
+            ROOT / "manifests" / "split_manifest_seed42.csv",
+            ROOT / "configs" / "authorizations" / f"test_diagnostic_trip_{trip_id}.json",
+            ROOT / "results" / "access_log.jsonl", trip_id, ["id", "point_id", "t", "x", "y"])
+        # Guarda o que foi lido ANTES de desenhar: a autorização é de uma só leitura e um erro de desenho
+        # não pode obrigar a ler outra vez (REV-050).
+        out = ROOT / "results" / "diagnostic_trip"
+        out.mkdir(parents=True, exist_ok=True)
+        xy.to_csv(out / f"{trip_id}_xy_lido.csv", index=False)
+        print(plot_xy(trip_id, xy))
