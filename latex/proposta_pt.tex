@@ -66,9 +66,17 @@
 \definecolor{rev040}{RGB}{127,0,0}
 \definecolor{rev041}{RGB}{255,23,68}
 \definecolor{rev042}{RGB}{10,61,98}
+% REV-046 — cor #00B0FF, RGB (0, 176, 255) (mesma do REVISION_LOG.md). Janelamento implementado: protocolo, lote e treino de J0 e J50.
+\definecolor{rev046}{RGB}{0,176,255}
+% REV-047 — cor #4A148C, RGB (74, 20, 140) (mesma do REVISION_LOG.md). Resultados de J0 e J50, medição por segmento e comparação com a referência.
+\definecolor{rev047}{RGB}{74,20,140}
+% REV-048 — cor #1B5E20, RGB (27, 94, 32) (mesma do REVISION_LOG.md). Atualização do restante texto ao estado real do trabalho.
+\definecolor{rev048}{RGB}{27,94,32}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 % Números gerados por ais.cli.build_final_results (REV-035): \rv{\resXxx} mostra o valor na cor da revisão.
 \input{generated/resultados}
+% Números de J0 e J50 gerados por ais.cli.build_window_results (REV-047).
+\input{generated/resultados_janelas}
 \newcommand{\rv}[1]{#1}
 \usepackage[switch]{lineno}
 
@@ -188,7 +196,7 @@ O código desta fase foi verificado com testes automáticos sobre dados sintéti
 \subsection{\texorpdfstring{\revtext{rev023}{Janelamento com sobreposição}}{Janelamento com sobreposição}}
 \label{sec:abordagem-janelas}
 
-\revtext{rev041}{A mesma CNN de referência (Secção~\ref{sec:cnn-especificacao}), sem alterações à arquitetura, é treinada e avaliada sobre janelas de comprimento fixo $L$ com sobreposição, para medir se o janelamento e a sobreposição melhoram a segmentação face à viagem completa. Começa-se com $L=64$ pontos e com sobreposição de 0\,\% (controlo, que separa o efeito do janelamento do efeito da sobreposição) e de 50\,\%; depois testa-se se aumentar ou diminuir $L$ compensa. Cada janela devolve uma probabilidade por ponto, e cada ponto original recebe a média das probabilidades das janelas em que aparece; a avaliação conta uma previsão por ponto original, e o preenchimento da última janela é ignorado na perda, na média e nas métricas. A divisão dos dados, as características, o normalizador e as métricas mantêm-se, para que a única diferença seja o janelamento. Ficam por decidir se a sobreposição se aplica no treino, na inferência ou em ambos, e o orçamento de treino, porque a mesma quantidade de épocas não dá o mesmo número de passos. Esta fase ainda não foi implementada.}
+\revtext{rev046}{A mesma CNN de referência (Secção~\ref{sec:cnn-especificacao}), sem alterações à arquitetura, foi treinada e avaliada sobre janelas de $L=64$ pontos em duas variantes: J0, sem sobreposição (passo de 64 pontos), que serve de controlo e separa o efeito do janelamento do efeito da sobreposição, e J50, com 50\,\% de sobreposição (passo de 32 pontos). As janelas começam no primeiro ponto de cada viagem e avançam pelo passo até uma delas alcançar o fim. Nenhuma janela mistura duas viagens; dentro de uma viagem atravessam os intervalos de tempo, tal como a referência trata a viagem inteira como uma só sequência. Quando o número de pontos não é um múltiplo do passo, a última janela fica mais curta do que $L$: não se acrescentam pontos falsos. Para empilhar janelas de comprimentos diferentes num lote usa-se um enchimento que a perda ignora e que a rede volta a pôr a zero depois de cada camada, pelo que a previsão de uma janela curta é a que teria sozinha (verificado por teste). A sobreposição é a mesma no treino e na inferência. Cada janela devolve uma probabilidade por ponto, e a avaliação conta uma previsão por ponto original: a probabilidade de cada ponto é a média simples das probabilidades das janelas que o cobrem, e só depois se aplica o limiar. Esta média é uma reconstrução e não uma suavização temporal, que fica para o pós-processamento. O treino é o da referência (Adam, taxa de aprendizagem $10^{-3}$, \rv{\resTrEpocas} épocas, semente \rv{\resTrSemente}, sem pesos de classe nem reamostragem), mas com lotes de 32 janelas: com o mesmo número de épocas, J50 tem mais janelas e faz \rv{\resJCPassosVezes} vezes os passos de otimização de J0 (Subsecção~\ref{sec:resultados-janelas50}). A divisão dos dados, as características, o normalizador (o mesmo da referência) e as métricas mantêm-se, para que a única diferença seja o janelamento. As sobreposições de 25\,\% e de 75\,\% e outros valores de $L$ ficam por estudar.}
 
 \subsection{\texorpdfstring{\revtext{rev023}{Pós-processamento temporal}}{Pós-processamento temporal}}
 \label{sec:abordagem-pos}
@@ -207,7 +215,7 @@ Esta secção descreve a rede com o detalhe necessário para a recriar com os me
 
 \subsection{\texorpdfstring{Entrada e saída}{Entrada e saída}}
 
-A rede processa \revtext{rev041}{uma sequência de cada vez: a viagem completa ou, na experiência com janelamento, uma janela.} A entrada é uma matriz $X\in\mathbf{R}^{7\times N}$, em que $N$ é o número de pontos da \revtext{rev041}{sequência (varia de viagem para viagem; numa janela é o comprimento fixo $L$)} e as sete linhas, por esta ordem, são: velocidade (\texttt{speed\_calc\_mps}), variação de rumo com sinal (\texttt{signed\_turn\_calc\_deg}), intervalo temporal (\texttt{time\_gap\_calc\_s}), distância à costa (\texttt{distanceToShore}), e os indicadores de ausência da velocidade, da variação de rumo e do intervalo temporal (1 se o valor original faltava, 0 caso contrário). As quatro primeiras linhas são normalizadas com a média e o desvio-padrão populacional de cada característica, calculados só com as viagens de treino e ignorando valores em falta; depois de normalizar, os valores em falta ficam a zero (a média). Os identificadores, os instantes, $x$ e $y$ não são entradas. A saída é um vetor de $N$ \emph{logits}, um por ponto original, $z\in\mathbf{R}^{N}$; a probabilidade de pesca é $p_i=\sigma(z_i)=1/(1+e^{-z_i})$, calculada só na inferência. \revtext{rev041}{Na viagem completa não há janelas, truncagem nem preenchimento de comprimento, e o lote tem sempre uma só viagem; com janelas, o preenchimento da última janela é marcado e ignorado na perda.}
+A rede processa \revtext{rev041}{uma sequência de cada vez: a viagem completa ou, na experiência com janelamento, uma janela.} A entrada é uma matriz $X\in\mathbf{R}^{7\times N}$, em que $N$ é o número de pontos da \revtext{rev041}{sequência (varia de viagem para viagem; numa janela é o comprimento fixo $L$\revtext{rev046}{, exceto na última janela de cada viagem, que pode ser mais curta})} e as sete linhas, por esta ordem, são: velocidade (\texttt{speed\_calc\_mps}), variação de rumo com sinal (\texttt{signed\_turn\_calc\_deg}), intervalo temporal (\texttt{time\_gap\_calc\_s}), distância à costa (\texttt{distanceToShore}), e os indicadores de ausência da velocidade, da variação de rumo e do intervalo temporal (1 se o valor original faltava, 0 caso contrário). As quatro primeiras linhas são normalizadas com a média e o desvio-padrão populacional de cada característica, calculados só com as viagens de treino e ignorando valores em falta; depois de normalizar, os valores em falta ficam a zero (a média). Os identificadores, os instantes, $x$ e $y$ não são entradas. A saída é um vetor de $N$ \emph{logits}, um por ponto original, $z\in\mathbf{R}^{N}$; a probabilidade de pesca é $p_i=\sigma(z_i)=1/(1+e^{-z_i})$, calculada só na inferência. \revtext{rev041}{Na viagem completa não há janelas, truncagem nem preenchimento de comprimento, e o lote tem sempre uma só viagem;} \revtext{rev046}{com janelas, o lote tem 32 janelas e a última janela de cada viagem é mais curta, sem pontos falsos (o enchimento que serve só para empilhar fica fora da perda e da média).}
 
 \subsection{\texorpdfstring{Arquitetura}{Arquitetura}}
 
@@ -291,20 +299,20 @@ A perda é a entropia cruzada binária aplicada aos \emph{logits}, com média so
 \begin{equation}
 \mathcal{L}=-\frac1N\sum_{i=1}^{N}\Big[y_i\log\sigma(z_i)+(1-y_i)\log\big(1-\sigma(z_i)\big)\Big],
 \end{equation}
-com $y_i=1$ para pesca e $0$ para navegação. Usa-se a versão que recebe \emph{logits} (\texttt{BCEWithLogitsLoss}), que combina a sigmoide e o logaritmo numa forma numericamente estável; por isso a rede não tem sigmoide na saída e esta não é aplicada duas vezes. Todos os pontos entram na perda, incluindo os pontos iniciais com valores em falta, que têm máscara na entrada. Não se usam pesos de classe nem reamostragem, por decisão do projeto: o desequilíbrio natural entre pesca e navegação é mantido e pode enviesar o modelo para a classe maioritária; é uma limitação a observar nos resultados. Como cada passo de treino usa uma só viagem e a perda é a média dessa viagem, cada viagem pesa o mesmo \emph{por passo}, independentemente do comprimento; viagens longas têm assim, por ponto, menos peso do que viagens curtas.
+com $y_i=1$ para pesca e $0$ para navegação. Usa-se a versão que recebe \emph{logits} (\texttt{BCEWithLogitsLoss}), que combina a sigmoide e o logaritmo numa forma numericamente estável; por isso a rede não tem sigmoide na saída e esta não é aplicada duas vezes. Todos os pontos entram na perda, incluindo os pontos iniciais com valores em falta, que têm máscara na entrada. Não se usam pesos de classe nem reamostragem, por decisão do projeto: o desequilíbrio natural entre pesca e navegação é mantido e pode enviesar o modelo para a classe maioritária; é uma limitação a observar nos resultados. Como cada passo de treino usa uma só viagem e a perda é a média dessa viagem, cada viagem pesa o mesmo \emph{por passo}, independentemente do comprimento; viagens longas têm assim, por ponto, menos peso do que viagens curtas. \revtext{rev046}{Com janelas, cada passo usa 32 janelas e a perda é a média sobre os pontos reais do lote; um ponto que aparece em duas janelas (sobreposição de 50\,\%) conta duas vezes no treino.}
 
 \subsection{\texorpdfstring{Otimizador e treino}{Otimizador e treino}}
 
-O otimizador previsto é o Adam, que adapta o passo de cada parâmetro e costuma funcionar sem grande ajuste, o que o torna uma escolha razoável para uma referência. Está implementado sem decaimento de pesos nem calendário de taxa de aprendizagem. A taxa de aprendizagem $10^{-3}$ no código é apenas o valor por omissão do Adam, usado como \emph{marcador}: \textbf{não foi escolhida nem validada} e será fixada na configuração de execução. Os restantes parâmetros foram fixados na configuração do treino (Subsecção~\ref{sec:cnn-treino}) e são igualmente iniciais e não validados. Cada passo de otimização usa uma viagem completa (\emph{batch} de tamanho 1), em ordem aleatória reprodutível. \revtext{rev041}{Na experiência com janelas, o tamanho do lote e o orçamento de treino ainda estão por definir.}
+O otimizador previsto é o Adam, que adapta o passo de cada parâmetro e costuma funcionar sem grande ajuste, o que o torna uma escolha razoável para uma referência. Está implementado sem decaimento de pesos nem calendário de taxa de aprendizagem. A taxa de aprendizagem $10^{-3}$ no código é apenas o valor por omissão do Adam, usado como \emph{marcador}: \textbf{não foi escolhida nem validada} e será fixada na configuração de execução. Os restantes parâmetros foram fixados na configuração do treino (Subsecção~\ref{sec:cnn-treino}) e são igualmente iniciais e não validados. Cada passo de otimização usa uma viagem completa (\emph{batch} de tamanho 1), em ordem aleatória reprodutível. \revtext{rev046}{Na experiência com janelas, o lote tem 32 janelas e o treino repete o da referência (\rv{\resTrEpocas} épocas), com um limite de 45 minutos por treino.}
 
 \subsection{\texorpdfstring{Reprodutibilidade}{Reprodutibilidade}}
 
-Os pesos iniciais são os da inicialização por omissão do PyTorch (\rv{\resTrTorch}, CPU) para camadas convolucionais, e a semente do gerador (Python, NumPy e PyTorch) é fixada na execução; a semente da divisão dos dados é 42. A ordem de treino das viagens usa um gerador com semente própria. O código regista a semente, as versões e o número de \emph{threads}, mas não garante resultados idênticos entre máquinas diferentes.  A configuração do treino (semente \resTrSemente{} e os valores acima) está no ficheiro \texttt{configs/phase1\_select.json}. Cada execução grava a semente, as versões, o normalizador e os hashes dos ficheiros usados. A escolha da época e do limiar segue um protocolo declarado antes de abrir o conjunto de teste e fica registada, e todos os números desta secção vêm do ficheiro \texttt{results/baseline\_frozen/final\_results.json}, gerado por \texttt{build\_final\_results.py}.
+Os pesos iniciais são os da inicialização por omissão do PyTorch (\rv{\resTrTorch}, CPU) para camadas convolucionais, e a semente do gerador (Python, NumPy e PyTorch) é fixada na execução; a semente da divisão dos dados é 42. A ordem de treino das viagens usa um gerador com semente própria. O código regista a semente, as versões e o número de \emph{threads}, mas não garante resultados idênticos entre máquinas diferentes.  A configuração do treino (semente \resTrSemente{} e os valores acima) está no ficheiro \texttt{configs/phase1\_select.json}\revtext{rev046}{ (viagem completa) e em \texttt{configs/windows\_j0.json} e \texttt{configs/windows\_j50.json} (janelas)}. Cada execução grava a semente, as versões, o normalizador e os hashes dos ficheiros usados. A escolha da época e do limiar segue um protocolo declarado antes de abrir o conjunto de teste e fica registada, e todos os números desta secção vêm do ficheiro \texttt{results/baseline\_frozen/final\_results.json}, gerado por \texttt{build\_final\_results.py}.
 
 \section{Materiais e Dados}
 \label{sec:materiais-dados}
 
-Será usado o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}: \rv{\resDadosViagens} trajetórias de pesca anotadas, com \rv{\resDadosLinhas} pontos (linhas), 13 colunas --- 12 atributos (identificador do navio e da viagem, instante, longitude, latitude, coordenadas projetadas, rumo, distância à costa, entre outros) e um rótulo. As cinco classes, desequilibradas (pesca: \texttt{02-fishing}, \texttt{04-fishing}; navegação: \texttt{01-sailing}, \texttt{03-sailing}, \texttt{05-sailing}), são agregadas num problema binário, mantendo o desequilíbrio natural (sem reamostragem nem pesos de classe) e as trajetórias completas.
+\revtext{rev048}{Usa-se} o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}: \rv{\resDadosViagens} trajetórias de pesca anotadas, com \rv{\resDadosLinhas} pontos (linhas), 13 colunas --- 12 atributos (identificador do navio e da viagem, instante, longitude, latitude, coordenadas projetadas, rumo, distância à costa, entre outros) e um rótulo. As cinco classes, desequilibradas (pesca: \texttt{02-fishing}, \texttt{04-fishing}; navegação: \texttt{01-sailing}, \texttt{03-sailing}, \texttt{05-sailing}), são agregadas num problema binário, mantendo o desequilíbrio natural (sem reamostragem nem pesos de classe) e as trajetórias completas.
 
 Eticamente, apesar de públicos, os dados AIS usados em fiscalização exigem cuidado: a deteção automática não deve, por si só, fundamentar sanções (a decisão humana é obrigatória); o sistema deve ser transparente e justo, evitando enviesamentos contra tipos de navio, regiões ou comunidades de pesca; e a confiança deve ser calibrada para não induzir falsa segurança.
 
@@ -321,7 +329,7 @@ Na CNN, o primeiro ponto de cada viagem não tem \texttt{time\_gap}, \texttt{spe
 \subsection{\texorpdfstring{\revtext{rev023}{Métricas e estudo de ablação}}{Métricas e estudo de ablação}}
 \label{sec:avaliacao-metricas}
 
-Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e por ponto), \revtext{rev042}{comparando a CNN sobre janelas com a CNN de referência sobre a viagem completa}. Um estudo de ablação com quatro variantes isola cada componente: (i) sem sobreposição nem pós-processamento; (ii) só sobreposição; (iii) só pós-processamento; (iv) ambos (método proposto). Analisa-se também a robustez face à taxa de sobreposição (0\%, 25\%, 50\%, 75\%) e ao nível de regularização temporal. A estabilidade mede-se pela fragmentação (número de segmentos por trajetória) e pelo erro de fronteira (desvio entre início/fim previsto e real); ``estável'' designa uma segmentação que muda pouco sob pequenas alterações da janela ou do pós-processamento.
+Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e por ponto), \revtext{rev042}{comparando a CNN sobre janelas com a CNN de referência sobre a viagem completa}. \revtext{rev047}{Nesta fase medem-se a referência, J0 e J50 por ponto e por segmento (IoU temporal de 0,5, em segundos, com correspondência um-para-um e sem suavizar as previsões), no conjunto de teste, com os resultados na Secção~\ref{sec:resultados}.} \revtext{rev048}{O estudo de ablação previsto, com quatro variantes que isolam cada componente: (i) sem sobreposição nem pós-processamento; (ii) só sobreposição; (iii) só pós-processamento; (iv) ambos (método proposto), só se fará se o janelamento mostrar benefício. Já se mediram as taxas de sobreposição de 0\,\% e de 50\,\%; ficam por analisar as de 25\,\% e 75\,\% e o nível de regularização temporal.} A estabilidade mede-se pela fragmentação (número de segmentos por trajetória) e pelo erro de fronteira (desvio entre início/fim previsto e real); ``estável'' designa uma segmentação que muda pouco sob pequenas alterações da janela ou do pós-processamento.
 
 \subsection{\texorpdfstring{Divisão dos dados e protocolo}{Divisão dos dados e protocolo}}
 \label{sec:avaliacao-protocolo}
@@ -336,7 +344,7 @@ Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos predit
 \section{\texorpdfstring{\revtext{rev041}{Resultados}}{Resultados}}
 \label{sec:resultados}
 
-\revtext{rev041}{Esta secção reúne os resultados da CNN de referência: sobre a viagem completa (Subsecção~\ref{sec:cnn-treino}) e, depois, com janelamento (Subsecção~\ref{sec:resultados-janelas}). A rede é a mesma em todos os casos, para que as diferenças se devam só ao janelamento e à sobreposição.}
+\revtext{rev047}{Esta secção reúne os resultados da CNN de referência sobre a viagem completa (Subsecção~\ref{sec:cnn-treino}), com janelamento sem sobreposição (Subsecção~\ref{sec:resultados-janelas}) e com 50\,\% de sobreposição (Subsecção~\ref{sec:resultados-janelas50}), e compara-os na Subsecção~\ref{sec:resultados-comparacao}. A rede é a mesma em todos os casos, para que as diferenças se devam só ao janelamento e à sobreposição (e ao que decorre deles: o lote e o número de passos). Nos três casos a época e o limiar foram escolhidos no conjunto de teste com o mesmo critério, e o conjunto de validação não foi aberto.}
 
 \subsection{\texorpdfstring{CNN de referência sobre a viagem completa}{CNN de referência sobre a viagem completa}}
 \label{sec:cnn-treino}
@@ -388,10 +396,146 @@ Teste & Pesca & \resTestePescaReal & \resTestePescaPrec & \resTestePescaSens & \
 \label{fig:final-viagens}
 \end{figure*}
 
-\subsection{\texorpdfstring{\revtext{rev041}{CNN de referência com janelamento}}{CNN de referência com janelamento}}
+\subsection{\texorpdfstring{\revtext{rev047}{CNN de referência com janelamento (sobreposição de 0\,\%)}}{CNN de referência com janelamento (sobreposição de 0\,\%)}}
 \label{sec:resultados-janelas}
 
-\revtext{rev041}{Ainda não foram feitos. Quando existirem, esta subsecção apresenta os resultados da mesma CNN de referência sobre janelas de $L=64$ pontos, com sobreposição de 0\,\% e de 50\,\%, comparados com os da subsecção anterior com as mesmas métricas e a mesma divisão, e depois o efeito de aumentar ou diminuir $L$. É esta comparação com a viagem completa que responde à RQ1 (Secção~\ref{sec:objetivos}).}
+\revtext{rev047}{J0 treina a CNN de referência sobre janelas de \resJZL{} pontos com passo de \resJZPasso{} pontos (sobreposição de \resJZSobrep{}). As \resTrViagens{} viagens de treino dão \resJZJanelas{} janelas, \resJZJanelasCurtas{} delas mais curtas (a última de cada viagem), e cada época faz \resJZPassos{} passos com lotes de \resJZLote{} janelas, contra \resTrViagens{} passos por época na referência. O treino repetiu o da referência (\resJZEpocas{} épocas, a mesma semente e o mesmo normalizador, sem monitorização interna) e durou cerca de \resJZSegundos{} minutos num CPU (\resJZSegPorEpoca{} segundos por época, avaliação incluída), dentro do limite de \resJZOrcamentoMin{} minutos.}
+
+\revtext{rev047}{A época e o limiar foram escolhidos no conjunto de teste, numa única abertura que serviu também para a seleção de J50 e para medir a referência por segmento, com os critérios da referência aplicados às probabilidades reconstruídas por ponto: a época com a menor perda por ponto e, nela, o limiar da grelha que maximiza a média dos F1 das duas classes. Resultaram a época \resJZEpoca{} (de \resSelNCand{}) e o limiar \resJZLimiar{}. Esta época é muito anterior ao fim do treino: a perda por ponto no teste sobe com as épocas, e chega a \resJZPerdaTesteMax{} desde a época 100, enquanto a do treino desce (Figura~\ref{fig:j0-perda}), o que é compatível com um ajuste excessivo às viagens de treino. Na época escolhida a perda vale \resJZPerdaTeste{} no teste e \resJZPerdaTreino{} no treino. O modelo avaliado é, por isso, o das primeiras épocas, e as restantes épocas do treino não entram nos resultados.}
+
+\revtext{rev047}{A Tabela~\ref{tab:j0-resultados} e a Figura~\ref{fig:j0-matriz} mostram o desempenho por ponto do modelo congelado nas viagens de treino e nas de teste. Os resultados do teste são \textbf{otimistas}, porque esse conjunto serviu para escolher a época e o limiar, e não substituem a medição final no conjunto de validação. No teste, a exatidão foi \resJZTesteAcc{} (\resJZTesteErros{} erros em \resJZTestePontos{} pontos), contra \resJZTesteAccMaj{} de uma regra que prevê sempre a classe maioritária e \resBsTesteAcc{} da referência sobre a viagem completa; no treino foi \resJZTreinoAcc{}, contra \resBsTreinoAcc{} da referência. Por viagem de teste, a exatidão vai de \resJZTesteViagMin{} a \resJZTesteViagMax{}, com mediana de \resJZTesteViagMed{}; em \resJZTesteNViagNaoSuperam{} viagens não supera a regra da classe maioritária dessa viagem. Face à referência, J0 tem exatidão maior em \resJZViagMelhor{} das 18 viagens de teste e menor em \resJZViagPior{}, com uma diferença mediana de \resJZViagDifMed{} pontos percentuais.}
+
+\begin{table}[t]
+\centering\footnotesize\color{rev047}\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Conjunto & Classe & Pontos & Prec. & Sensib. & F1 & IoU \\
+\midrule
+Treino & Navegação & \resJZTreinoNavReal & \resJZTreinoNavPrec & \resJZTreinoNavSens & \resJZTreinoNavF & \resJZTreinoNavIoU \\
+Treino & Pesca & \resJZTreinoPescaReal & \resJZTreinoPescaPrec & \resJZTreinoPescaSens & \resJZTreinoPescaF & \resJZTreinoPescaIoU \\
+Teste & Navegação & \resJZTesteNavReal & \resJZTesteNavPrec & \resJZTesteNavSens & \resJZTesteNavF & \resJZTesteNavIoU \\
+Teste & Pesca & \resJZTestePescaReal & \resJZTestePescaPrec & \resJZTestePescaSens & \resJZTestePescaF & \resJZTestePescaIoU \\
+\bottomrule
+\end{tabular}
+\caption{Métricas por ponto e por classe de J0 (época \resJZEpoca, limiar \resJZLimiar). ``Pontos'' são os pontos reais de cada classe. Os resultados do teste são otimistas (esse conjunto serviu para escolher).}
+\label{tab:j0-resultados}
+\end{table}
+
+\begin{figure}[t]
+\centering\color{rev047}
+\includegraphics[width=0.95\columnwidth]{figures/janelas_j0_perda.png}
+\caption{Perda por ponto (entropia cruzada binária, depois de reconstruir uma previsão por ponto) de J0 ao longo das épocas, avaliada no fim de cada época nas viagens de treino e nas de teste. A linha tracejada marca a época escolhida no teste.}
+\label{fig:j0-perda}
+\end{figure}
+
+\begin{figure}[t]
+\centering\color{rev047}
+\includegraphics[width=0.95\columnwidth]{figures/janelas_j0_matriz.png}
+\caption{Matrizes de confusão por ponto de J0: percentagem da classe real (linha) prevista em cada classe, nas viagens de treino e nas de teste.}
+\label{fig:j0-matriz}
+\end{figure}
+
+\subsection{\texorpdfstring{\revtext{rev047}{CNN de referência com janelamento e 50\,\% de sobreposição}}{CNN de referência com janelamento e 50\,\% de sobreposição}}
+\label{sec:resultados-janelas50}
+
+\revtext{rev047}{J50 treina a CNN de referência sobre janelas de \resJCL{} pontos com passo de \resJCPasso{} pontos (sobreposição de \resJCSobrep{}). As \resTrViagens{} viagens de treino dão \resJCJanelas{} janelas, \resJCJanelasCurtas{} delas mais curtas (a última de cada viagem), e cada época faz \resJCPassos{} passos com lotes de \resJCLote{} janelas, contra \resTrViagens{} passos por época na referência, e \resJCPassosVezes{} vezes os passos de otimização de J0 no mesmo número de épocas (\resJCPassosTotal{} passos no total). O treino repetiu o da referência (\resJCEpocas{} épocas, a mesma semente e o mesmo normalizador, sem monitorização interna) e durou cerca de \resJCSegundos{} minutos num CPU (\resJCSegPorEpoca{} segundos por época, avaliação incluída), dentro do limite de \resJCOrcamentoMin{} minutos.}
+
+\revtext{rev047}{A época e o limiar foram escolhidos no conjunto de teste, numa única abertura que serviu também para a seleção de J0 e para medir a referência por segmento, com os critérios da referência aplicados às probabilidades reconstruídas por ponto: a época com a menor perda por ponto e, nela, o limiar da grelha que maximiza a média dos F1 das duas classes. Resultaram a época \resJCEpoca{} (de \resSelNCand{}) e o limiar \resJCLimiar{}. Esta época é muito anterior ao fim do treino: a perda por ponto no teste sobe com as épocas, e chega a \resJCPerdaTesteMax{} desde a época 100, enquanto a do treino desce (Figura~\ref{fig:j50-perda}), o que é compatível com um ajuste excessivo às viagens de treino. Na época escolhida a perda vale \resJCPerdaTeste{} no teste e \resJCPerdaTreino{} no treino. O modelo avaliado é, por isso, o das primeiras épocas, e as restantes épocas do treino não entram nos resultados.}
+
+\revtext{rev047}{A Tabela~\ref{tab:j50-resultados} e a Figura~\ref{fig:j50-matriz} mostram o desempenho por ponto do modelo congelado nas viagens de treino e nas de teste. Os resultados do teste são \textbf{otimistas}, porque esse conjunto serviu para escolher a época e o limiar, e não substituem a medição final no conjunto de validação. No teste, a exatidão foi \resJCTesteAcc{} (\resJCTesteErros{} erros em \resJCTestePontos{} pontos), contra \resJCTesteAccMaj{} de uma regra que prevê sempre a classe maioritária e \resBsTesteAcc{} da referência sobre a viagem completa; no treino foi \resJCTreinoAcc{}, contra \resBsTreinoAcc{} da referência. Por viagem de teste, a exatidão vai de \resJCTesteViagMin{} a \resJCTesteViagMax{}, com mediana de \resJCTesteViagMed{}; em \resJCTesteNViagNaoSuperam{} viagens não supera a regra da classe maioritária dessa viagem. Face à referência, J50 tem exatidão maior em \resJCViagMelhor{} das 18 viagens de teste e menor em \resJCViagPior{}, com uma diferença mediana de \resJCViagDifMed{} pontos percentuais.}
+
+\begin{table}[t]
+\centering\footnotesize\color{rev047}\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Conjunto & Classe & Pontos & Prec. & Sensib. & F1 & IoU \\
+\midrule
+Treino & Navegação & \resJCTreinoNavReal & \resJCTreinoNavPrec & \resJCTreinoNavSens & \resJCTreinoNavF & \resJCTreinoNavIoU \\
+Treino & Pesca & \resJCTreinoPescaReal & \resJCTreinoPescaPrec & \resJCTreinoPescaSens & \resJCTreinoPescaF & \resJCTreinoPescaIoU \\
+Teste & Navegação & \resJCTesteNavReal & \resJCTesteNavPrec & \resJCTesteNavSens & \resJCTesteNavF & \resJCTesteNavIoU \\
+Teste & Pesca & \resJCTestePescaReal & \resJCTestePescaPrec & \resJCTestePescaSens & \resJCTestePescaF & \resJCTestePescaIoU \\
+\bottomrule
+\end{tabular}
+\caption{Métricas por ponto e por classe de J50 (época \resJCEpoca, limiar \resJCLimiar). ``Pontos'' são os pontos reais de cada classe. Os resultados do teste são otimistas (esse conjunto serviu para escolher).}
+\label{tab:j50-resultados}
+\end{table}
+
+\begin{figure}[t]
+\centering\color{rev047}
+\includegraphics[width=0.95\columnwidth]{figures/janelas_j50_perda.png}
+\caption{Perda por ponto (entropia cruzada binária, depois de reconstruir uma previsão por ponto) de J50 ao longo das épocas, avaliada no fim de cada época nas viagens de treino e nas de teste. A linha tracejada marca a época escolhida no teste.}
+\label{fig:j50-perda}
+\end{figure}
+
+\begin{figure}[t]
+\centering\color{rev047}
+\includegraphics[width=0.95\columnwidth]{figures/janelas_j50_matriz.png}
+\caption{Matrizes de confusão por ponto de J50: percentagem da classe real (linha) prevista em cada classe, nas viagens de treino e nas de teste.}
+\label{fig:j50-matriz}
+\end{figure}
+
+\subsection{\texorpdfstring{\revtext{rev047}{Comparação com a referência e resposta à RQ1}}{Comparação com a referência e resposta à RQ1}}
+\label{sec:resultados-comparacao}
+
+\revtext{rev047}{A Tabela~\ref{tab:comparacao-pontos} compara os três modelos por ponto no conjunto de teste, e a Figura~\ref{fig:janelas-viagens} mostra a exatidão por viagem. Nenhuma das variantes com janelas supera a referência na exatidão por ponto: \resJZTesteAcc{} (J0) e \resJCTesteAcc{} (J50), contra \resBsTesteAcc{}. J50 fica ligeiramente acima de J0, e a diferença para a referência é pequena, de cerca de um ponto percentual, mas vai no mesmo sentido na maioria das viagens (J0 tem exatidão maior em \resJZViagMelhor{} das 18 viagens de teste e J50 em \resJCViagMelhor{}).}
+
+\begin{table}[t]
+\centering\footnotesize\color{rev047}\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Modelo & Época & Limiar & Exatidão & F1 nav. & F1 pesca \\
+\midrule
+Referência & \resBsEpoca & \resBsLimiar & \resBsTesteAcc & \resBsTesteNavF & \resBsTestePescaF \\
+J0 & \resJZEpoca & \resJZLimiar & \resJZTesteAcc & \resJZTesteNavF & \resJZTestePescaF \\
+J50 & \resJCEpoca & \resJCLimiar & \resJCTesteAcc & \resJCTesteNavF & \resJCTestePescaF \\
+\bottomrule
+\end{tabular}
+\caption{Desempenho por ponto no conjunto de teste, com a época e o limiar escolhidos nesse conjunto para cada modelo (resultados otimistas, com o mesmo critério para os três).}
+\label{tab:comparacao-pontos}
+\end{table}
+
+\begin{figure*}[t]
+\centering\color{rev047}
+\includegraphics[width=0.82\textwidth]{figures/janelas_viagens.png}
+\caption{Exatidão por viagem do conjunto de teste da referência, de J0 e de J50, com as viagens ordenadas pela exatidão da referência.}
+\label{fig:janelas-viagens}
+\end{figure*}
+
+\revtext{rev047}{Por segmento (Tabela~\ref{tab:comparacao-segmentos} e Figura~\ref{fig:janelas-segmentos}), com um segmento previsto a corresponder a um real quando o IoU temporal é de pelo menos 0,5, os três modelos fragmentam muito: nas viagens de teste há \resBsSegPescaNRef{} segmentos reais de pesca, e a referência prevê \resBsSegPescaNPred{}, J0 \resJZSegPescaNPred{} e J50 \resJCSegPescaNPred{}. Como cada viagem tem em geral um só segmento de pesca, um segmento previsto só corresponde ao real se cobrir quase toda a pesca, e por isso o F1 de segmentos de pesca é muito baixo nos três (\resBsSegPescaF{}, \resJZSegPescaF{} e \resJCSegPescaF{}), embora a exatidão por ponto seja elevada. A razão de fragmentação (segmentos previstos sobre reais) de J50 é menor do que a de J0 e a da referência, que são semelhantes entre si: na pesca \resJCSegPescaFrag{} contra \resJZSegPescaFrag{} (J0) e \resBsSegPescaFrag{} (referência), e na navegação \resJCSegNavFrag{} contra \resJZSegNavFrag{} e \resBsSegNavFrag{}; continua, porém, muito acima de 1, o valor de uma segmentação sem fragmentos a mais. O F1 de segmentos de navegação é o mais alto em J50 (\resJCSegNavF{}, contra \resJZSegNavF{} em J0 e \resBsSegNavF{} na referência). Os erros de fronteira na pesca não mostram um padrão: as medianas do erro de início são de \resBsSegPescaIniMed{}, \resJZSegPescaIniMed{} e \resJCSegPescaIniMed{} segundos (referência, J0, J50) e as do fim de \resBsSegPescaFimMed{}, \resJZSegPescaFimMed{} e \resJCSegPescaFimMed{} segundos, estimadas com apenas \resBsSegPescaNPar{}, \resJZSegPescaNPar{} e \resJCSegPescaNPar{} pares correspondidos. A Figura~\ref{fig:janelas-linha} mostra uma viagem de teste, a que tem mais segmentos reais.}
+
+\begin{table*}[t]
+\centering\footnotesize\color{rev047}\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}llrrrrrrr@{}}
+\toprule
+Modelo & Classe & Reais & Previstos & Pares & F1 & Fragm. & Erro início (s) & Erro fim (s) \\
+\midrule
+Referência & Pesca & \resBsSegPescaNRef & \resBsSegPescaNPred & \resBsSegPescaNPar & \resBsSegPescaF & \resBsSegPescaFrag & \resBsSegPescaIniMed & \resBsSegPescaFimMed \\
+Referência & Navegação & \resBsSegNavNRef & \resBsSegNavNPred & \resBsSegNavNPar & \resBsSegNavF & \resBsSegNavFrag & \resBsSegNavIniMed & \resBsSegNavFimMed \\
+J0 & Pesca & \resJZSegPescaNRef & \resJZSegPescaNPred & \resJZSegPescaNPar & \resJZSegPescaF & \resJZSegPescaFrag & \resJZSegPescaIniMed & \resJZSegPescaFimMed \\
+J0 & Navegação & \resJZSegNavNRef & \resJZSegNavNPred & \resJZSegNavNPar & \resJZSegNavF & \resJZSegNavFrag & \resJZSegNavIniMed & \resJZSegNavFimMed \\
+J50 & Pesca & \resJCSegPescaNRef & \resJCSegPescaNPred & \resJCSegPescaNPar & \resJCSegPescaF & \resJCSegPescaFrag & \resJCSegPescaIniMed & \resJCSegPescaFimMed \\
+J50 & Navegação & \resJCSegNavNRef & \resJCSegNavNPred & \resJCSegNavNPar & \resJCSegNavF & \resJCSegNavFrag & \resJCSegNavIniMed & \resJCSegNavFimMed \\
+\bottomrule
+\end{tabular}
+\caption{Métricas por segmento no conjunto de teste (IoU temporal $\geq$ 0,5, em segundos, correspondência um-para-um, sem suavizar as previsões). ``Reais'' e ``Previstos'' são os segmentos de cada classe, ``Pares'' os correspondidos, ``Fragm.'' a razão previstos/reais e os erros de fronteira são medianas dos valores absolutos nos pares.}
+\label{tab:comparacao-segmentos}
+\end{table*}
+
+\begin{figure*}[t]
+\centering\color{rev047}
+\includegraphics[width=0.95\textwidth]{figures/janelas_segmentos.png}
+\caption{Métricas por segmento da referência, de J0 e de J50 no conjunto de teste: F1 de segmentos, razão de fragmentação (a linha tracejada marca 1, a segmentação sem fragmentos a mais) e mediana do erro de fronteira.}
+\label{fig:janelas-segmentos}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering\color{rev047}
+\includegraphics[width=0.95\textwidth]{figures/janelas_linha_temporal.png}
+\caption{Uma viagem do conjunto de teste (a que tem mais segmentos reais): classe real e classe prevista pela referência, por J0 e por J50, ponto a ponto.}
+\label{fig:janelas-linha}
+\end{figure*}
+
+\revtext{rev047}{\textbf{Resposta à RQ1.} Neste conjunto de teste, com estas escolhas, a sobreposição de 50\,\% reduz o número de fragmentos face a J0 e à referência, mas não melhora a exatidão por ponto nem o erro de fronteira da pesca de forma consistente, e o janelamento sem sobreposição não supera a referência. Não se conclui, por isso, que o janelamento ou a sobreposição melhorem a segmentação. Há várias limitações. As épocas escolhidas (\resJCEpoca{} e \resJZEpoca{}) são as primeiras, porque a perda no teste sobe com o treino, e a referência foi escolhida bem mais tarde (época \resBsEpoca{}), pelo que parte da diferença pode vir do comportamento do critério de seleção e não do janelamento. O lote também difere (32 janelas contra uma viagem por passo), e J50 faz o dobro dos passos de J0 no mesmo número de épocas. Os resultados vêm de uma só semente e de 18 viagens de teste, e são otimistas por esse conjunto ter servido a escolher. Por fim, as viagens do mesmo navio podem estar em conjuntos diferentes, pelo que os resultados não são generalização a navios inéditos. A medição final, no conjunto de validação, fica reservada para o fim do trabalho.}
 
 % References may use the provided IJCAI named bibliography style.
 \bibliographystyle{FormattingGuidelines-IJCAI-ECAI-26/named}

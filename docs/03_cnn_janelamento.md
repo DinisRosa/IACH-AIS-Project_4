@@ -1,6 +1,6 @@
 # 03 — CNN 1D com janelamento e sobreposição (Marco 4)
 
-[REV-033 | cor #3E2723] Documento fundido a partir de `03_cnn_janelamento_sobreposicao` (workflow) e `06_funcoes_documentos_cnn_janelamento_sobreposicao` (contratos). [REV-046 | cor #E65100] **O janelamento está implementado** em `src/ais/phase1/windows.py` e as duas variantes (J0 e J50) foram treinadas e selecionadas; o estado e os resultados estão em `PROGRESS.md` e, por código, em `results/windows_final/final_results_windows.json`. Este documento descreve as decisões e os contratos tal como foram implementados.
+[REV-033 | cor #3E2723] Documento fundido a partir de `03_cnn_janelamento_sobreposicao` (workflow) e `06_funcoes_documentos_cnn_janelamento_sobreposicao` (contratos). [REV-046 | cor #00B0FF] **O janelamento está implementado** em `src/ais/phase1/windows.py` e as duas variantes (J0 e J50) foram treinadas e selecionadas; o estado e os resultados estão em `PROGRESS.md` e, por código, em `results/windows_final/final_results_windows.json`. Este documento descreve as decisões e os contratos tal como foram implementados.
 
 ## 1. Objetivo
 
@@ -9,7 +9,7 @@ Medir o efeito de dividir as viagens em janelas e de adicionar sobreposição, c
 ## 2. Regras que se herdam e decisões do Marco 4
 
 - Acesso: só treino ou sintéticos em desenvolvimento. Validação e teste exigem autorização explícita (`00` §6). A seleção no `test` fez-se **numa só abertura**, com `configs/authorizations/test_selection_windows.json` e o protocolo `configs/selection_protocol_windows.json`, ambos novos (os da baseline não se alteraram).
-- Nunca atravessar IDs nem conjuntos. [REV-046 | cor #E65100] **Intervalos de tempo dentro de uma viagem não cortam a sequência**: a baseline trata a viagem inteira como uma só sequência (o `time_gap` é uma característica) e as janelas fazem o mesmo, para a única diferença ser o janelamento. Decisão do utilizador (REV-046); a regra «não atravessar gaps» do `AGENTS.md` §5 aplica-se, nesta fase, às viagens e não aos intervalos de tempo dentro de uma viagem.
+- Nunca atravessar IDs nem conjuntos. [REV-046 | cor #00B0FF] **Intervalos de tempo dentro de uma viagem não cortam a sequência**: a baseline trata a viagem inteira como uma só sequência (o `time_gap` é uma característica) e as janelas fazem o mesmo, para a única diferença ser o janelamento. Decisão do utilizador (REV-046); a regra «não atravessar gaps» do `AGENTS.md` §5 aplica-se, nesta fase, às viagens e não aos intervalos de tempo dentro de uma viagem.
 - Entrada `[B, 7, L]` e logits `[B, 1, L]`; um rótulo por ponto.
 - `BCEWithLogitsLoss` mascarada; a sigmoide só dá probabilidades, aplicada uma só vez (float64 na reconstrução).
 - Avalia-se **depois** de reconstruir uma previsão por ponto original, sem contar repetições sobrepostas como pontos novos.
@@ -37,7 +37,7 @@ Comprimento: **L = 64 pontos**. A CNN é exatamente a de referência, que contin
 
 1. Cada viagem começa no índice 0 e avança pelo passo.
 2. Pára-se depois da primeira janela que alcança o fim (`início + L ≥ N`).
-3. [REV-046 | cor #E65100] **A última janela é mais curta quando N não é múltiplo do passo, sem pontos falsos.** Uma viagem com N ≤ L dá uma só janela com N pontos. Uma cauda curta tem menos contexto (o campo recetivo é 13 pontos) e, em J0, os seus pontos têm uma única previsão; em J50 estão normalmente também na janela anterior.
+3. [REV-046 | cor #00B0FF] **A última janela é mais curta quando N não é múltiplo do passo, sem pontos falsos.** Uma viagem com N ≤ L dá uma só janela com N pontos. Uma cauda curta tem menos contexto (o campo recetivo é 13 pontos) e, em J0, os seus pontos têm uma única previsão; em J50 estão normalmente também na janela anterior.
 4. Um lote de janelas de comprimentos diferentes é empilhado com enchimento **só para empilhar**: a máscara tira-o da perda e da média e `FullTripCNN.forward(x, mask)` põe a zero as posições de enchimento depois de cada ReLU. A previsão de uma janela curta num lote é assim igual à da janela sozinha (testado). Sem máscara, a baseline não muda.
 5. Todos os pontos reais aparecem pelo menos uma vez; a probabilidade final de cada ponto é a **média simples** das probabilidades das janelas que o cobrem (`prediction_count` = `n_windows`); o limiar aplica-se só depois da média.
 

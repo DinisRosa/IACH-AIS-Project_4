@@ -237,11 +237,11 @@ def fig_loss(R: dict, name: str) -> str:
     ax.plot(hist["epoch"], hist["train_eval_loss_per_point"], color=NAV, lw=1.3, label="treino (87 viagens)")
     ax.plot(sorted(curve), [curve[e] for e in sorted(curve)], color=PESCA, lw=1.0, label="teste (18 viagens)")
     ax.axvline(best, color=INK, ls="--", lw=0.9)
-    ax.annotate(f"época escolhida ({best})", (best, curve[best]), xytext=(0.30, 0.04),
+    ax.annotate(f"época escolhida ({best})", (best, curve[best]), xytext=(0.30, 0.22),
                 textcoords="axes fraction", fontsize=7, color=INK2,
                 arrowprops={"arrowstyle": "-", "color": INK2, "lw": 0.6})
     ax.set(xlabel="Época", ylabel="Perda por ponto (BCE)")
-    ax.legend(frameon=False, fontsize=7, loc="upper right")
+    ax.legend(frameon=False, fontsize=7, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2)
     return save(fig, f"janelas_{v['label']}_perda.png")
 
 
