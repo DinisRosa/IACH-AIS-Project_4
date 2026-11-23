@@ -845,3 +845,16 @@ Regras:
 - **Validação:** 6 testes sintéticos novos (só a viagem e as colunas autorizadas, registo, segunda leitura recusada, recusas sem registo, finalidade errada, `validation`, ficheiro errado); `pytest tests/`: 187 passaram (23:43 WET). Exposição: o `access_log` tem um `diagnostic_read` de `219001624-2` (colunas `x`, `y`, `point_id`, `t`, `id`); nenhum valor foi visto nem usado.
 - **Limitações:** o programa de desenho continua sem teste automático (só o teste manual com dados falsos). O gráfico de `x` por `y` **ainda não existe**.
 - **Pendentes:** nova autorização do utilizador para uma leitura (com o âmbito acima).
+
+### REV-051 — Segunda leitura de diagnóstico e gráfico de `x` por `y` da viagem 219001624-2
+
+- **Data:** 2026-11-23, 23:46 WET (leitura registada às 23:45:53 UTC).
+- **Cor:** Pêssego `#FFCC80`, RGB (255, 204, 128). Só marcador do registo; não há alteração ao `.tex`.
+- **O quê:** nova autorização `configs/authorizations/test_diagnostic_trip_219001624-2_leitura2.json` (uma leitura de `id`, `point_id`, `t`, `x`, `y` da viagem `219001624-2`), escrita a partir do «sim, autorizo» do utilizador, porque a leitura de REV-050 ficou gasta sem gráfico. A anterior não se alterou. `plot_trip_diagnostic` ganhou `--auth` para indicar o ficheiro. A leitura foi feita **uma vez** e registada (`diagnostic_read`, 23:45:53 UTC); os dados lidos ficaram guardados em `results/diagnostic_trip/219001624-2_xy_lido.csv` e o gráfico em `results/diagnostic_trip/219001624-2_xy.png` (não versionados).
+- **Observado (só desta viagem):** a pesca real é um troço retilíneo de cerca de 6 km no extremo sul, percorrido de ida e volta. A referência e J50 apanham a maior parte desse troço, mas dão navegação nos extremos (nas viragens). J0 dá navegação em quase todo o troço e só acerta uns pontos de pesca; o resto da viagem (a transição até à zona de pesca) é navegação nas quatro.
+- **Porquê:** diagnóstico pedido pelo utilizador. Não escolhe nada nem altera resultados.
+- **Ficheiros afetados:** `src/ais/cli/plot_trip_diagnostic.py`, `configs/authorizations/test_diagnostic_trip_219001624-2_leitura2.json`, `PROGRESS.md`, `handoff.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação:** `pytest tests/`: 187 passaram (23:46 WET); gráfico inspecionado. O programa de desenho não tem teste automático.
+- **Limitações:** uma única viagem. O `access_log` tem agora **duas** leituras de diagnóstico desta viagem (a primeira, gasta sem gráfico, e esta); nenhuma é uma abertura de seleção.
+- **Pendentes:** nenhum deste pedido.

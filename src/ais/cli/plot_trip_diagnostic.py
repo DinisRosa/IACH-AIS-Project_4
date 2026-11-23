@@ -13,7 +13,7 @@ por cada modelo. Isso exige ler as colunas `id`, `point_id`, `t`, `x` e `y` dess
 uma leitura, registada no `access_log` por `ais.phase1.reserved.load_reserved_diagnostic`).
 
 Execução (a partir da raiz do projeto):
-    iach-ais-venv-4/bin/python -m ais.cli.plot_trip_diagnostic 219001624-2 [--xy]
+    iach-ais-venv-4/bin/python -m ais.cli.plot_trip_diagnostic 219001624-2 [--xy [--auth caminho.json]]
 Saídas: results/diagnostic_trip/<id>_classes.png e, com `--xy`, <id>_xy.png (não versionadas).
 """
 from __future__ import annotations
@@ -127,7 +127,8 @@ if __name__ == "__main__":
         xy = load_reserved_diagnostic(
             "test", ROOT / "data" / "123_fishing_trajs_clean_test.parquet",
             ROOT / "manifests" / "split_manifest_seed42.csv",
-            ROOT / "configs" / "authorizations" / f"test_diagnostic_trip_{trip_id}.json",
+            Path(sys.argv[sys.argv.index("--auth") + 1]) if "--auth" in sys.argv
+            else ROOT / "configs" / "authorizations" / f"test_diagnostic_trip_{trip_id}.json",
             ROOT / "results" / "access_log.jsonl", trip_id, ["id", "point_id", "t", "x", "y"])
         # Guarda o que foi lido ANTES de desenhar: a autorização é de uma só leitura e um erro de desenho
         # não pode obrigar a ler outra vez (REV-050).

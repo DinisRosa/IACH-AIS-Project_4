@@ -23,7 +23,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
 - **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15). Texto estável a preto (REV-043); o novo (4.4, Secção 5 em partes, 7.1, Secção 6 e 8.2 a 8.4) tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C` e REV-048 `#1B5E20`.
 - **Git:** os commits locais de REV-046 a REV-048 (a partir de `9896021`) **não foram enviados**; o último estado em `origin/main` no início desta sessão era `696fed2`. Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-050.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-051.
 
 ## Decisões do utilizador (vigentes)
 
@@ -828,3 +828,17 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - O gráfico de `x` por `y` precisa de **nova autorização** do utilizador para uma leitura.
+
+### 2026-11-23bf — Gráfico de x por y da viagem 219001624-2 (REV-051), 2026-11-23 23:46 WET
+
+**Feito**
+- Nova autorização (uma leitura, mesmo âmbito) e leitura única de `id`, `point_id`, `t`, `x`, `y` da viagem; `--auth` no `plot_trip_diagnostic`; gráfico de `x` por `y` com a classe real e a prevista pela referência, J0 e J50.
+
+**Validado**
+- `pytest`: 187 passaram; gráfico inspecionado. Os dados lidos ficaram guardados antes do desenho.
+
+**Problemas e limitações**
+- Uma só viagem. Duas leituras de diagnóstico no `access_log` (a primeira foi gasta por um erro de desenho).
+
+**Pendente**
+- Nenhum deste pedido. Pendências gerais no topo.

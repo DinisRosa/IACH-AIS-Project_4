@@ -1,0 +1,25 @@
+{
+  "id": "test_diagnostic_219001624-2_leitura2_2026-11-23",
+  "concedida_por": "utilizador (mensagem no chat, 2026-11-23)",
+  "conjuntos_autorizados": [
+    "test"
+  ],
+  "finalidade": "diagnostico",
+  "viagens_autorizadas": [
+    "219001624-2"
+  ],
+  "colunas_autorizadas": [
+    "id",
+    "point_id",
+    "t",
+    "x",
+    "y"
+  ],
+  "decisoes_cobertas": [
+    "nenhuma: apenas um grafico de x por y desta viagem, para perceber porque a exatidao de J0 nela e baixa"
+  ],
+  "max_leituras": 1,
+  "validation_autorizado": false,
+  "citacao_literal": "sim, autorizo (resposta a: autorizas uma nova leitura, com o mesmo ambito: so id, point_id, t, x e y da viagem 219001624-2, so para este grafico, sem escolher nada nem alterar resultados? A leitura anterior ficou gasta por erro meu no desenho)",
+  "nota": "Substitui a autorizacao test_diagnostic_219001624-2_2026-11-23, cuja unica leitura ficou gasta. Cobre UMA leitura, so desta viagem e destas colunas."
+}
