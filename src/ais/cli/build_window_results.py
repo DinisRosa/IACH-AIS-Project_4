@@ -122,6 +122,10 @@ def collect() -> dict:
         "segmentos_test": base_seg["metricas_por_segmento"],
         "previsoes_iguais_as_da_selecao_anterior": base_seg["previsoes_iguais_as_da_selecao_anterior"],
         "segundos_total": base["treino"]["segundos_total"], "segundos_por_epoca": base["treino"]["segundos_por_epoca"],
+        "viagens": base["treino"]["viagens"], "epocas": base["treino"]["epocas_executadas"],
+        "_hist": pd.read_csv(ROOT / "results" / "phase1_select" / "training_history.csv"),
+        "_curve": {int(k): x for k, x in load_json(ROOT / "results" / "phase1_select" / "selection_test.json")[
+            "curva_de_perda_por_epoca"].items()},
     }
     R["meta"] = {
         "criado_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -189,6 +193,9 @@ def latex_macros(R: dict, paired: dict) -> str:
     M.update(point_macros("Bs", R["baseline"]["test"], "Teste"))
     M.update(segment_macros("Bs", R["baseline"]["segmentos_test"]))
     M["BsEpoca"], M["BsLimiar"] = str(R["baseline"]["epoca"]), pt(R["baseline"]["limiar"], 2)
+    M.update({"BsPassos": str(R["baseline"]["viagens"]),
+              "BsPassosTotal": thousands(R["baseline"]["viagens"] * R["baseline"]["epocas"]),
+              "BsEpocas": str(R["baseline"]["epocas"]), "BsSegundos": pt(R["baseline"]["segundos_total"] / 60, 0)})
     bt = R["baseline"]["test"]["por_viagem"]
     for name, v in VARIANTS.items():
         P, r = v["prefix"], R["variantes"][name]
@@ -264,6 +271,48 @@ def fig_matrix(R: dict, name: str) -> str:
     axes[0].set_ylabel("Real", fontsize=7)
     fig.tight_layout(w_pad=0.6)
     return save(fig, f"janelas_{v['label']}_matriz.png")
+
+
+def fig_loss_all(R: dict) -> str:
+    """Curvas de perda (treino e teste) da referência, de J0 e de J50, lado a lado."""
+    items = [("Referência", R["baseline"]["_hist"]["monitor_loss_per_point"], R["baseline"]["_curve"], R["baseline"]["epoca"])]
+    for name in VARIANTS:
+        r = R["variantes"][name]
+        items.append((name, r["_hist"]["train_eval_loss_per_point"], r["_curve"], r["selecao"]["epoca_escolhida"]))
+    fig, axes = plt.subplots(1, 3, figsize=(6.9, 2.3), sharey=True)
+    for ax, (title, train, curve, best) in zip(axes, items):
+        ax.plot(np.arange(1, len(train) + 1), train, color=NAV, lw=1.2, label="treino (87 viagens)")
+        ax.plot(sorted(curve), [curve[e] for e in sorted(curve)], color=PESCA, lw=0.9, label="teste (18 viagens)")
+        ax.axvline(best, color=INK, ls="--", lw=0.9)
+        ax.set_title(f"{title} (época {best})", fontsize=8)
+        ax.set_xlabel("Época", fontsize=7)
+    axes[0].set_ylabel("Perda por ponto (BCE)", fontsize=7)
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, frameon=False, fontsize=7, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2)
+    fig.tight_layout(w_pad=0.8)
+    return save(fig, "janelas_perda.png")
+
+
+def fig_matrix_all(R: dict) -> str:
+    """Matrizes de confusão por ponto no teste da referência, de J0 e de J50, lado a lado."""
+    items = [("Referência", R["baseline"]["test"])] + [(n, R["variantes"][n]["test"]) for n in VARIANTS]
+    fig, axes = plt.subplots(1, 3, figsize=(6.9, 2.1), sharey=True)
+    for ax, (title, t) in zip(axes, items):
+        cm = np.array(t["matriz_confusao_linhas_real_colunas_previsto"])
+        rows = cm / cm.sum(axis=1, keepdims=True)
+        ax.imshow(rows, cmap="Blues", vmin=0, vmax=1)
+        ax.grid(False)
+        for i in range(2):
+            for j in range(2):
+                ax.text(j, i, f"{100 * rows[i, j]:.1f} %", ha="center", va="center", fontsize=7,
+                        color=INK if rows[i, j] < 0.6 else "white")
+        ax.set_xticks([0, 1], ["nav.", "pesca"], fontsize=7)
+        ax.set_yticks([0, 1], ["nav.", "pesca"], fontsize=7)
+        ax.set_title(title, fontsize=8)
+        ax.set_xlabel("Previsto", fontsize=7)
+    axes[0].set_ylabel("Real", fontsize=7)
+    fig.tight_layout(w_pad=0.8)
+    return save(fig, "janelas_matrizes.png")
 
 
 def fig_trips(R: dict) -> str:
@@ -345,8 +394,7 @@ def fig_timeline(R: dict) -> tuple[str, str]:
 def main() -> None:
     R = collect()
     paired = paired_trips(R)
-    figs = [fig_loss(R, n) for n in VARIANTS] + [fig_matrix(R, n) for n in VARIANTS]
-    figs += [fig_trips(R), fig_segments(R)]
+    figs = [fig_loss_all(R), fig_matrix_all(R), fig_trips(R), fig_segments(R)]
     tl, trip = fig_timeline(R)
     figs.append(tl)
     GEN_DIR.mkdir(parents=True, exist_ok=True)
@@ -354,7 +402,7 @@ def main() -> None:
     R["comparacao_por_viagem_com_a_baseline"] = paired
     R["viagem_da_linha_temporal"] = {"id": trip, "regra": "a viagem de teste com mais segmentos de referência"}
     R["figuras"], R["macros_latex"] = figs, "latex/generated/resultados_janelas.tex"
-    for r in R["variantes"].values():
+    for r in list(R["variantes"].values()) + [R["baseline"]]:
         r.pop("_hist"), r.pop("_curve")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "final_results_windows.json").write_text(

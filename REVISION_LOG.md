@@ -858,3 +858,20 @@ Regras:
 - **Validação:** `pytest tests/`: 187 passaram (23:46 WET); gráfico inspecionado. O programa de desenho não tem teste automático.
 - **Limitações:** uma única viagem. O `access_log` tem agora **duas** leituras de diagnóstico desta viagem (a primeira, gasta sem gráfico, e esta); nenhuma é uma abertura de seleção.
 - **Pendentes:** nenhum deste pedido.
+
+### REV-052 — Refactoring de leitura da proposta LaTeX
+
+- **Data:** 2026-11-23, 23:57 WET.
+- **Cor:** Bordô `#880E4F`, RGB (136, 14, 79) (verificada contra o registo: não repete nenhuma cor anterior).
+- **O quê:** a pedido do utilizador, que sentia dificuldade em ler o relatório (figuras acumuladas, texto pouco corrido). Decisões dele: condensar com anexo; fundir figuras; manter as cores; Secção 8 com resumo e comparação primeiro.
+  - **Secção 8:** abre com um resumo de três pontos e uma tabela de resumo por ponto; 8.1, 8.2 e 8.3 reduzidas a um parágrafo ou dois cada; 8.4 com a comparação (por ponto, por segmento), a resposta à RQ1 e as limitações em lista. 9 figuras e 6 tabelas passaram a **5 figuras** (perda; matrizes e exatidão por viagem; segmentos e linha temporal, em três blocos) e **3 tabelas** em texto, com as métricas por classe no anexo.
+  - **4.3 e 4.4** condensadas; a 4.4 ganhou uma tabela com o protocolo das três experiências. **Secção 5** condensada (frases curtas, listas em «Porquê estes valores»); a tabela da arquitetura e o desenho da rede ficaram como estavam.
+  - **Anexo A** novo: pormenores do janelamento (última janela, lotes e enchimento, perda e reconstrução, treino) e a tabela de métricas por classe.
+  - `placeins` com a opção `section`, para as figuras não saltarem de secção.
+  - `build_window_results`: figuras fundidas `janelas_perda.png` e `janelas_matrizes.png` (a referência entra nas curvas de perda e nas matrizes) e macros `\resBsPassos`, `\resBsPassosTotal`, `\resBsEpocas` e `\resBsSegundos`. As quatro figuras por variante deixaram de se gerar e foram retiradas do repositório.
+- **Porquê:** legibilidade. Nenhum resultado, número ou conclusão mudou: todos os números continuam a vir de macros geradas e o texto das conclusões e das limitações é o mesmo, mais curto.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `latex/generated/resultados_janelas.tex`, `latex/figures/janelas_*.png`, `src/ais/cli/build_window_results.py`, `PROGRESS.md`, `handoff.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**; `pdflatex` + `bibtex` sem erros, **9 páginas** (antes 11; limite de 15), 0 referências indefinidas, sem caixas largas; páginas inspecionadas.
+- **Validação:** compilação e inspeção visual das páginas; `pytest tests/`: 187 passaram (23:57 WET). Não se alterou código de treino, de seleção nem de dados.
+- **Limitações:** o texto reescrito é meu; o utilizador ainda não o leu. O texto que ficou a preto das revisões anteriores (por exemplo, a tabela da arquitetura, a Secção 6 e 7.2) não foi tocado. Tudo o que foi reescrito está agora na cor desta revisão, por isso a cor deixa de distinguir o que é de revisões anteriores. As quatro figuras `final_*.png` da referência continuam geradas mas já não são usadas.
+- **Pendentes:** as passagens adiadas de REV-041 (explicabilidade, calibração e *dashboard*, título «OOI», «human-on-the-loop»).

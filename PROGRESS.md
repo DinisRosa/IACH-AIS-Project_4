@@ -21,9 +21,9 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. O janelamento está em `windows.py`, `run_window_training`, `select_windows_on_test` e `build_window_results`; ainda não existe código de pós-processamento.
 - **Testes:** 181 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
-- **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15). Texto estável a preto (REV-043); o novo (4.4, Secção 5 em partes, 7.1, Secção 6 e 8.2 a 8.4) tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C` e REV-048 `#1B5E20`.
+- **LaTeX:** `latex/proposta_pt.tex` compila (9 páginas; limite de 15; refactoring de leitura em REV-052). Texto estável a preto (REV-043); o novo tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C`, REV-048 `#1B5E20` e, no que foi reescrito em REV-052 (4.3, 4.4, Secção 5, Secção 8 e Anexo A), `#880E4F`.
 - **Git:** os commits locais de REV-046 a REV-048 (a partir de `9896021`) **não foram enviados**; o último estado em `origin/main` no início desta sessão era `696fed2`. Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-051.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-052.
 
 ## Decisões do utilizador (vigentes)
 
@@ -842,3 +842,18 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Nenhum deste pedido. Pendências gerais no topo.
+
+### 2026-11-23bg — Refactoring de leitura da proposta (REV-052), 2026-11-23 23:57 WET
+
+**Feito**
+- Secção 8 reordenada (resumo e tabela primeiro; 8.1 a 8.3 curtas; 8.4 com comparação, RQ1 e limitações em lista); 5 figuras e 3 tabelas em vez de 9 e 6; 4.3, 4.4 e Secção 5 condensadas; Anexo A com os pormenores do janelamento e a tabela por classe; `placeins`.
+- `build_window_results` passou a gerar as figuras fundidas e as macros da referência; retiradas as figuras por variante.
+
+**Validado**
+- `pdflatex` + `bibtex`: 9 páginas (antes 11), 0 erros, 0 referências indefinidas, sem caixas largas; páginas inspecionadas. `pytest`: 187 passaram.
+
+**Problemas e limitações**
+- Um `%` nu num marcador de título comentou o resto da linha e partiu a compilação; corrigido (usar «por cento» nos marcadores). O texto reescrito não foi lido pelo utilizador. A cor de REV-052 cobre agora grande parte do texto.
+
+**Pendente**
+- Leitura do utilizador; passagens adiadas de REV-041; push dos commits locais.

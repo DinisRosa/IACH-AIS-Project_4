@@ -1,13 +1,13 @@
 # Handoff — Projeto AIS
 
-**Data e hora desta atualização:** 2026-11-23 23:47 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
+**Data e hora desta atualização:** 2026-11-23 23:58 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
 
 ### Última validação (registada neste handoff)
 
 | Verificação | Resultado | Data e hora (WET) |
 |---|---|---|
-| Testes (`pytest tests/`) | 187 passaram | 2026-11-23 23:46 |
-| LaTeX (`pdflatex` + `bibtex`) | 11 páginas (limite de 15); 0 erros; 0 referências indefinidas | 2026-11-23 23:36 |
+| Testes (`pytest tests/`) | 187 passaram | 2026-11-23 23:57 |
+| LaTeX (`pdflatex` + `bibtex`) | 9 páginas (limite de 15); 0 erros; 0 referências indefinidas | 2026-11-23 23:57 |
 | Git | `main` cinco commits à frente de `origin/main` (último em `origin/main`: `696fed2`); **nada enviado** | 2026-11-23 23:36 |
 | Treino de J0 e de J50 | os dois completos (300 épocas), 9,8 min e 21,3 min | 22:58 a 23:28 |
 | Seleção no `test` (única abertura das janelas) | abertura 23:28:19 e fim 23:29:54, em `results/access_log.jsonl` | 2026-11-23 |
@@ -34,7 +34,7 @@ O commit deste handoff vem a seguir e não está na tabela.
 1. `AGENTS.md`: regras fixas. O `CLAUDE.md` manda lê-lo antes de qualquer ação.
 2. Este ficheiro.
 3. `docs/00_projeto_e_decisoes.md`, `docs/02_cnn_viagem_completa.md` e `docs/03_cnn_janelamento.md` (decisões e contratos do Marco 4, já implementado); `docs/01_dados_e_preparacao.md` se for preciso.
-4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23bc) e `REVISION_LOG.md` (REV-001 a REV-051).
+4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23bc) e `REVISION_LOG.md` (REV-001 a REV-052).
 5. Antes de qualquer ação: `git status` e `git log`, e `iach-ais-venv-4/bin/python -m pytest tests/` (187 testes a passar).
 
 Mensagem sugerida para abrir a nova sessão: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -67,7 +67,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 - **Cuidados (limitações registadas):** os números do `test` são **otimistas** (serviram a escolher, nas três variantes com o mesmo critério). **A perda no `test` sobe com o treino** (máximos de 0,79 em J0 e 0,93 em J50 desde a época 100), por isso o critério da menor perda escolheu épocas muito cedo (4 e 8), enquanto a baseline foi escolhida na 162: parte da diferença pode vir do critério e não do janelamento. O lote difere (32 janelas contra uma viagem por passo) e J50 faz o dobro dos passos. Uma semente e 18 viagens de teste. Os resultados foram reportados como saíram, sem repetir nem ajustar.
 - **Conjuntos reservados:** o `test` teve ainda **duas leituras de diagnóstico** da viagem `219001624-2` (colunas `id`, `point_id`, `t`, `x`, `y`; a primeira foi gasta por um erro de desenho e a segunda produziu o gráfico), sem escolher nada. Foi aberto **duas vezes** para seleção, uma por autorização (baseline às 18:40 UTC; janelas às 23:28 UTC), ambas em `results/access_log.jsonl`. O `validation` **nunca foi aberto**.
 - **Testes:** 181, todos sintéticos (mais um que lê 3 viagens de treino).
-- **LaTeX** (`latex/proposta_pt.tex`): 11 páginas, limite de 15. A Secção 8 tem 8.1 (referência), 8.2 (J0), 8.3 (J50) e 8.4 (comparação e RQ1), com números e figuras gerados por código. Texto novo com cor: rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`.
+- **LaTeX** (`latex/proposta_pt.tex`): 9 páginas, limite de 15. **Refactoring de leitura (REV-052):** a Secção 8 abre com um resumo e uma tabela e tem 8.1 (referência), 8.2 (J0), 8.3 (J50) e 8.4 (comparação, RQ1 e limitações); 5 figuras e 3 tabelas; 4.3, 4.4 e Secção 5 condensadas; **Anexo A** com os pormenores do janelamento e as métricas por classe. Números e figuras gerados por código (`build_window_results`). Cores do texto novo: rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20` e, no que foi reescrito em REV-052, rev052 `#880E4F`.
 - **Git:** cinco commits locais por enviar (ver cima). Cada push precisa de autorização explícita nova do utilizador.
 
 ## Decisões vigentes
@@ -89,8 +89,8 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 
 **Âmbito e LaTeX**
 - HMM e Wu et al. **não** são comparações. Explicabilidade, calibração e *dashboard* estão fora do mínimo atual.
-- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-052**. As cores já usadas estão no `REVISION_LOG.md` (verificar antes de escolher: duas escolhas iniciais já eram de REV-007 e REV-011).
-- Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`. Outras estão definidas, sem uso (rev013, rev018, rev020, rev022, rev024 a rev028, rev030 a rev032, rev035, rev036). Só marcadores Markdown: REV-029, REV-033, REV-034, REV-037, REV-038, REV-039, REV-044, REV-045.
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-053**. As cores já usadas estão no `REVISION_LOG.md` (verificar antes de escolher: duas escolhas iniciais já eram de REV-007 e REV-011).
+- Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F`. Outras estão definidas, sem uso (rev013, rev018, rev020, rev022, rev024 a rev028, rev030 a rev032, rev035, rev036). Só marcadores Markdown: REV-029, REV-033, REV-034, REV-037, REV-038, REV-039, REV-044, REV-045.
 
 ## Ficheiros principais
 
@@ -126,6 +126,7 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
 - `torch.__version__` impedia carregar o checkpoint com `weights_only=True`; corrigido com `str()`.
 - Testes e subagentes a correr em paralelo abrandam muito o treino (uma época de 2 s passou a 12 s com o `pytest`); **não correr CPU em paralelo durante treinos**.
 - LaTeX: caracteres `«»` não existem na codificação do modelo (usar `` `` ''); o vigilante e compilações manuais em `latex/build/` corromperam o `.aux` (compilar em `build/check/`).
+- LaTeX: um `%` nu no 2.º argumento de `\texorpdfstring` comenta o resto da linha e parte a compilação (nos marcadores usar «por cento»).
 - Cores de revisão: duas escolhidas à primeira (`#E65100`, `#AD1457`) já pertenciam a REV-011 e REV-007; apanhado antes do commit com cor. **Verificar sempre no `REVISION_LOG.md`.**
 - `grep -c` devolve código 1 quando conta zero; cuidado em cadeias com `&&`.
 - Smoke test estrito: exige gradiente não nulo em todos os tensores; pode ter de ser relaxado.
@@ -139,7 +140,7 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
    - Quer **manter o critério de seleção** (menor perda no `test`), que escolheu as épocas 4 e 8, ou mudá-lo (por exemplo, F1, ou travar o treino mais cedo)? Mudar implica novo protocolo e nova autorização, e repetir a seleção da baseline para a comparação ser justa.
    - Quer avançar para o **Marco 5** (pós-processamento), dado que J50 reduz a fragmentação mas a segmentação continua muito fragmentada? A unidade e a largura do filtro teriam de ser aprovadas.
    - Quando fazer os **Marcos 6 e 7** (congelar tudo e medir no `validation`, uma só vez, com autorização nova).
-2. **LaTeX, passagens ainda abertas** (o utilizador adiou-as): explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o título começa por «OOI» e há texto a vermelho «human-on-the-loop»; o texto das subsecções 5.3 a 5.6 e 6.1 não foi relido pelo utilizador; a 7.1 ainda descreve a ablação completa.
+2. **LaTeX, passagens ainda abertas** (o utilizador adiou-as): explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o título começa por «OOI» e há texto a vermelho «human-on-the-loop»; **o utilizador ainda não leu o texto reescrito em REV-052** (4.3, 4.4, Secção 5, Secção 8 e Anexo A); a 7.1 ainda descreve a ablação completa.
 3. **Arrumação:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas, se o utilizador quiser.
 4. **Diagnóstico da viagem `219001624-2` (REV-049 a REV-051):** feito. J0 acerta 42,0 % porque a probabilidade na pesca fica abaixo do seu limiar de 0,60; a pesca real é um troço retilíneo no extremo sul. Gráficos em `results/diagnostic_trip/`. Nada mais pendente deste pedido; qualquer nova leitura do `test` precisa de nova autorização. O gráfico das classes já está feito (J0 acerta 42,0 % nesta viagem por a probabilidade na pesca ficar abaixo do limiar de 0,60).
 5. **Push:** os cinco commits locais só seguem quando o utilizador autorizar.
