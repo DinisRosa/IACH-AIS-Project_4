@@ -7,7 +7,7 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 - `AGENTS.md`: regras e instruções do projeto (fonte única).
 - `CLAUDE.md`: instrução para o Claude Code ler o `AGENTS.md`.
 - `PROGRESS.md`: registo de progresso, validações, decisões e pendentes.
-- `REVISION_LOG.md`: registo das revisões de documentos, com ID e cor (REV-001 a REV-004).
+- `REVISION_LOG.md`: registo das revisões de documentos, com ID e cor (REV-001 a REV-005).
 - `docs/`: contexto, preparação comum, especificações e funções das CNN.
   - `00_contexto_projeto_dicionario_dados.md`: ponto de entrada e dicionário das colunas.
   - `00_5_orientacoes_execucao_decisoes.md`: decisões consolidadas e marcos.
