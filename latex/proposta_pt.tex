@@ -34,6 +34,7 @@
 % REV-021 — cor #D500F9, RGB (213, 0, 249) (mesma do REVISION_LOG.md).
 % REV-022 — cor #00897B, RGB (0, 137, 123) (mesma do REVISION_LOG.md).
 % REV-023 — cor #0277BD, RGB (2, 119, 189) (mesma do REVISION_LOG.md). Títulos de subsecções novos.
+% REV-031 — cor #006064, RGB (0, 96, 100) (mesma do REVISION_LOG.md). Anexo com as figuras do ensaio preliminar.
 % REV-030 — cor #FF6F00, RGB (255, 111, 0) (mesma do REVISION_LOG.md). Subsecção e figuras do ensaio preliminar (marcador de resultados).
 % REV-028 — cor #00ACC1, RGB (0, 172, 193) (mesma do REVISION_LOG.md). Avaliação em 3 outras viagens de treino.
 % REV-027 — cor #AFB42B, RGB (175, 180, 43) (mesma do REVISION_LOG.md). Ensaio de ajuste em 3 viagens de treino.
@@ -52,6 +53,7 @@
 \definecolor{rev027}{RGB}{175,180,43}
 \definecolor{rev028}{RGB}{0,172,193}
 \definecolor{rev030}{RGB}{255,111,0}
+\definecolor{rev031}{RGB}{0,96,100}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 \usepackage[switch]{lineno}
 
@@ -319,26 +321,34 @@ Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos predit
 \subsection{\texorpdfstring{\revtext{rev030}{Ensaio preliminar com poucas viagens}}{Ensaio preliminar com poucas viagens}}
 \label{sec:avaliacao-preliminar}
 
-\revtext{rev030}{Esta subsecção mostra, como marcador do tipo de resultados que o relatório final irá apresentar, um ensaio curto feito apenas com viagens do conjunto de treino. A CNN da Secção~\ref{sec:cnn-especificacao} foi treinada durante 200 épocas (taxa de aprendizagem $10^{-3}$, valores não validados) em três viagens, e as previsões foram avaliadas nessas três e em outras três viagens de treino que nem a rede nem o normalizador tinham visto. O ensaio é reproduzível pelos \emph{scripts} \texttt{diagnostic\_fit\_3\_trips.py} (ajuste e previsão) e \texttt{plot\_diagnostic\_3trips.py} (figuras), que lêem apenas o conjunto de treino. A Figura~\ref{fig:diag-matrizes} compara as classes previstas com as reais e a Figura~\ref{fig:diag-linhas} mostra, para cada viagem não vista, a probabilidade de pesca ao longo do tempo, as classes real e prevista e os pontos errados.}
+\revtext{rev030}{Esta subsecção mostra, como marcador do tipo de resultados que o relatório final irá apresentar, um ensaio curto feito apenas com viagens do conjunto de treino. A CNN da Secção~\ref{sec:cnn-especificacao} foi treinada durante 200 épocas (taxa de aprendizagem $10^{-3}$, valores não validados) em três viagens, e as previsões foram avaliadas nessas três e em outras três viagens de treino que nem a rede nem o normalizador tinham visto. O ensaio é reproduzível pelos \emph{scripts} \texttt{diagnostic\_fit\_3\_trips.py} (ajuste e previsão) e \texttt{plot\_diagnostic\_3trips.py} (figuras), que lêem apenas o conjunto de treino. A Figura~\ref{fig:diag-matrizes} compara as classes previstas com as reais e a Figura~\ref{fig:diag-linhas} mostra, para cada viagem não vista, a probabilidade de pesca ao longo do tempo, as classes real e prevista e os pontos errados.} \revtext{rev031}{As duas figuras encontram-se no Anexo~\ref{app:figuras-preliminares}, para não interromper a leitura do texto.}
 
 \revtext{rev030}{Estes resultados são \textbf{ilustrativos e provisórios}: três viagens não têm valor estatístico, a configuração da rede não foi otimizada, e não foram usados a validação nem o teste oficiais. Servem para antecipar o formato das figuras e do texto, e serão substituídos pelos resultados do treino completo. Pela leitura visual da Figura~\ref{fig:diag-linhas}, uma parte importante dos erros parece concentrar-se junto às fronteiras dos segmentos de pesca, em blocos contínuos, e não espalhada pelos pontos; esta impressão ainda não foi quantificada e não deve ser tomada como resultado.}
 
-\begin{figure*}[t]
+% References may use the provided IJCAI named bibliography style.
+\bibliographystyle{FormattingGuidelines-IJCAI-ECAI-26/named}
+\bibliography{references}
+
+\appendix
+
+\section{\texorpdfstring{\revtext{rev031}{Figuras do ensaio preliminar}}{Figuras do ensaio preliminar}}
+\label{app:figuras-preliminares}
+
+\revtext{rev031}{Este anexo reúne as figuras do ensaio preliminar descrito na Subsecção~\ref{sec:avaliacao-preliminar}: as matrizes de confusão (Figura~\ref{fig:diag-matrizes}) e a previsão ao longo de três viagens de treino não vistas (Figura~\ref{fig:diag-linhas}). São marcadores de resultados, com apenas três viagens de treino e sem validação oficial, e serão substituídas pelos resultados do treino completo.}
+
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=0.62\textwidth]{figures/diag3_matrizes_confusao.png}
 \caption{\revtext{rev030}{Ensaio preliminar (marcador de resultados): matrizes de confusão, por ponto, nas três viagens de ajuste e nas três viagens de treino não vistas. Cada célula mostra a contagem e a percentagem da linha (classe real). Treino de apenas três viagens, sem validação oficial.}}
 \label{fig:diag-matrizes}
 \end{figure*}
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=0.82\textwidth]{figures/diag3_linhas_temporais.png}
 \caption{\revtext{rev030}{Ensaio preliminar (marcador de resultados): previsão da CNN em três viagens de treino não vistas. Em cada viagem, a curva é a probabilidade de pesca, a faixa ``real'' e a faixa ``previsto'' mostram a classe por ponto (azul: navegação; laranja: pesca) e a faixa ``erro'' marca os pontos errados.}}
 \label{fig:diag-linhas}
 \end{figure*}
 
-% References may use the provided IJCAI named bibliography style.
-\bibliographystyle{FormattingGuidelines-IJCAI-ECAI-26/named}
-\bibliography{references}
 
 \end{document}

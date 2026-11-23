@@ -24,7 +24,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Colunas de treino para a verificação de unidades (REV-003) e para as contagens de anomalias (REV-017).
   - Validação e teste: leitura completa para construir as bases limpas (REV-015), sem análise de resultados nem uso para escolher nada.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-030.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-031.
 
 ## Decisões do utilizador (vigentes)
 
@@ -539,3 +539,16 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 **Pendente**
 - Commit de `handoff.md` e desta entrada, a pedido do utilizador. Push por conta do utilizador.
+
+### 2026-11-23ai — Figuras do ensaio num anexo (REV-031)
+
+**Feito**
+- Figuras 3 e 4 movidas da subsecção 7.4 para o Anexo A, depois das referências; remissão no texto.
+- O utilizador fez o push dos commits até `005b0f5` para `origin/main` (o pendente «push» das entradas anteriores fica resolvido até esse commit).
+
+**Validado**
+- `pdflatex` sem erros nem referências em falta (7 páginas); páginas 5 a 7 vistas.
+
+**Pendente**
+- Commit local desta alteração por autorizar; push por conta do utilizador.
+- Substituir as figuras marcadoras pelos resultados reais. Decisões de treino em aberto.

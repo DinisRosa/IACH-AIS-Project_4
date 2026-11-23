@@ -534,3 +534,16 @@ Regras:
 - **Validação:** compilação e inspeção visual. Os números das figuras vêm dos artefactos do ensaio; o texto não copia números.
 - **Limitações:** as figuras são marcadores e serão substituídas pelos resultados do treino completo. As duas figuras flutuantes de largura total ficam em páginas separadas (a Figura 4 sozinha na página 7); a paginação deve ser revista no fim. As PNG em `latex/figures/` não estão ignoradas pelo git e entram no próximo commit.
 - **Pendentes:** substituir as figuras pelos resultados reais; quantificar o desfasamento nas fronteiras; commit local por autorizar.
+
+### REV-031 — Figuras do ensaio preliminar passam para um anexo
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Azul-petróleo `#006064`, RGB (0, 96, 100). No `.tex`, em `\revtext{rev031}` (título e texto novos do anexo e uma frase de remissão).
+- **O quê:**
+  - Novo Anexo A «Figuras do ensaio preliminar», depois das referências, com a Figura 3 (matrizes de confusão) e a Figura 4 (previsão em 3 viagens não vistas), movidas da subsecção 7.4. Mantêm as legendas em cor REV-030 (texto movido, não recolorido) e passam a `figure*[!t]`.
+  - Frase na subsecção 7.4 a remeter para o Anexo A, «para não interromper a leitura do texto».
+- **Porquê:** pedido do utilizador, para as figuras grandes não estragarem a leitura do corpo do texto e ficarem seguidas.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**. `pdflatex` sem erros e sem referências em falta (7 páginas). Páginas 5 a 7 inspecionadas.
+- **Validação:** compilação e inspeção visual; as duas figuras ficam juntas na página 7.
+- **Pendentes:** substituir as figuras pelos resultados reais; commit local por autorizar.
