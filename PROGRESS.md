@@ -564,3 +564,12 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 **Pendente**
 - O vigilante já em execução continua com a versão antiga até ser reiniciado (Ctrl+C e `bash scripts/watch_latex.sh`).
+
+### 2026-11-23ak — Push autorizado pelo utilizador
+
+**Feito**
+- A pedido explícito do utilizador no chat, executei `git push origin main` (`005b0f5..4752fc1`, sem `--force`). Foi uma autorização pontual: a regra do `AGENTS.md` §6 (push exclusivo do utilizador) mantém-se para os pushes seguintes, que exigem nova autorização.
+
+**Pendente**
+- Decisões de treino do utilizador: partição interna, lr, épocas, critério de paragem, orçamento de tempo.
+- Esta entrada fica num commit local, por enviar (push por autorização).
