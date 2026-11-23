@@ -201,3 +201,65 @@ def evaluate_training_subset(
             "iou": iou_zero,
         },
     }
+
+
+def train_model(model, train_seqs, monitor_seqs, config: dict, device, scaler: dict,
+                input_channels: list[str], checkpoint_path=None, log=print) -> dict:
+    """Treina com paragem antecipada na perda por ponto da monitorização interna.
+
+    Só treino oficial: `train_seqs` e `monitor_seqs` vêm da partição interna do treino.
+    Para quando: (a) a perda de monitorização não melhora (por mais de `min_delta`) durante
+    `patience` épocas; (b) se atinge `max_epochs`; (c) o tempo decorrido ultrapassa
+    `time_budget_seconds` (verificado no fim de cada época). Guarda o melhor checkpoint (em
+    memória e, se indicado, em disco) e restaura-o no modelo no fim.
+    Devolve histórico, época do melhor modelo, motivo da paragem e tempos.
+    """
+    import copy
+
+    from .artifacts import save_checkpoint
+    from .data import build_sequence_loader
+
+    loss_fn = build_loss()
+    optimizer = build_optimizer(model, {"lr": config["lr"]})
+    monitor_loader = build_sequence_loader(monitor_seqs, shuffle=False, seed=0)
+
+    history, best_loss, best_epoch, best_state, stale = [], float("inf"), 0, None, 0
+    stop_reason = "max_epochs"
+    t0 = time.perf_counter()
+    for epoch in range(1, config["max_epochs"] + 1):
+        loader = build_sequence_loader(train_seqs, shuffle=True, seed=config["seed"] + epoch)
+        tr = train_one_epoch(model, loader, optimizer, loss_fn, device)
+        mon = evaluate_training_subset(model, monitor_loader, loss_fn, device, config["threshold"])
+        elapsed = time.perf_counter() - t0
+        improved = mon["mean_loss_per_point"] < best_loss - config["min_delta"]
+        if improved:
+            best_loss, best_epoch, stale = mon["mean_loss_per_point"], epoch, 0
+            best_state = copy.deepcopy(model.state_dict())
+            if checkpoint_path is not None:
+                save_checkpoint(checkpoint_path, model, optimizer, config, scaler, epoch,
+                                {"monitor_loss_per_point": best_loss, "monitor": mon["metrics"]},
+                                input_channels)
+        else:
+            stale += 1
+        history.append({
+            "epoch": epoch, "train_loss_per_point": tr["mean_loss_per_point"],
+            "train_loss_per_step": tr["mean_loss_per_step"], "train_seconds": tr["seconds"],
+            "monitor_loss_per_point": mon["mean_loss_per_point"],
+            "monitor_precision": mon["metrics"]["precision"],
+            "monitor_sensitivity": mon["metrics"]["sensitivity"],
+            "monitor_f1": mon["metrics"]["f1"], "monitor_iou": mon["metrics"]["iou"],
+            "improved": improved, "elapsed_seconds": elapsed})
+        log(f"época {epoch:3d} | treino {tr['mean_loss_per_point']:.4f} | monitor "
+            f"{mon['mean_loss_per_point']:.4f} | F1 monitor {mon['metrics']['f1']:.3f} | "
+            f"{'melhor' if improved else f'sem melhoria {stale}/{config['patience']}'} | {elapsed:6.1f}s")
+        if stale >= config["patience"]:
+            stop_reason = "paragem_antecipada"
+            break
+        if elapsed > config["time_budget_seconds"]:
+            stop_reason = "orcamento_de_tempo"
+            break
+    if best_state is not None:
+        model.load_state_dict(best_state)
+    return {"history": history, "best_epoch": best_epoch, "best_monitor_loss_per_point": best_loss,
+            "stop_reason": stop_reason, "epochs_run": len(history),
+            "total_seconds": time.perf_counter() - t0}
