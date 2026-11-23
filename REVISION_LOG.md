@@ -21,6 +21,7 @@ Regras:
 | REV-007 | Rosa | `#AD1457` | (173, 20, 87) |
 | REV-008 | Verde-azulado | `#00695C` | (0, 105, 92) |
 | REV-009 | Índigo | `#283593` | (40, 53, 147) |
+| REV-010 | Ocre | `#8D6E00` | (141, 110, 0) |
 
 ## Revisões
 
@@ -203,3 +204,14 @@ Regras:
   - Decidir a base de `bearing`: manter o da grelha (x,y, consistente com as outras features), ou usar o original (norte verdadeiro). Não é o mesmo ângulo.
   - Validação e teste: só depois de autorização explícita do utilizador. Não foram processados.
   - Decidir a regra das anomalias restantes (poucas, ~10 pares de tempo). A limpeza por remoção ou marcação continua pendente.
+
+### REV-010 — Atualização automática de PROGRESS e REVISION_LOG em cada interação
+
+- **Data:** 2026-11-23 (hora não registada).
+- **Cor:** Ocre `#8D6E00`, RGB (141, 110, 0).
+- **O quê:** `AGENTS.md` §5 recebe a regra de atualização automática: no fim de cada interação que altere ficheiros, decisões, validações ou pendentes, o agente atualiza `PROGRESS.md` e `REVISION_LOG.md` sem pedido. Sem entradas vazias quando não há alterações. Verificação de coerência antes de terminar.
+- **Porquê:** pedido do utilizador. Os registos estavam a ficar para trás e exigiam pedido explícito.
+- **Ficheiros afetados:** `AGENTS.md` §5.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação:** leitura da alteração em `AGENTS.md`. Não há código.
+- **Pendentes:** nenhum.

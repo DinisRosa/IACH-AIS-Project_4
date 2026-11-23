@@ -69,6 +69,11 @@ Se uma viagem não couber em memória, parar e reportar. Não truncar, excluir v
 - Registar seed, features em ordem, configurações, versões, manifesto da divisão e proveniência.
 - Atualizar documentação afetada, sem inventar resultados no Markdown/LaTeX.
 - Atualizar PROGRESS.md após marcos/sessões: feito, validado, problemas, decisões, pendentes e próximo passo.
+- **Atualização automática no fim de cada interação (obrigatória, sem pedido do utilizador):** no fim de cada resposta que altere ficheiros, decisões, validações ou pendentes, o agente atualiza `PROGRESS.md` e `REVISION_LOG.md` antes de terminar. Regras:
+  - `REVISION_LOG.md`: uma revisão por alteração lógica de documentos, com novo ID sequencial e cor (§8). Nunca renumerar.
+  - `PROGRESS.md`: uma entrada datada com feito, validado, problemas, decisões e pendentes. Atualizar também o "Estado atual", o "Decisões vigentes", os pendentes dos marcos e a tabela de artefactos, para que nenhuma informação fique desatualizada.
+  - Se a interação não alterar nada (só perguntas ou leituras), não se criam entradas vazias; verifica-se apenas que os documentos continuam corretos.
+  - Antes de terminar, confirmar que `PROGRESS.md`, `REVISION_LOG.md` e `README.md` não contradizem o estado real do repositório. Commits locais seguem §6.
 
 ## 6. Git: commits e publicação
 ### Commits locais

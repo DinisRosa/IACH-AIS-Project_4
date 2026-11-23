@@ -20,7 +20,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
   - Validação e teste: só o `id` e as contagens de linhas. Nenhum valor de validação ou teste foi lido ou analisado.
 - **Divisão por ID (manifesto):** `manifests/split_manifest_seed42.csv`, gerado e **versionado** (REV-006).
 - **Conjuntos de validação e teste:** bloqueados para desenvolvimento.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-009.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-010.
 - **Base limpa do treino:** `data/123_fishing_trajs_clean_train.parquet` (713 854 linhas, 87 viagens), gerada por `scripts/build_clean_dataset.py` (REV-009). Validação e teste **não** processados.
 
 ## Decisões do utilizador (vigentes)
@@ -171,13 +171,13 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 
 | Ficheiro | Estado |
 |---|---|
-| `AGENTS.md`, `CLAUDE.md`, `README.md` | Existentes; alinhados (REV-004, REV-007) |
+| `AGENTS.md`, `CLAUDE.md`, `README.md` | Existentes; alinhados (REV-004, REV-007); `AGENTS.md` §5 com atualização automática de registos (REV-010) |
 | `docs/00` a `docs/06` | Existentes; atualizados (REV-001 a REV-004, REV-007) |
 | `latex/proposta_pt.tex` | Reescrito a partir do PDF IAHC (REV-005); compila com pdflatex/bibtex |
 | `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** (REV-006) |
 | `latex/references.bib` | Existente; `kaggleAIS` com autor corrigido (REV-006) |
 | `requirements.txt` | Existente; testado numa instalação limpa |
-| `REVISION_LOG.md` | Existente; REV-001 a REV-009 |
+| `REVISION_LOG.md` | Existente; REV-001 a REV-010 |
 | `scripts/build_clean_dataset.py` | Existente; executado só com treino (REV-009) |
 | `data/123_fishing_trajs_clean_train.parquet` | Gerado; não versionado; só treino |
 | `PROGRESS.md` | Este ficheiro |
@@ -216,3 +216,11 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Decidir a base de `bearing` (grelha ou norte verdadeiro).
 - Autorização explícita para processar validação e teste.
 - Regra para as anomalias restantes.
+
+### 2026-11-23k — Atualização automática de registos (REV-010)
+
+**Feito**
+- `AGENTS.md` §5: no fim de cada interação com alterações, `PROGRESS.md` e `REVISION_LOG.md` são atualizados sem pedido.
+
+**Pendente**
+- Nenhum.
