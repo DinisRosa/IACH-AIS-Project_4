@@ -406,3 +406,4 @@ Regras:
   - Porque é que o segundo não tem `signed_turn`: `bearing` existe a partir do segundo ponto (é o rumo do primeiro intervalo). `signed_turn` é a diferença entre dois rumos consecutivos, por isso precisa de dois intervalos. No segundo ponto só há um.
   - O primeiro ponto **mantém-se** no conjunto, com valores ausentes, por decisão do utilizador.
   - A entrada dos pontos iniciais na função de perda **não está decidida**. A versão anterior dizia que ficavam fora, sem confirmação. Fica como pendente.
+- **Decisão final (2026-11-23, mesma revisão REV-022):** o primeiro ponto tem `time_gap`, `speed` e `signed_turn` a zero, com máscara. O segundo tem `signed_turn` a zero, com máscara. Não se inventa `bearing` para o primeiro ponto, porque isso criaria uma curva falsa no segundo. Os pontos iniciais **entram** na função de perda, com as máscaras nas entradas. Proposta do utilizador, aceite após análise.

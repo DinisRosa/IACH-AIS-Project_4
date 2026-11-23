@@ -373,4 +373,24 @@ Ver `docs/00_5_orientacoes_execucao_decisoes.md`.
 - Decisão do utilizador: partição interna de monitorização dentro do treino (proporção por ID) e orçamento de tempo para treino.
 - Push dos commits, por conta do utilizador.
 
-**Pendente adicional (2026-11-23w):** decidir se o primeiro e o segundo ponto entram na função de perda. Ficam com máscara nas entradas em qualquer caso.
+**Decidido (2026-11-23x, REV-022):** os pontos iniciais entram na função de perda. O primeiro ponto tem `time_gap`, `speed` e `signed_turn` a zero com máscara; o segundo tem `signed_turn` a zero com máscara. Não se inventa `bearing` para o primeiro ponto.
+
+### 2026-11-23x — Pontos iniciais: zero com máscara, entram na perda (REV-022)
+
+**Feito**
+- Decisão do utilizador, após análise: zero com máscara nos valores em falta; não se inventa `bearing` para o primeiro ponto; os pontos iniciais entram na função de perda.
+- Documentos e proposta alinhados. Compila sem erros.
+
+**Próximos passos do Marco 3**
+1. Construir as sequências por viagem, só com o treino, com as quatro características na ordem decidida, e as máscaras.
+2. Ajustar o normalizador (StandardScaler) só com o treino, sem contar os valores em falta; guardar média e desvio-padrão e a ordem das características.
+3. Implementar a CNN 1D de referência: uma probabilidade por ponto, arquitetura conforme `docs/02`, perda sobre todos os pontos.
+4. Testes sintéticos: alinhamento, máscaras, forward e backward com tensores pequenos, e ausência de vazamento.
+5. Treino de ensaio só com o treino. Se for preciso monitorização, partição interna dentro do treino, por ID completo.
+6. Medir o custo em CPU e registar as métricas internas de referência.
+7. Pedido de revisão do Marco 3 ao utilizador.
+
+**Pendente**
+- Proporção da partição interna de monitorização (decisão do utilizador).
+- Orçamento de tempo para o treino (decisão do utilizador).
+- Push, por conta do utilizador.

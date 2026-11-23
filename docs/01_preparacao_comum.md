@@ -102,7 +102,7 @@ Separar deteção de problemas de exclusão de linhas. Guardar auditoria das aç
 
 Após remover pontos, recalcular variáveis dependentes do predecessor. Não reutilizar uma distância original se já não corresponder ao novo intervalo.
 
-Política para primeiros pontos de sequência e ausências decidida (REV-022): nenhuma linha removida; valores em falta preenchidos com zero e marcados por máscara. Entrada na perda dos pontos iniciais: por confirmar. Intervalos não positivos: não ocorrem nos dados (REV-009). Não transformar automaticamente uma ausência num zero físico.
+Política para primeiros pontos de sequência e ausências decidida (REV-022): nenhuma linha removida; valores em falta preenchidos com zero e marcados por máscara. Os pontos iniciais entram na perda (REV-022). Intervalos não positivos: não ocorrem nos dados (REV-009). Não transformar automaticamente uma ausência num zero físico.
 
 ### Rótulos
 ```text

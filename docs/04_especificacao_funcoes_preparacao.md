@@ -448,7 +448,7 @@ manifesto de IDs → separação técnica e isolamento → carregar só treino
 ```
 
 ## Política para pontos iniciais e ausências
-O primeiro ponto de cada sequência não tem diferenças anteriores calculáveis. O segundo não tem signed_turn, porque depende do rumo do primeiro intervalo. Política de ausências (REV-022): nenhuma linha é removida. Os valores em falta nas entradas são preenchidos com zero e marcados por um indicador de ausência (máscara) por característica, para distinguir ausência de um valor físico zero. O primeiro ponto de cada viagem mantém-se, com time_gap, speed e signed_turn ausentes. O segundo mantém-se, com signed_turn ausente. Se os pontos iniciais entram ou não na função de perda fica por confirmar pelo utilizador.
+O primeiro ponto de cada sequência não tem diferenças anteriores calculáveis. O segundo não tem signed_turn, porque depende do rumo do primeiro intervalo. Política de ausências (REV-022): nenhuma linha é removida. Os valores em falta nas entradas são preenchidos com zero e marcados por um indicador de ausência (máscara) por característica, para distinguir ausência de um valor físico zero. O primeiro ponto de cada viagem mantém-se, com time_gap, speed e signed_turn a zero e marcados como ausentes. O segundo mantém-se, com signed_turn a zero e marcado como ausente. Não se inventa rumo para o primeiro ponto, porque isso criaria uma curva falsa no segundo. Os pontos iniciais entram na função de perda, com as máscaras nas entradas (decidido pelo utilizador, REV-022).
 
 ## Condições mínimas antes de exportar para a CNN
 - IDs sem sobreposição entre conjuntos.
