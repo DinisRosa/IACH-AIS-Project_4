@@ -22,8 +22,8 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Testes:** 192 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
 - **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15), com a Secção 9 (medição final) antes do anexo (REV-053). Texto estável a preto (REV-043); o novo tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C`, REV-048 `#1B5E20` `#880E4F` (REV-052: 4.3, 4.4, Secção 5, Secção 8 e Anexo A) e `#0D47A1` (REV-053: Secção 9 e as frases sobre o `validation`).
-- **Git:** `origin/main` tem tudo até `548cb8a` (REV-053), enviado a pedido do utilizador em 2026-11-24 00:39 WET (push normal, sem `--force`). Confirmar com `git status -sb`. Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-054.
+- **Git:** o estado muda a cada commit e push; confirmar com `git status -sb` e `git log origin/main..HEAD`. O push só se faz a pedido explícito do utilizador, sem mais confirmações (REV-055). Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-055.
 
 ## Decisões do utilizador (vigentes)
 
@@ -886,3 +886,15 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Decisão do utilizador sobre o Marco 5 (só avaliável no `test`); passagens adiadas do LaTeX; push de `d6111f6` e deste commit, a pedido do utilizador.
+
+### 2026-11-24c — Regra do push atualizada (REV-055), 2026-11-24 00:46 WET
+
+**Feito**
+- A pedido do utilizador, o `AGENTS.md` §6, o `CLAUDE.md` e o handoff passam a dizer: se o utilizador pede push (no chat ou no handoff), o agente envia como se fosse ele, sem pedir confirmação nem repetir a autorização; por iniciativa própria, ou a trabalhar sozinho sem pedido explícito, nunca; sem `--force` (que exige pedido próprio); subagentes nunca fazem push.
+- Estado do git nos documentos deixa de nomear commits «por enviar» (ficava sempre desatualizado depois do push).
+
+**Validado**
+- Releitura dos documentos à procura de contradições sobre o push (`AGENTS.md`, `CLAUDE.md`, `handoff.md`, `PROGRESS.md`). Código e LaTeX não foram alterados.
+
+**Pendente**
+- Os de sempre (Marco 5, passagens adiadas do LaTeX, arrumação técnica).

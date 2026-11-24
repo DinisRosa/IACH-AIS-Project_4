@@ -107,10 +107,10 @@ Pendente:
 ```
 Incluir ID da revisão documental quando aplicável. Um commit pequeno não autoriza uma mudança científica sem aprovação.
 
-### Push é exclusivo do utilizador
-O agente NUNCA executa git push, incluindo force/force-with-lease, sincronização por interface, publicação por API, merge remoto ou automação equivalente.
+### Push só a pedido explícito do utilizador (REV-055)
+O agente só executa git push quando o utilizador o pede explicitamente, no chat ou em instruções suas (por exemplo, no handoff). Esse pedido vale como o próprio utilizador a dar o push: o agente envia, sem pedir nova confirmação nem repetir a autorização. **Por iniciativa própria, ou a trabalhar sozinho sem esse pedido, o agente NUNCA executa git push**, nem force/force-with-lease, sincronização por interface, publicação por API, merge remoto ou automação equivalente. Os subagentes nunca fazem push.
 
-Pode verificar branch/upstream/remoto por comandos de leitura e indicar ao utilizador o comando exato adequado, sem executar. Não assumir main/master/origin. Não sugerir force por rotina; explicar risco e contexto antes de o discutir.
+O pedido de push não autoriza `--force`, que exige pedido explícito para esse caso, com o risco explicado. Antes de enviar, verificar por comandos de leitura o branch, o upstream/remoto e os commits a enviar (sem dados, credenciais nem resultados volumosos); não assumir main/master/origin.
 
 Não reescrever histórico, executar reset destrutivo/rebase arriscado ou apagar branches sem autorização. Preferir branch de trabalho quando apropriado sem mudar trabalho existente inadvertidamente.
 

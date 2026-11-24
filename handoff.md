@@ -1,6 +1,6 @@
 # Handoff — Projeto AIS
 
-**Data e hora desta atualização:** 2026-11-24 00:42 WET (UTC+00:00). Reescrito de raiz em REV-054, depois de o Marco 4 e a medição final terem sido executados (versões anteriores: REV-044, REV-045, REV-046 a REV-053). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
+**Data e hora desta atualização:** 2026-11-24 00:46 WET (UTC+00:00). Reescrito de raiz em REV-054, regra do push atualizada em REV-055, depois de o Marco 4 e a medição final terem sido executados (versões anteriores: REV-044, REV-045, REV-046 a REV-053). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
 
 Nota: o utilizador chamou-lhe uma vez «endof.md»; esse ficheiro não existe e o que se leu no arranque foi este `handoff.md`.
 
@@ -10,7 +10,7 @@ Nota: o utilizador chamou-lhe uma vez «endof.md»; esse ficheiro não existe e 
 |---|---|---|
 | Testes (`pytest tests/`) | 192 passaram | 2026-11-24 00:41 |
 | LaTeX (`pdflatex` + `bibtex`) | 11 páginas (limite de 15); 0 erros; 0 referências indefinidas | 2026-11-24 00:41 |
-| Git | `main` um commit à frente de `origin/main` (`d6111f6`, só documentação); `origin/main` tem tudo até `548cb8a` (REV-053), enviado a pedido do utilizador às 00:39 | 2026-11-24 00:41 |
+| Git | o estado muda a cada commit e push: confirmar com `git status -sb` e `git log origin/main..HEAD`. Último push a pedido do utilizador: 2026-11-24 (ver `git log origin/main -1`) | 2026-11-24 00:46 |
 | Treino de J0 e de J50 | os dois completos (300 épocas), 9,8 min e 21,3 min | 2026-11-23 22:58 a 23:28 |
 | Seleção de J0 e J50 no `test` (única abertura das janelas) | abertura 23:28:19 e fim 23:29:54 (UTC) em `results/access_log.jsonl` | 2026-11-23 |
 | Medição final no `validation` | escolha do modelo 00:32:09, abertura 00:32:09 e fim 00:32:10 (UTC); só o modelo escolhido; **o `validation` está gasto** | 2026-11-24 00:32 |
@@ -22,7 +22,8 @@ Quem retomar deve repetir estas verificações e comparar com as horas acima: o 
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
-| `d6111f6` | 2026-11-24 00:39 | Corrige o estado do git no handoff e no PROGRESS depois do push de REV-053 (**por enviar**) |
+| `8eca05c` | 2026-11-24 00:42 | Reescreve o handoff depois do Marco 4 e da medição final (REV-054) |
+| `d6111f6` | 2026-11-24 00:39 | Corrige o estado do git no handoff e no PROGRESS depois do push de REV-053 |
 | `548cb8a` | 2026-11-24 00:36 | Medição final no validation do modelo escolhido e Secção 9 da proposta (REV-053) |
 | `9ab2e46` | 2026-11-24 00:32 | Prepara a medição final no validation: protocolo, autorização e programa, antes de abrir (REV-053) |
 | `b818aba` | 2026-11-23 23:58 | Corrige o estado do git no handoff e no PROGRESS depois do push do utilizador |
@@ -44,7 +45,7 @@ O commit deste handoff vem a seguir e não está na tabela.
 1. `AGENTS.md`: regras fixas. O `CLAUDE.md` manda lê-lo antes de qualquer ação.
 2. Este ficheiro.
 3. `docs/00_projeto_e_decisoes.md`, `docs/02_cnn_viagem_completa.md` e `docs/03_cnn_janelamento.md` (decisões e contratos do Marco 4, já implementado); `docs/01_dados_e_preparacao.md` se for preciso.
-4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-24a) e `REVISION_LOG.md` (REV-001 a REV-054).
+4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-24a) e `REVISION_LOG.md` (REV-001 a REV-055).
 5. Antes de qualquer ação: `git status` e `git log`, e `iach-ais-venv-4/bin/python -m pytest tests/` (192 testes a passar).
 
 Mensagem sugerida para abrir a nova sessão: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -89,7 +90,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 - **Conjuntos reservados (`results/access_log.jsonl`):** o `test` foi aberto **duas vezes** para seleção, uma por autorização (baseline às 18:40 UTC; janelas às 23:28 UTC), e teve **duas leituras de diagnóstico** da viagem `219001624-2` (colunas `id`, `point_id`, `t`, `x`, `y`; a primeira foi gasta por um erro de desenho). O `validation` foi aberto **uma só vez** (`validation_final_2026-11-24`) e **está gasto**: já não pode medir mais nada, incluindo um futuro pós-processamento.
 - **Testes:** 192, todos sintéticos (mais um que lê 3 viagens de treino).
 - **LaTeX** (`latex/proposta_pt.tex`): 11 páginas, limite de 15. Secção 8 com resumo e tabela primeiro, 8.1 a 8.4, **Secção 9** (medição final) antes do **Anexo A**. Números e figuras gerados por código. Cores do texto novo: rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F` (reescrito) e rev053 `#0D47A1` (Secção 9).
-- **Git:** `origin/main` tem tudo até `548cb8a`; falta enviar `d6111f6` e o commit deste handoff (só documentação).
+- **Git:** `origin/main` tinha tudo até `548cb8a` (REV-053) às 00:39; os commits seguintes (REV-054 e REV-055, só documentação) foram enviados a pedido do utilizador. Confirmar com `git status -sb`.
 
 ## Decisões vigentes
 
@@ -110,7 +111,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 
 **Âmbito e LaTeX**
 - HMM e Wu et al. **não** são comparações. Explicabilidade, calibração e *dashboard* estão fora do mínimo atual.
-- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-055**. Verificar sempre no `REVISION_LOG.md` se uma cor já foi usada (duas escolhas iniciais já eram de REV-011 e REV-007).
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-056**. Verificar sempre no `REVISION_LOG.md` se uma cor já foi usada (duas escolhas iniciais já eram de REV-011 e REV-007).
 - Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F`, rev053 `#0D47A1`. Outras estão definidas, sem uso (rev013, rev018, rev020, rev022, rev024 a rev028, rev030 a rev032, rev035, rev036). Só marcadores Markdown: REV-029, REV-033, REV-034, REV-037 a REV-039, REV-044, REV-045, REV-049 a REV-051 e REV-054 (`#00BFA5`).
 
 ## Ficheiros principais
@@ -166,13 +167,13 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
    - O critério de seleção por menor perda (épocas 8 e 4) **já não muda o resultado final**: o modelo medido foi a referência. Recomendação anterior: manter e deixar como limitação.
 2. **LaTeX, passagens ainda abertas** (o utilizador adiou-as): explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o título começa por «OOI» e há texto a vermelho «human-on-the-loop»; a 7.1 ainda descreve a ablação completa; as secções 6 e 7.2 e as partes a preto das revisões anteriores não foram relidas.
 3. **Arrumação:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas, se o utilizador quiser.
-4. **Push:** enviar `d6111f6` e o commit deste handoff, só quando o utilizador o pedir (ver as regras).
+4. **Push:** só quando o utilizador o pedir (ver as regras); quando pede, enviar sem mais perguntas.
 
 ## Regras a não esquecer
 
 - Desenvolvimento só com treino ou dados sintéticos. Validação e teste só com autorização explícita; uma flag no código não é autorização. **O `validation` já não se abre mais.**
 - Todo o número usado como evidência vem de código versionado e executável (AGENTS §10); no LaTeX, só por macros geradas. Não afirmar o que não foi medido; distinguir feito, validado e pendente.
-- **Push:** o `AGENTS.md` §6 diz que o agente nunca faz `git push`. O utilizador autorizou explicitamente um push nesta sessão (00:39) e já tinha enviado outros ele próprio; essa regra não foi alterada. **Só enviar com pedido explícito do utilizador**, nunca com `--force`, e lembrá-lo do conflito com o §6 se nunca o tiver resolvido.
+- **Push (REV-055):** o utilizador definiu a regra: **se ele pede (no chat ou no handoff), o agente faz push, como se fosse ele, sem pedir confirmação nem lembrar a autorização**. Por iniciativa própria, ou a trabalhar sozinho sem pedido explícito, **nunca**. Sem `--force`. Antes de enviar, ver branch, remoto e commits a enviar. Está no `AGENTS.md` §6.
 - Commits após explicação; alterações substanciais com mensagem completa (O quê, Porquê, Como, Impacto, Validação, Pendente) e a linha de coautoria. Selecionar ficheiros explicitamente.
 - No fim de cada interação que altere ficheiros: atualizar `PROGRESS.md` e `REVISION_LOG.md` (REV novo, cor nova, marcador `[REV-NNN | cor #HEX]`) e confirmar que `README.md`, `docs/` e o LaTeX não se contradizem.
 - Explicar comandos e alterações antes de os executar. Pedir autorização para alterações metodológicas, execuções prolongadas e instalações.
@@ -185,6 +186,6 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
 - Quer um **plano** e uma explicação antes de avançar, e que as dúvidas lhe sejam colocadas **antes** de o trabalho autónomo começar; depois dá autonomia para executar tudo, incluindo subagentes, treinos e LaTeX.
 - Prefere resultados em **imagens e tabelas** e um resumo final claro; se o resultado for pior que a baseline, quer apenas que lho digam.
 - Decide depressa e deixa decisões claras («está fechado», «desconsidera», «sim, autorizo»): registá-las como estão, sem as reabrir.
-- Quer commits **divididos por tema**, com mensagens completas; o push só quando o pede.
+- Quer commits **divididos por tema**, com mensagens completas; o push só quando o pede (e, quando pede, sem mais perguntas).
 - Quer o LaTeX sempre coerente e com valores **gerados por código**, e **a cor da revisão em todo o texto novo**; também quer o relatório **fácil de ler** (poucas figuras acumuladas, texto corrido, resumo primeiro).
 - Aceita valores recomendados em bloco quando vêm numa tabela com valor proposto e justificação.

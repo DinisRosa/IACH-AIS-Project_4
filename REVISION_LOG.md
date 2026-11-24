@@ -904,3 +904,15 @@ Regras:
 - **Validação:** `pytest tests/`: 192 passaram e `pdflatex` + `bibtex`: 11 páginas, 0 erros, 0 referências indefinidas (ambos às 00:41 WET); horas e commits lidos do relógio e do `git log`; números copiados de `final_validation.json`, `final_results_windows.json` e do `access_log`.
 - **Limitações:** a tabela da última validação fica desatualizada assim que algo mudar; o handoff diz-o. O `AGENTS.md` §6 e a autorização de push continuam em conflito, sem decisão do utilizador.
 - **Pendentes:** os do handoff («O que fazer a seguir»); push de `d6111f6` e deste commit, só a pedido do utilizador.
+
+### REV-055 — Regra do push: só a pedido explícito do utilizador
+
+- **Data:** 2026-11-24 00:46 WET.
+- **Cor:** Rosa-claro `#F06292`, RGB (240, 98, 146). Só marcador do registo; não há alteração ao `.tex`.
+- **O quê:** por instrução do utilizador, a regra do push muda. **Antes** (`AGENTS.md` §6): o agente nunca faz push, o push é exclusivo do utilizador. **Agora:** quando o utilizador pede push, no chat ou nas suas instruções (por exemplo, no handoff), o agente envia como se fosse ele, sem pedir confirmação nem repetir a autorização; por iniciativa própria, ou a trabalhar sozinho sem pedido explícito, nunca; `--force` só com pedido próprio e risco explicado; os subagentes nunca fazem push; antes de enviar, verificar branch, remoto e commits (sem dados nem segredos).
+- **Porquê:** o utilizador resolveu o conflito entre o §6 e os pedidos de push que ia fazendo.
+- **Ficheiros afetados:** `AGENTS.md` (§6), `CLAUDE.md`, `handoff.md`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação:** releitura dos documentos à procura de contradições sobre o push. Sem código nem LaTeX alterados.
+- **Limitações:** a regra é mais permissiva, mas continua a exigir pedido explícito; um pedido genérico («continua») não é pedido de push.
+- **Pendentes:** nenhum.
