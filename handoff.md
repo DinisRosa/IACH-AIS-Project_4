@@ -1,18 +1,19 @@
 # Handoff — Projeto AIS
 
-**Data e hora desta atualização:** 2026-11-23 23:58 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
+**Data e hora desta atualização:** 2026-11-24 00:37 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
 
 ### Última validação (registada neste handoff)
 
 | Verificação | Resultado | Data e hora (WET) |
 |---|---|---|
-| Testes (`pytest tests/`) | 187 passaram | 2026-11-23 23:57 |
-| LaTeX (`pdflatex` + `bibtex`) | 9 páginas (limite de 15); 0 erros; 0 referências indefinidas | 2026-11-23 23:57 |
+| Testes (`pytest tests/`) | 192 passaram | 2026-11-24 00:36 |
+| LaTeX (`pdflatex` + `bibtex`) | 11 páginas (limite de 15); 0 erros; 0 referências indefinidas | 2026-11-24 00:36 |
 | Git | `origin/main` já tem tudo até `bb01a60` (REV-051; enviado pelo utilizador); falta enviar o commit de REV-052 (e o deste handoff) | 2026-11-23 23:59 |
 | Treino de J0 e de J50 | os dois completos (300 épocas), 9,8 min e 21,3 min | 22:58 a 23:28 |
 | Seleção no `test` (única abertura das janelas) | abertura 23:28:19 e fim 23:29:54, em `results/access_log.jsonl` | 2026-11-23 |
 | Números de J0 e J50 (`final_results_windows.json`) | gerados por `build_window_results` | 2026-11-23 23:33 |
-| Conjunto `validation` | **nunca aberto** (sem entradas no `access_log`) | verificado em 2026-11-23 23:36 |
+| Conjunto `validation` | **aberto uma única vez**, na medição final (abertura às 00:32:09 UTC, fim às 00:32:10), só do modelo escolhido; **gasto** | 2026-11-24 00:32 |
+| Medição final (`final_validation`) | modelo escolhido: a referência; números em `results/final_validation/final_validation.json` | 2026-11-24 00:32 |
 
 Quem retomar deve repetir estas verificações e comparar com as horas acima: o que tiver mudado depois destas horas **não foi** validado por este handoff.
 
@@ -34,7 +35,7 @@ O commit deste handoff vem a seguir e não está na tabela.
 1. `AGENTS.md`: regras fixas. O `CLAUDE.md` manda lê-lo antes de qualquer ação.
 2. Este ficheiro.
 3. `docs/00_projeto_e_decisoes.md`, `docs/02_cnn_viagem_completa.md` e `docs/03_cnn_janelamento.md` (decisões e contratos do Marco 4, já implementado); `docs/01_dados_e_preparacao.md` se for preciso.
-4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23bc) e `REVISION_LOG.md` (REV-001 a REV-052).
+4. `PROGRESS.md` (estado vivo no topo; histórico por entrada, termina em 2026-11-23bc) e `REVISION_LOG.md` (REV-001 a REV-053).
 5. Antes de qualquer ação: `git status` e `git log`, e `iach-ais-venv-4/bin/python -m pytest tests/` (187 testes a passar).
 
 Mensagem sugerida para abrir a nova sessão: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -46,7 +47,7 @@ Segmentar viagens AIS de pesca em **pesca** e **navegação**, com uma previsão
 2. **CNN de referência sobre a viagem completa** (feita e **fechada**, Marco 3).
 3. **A mesma CNN sobre janelas com sobreposição** (Marco 4, **feito**): J0 (0 %) e J50 (50 %), L = 64, para saber se o janelamento melhora face à referência (RQ1).
 4. Pós-processamento temporal, só se o utilizador o decidir (Marco 5).
-5. Congelar todas as variantes e fazer uma **medição final única** no conjunto `validation` (Marcos 6 e 7).
+5. **Medição final única** no conjunto `validation` (Marcos 6 e 7): **feita (REV-053)**, só do modelo escolhido.
 
 Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 42, 70/15/15: treino 87 viagens (713 854 linhas), validação 18 (209 016), teste 18 (103 409). Fonte: Zenodo (Song Wu, CC BY 4.0).
 
@@ -59,15 +60,16 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 | 3 CNN de referência (viagem completa) | **Fechado por decisão do utilizador (REV-041)** |
 | 4 Janelamento com a mesma CNN | **Feito (REV-046, REV-047)**: J0 e J50 treinadas, escolhidas no `test` numa só abertura e congeladas |
 | 5 Pós-processamento | Por fazer; só com decisão do utilizador |
-| 6 e 7 Congelar tudo e medição final no `validation` | Por fazer; precisam de autorização |
+| 6 e 7 Congelar e medição final no `validation` | **Feito (REV-053)**: só o modelo escolhido (a referência) foi medido, uma só vez |
 
 - **Baseline (CNN de referência):** 87 viagens de treino, 300 épocas, ~19 min em CPU. **Época 162 e limiar 0,65**, escolhidos no `test` numa só ronda e congelados em `results/baseline_frozen/`. Exatidão por ponto de 93,5 % no treino e de 94,7 % no `test` (regra da classe maioritária: 61,2 %).
 - **J0 e J50:** a mesma CNN (21 761 parâmetros, campo recetivo 13), mesmo normalizador, seed 42, Adam lr 1e-3, 300 épocas, **lotes de 32 janelas**, janelas de 64 pontos com passo 64 (J0) e 32 (J50). J0: 11 201 janelas, 351 passos por época, 105 300 passos, 9,8 min. J50: 22 265 janelas, 696 passos por época, 208 800 passos (o dobro), 21,3 min. Escolhidas no `test` numa só abertura: **J0 época 8, limiar 0,60; J50 época 4, limiar 0,75**. Exatidão por ponto no `test`: J0 93,5 %, J50 93,8 %, contra 94,7 % da referência. J0 supera a referência em 7 das 18 viagens e J50 em 5. Congeladas em `results/windows_j0_frozen/` e `results/windows_j50_frozen/`; números em `results/windows_final/final_results_windows.json` (fonte única).
 - **Por segmento (`test`, IoU 0,5, sem suavizar):** 18 segmentos reais de pesca; previstos 358 (referência), 377 (J0) e 303 (J50); F1 de segmentos de pesca cerca de 0,03 nas três; razão de fragmentação na pesca 19,9, 20,9 e 16,8 e na navegação 10,4, 11,0 e 8,8. **J50 reduz a fragmentação face a J0 e à referência**, mas a segmentação continua muito fragmentada. Erros de fronteira da pesca sem padrão (5 ou 6 pares correspondidos).
 - **Cuidados (limitações registadas):** os números do `test` são **otimistas** (serviram a escolher, nas três variantes com o mesmo critério). **A perda no `test` sobe com o treino** (máximos de 0,79 em J0 e 0,93 em J50 desde a época 100), por isso o critério da menor perda escolheu épocas muito cedo (4 e 8), enquanto a baseline foi escolhida na 162: parte da diferença pode vir do critério e não do janelamento. O lote difere (32 janelas contra uma viagem por passo) e J50 faz o dobro dos passos. Uma semente e 18 viagens de teste. Os resultados foram reportados como saíram, sem repetir nem ajustar.
-- **Conjuntos reservados:** o `test` teve ainda **duas leituras de diagnóstico** da viagem `219001624-2` (colunas `id`, `point_id`, `t`, `x`, `y`; a primeira foi gasta por um erro de desenho e a segunda produziu o gráfico), sem escolher nada. Foi aberto **duas vezes** para seleção, uma por autorização (baseline às 18:40 UTC; janelas às 23:28 UTC), ambas em `results/access_log.jsonl`. O `validation` **nunca foi aberto**.
-- **Testes:** 181, todos sintéticos (mais um que lê 3 viagens de treino).
-- **LaTeX** (`latex/proposta_pt.tex`): 9 páginas, limite de 15. **Refactoring de leitura (REV-052):** a Secção 8 abre com um resumo e uma tabela e tem 8.1 (referência), 8.2 (J0), 8.3 (J50) e 8.4 (comparação, RQ1 e limitações); 5 figuras e 3 tabelas; 4.3, 4.4 e Secção 5 condensadas; **Anexo A** com os pormenores do janelamento e as métricas por classe. Números e figuras gerados por código (`build_window_results`). Cores do texto novo: rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20` e, no que foi reescrito em REV-052, rev052 `#880E4F`.
+- **Medição final (REV-053):** a pedido do utilizador, escolheu-se o melhor modelo **só com o `test`**, por um critério declarado antes de abrir (maior F1 médio por ponto; empate pela exatidão): a **referência** (0,945; J50 0,934; J0 0,931). Medida uma só vez no `validation` (18 viagens, 209 016 pontos): **exatidão 94,4 %** (11 662 erros; regra da classe maioritária 83,2 %; no `test` 94,7 %), pesca com sensibilidade 0,938 e precisão 0,995, navegação com sensibilidade 0,976 e **precisão 0,760** (0,900 no `test`). Por viagem de 40,4 % (`219020187-4`) a 99,7 %, mediana 98,2 %. Por segmento a pesca tem 18 reais e 486 previstos (fragmentação 27,0). J0 e J50 **não** foram medidas no `validation`. Secção 9 da proposta.
+- **Conjuntos reservados:** o `test` teve ainda **duas leituras de diagnóstico** da viagem `219001624-2` (colunas `id`, `point_id`, `t`, `x`, `y`; a primeira foi gasta por um erro de desenho e a segunda produziu o gráfico), sem escolher nada. Foi aberto **duas vezes** para seleção, uma por autorização (baseline às 18:40 UTC; janelas às 23:28 UTC), ambas em `results/access_log.jsonl`. O `validation` foi aberto **uma só vez** (medição final, `validation_final_2026-11-24`) e **está gasto**.
+- **Testes:** 192, todos sintéticos (mais um que lê 3 viagens de treino).
+- **LaTeX** (`latex/proposta_pt.tex`): 11 páginas, limite de 15. Secção 9 (medição final, REV-053) antes do anexo. **Refactoring de leitura (REV-052):** a Secção 8 abre com um resumo e uma tabela e tem 8.1 (referência), 8.2 (J0), 8.3 (J50) e 8.4 (comparação, RQ1 e limitações); 5 figuras e 3 tabelas; 4.3, 4.4 e Secção 5 condensadas; **Anexo A** com os pormenores do janelamento e as métricas por classe. Números e figuras gerados por código (`build_window_results`). Cores do texto novo: rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F` (reescrito) e rev053 `#0D47A1` (Secção 9).
 - **Git:** os commits até REV-051 já estão em `origin/main` (enviados pelo utilizador); o de REV-052 e o deste handoff estão por enviar. Cada push precisa de autorização explícita nova do utilizador.
 
 ## Decisões vigentes
@@ -89,8 +91,8 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 
 **Âmbito e LaTeX**
 - HMM e Wu et al. **não** são comparações. Explicabilidade, calibração e *dashboard* estão fora do mínimo atual.
-- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-053**. As cores já usadas estão no `REVISION_LOG.md` (verificar antes de escolher: duas escolhas iniciais já eram de REV-007 e REV-011).
-- Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F`. Outras estão definidas, sem uso (rev013, rev018, rev020, rev022, rev024 a rev028, rev030 a rev032, rev035, rev036). Só marcadores Markdown: REV-029, REV-033, REV-034, REV-037, REV-038, REV-039, REV-044, REV-045.
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-054**. As cores já usadas estão no `REVISION_LOG.md` (verificar antes de escolher: duas escolhas iniciais já eram de REV-007 e REV-011).
+- Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F`, rev053 `#0D47A1`. Outras estão definidas, sem uso (rev013, rev018, rev020, rev022, rev024 a rev028, rev030 a rev032, rev035, rev036). Só marcadores Markdown: REV-029, REV-033, REV-034, REV-037, REV-038, REV-039, REV-044, REV-045.
 
 ## Ficheiros principais
 
@@ -100,6 +102,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 | Documentação | `docs/00_projeto_e_decisoes`, `docs/01_dados_e_preparacao`, `docs/02_cnn_viagem_completa`, `docs/03_cnn_janelamento` (decisões e contratos do Marco 4, implementado) |
 | Biblioteca (`src/ais/phase1/`) | `data.py`, `model.py` (com máscara opcional), `training.py`, `checks.py`, `utils.py`, `artifacts.py`, `config.py`, `metrics.py`, `inference.py`, `reserved.py`, `selection.py`, `segments.py`, **`windows.py`** |
 | Programas, baseline | `run_phase1_training.py`, `select_on_test.py`, `freeze_baseline.py` (com `label`), `build_final_results.py`, `segment_metrics.py`, `plot_phase1_run.py`, `benchmark_training_speed.py` |
+| Programas, medição final (REV-053) | `final_validation.py`, `build_validation_results.py` |
 | Programas, janelas (REV-046, REV-047, REV-049) | `run_window_training.py`, `select_windows_on_test.py`, `build_window_results.py`, `plot_trip_diagnostic.py` |
 | Programas, preparação | `create_split_manifest.py`, `check_units_train.py`, `verify_trip_count.py`, `build_clean_dataset.py --split train\|validation\|test`, `count_anomalies_train.py`, `count_shared_vessels.py` |
 | Programas do ensaio antigo (sem uso) | `diagnostic_fit_3_trips.py`, `plot_diagnostic_3trips.py` |
@@ -116,10 +119,11 @@ iach-ais-venv-4/bin/python -m pytest tests/                                     
 iach-ais-venv-4/bin/python -m ais.cli.run_window_training configs/windows_j0.json    # treino de J0 (já feito)
 iach-ais-venv-4/bin/python -m ais.cli.build_final_results                            # regenera os números da baseline
 iach-ais-venv-4/bin/python -m ais.cli.build_window_results                           # regenera os números de J0 e J50
+iach-ais-venv-4/bin/python -m ais.cli.build_validation_results                       # regenera macros e figuras da Secção 9 (não reabre o validation)
 iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv          # métricas por segmento
 ```
 
-**Não voltar a correr** `select_on_test` nem `select_windows_on_test` (cada autorização era de **uma** abertura; os programas recusam a segunda). Compilar o LaTeX à mão **sem colidir com o vigilante** (a partir de `latex/`): `-output-directory=build/check`, duas passagens de `pdflatex` e `bibtex` com `BIBINPUTS`/`BSTINPUTS` a apontar para `latex/`.
+**Não voltar a correr** `select_on_test`, `select_windows_on_test` nem `final_validation` (cada autorização era de **uma** abertura; os programas recusam a segunda). Compilar o LaTeX à mão **sem colidir com o vigilante** (a partir de `latex/`): `-output-directory=build/check`, duas passagens de `pdflatex` e `bibtex` com `BIBINPUTS`/`BSTINPUTS` a apontar para `latex/`.
 
 ## O que falhou ou exigiu correção
 
@@ -139,7 +143,7 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
 1. **Perguntar ao utilizador, antes de qualquer trabalho:**
    - Quer **manter o critério de seleção** (menor perda no `test`), que escolheu as épocas 4 e 8, ou mudá-lo (por exemplo, F1, ou travar o treino mais cedo)? Mudar implica novo protocolo e nova autorização, e repetir a seleção da baseline para a comparação ser justa.
    - Quer avançar para o **Marco 5** (pós-processamento), dado que J50 reduz a fragmentação mas a segmentação continua muito fragmentada? A unidade e a largura do filtro teriam de ser aprovadas.
-   - Quando fazer os **Marcos 6 e 7** (congelar tudo e medir no `validation`, uma só vez, com autorização nova).
+   - O `validation` **está gasto**: um futuro pós-processamento só poderia ser avaliado no `test` (otimista), nunca no `validation`.
 2. **LaTeX, passagens ainda abertas** (o utilizador adiou-as): explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o título começa por «OOI» e há texto a vermelho «human-on-the-loop»; **o utilizador ainda não leu o texto reescrito em REV-052** (4.3, 4.4, Secção 5, Secção 8 e Anexo A); a 7.1 ainda descreve a ablação completa.
 3. **Arrumação:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas, se o utilizador quiser.
 4. **Diagnóstico da viagem `219001624-2` (REV-049 a REV-051):** feito. J0 acerta 42,0 % porque a probabilidade na pesca fica abaixo do seu limiar de 0,60; a pesca real é um troço retilíneo no extremo sul. Gráficos em `results/diagnostic_trip/`. Nada mais pendente deste pedido; qualquer nova leitura do `test` precisa de nova autorização. O gráfico das classes já está feito (J0 acerta 42,0 % nesta viagem por a probabilidade na pesca ficar abaixo do limiar de 0,60).

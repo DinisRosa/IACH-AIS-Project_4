@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-048)
+## Estado atual (REV-053)
 
 | Marco | Estado |
 |---|---|
@@ -12,18 +12,18 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | 3 CNN 1D de referência sobre a viagem completa | **Fechado por decisão do utilizador (REV-041)** |
 | 4 Janelamento com a mesma CNN (L = 64; 0 % e 50 %) | **Feito (REV-046, REV-047)**: J0 e J50 treinadas, selecionadas no `test` numa só abertura e congeladas; resultados no LaTeX (8.2 a 8.4) |
 | 5 Pós-processamento | Por fazer; só com decisão do utilizador (o Marco 4 não melhorou a exatidão por ponto; J50 reduz a fragmentação face a J0) |
-| 6 e 7 Congelar tudo e medição final no `validation` | Por fazer; precisam de autorização |
+| 6 e 7 Congelar tudo e medição final no `validation` | **Feito (REV-053)**: medido só o modelo escolhido (a referência), uma única vez; J0 e J50 não foram medidas no `validation` |
 
 - **Baseline (CNN de referência):** treinada só com o treino oficial (87 viagens, 300 épocas, um checkpoint por época). **Época 162 e limiar 0,65**, escolhidos no `test` numa só ronda e congelados em `results/baseline_frozen/` (REV-038). Números em `results/baseline_frozen/final_results.json` e, no LaTeX, em macros geradas (REV-040). Os resultados do `test` são otimistas (serviram a escolher) e a perda no `test` é ruidosa entre épocas.
 - **J0 e J50 (REV-046, REV-047):** a mesma CNN sobre janelas de 64 pontos, sem sobreposição (J0) e com 50 % (J50), 300 épocas, lote de 32 janelas. J0 em 9,8 min e 105 300 passos; J50 em 21,3 min e 208 800 passos. Escolhidas no `test` numa só abertura: **J0 época 8, limiar 0,60; J50 época 4, limiar 0,75** (a perda no `test` sobe com o treino). Exatidão por ponto no `test`: referência 94,7 %, J0 93,5 %, J50 93,8 %; J50 reduz a fragmentação face a J0 e à referência, mas o F1 de segmentos de pesca é baixo (cerca de 0,03) nas três. Congeladas em `results/windows_j0_frozen/` e `results/windows_j50_frozen/`; números em `results/windows_final/final_results_windows.json` (fonte única) e, no LaTeX, em macros geradas. Resultados otimistas (serviram a escolher).
-- **Conjuntos reservados:** o `test` foi aberto **duas vezes**, cada uma ao abrigo da sua autorização (baseline e janelas) e registada em `results/access_log.jsonl`; o `validation` **nunca foi aberto**. Validação e teste foram lidos por inteiro só para construir as bases limpas (REV-015).
+- **Conjuntos reservados:** o `test` foi aberto **duas vezes**, cada uma ao abrigo da sua autorização (baseline e janelas) e registada em `results/access_log.jsonl`; o `validation` foi aberto **uma única vez**, na medição final (REV-053, autorização `validation_final_2026-11-24`); **está gasto**. Validação e teste foram lidos por inteiro só para construir as bases limpas (REV-015).
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU), pacote `ais` instalado em modo editável (REV-034). Dependências em `requirements.txt`.
 - **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. O janelamento está em `windows.py`, `run_window_training`, `select_windows_on_test` e `build_window_results`; ainda não existe código de pós-processamento.
-- **Testes:** 181 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
+- **Testes:** 192 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
-- **LaTeX:** `latex/proposta_pt.tex` compila (9 páginas; limite de 15; refactoring de leitura em REV-052). Texto estável a preto (REV-043); o novo tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C`, REV-048 `#1B5E20` e, no que foi reescrito em REV-052 (4.3, 4.4, Secção 5, Secção 8 e Anexo A), `#880E4F`.
-- **Git:** os commits até REV-051 (`bb01a60`) já estão em `origin/main` (enviados pelo utilizador); o de REV-052 e os seguintes estão por enviar. Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-052.
+- **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15), com a Secção 9 (medição final) antes do anexo (REV-053). Texto estável a preto (REV-043); o novo tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C`, REV-048 `#1B5E20` `#880E4F` (REV-052: 4.3, 4.4, Secção 5, Secção 8 e Anexo A) e `#0D47A1` (REV-053: Secção 9 e as frases sobre o `validation`).
+- **Git:** `origin/main` tinha tudo até REV-052 no início desta tarefa; os commits de REV-053 estão por enviar. Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-053.
 
 ## Decisões do utilizador (vigentes)
 
@@ -857,3 +857,18 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do utilizador; passagens adiadas de REV-041; push dos commits locais.
+
+### 2026-11-24a — Medição final no `validation` e Secção 9 (REV-053), 2026-11-24 00:37 WET
+
+**Feito**
+- A pedido do utilizador: protocolo e autorização escritos antes de abrir; **escolha do modelo** pelo critério declarado (maior F1 médio por ponto no `test`): **a referência** (época 162, limiar 0,65); **uma só abertura do `validation`** (00:32:09 UTC) e medição só desse modelo; macros, figuras e **Secção 9** da proposta; frases do LaTeX sobre o `validation` atualizadas.
+- Resultado: exatidão por ponto de 94,4 % (11 662 erros em 209 016 pontos; regra da classe maioritária 83,2 %), contra 94,7 % no `test`; precisão da navegação 0,760 (0,900 no `test`); exatidão por viagem de 40,4 % a 99,7 %; segmentação muito fragmentada (pesca: 18 reais, 486 previstos).
+
+**Validado**
+- 192 testes sintéticos a passar; medição testada de ponta a ponta com dados sintéticos antes de abrir; proveniência verificada (uma abertura, escolha gravada antes, hashes). `pdflatex` + `bibtex`: 11 páginas, 0 erros, 0 referências indefinidas.
+
+**Problemas e limitações**
+- Uma só medição em 18 viagens, sem incerteza; J0 e J50 não medidas no `validation`; **o `validation` está gasto** e já não pode avaliar um pós-processamento.
+
+**Pendente**
+- Decisão do utilizador sobre o pós-processamento (só avaliável no `test`); passagens adiadas do LaTeX; push dos commits locais.

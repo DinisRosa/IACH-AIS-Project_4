@@ -61,7 +61,7 @@ Registar sempre: seed, características por ordem, configuração, versões, man
 | Figuras do treino com monitorização (execução 1, histórica) | `src/ais/cli/plot_phase1_run.py` | Script, sem teste; sem uso no LaTeX |
 | Execução | `src/ais/cli/run_phase1_training.py` | Script, sem teste |
 | Segmentos (`extract_segments`), correspondência, métricas por segmento, fronteiras e fragmentação | `src/ais/phase1/segments.py`; programa `src/ais/cli/segment_metrics.py` | Feito (REV-039): ferramenta de medição, **sem suavizar**; IoU 0,5, segundos, um-para-um guloso |
-| Medição final no `validation` | — | **Por fazer** (Marco 7); fora do caminho normal de desenvolvimento, só com autorização nova e todas as variantes congeladas |
+| Medição final no `validation` | `src/ais/cli/final_validation.py` | **Feito (REV-053)**: uma só abertura, só do modelo escolhido (a referência); fora do caminho normal de desenvolvimento |
 
 Comandos (a partir da raiz do projeto):
 

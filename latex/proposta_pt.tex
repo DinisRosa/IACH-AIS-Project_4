@@ -75,11 +75,15 @@
 \definecolor{rev048}{RGB}{27,94,32}
 % REV-052 — cor #880E4F, RGB (136, 14, 79) (mesma do REVISION_LOG.md). Refactoring de leitura: Secção 8 reordenada, 4.3, 4.4 e Secção 5 condensadas, anexo.
 \definecolor{rev052}{RGB}{136,14,79}
+% REV-053 — cor #0D47A1, RGB (13, 71, 161) (mesma do REVISION_LOG.md). Medição final no conjunto de validação (Secção 9) e frases sobre o validation.
+\definecolor{rev053}{RGB}{13,71,161}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 % Números gerados por ais.cli.build_final_results (REV-035): \rv{\resXxx} mostra o valor na cor da revisão.
 \input{generated/resultados}
 % Números de J0 e J50 gerados por ais.cli.build_window_results (REV-047).
 \input{generated/resultados_janelas}
+% Números da medição final no validation gerados por ais.cli.build_validation_results (REV-053).
+\input{generated/resultados_validacao}
 \newcommand{\rv}[1]{#1}
 \usepackage[switch]{lineno}
 
@@ -194,7 +198,7 @@ A entrada tem sete canais (quatro características normalizadas e três indicado
 \subsection{\texorpdfstring{Verificação da implementação}{Verificação da implementação}}
 \label{sec:abordagem-verificacao}
 
-\revtext{rev052}{O código foi verificado com testes automáticos sobre dados sintéticos (e, para a leitura das sequências, sobre três viagens de treino). Os testes confirmam o alinhamento de cada previsão com o ponto de origem, que nenhuma viagem se mistura com outra, o padrão dos valores em falta e das máscaras, a ausência de vazamento da monitorização para a normalização, a recusa de ficheiros de validação e teste, as dimensões da saída e o campo recetivo de \resModCampo{} pontos. Confirmam também a perda, os gradientes e o passo do otimizador e, no janelamento, a cobertura de todos os pontos, a equivalência de uma janela num lote com a janela sozinha e a reconstrução por média. Estes testes verificam o código e não medem a qualidade do modelo. O conjunto de teste serviu apenas para escolher a época e o limiar, e o de validação não foi aberto.}
+\revtext{rev052}{O código foi verificado com testes automáticos sobre dados sintéticos (e, para a leitura das sequências, sobre três viagens de treino). Os testes confirmam o alinhamento de cada previsão com o ponto de origem, que nenhuma viagem se mistura com outra, o padrão dos valores em falta e das máscaras, a ausência de vazamento da monitorização para a normalização, a recusa de ficheiros de validação e teste, as dimensões da saída e o campo recetivo de \resModCampo{} pontos. Confirmam também a perda, os gradientes e o passo do otimizador e, no janelamento, a cobertura de todos os pontos, a equivalência de uma janela num lote com a janela sozinha e a reconstrução por média. Estes testes verificam o código e não medem a qualidade do modelo. O conjunto de teste serviu apenas para escolher a época e o limiar, \revtext{rev053}{e o de validação só foi aberto na medição final (Secção~\ref{sec:validacao}).}}
 
 \subsection{\texorpdfstring{\revtext{rev023}{Janelamento com sobreposição}}{Janelamento com sobreposição}}
 \label{sec:abordagem-janelas}
@@ -354,7 +358,7 @@ Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e p
 \subsection{\texorpdfstring{Divisão dos dados e protocolo}{Divisão dos dados e protocolo}}
 \label{sec:avaliacao-protocolo}
 
-Os dados são divididos por trajetória completa (ID completo, composto pelo identificador do navio e pelo sufixo da viagem) em treino, validação e teste, na proporção 70/15/15, com semente 42 e manifesto fixo. Todas as linhas de cada trajetória ficam no mesmo conjunto. Trajetórias do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto; por isso, os resultados não são apresentados como generalização para navios inéditos. Os hiperparâmetros e as restantes escolhas (número de épocas, limiar, variantes) usam apenas o treino e o conjunto de teste, que serve para selecionar; o conjunto de validação é reservado à medição final, feita uma só vez com o modelo e o protocolo congelados.
+Os dados são divididos por trajetória completa (ID completo, composto pelo identificador do navio e pelo sufixo da viagem) em treino, validação e teste, na proporção 70/15/15, com semente 42 e manifesto fixo. Todas as linhas de cada trajetória ficam no mesmo conjunto. Trajetórias do mesmo navio podem pertencer a conjuntos diferentes, por decisão do projeto; por isso, os resultados não são apresentados como generalização para navios inéditos. Os hiperparâmetros e as restantes escolhas (número de épocas, limiar, variantes) usam apenas o treino e o conjunto de teste, que serve para selecionar; \revtext{rev053}{o conjunto de validação foi reservado à medição final, feita uma só vez com o modelo e o protocolo congelados (Secção~\ref{sec:validacao}).}
 
 \subsection{\texorpdfstring{\revtext{rev023}{Avaliação qualitativa e dimensão humana}}{Avaliação qualitativa e dimensão humana}}
 \label{sec:avaliacao-qualitativa}
@@ -364,7 +368,7 @@ Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos predit
 \section{\texorpdfstring{\revtext{rev041}{Resultados}}{Resultados}}
 \label{sec:resultados}
 
-\revtext{rev052}{Comparam-se três modelos com a mesma CNN: a referência sobre a viagem completa, J0 (janelas de 64 pontos sem sobreposição) e J50 (com 50\,\%). Os três têm a época e o limiar escolhidos no conjunto de teste com o mesmo critério, pelo que os resultados do teste são \textbf{otimistas}; o conjunto de validação não foi aberto.
+\revtext{rev052}{Comparam-se três modelos com a mesma CNN: a referência sobre a viagem completa, J0 (janelas de 64 pontos sem sobreposição) e J50 (com 50\,\%). Os três têm a época e o limiar escolhidos no conjunto de teste com o mesmo critério, pelo que os resultados do teste são \textbf{otimistas}; \revtext{rev053}{o conjunto de validação só foi aberto na medição final (Secção~\ref{sec:validacao}).}
 
 \textbf{Em resumo:}
 \begin{itemize}
@@ -464,7 +468,92 @@ J50 & Navegação & \resJCSegNavNRef & \resJCSegNavNPred & \resJCSegNavNPar & \r
 \item \textbf{Treino diferente.} O lote é de 32 janelas contra uma viagem por passo, e J50 faz \resJCPassosVezes{} vezes os passos de J0.
 \item \textbf{Poucos dados.} Uma só semente e \resSelViagens{} viagens de teste, escolhidas depois de o conjunto servir para selecionar (resultados otimistas).
 \item \textbf{Navios.} Viagens do mesmo navio podem estar em conjuntos diferentes, pelo que não se afirma generalização a navios inéditos.
-\item \textbf{Medição final.} Fica reservada ao conjunto de validação, no fim do trabalho.
+\item \textbf{Medição final.} \revtext{rev053}{Só o modelo escolhido foi medido no conjunto de validação (Secção~\ref{sec:validacao}); J0 e J50 não foram, pelo que a comparação entre os três assenta só no teste.}
+\end{itemize}}
+
+\section{\texorpdfstring{\revtext{rev053}{Medição final no conjunto de validação}}{Medição final no conjunto de validação}}
+\label{sec:validacao}
+
+\revtext{rev053}{O conjunto de validação (\resVaViagens{} viagens, \resVaPontos{} pontos) foi aberto uma única vez, no fim do trabalho, para medir um só modelo com a época e o limiar já congelados. Nada foi escolhido nem ajustado com estes resultados.}
+
+\subsection{\texorpdfstring{\revtext{rev053}{Escolha do modelo}}{Escolha do modelo}}
+
+\revtext{rev053}{O critério foi declarado antes de abrir o conjunto de validação e usa só resultados do teste: o modelo com maior F1 médio por ponto (a média dos F1 de navegação e de pesca), com a exatidão a desempatar. A Tabela~\ref{tab:escolha} mostra que a referência fica à frente, pelo que foi o modelo medido: \resVaModelo, com a época \resVaEpoca{} e o limiar \resVaLimiar{}. J0 e J50 não foram medidas no conjunto de validação.}
+
+\begin{table}[t]
+\centering\footnotesize\color{rev053}\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lrrc@{}}
+\toprule
+Modelo & F1 médio (teste) & Exat. (teste) & Validação \\
+\midrule
+Referência & \resVaFMedioBs & \resVaAccTesteBs & sim \\
+J0 & \resVaFMedioJZ & \resVaAccTesteJZ & não \\
+J50 & \resVaFMedioJC & \resVaAccTesteJC & não \\
+\bottomrule
+\end{tabular}
+\caption{Escolha do modelo da medição final, só com resultados do teste: F1 médio por ponto (critério) e exatidão (desempate).}
+\label{tab:escolha}
+\end{table}
+
+\subsection{\texorpdfstring{\revtext{rev053}{Resultados}}{Resultados}}
+
+\revtext{rev053}{No conjunto de validação, a exatidão por ponto foi \resVaValidAcc{} (\resVaValidErros{} erros em \resVaValidPontos{} pontos), contra \resVaValidAccMaj{} de uma regra que prevê sempre a classe maioritária (pesca, \resVaPercPesca{} dos pontos). No teste, a mesma rede teve \resVaTesteAcc{}, contra \resVaTesteAccMaj{}: a exatidão mantém-se, mas a proporção de pesca é muito diferente entre os dois conjuntos, pelo que a exatidão não é diretamente comparável. A Tabela~\ref{tab:validacao-classes} mostra as métricas por classe e a Figura~\ref{fig:validacao} a matriz de confusão e a exatidão por viagem.
+
+A pesca é bem detetada (sensibilidade de \resVaValidPescaSens{} e precisão de \resVaValidPescaPrec{}). A navegação tem sensibilidade de \resVaValidNavSens{}, mas a precisão desce para \resVaValidNavPrec{} (era \resVaTesteNavPrec{} no teste): \resVaValidFN{} pontos de pesca são previstos como navegação, contra \resVaValidTN{} pontos de navegação certos, e, como a navegação é a classe minoritária (\resVaValidNavReal{} pontos), esses erros pesam muito na sua precisão.
+
+Por viagem, a exatidão vai de \resVaViagMin{} (viagem \resVaPiorViagem) a \resVaViagMax{}, com mediana de \resVaViagMed{}, e em \resVaNViagNaoSuperam{} viagem não supera a regra da classe maioritária dessa viagem. Na pior viagem (Figura~\ref{fig:validacao}), o modelo deixa de prever pesca a meio do segmento real de pesca e prevê navegação até ao fim.
+
+Por segmento (Tabela~\ref{tab:validacao-segmentos}), com um segmento previsto a corresponder a um real quando o IoU temporal é de pelo menos 0,5, o modelo fragmenta muito: há \resVaSegPescaNRef{} segmentos reais de pesca e \resVaSegPescaNPred{} previstos (razão de fragmentação de \resVaSegPescaFrag{}, contra \resVaTSegPescaFrag{} no teste), e o F1 de segmentos de pesca é \resVaSegPescaF{}; na navegação há \resVaSegNavNRef{} segmentos reais e \resVaSegNavNPred{} previstos, com F1 de \resVaSegNavF{}. É a fragmentação que o pós-processamento temporal pretende reduzir, e que ainda não foi estudado.}
+
+\begin{table}[t]
+\centering\footnotesize\color{rev053}\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Conjunto & Classe & Pontos & Prec. & Sensib. & F1 & IoU \\
+\midrule
+Validação & Navegação & \resVaValidNavReal & \resVaValidNavPrec & \resVaValidNavSens & \resVaValidNavF & \resVaValidNavIoU \\
+Validação & Pesca & \resVaValidPescaReal & \resVaValidPescaPrec & \resVaValidPescaSens & \resVaValidPescaF & \resVaValidPescaIoU \\
+Teste & Navegação & \resVaTesteNavReal & \resVaTesteNavPrec & \resVaTesteNavSens & \resVaTesteNavF & \resVaTesteNavIoU \\
+Teste & Pesca & \resVaTestePescaReal & \resVaTestePescaPrec & \resVaTestePescaSens & \resVaTestePescaF & \resVaTestePescaIoU \\
+\bottomrule
+\end{tabular}
+\caption{Métricas por ponto e por classe do modelo escolhido (\resVaModelo) no conjunto de validação e, para comparação, no de teste. ``Pontos'' são os pontos reais de cada classe. O teste serviu para escolher a época e o limiar e é otimista; o de validação é a medição final.}
+\label{tab:validacao-classes}
+\end{table}
+
+\begin{figure*}[t]
+\centering\color{rev053}
+\includegraphics[width=0.9\textwidth]{figures/validacao_resumo.png}\\[2pt]
+\includegraphics[width=0.9\textwidth]{figures/validacao_pior_viagem.png}
+\caption{Medição final no conjunto de validação. Em cima, a matriz de confusão por ponto (percentagem da classe real, em linha, prevista em cada classe) e a exatidão por viagem, com as viagens por ordem crescente de exatidão (os pontos pretos são a exatidão de prever sempre a classe maioritária da viagem). Em baixo, a viagem de menor exatidão: classe real e classe prevista, ponto a ponto.}
+\label{fig:validacao}
+\end{figure*}
+
+\begin{table*}[t]
+\centering\footnotesize\color{rev053}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llrrrrrrr@{}}
+\toprule
+Conjunto & Classe & Reais & Previstos & Pares & F1 & Fragm. & Erro início (s) & Erro fim (s) \\
+\midrule
+Validação & Pesca & \resVaSegPescaNRef & \resVaSegPescaNPred & \resVaSegPescaNPar & \resVaSegPescaF & \resVaSegPescaFrag & \resVaSegPescaIniMed & \resVaSegPescaFimMed \\
+Validação & Navegação & \resVaSegNavNRef & \resVaSegNavNPred & \resVaSegNavNPar & \resVaSegNavF & \resVaSegNavFrag & \resVaSegNavIniMed & \resVaSegNavFimMed \\
+Teste & Pesca & \resVaTSegPescaNRef & \resVaTSegPescaNPred & \resVaTSegPescaNPar & \resVaTSegPescaF & \resVaTSegPescaFrag & \resVaTSegPescaIniMed & \resVaTSegPescaFimMed \\
+Teste & Navegação & \resVaTSegNavNRef & \resVaTSegNavNPred & \resVaTSegNavNPar & \resVaTSegNavF & \resVaTSegNavFrag & \resVaTSegNavIniMed & \resVaTSegNavFimMed \\
+\bottomrule
+\end{tabular}
+\caption{Métricas por segmento do modelo escolhido no conjunto de validação e no de teste (IoU temporal $\geq$ 0,5, em segundos, correspondência um-para-um, sem suavizar as previsões). ``Fragm.'' é a razão entre segmentos previstos e reais; os erros de fronteira são medianas dos valores absolutos nos pares.}
+\label{tab:validacao-segmentos}
+\end{table*}
+
+\subsection{\texorpdfstring{\revtext{rev053}{Leitura e limitações}}{Leitura e limitações}}
+
+\revtext{rev053}{Em resumo, a referência mantém por ponto o desempenho que tinha no teste (exatidão de \resVaValidAcc{}), mas com menos precisão na navegação e uma segmentação muito fragmentada. As limitações são:
+\begin{itemize}
+\item \textbf{Uma só medição.} Foi feita em \resVaViagens{} viagens, uma delas com exatidão muito baixa, e sem intervalo de incerteza.
+\item \textbf{Só um modelo.} J0 e J50 não foram medidas no conjunto de validação, pelo que a resposta à RQ1 (Subsecção~\ref{sec:resultados-comparacao}) continua a assentar no teste, que é otimista.
+\item \textbf{Navios.} A divisão é por viagem: viagens do mesmo navio podem estar em conjuntos diferentes, pelo que não se afirma generalização a navios inéditos.
+\item \textbf{Fragmentação.} O pós-processamento temporal (RQ2 e RQ3) não foi estudado.
+\item \textbf{Medição final.} O modelo, a época e o limiar não podem voltar a mudar, e o conjunto de validação não pode ser usado para escolher mais nada.
 \end{itemize}}
 
 \appendix

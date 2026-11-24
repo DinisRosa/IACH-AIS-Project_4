@@ -6,13 +6,13 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 
 - **Marcos 1 a 3 fechados.** A CNN de referência (viagem completa) foi treinada só com o treino oficial (87 viagens, 300 épocas) e congelada: época 162 e limiar 0,65, escolhidos no conjunto `test` numa só ronda (REV-038, REV-041). Os números estão em `results/baseline_frozen/final_results.json` e, no relatório, em macros geradas por código.
 - **Marco 4 (janelamento com a mesma CNN) feito (REV-046, REV-047):** J0 (sem sobreposição) e J50 (50 %), com janelas de 64 pontos, foram treinadas só com o treino, selecionadas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Nenhuma supera a referência por ponto no `test`; J50 reduz a fragmentação face a J0. Números em `results/windows_final/final_results_windows.json` e na Secção 8 do LaTeX.
-- Conjuntos reservados: o `test` serve para selecionar e foi aberto uma só vez; o `validation` é a medição final e **nunca foi aberto**.
-- 181 testes sintéticos a passar. Ver `PROGRESS.md` (estado e histórico) e `handoff.md` (para retomar numa nova sessão).
+- Conjuntos reservados: o `test` serve para selecionar e foi aberto uma só vez; o `validation` é a medição final e foi aberto **uma única vez** (REV-053), só para o modelo escolhido (a referência): exatidão por ponto de 94,4 %. Está gasto.
+- 192 testes sintéticos a passar. Ver `PROGRESS.md` (estado e histórico) e `handoff.md` (para retomar numa nova sessão).
 
 ## Estrutura
 
 - `AGENTS.md`: regras e instruções do projeto (fonte única). `CLAUDE.md`: manda ler o `AGENTS.md`.
-- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-048). `handoff.md`: ponto de situação para outra sessão.
+- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-053). `handoff.md`: ponto de situação para outra sessão.
 - `docs/`: documentação, em quatro ficheiros.
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos e política de acesso aos dados.
   - `01_dados_e_preparacao.md`: dicionário das colunas, unidades verificadas, entradas da CNN e preparação.
@@ -55,6 +55,8 @@ Executar a partir da raiz do projeto, por exemplo `iach-ais-venv-4/bin/python -m
 | `select_windows_on_test` | **Uma só abertura** do `test`: escolhe época e limiar de J0 e J50, mede por segmento a baseline, J0 e J50 e congela as duas variantes. Já executado; não repetir. |
 | `build_window_results` | Gera `results/windows_final/final_results_windows.json`, as macros `latex/generated/resultados_janelas.tex` e as figuras `latex/figures/janelas_*.png`. |
 | `plot_trip_diagnostic <id da viagem>` | Gráfico de diagnóstico de uma viagem do `test` (classe real e prevista pela referência, J0 e J50, e probabilidades), só a partir das previsões já geradas (REV-049); com `--xy`, as coordenadas, que exigem uma autorização de diagnóstico própria (REV-050). Sem teste automático. |
+| `final_validation` | **Medição final, uma só abertura do `validation`**: escolhe o modelo pelo critério declarado (só com o `test`), mede só esse modelo por ponto e por segmento. Já executado; não repetir (REV-053). |
+| `build_validation_results` | Gera `latex/generated/resultados_validacao.tex` e as figuras `latex/figures/validacao_*.png` a partir dos resultados já gerados (Secção 9). |
 | `segment_metrics <previsões.csv>` | Extrai segmentos (sem suavizar) e calcula métricas por segmento. |
 | `count_shared_vessels` | Conta navios partilhados entre conjuntos (só lê o manifesto). |
 | `plot_phase1_run`, `benchmark_training_speed`, `diagnostic_fit_3_trips`, `plot_diagnostic_3trips` | Figuras e medições de execuções antigas; sem uso no relatório. |

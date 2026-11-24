@@ -45,8 +45,8 @@ O âmbito mínimo atual só responde a RQ1. Um resultado sem melhoria também é
 | 3 | CNN 1D de referência sobre a viagem completa | **Fechado (REV-041)**: baseline definida por decisão do utilizador (época 162, limiar 0,65, escolhidos no `test` numa ronda). Não se altera; só volta a ser usada na comparação com as janelas |
 | 4 | Janelamento com sobreposição e a mesma CNN | **Feito (REV-046, REV-047)**: J0 (0 %) e J50 (50 %), L = 64, mesma CNN e mesmos valores da baseline, lote de 32; sobreposição igual no treino e na inferência; escolhidas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Fora do projeto: 25 %, 75 % e outros L. Resultados em `results/windows_final/final_results_windows.json` |
 | 5 | Pós-processamento simples, em ramo separado | Por fazer; só avança se o Marco 4 mostrar benefício da sobreposição; precisa de aprovação da unidade/largura do filtro e do protocolo |
-| 6 | Congelar todas as variantes (baseline, janelas e, se existir, pós-processamento) | Por fazer |
-| 7 | Medição final única no conjunto `validation`, com todas as variantes de uma vez | Por fazer; nova autorização do utilizador |
+| 6 | Congelar as variantes (baseline, J0 e J50; pós-processamento não existe) | **Feito (REV-038, REV-047)**: congeladas, cada uma com hash |
+| 7 | Medição final única no conjunto `validation` | **Feito (REV-053)**: por decisão do utilizador, **só o modelo escolhido** (a referência, pelo maior F1 médio por ponto no `test`, critério declarado antes) foi medido, uma só vez; J0 e J50 não foram medidas no `validation`. O `validation` está gasto |
 
 O pós-processamento (um filtro que altera as previsões) não é o mesmo que extrair segmentos (só agrupar pontos consecutivos da mesma classe, sem suavizar): a extração é uma ferramenta de medição e vem antes. O `validation` só se abre no fim, para todas as variantes de uma vez, e não já para a baseline.
 
@@ -64,7 +64,7 @@ As regras completas estão no `AGENTS.md` §3. Resumo operacional:
 |---|---|---|
 | A — Desenvolvimento | Treino oficial ou sintéticos | Autorizada. Inclui debugging, gráficos, benchmarks, inspeção e testes de integração |
 | B — Seleção | `test` | Só com autorização explícita (âmbito das decisões declarado), depois de congelar a implementação; pode ser consultado mais do que uma vez dentro do âmbito autorizado |
-| C — Medição final | `validation` | Só com nova autorização, **uma só vez**, depois de congelar modelo, limiar, número de épocas e lista de variantes |
+| C — Medição final | `validation` | Só com nova autorização, **uma só vez**, depois de congelar modelo, limiar, número de épocas e lista de variantes. **Feita em REV-053 (2026-11-24 00:32 UTC); o `validation` está gasto** |
 
 - **Nomes e papéis (REV-036):** os conjuntos mantêm os nomes `validation` e `test` nos ficheiros e no manifesto, mas os papéis estão trocados face ao habitual: `test` serve para **selecionar** (épocas, limiar, treinar mais, escolher entre variantes) e `validation` é a **medição final**, usada uma só vez com tudo congelado. Os resultados no `test` são otimistas por terem servido a escolher; o número final da proposta é o do `validation`.
 - A divisão foi feita antes de qualquer exploração, só com IDs e contagens técnicas; a tabela `id → split` está em `manifests/split_manifest_seed42.csv` e não se refaz.
