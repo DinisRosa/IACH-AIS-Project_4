@@ -1,0 +1,17 @@
+{
+  "id": "validation_final_2026-11-24",
+  "concedida_por": "utilizador (mensagem no chat, 2026-11-24)",
+  "conjuntos_autorizados": [
+    "validation"
+  ],
+  "finalidade": "medicao_final",
+  "decisoes_cobertas": [
+    "nenhuma: medicao final unica do modelo escolhido pelo criterio declarado em configs/selection_protocol_validation.json, sem escolher nem ajustar nada"
+  ],
+  "protocolo": "configs/selection_protocol_validation.json",
+  "max_rondas": 1,
+  "validation_autorizado": true,
+  "citacao_literal": "Quero agora que escolhas qual é que é o melhor modelo entre as 3 opções que temos e corras a validação, ou seja, o dataset de validação com esse modelo e acrescentes uma nova secção no final, antes dos anexos, talvez, acho que uma secção 9, em que mostres esses resultados. Depois deves esperar pelas próximas tarefas.",
+  "contexto": "Medicao final unica no conjunto validation (REV-036, REV-037): so o modelo escolhido, com modelo e protocolo congelados. O utilizador delegou a escolha do melhor entre referencia, J0 e J50; o criterio foi declarado antes de abrir.",
+  "nota": "Cobre UMA abertura do conjunto validation, so do modelo escolhido pelo criterio declarado. Nao cobre outro modelo, uma segunda abertura, pos-processamento nem qualquer ajuste."
+}

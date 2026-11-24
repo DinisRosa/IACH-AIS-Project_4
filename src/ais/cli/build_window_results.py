@@ -7,7 +7,7 @@ parquet do `test` nem o `validation`: os números do `test` vêm de `selection_t
 
 Confirma por hash que as congelações coincidem com as seleções e, no `access_log`, que o `test` foi
 aberto uma só vez ao abrigo da autorização das janelas (e uma, antes, ao abrigo da da baseline) e que o
-`validation` nunca foi aberto. Escreve:
+`validation` só foi aberto, no máximo uma vez, pela medição final (`final_validation`). Escreve:
   - results/windows_final/final_results_windows.json : todos os números com proveniência (fonte única);
   - latex/generated/resultados_janelas.tex           : macros \\res... (sem dígitos nos nomes);
   - latex/figures/janelas_*.png                      : figuras geradas dos mesmos números.
@@ -78,7 +78,9 @@ def collect() -> dict:
         "test_aberto_uma_vez_ao_abrigo_da_autorizacao_da_baseline":
             sum(1 for e in opens if e.get("authorization") == OLD_AUTH) == 1,
         "test_so_teve_estas_duas_aberturas": len(opens) == 2,
-        "validation_nunca_aberto": not any(e.get("split") == "validation" for e in log),
+        # O validation só pode ter sido aberto, no máximo uma vez, pela medição final (REV-053).
+        "validation_so_aberto_pela_medicao_final": all(e.get("authorization") == "validation_final_2026-11-24" for e in log if e.get("split") == "validation" and e.get("event") == "open")
+            and sum(1 for e in log if e.get("split") == "validation" and e.get("event") == "open") <= 1,
     }
     for name, v in VARIANTS.items():
         run, frozen = ROOT / "results" / v["dir"], ROOT / "results" / f"{v['dir']}_frozen"
@@ -134,7 +136,7 @@ def collect() -> dict:
         "verificacoes": checks, "protocolo": "selecao_janelas_v1", "autorizacao": NEW_AUTH + " (ficheiro test_selection_windows.json)",
         "aviso": "J0 e J50 treinadas nas 87 viagens do treino oficial. Época e limiar foram escolhidos no "
                  "conjunto test numa só abertura; as métricas do test são otimistas por terem servido a "
-                 "escolher (para as três variantes, com o mesmo critério). O validation não foi aberto.",
+                 "escolher (para as três variantes, com o mesmo critério). O validation não serviu para escolher nada.",
     }
     return R
 

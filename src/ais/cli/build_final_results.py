@@ -6,7 +6,7 @@ do `test`: os números do `test` vêm de `selection_test.json` (já gerado sob a
 Só lê o treino, para avaliar a baseline congelada nas 87 viagens de treino.
 
 Confirma por hash que os sumários da preparação, o manifesto, o checkpoint e a seleção coincidem, e que o
-`validation` nunca foi aberto (`results/access_log.jsonl`). Escreve:
+`validation` só foi aberto, no máximo uma vez, pela medição final (`results/access_log.jsonl`). Escreve:
   - results/baseline_frozen/final_results.json : todos os números com proveniência (fonte única);
   - latex/generated/resultados.tex             : macros \\res... com os valores formatados;
   - latex/figures/final_*.png                  : figuras geradas a partir dos mesmos números.
@@ -136,7 +136,9 @@ def collect() -> dict:
             sel["hashes"]["ficheiro_test"] == clean["test"]["meta"]["output_sha256"],
         "epoca_e_limiar_congelados_iguais_aos_da_selecao":
             frz["epoca"] == sel["epoca_escolhida"] and frz["limiar"] == sel["limiar_escolhido"],
-        "validation_nunca_aberto": not any(e.get("split") == "validation" for e in log),
+        # O validation só pode ter sido aberto, no máximo uma vez, pela medição final (REV-053).
+        "validation_so_aberto_pela_medicao_final": all(e.get("authorization") == "validation_final_2026-11-24" for e in log if e.get("split") == "validation" and e.get("event") == "open")
+            and sum(1 for e in log if e.get("split") == "validation" and e.get("event") == "open") <= 1,
         # Uma abertura ao abrigo da autorização da baseline (REV-046: existe uma segunda abertura, ao
         # abrigo da autorização das janelas, contada em `build_window_results`).
         "test_aberto_so_uma_vez": sum(1 for e in log if e.get("event") == "open" and e.get("split") == "test"
@@ -167,7 +169,7 @@ def collect() -> dict:
             "protocolo": sel["protocolo"], "autorizacao": sel["autorizacao"],
             "aviso": "Treino nas 87 viagens do treino oficial. Época e limiar foram escolhidos no conjunto "
                      "test (uma ronda): as métricas do test são otimistas por terem servido a escolher. "
-                     "O conjunto validation não foi aberto; fica reservado à medição final.",
+                     "O conjunto validation não serviu para escolher nada; a medição final faz-se à parte.",
         },
         "dados": {
             "linhas_total": sum(dg[s]["linhas"] for s in dg), "viagens_total": sum(dg[s]["viagens"] for s in dg),

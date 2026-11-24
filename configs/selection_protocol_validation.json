@@ -1,0 +1,20 @@
+{
+  "id": "medicao_final_v1",
+  "declarado_antes_de_abrir_o_test": true,
+  "conjunto": "validation",
+  "autorizacao": "configs/authorizations/validation_final.json",
+  "candidatos": "Tres modelos congelados: referencia (viagem completa, epoca 162, limiar 0,65), J0 (janelas de 64 sem sobreposicao, epoca 8, limiar 0,60) e J50 (janelas de 64 com 50 % de sobreposicao, epoca 4, limiar 0,75). Epocas e limiares ja escolhidos no test e congelados; nada se altera.",
+  "criterio_de_escolha_do_modelo": "decidido ANTES de abrir o validation e so com resultados do test (o conjunto de selecao): o modelo com maior F1 medio por ponto (media dos F1 de navegacao e de pesca) no test; empate: a maior exatidao por ponto no test; novo empate: a ordem referencia, J0, J50. Justificacao: e a mesma metrica usada para escolher o limiar, e por ponto, e mede as duas classes sem favorecer a maioritaria.",
+  "o_que_se_mede": "so o modelo escolhido, uma unica vez, no conjunto validation: por ponto (exatidao, precisao, sensibilidade, F1 e IoU por classe, matriz de confusao, exatidao por viagem) e por segmento (IoU temporal 0,5, em segundos, correspondencia um-para-um, sem suavizar). Os outros dois modelos nao sao medidos no validation.",
+  "aberturas_do_validation": 1,
+  "rondas": 1,
+  "proibido": [
+    "alterar o criterio de escolha, o modelo, a epoca ou o limiar depois de ver resultados do validation",
+    "segunda abertura do validation",
+    "medir outro modelo no validation",
+    "usar o validation para escolher ou ajustar o que quer que seja",
+    "pos-processamento (Marco 5)",
+    "re-treinar qualquer modelo"
+  ],
+  "metricas_reportadas": "as do o_que_se_mede, com o resultado do test do mesmo modelo ao lado, para mostrar o quanto o test era otimista"
+}
