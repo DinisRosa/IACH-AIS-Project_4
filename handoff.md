@@ -1,6 +1,6 @@
 # Handoff — Projeto AIS
 
-**Data e hora desta atualização:** 2026-11-24 00:37 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
+**Data e hora desta atualização:** 2026-11-24 00:40 WET (UTC+00:00). Reescrito de raiz em REV-044, atualizado em REV-045 e de novo em REV-046 a REV-048 (Marco 4 executado). Todas as horas deste ficheiro estão em WET (em novembro igual a UTC).
 
 ### Última validação (registada neste handoff)
 
@@ -8,7 +8,7 @@
 |---|---|---|
 | Testes (`pytest tests/`) | 192 passaram | 2026-11-24 00:36 |
 | LaTeX (`pdflatex` + `bibtex`) | 11 páginas (limite de 15); 0 erros; 0 referências indefinidas | 2026-11-24 00:36 |
-| Git | `origin/main` já tem tudo até `bb01a60` (REV-051; enviado pelo utilizador); falta enviar o commit de REV-052 (e o deste handoff) | 2026-11-23 23:59 |
+| Git | `origin/main` tem tudo até `548cb8a` (REV-053), enviado a pedido do utilizador às 00:39 (push normal); só falta enviar o commit que corrige esta linha | 2026-11-24 00:39 |
 | Treino de J0 e de J50 | os dois completos (300 épocas), 9,8 min e 21,3 min | 22:58 a 23:28 |
 | Seleção no `test` (única abertura das janelas) | abertura 23:28:19 e fim 23:29:54, em `results/access_log.jsonl` | 2026-11-23 |
 | Números de J0 e J50 (`final_results_windows.json`) | gerados por `build_window_results` | 2026-11-23 23:33 |
@@ -70,7 +70,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 - **Conjuntos reservados:** o `test` teve ainda **duas leituras de diagnóstico** da viagem `219001624-2` (colunas `id`, `point_id`, `t`, `x`, `y`; a primeira foi gasta por um erro de desenho e a segunda produziu o gráfico), sem escolher nada. Foi aberto **duas vezes** para seleção, uma por autorização (baseline às 18:40 UTC; janelas às 23:28 UTC), ambas em `results/access_log.jsonl`. O `validation` foi aberto **uma só vez** (medição final, `validation_final_2026-11-24`) e **está gasto**.
 - **Testes:** 192, todos sintéticos (mais um que lê 3 viagens de treino).
 - **LaTeX** (`latex/proposta_pt.tex`): 11 páginas, limite de 15. Secção 9 (medição final, REV-053) antes do anexo. **Refactoring de leitura (REV-052):** a Secção 8 abre com um resumo e uma tabela e tem 8.1 (referência), 8.2 (J0), 8.3 (J50) e 8.4 (comparação, RQ1 e limitações); 5 figuras e 3 tabelas; 4.3, 4.4 e Secção 5 condensadas; **Anexo A** com os pormenores do janelamento e as métricas por classe. Números e figuras gerados por código (`build_window_results`). Cores do texto novo: rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F` (reescrito) e rev053 `#0D47A1` (Secção 9).
-- **Git:** os commits até REV-051 já estão em `origin/main` (enviados pelo utilizador); o de REV-052 e o deste handoff estão por enviar. Cada push precisa de autorização explícita nova do utilizador.
+- **Git:** os commits até REV-053 (`548cb8a`) estão em `origin/main`. Cada push precisa de autorização explícita nova do utilizador. Cada push precisa de autorização explícita nova do utilizador.
 
 ## Decisões vigentes
 
@@ -147,7 +147,7 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
 2. **LaTeX, passagens ainda abertas** (o utilizador adiou-as): explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o título começa por «OOI» e há texto a vermelho «human-on-the-loop»; **o utilizador ainda não leu o texto reescrito em REV-052** (4.3, 4.4, Secção 5, Secção 8 e Anexo A); a 7.1 ainda descreve a ablação completa.
 3. **Arrumação:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas, se o utilizador quiser.
 4. **Diagnóstico da viagem `219001624-2` (REV-049 a REV-051):** feito. J0 acerta 42,0 % porque a probabilidade na pesca fica abaixo do seu limiar de 0,60; a pesca real é um troço retilíneo no extremo sul. Gráficos em `results/diagnostic_trip/`. Nada mais pendente deste pedido; qualquer nova leitura do `test` precisa de nova autorização. O gráfico das classes já está feito (J0 acerta 42,0 % nesta viagem por a probabilidade na pesca ficar abaixo do limiar de 0,60).
-5. **Push:** os commits locais por enviar (REV-052 e este handoff) só seguem quando o utilizador autorizar.
+5. **Push:** só com autorização explícita nova do utilizador; fica por enviar apenas o commit que corrige o estado do git.
 
 ## Regras a não esquecer
 
