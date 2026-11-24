@@ -892,3 +892,15 @@ Regras:
 - **Validação:** 5 testes sintéticos de ponta a ponta da medição (escolha e desempates, uma só abertura, segunda recusada, modelo de janelas, bloqueio antes de abrir se o modelo estiver adulterado, autorização sem a bandeira do `validation`); 192 testes a passar antes e depois da medição. Proveniência verificada em `build_validation_results`: `validation` aberto uma só vez ao abrigo da autorização da medição final, escolha gravada antes da abertura, só o modelo escolhido medido, checkpoints congelados conferem por hash.
 - **Limitações:** uma só medição, em 18 viagens, sem intervalo de incerteza; J0 e J50 **não** foram medidas no `validation`, pelo que a resposta à RQ1 continua a assentar no `test`, que é otimista; a divisão é por viagem (não se afirma generalização a navios inéditos). **O `validation` ficou gasto:** já não pode servir para medir mais nada, incluindo um futuro pós-processamento (seria uma segunda abertura, proibida pelo protocolo).
 - **Pendentes:** decisão do utilizador sobre o pós-processamento (RQ2 e RQ3), que só poderia ser avaliado no `test`.
+
+### REV-054 — Handoff reescrito depois do Marco 4 e da medição final
+
+- **Data:** 2026-11-24 00:42 WET.
+- **Cor:** Verde-água `#00BFA5`, RGB (0, 191, 165). Só marcador do registo; não há alteração ao `.tex`.
+- **O quê:** a pedido do utilizador, `handoff.md` reescrito de raiz, no mesmo formato dos anteriores: data e hora, tabela da última validação (testes, LaTeX, git, treinos, seleção, medição final), cronologia dos commits, como retomar, objetivo, **resumo cronológico do que se fez** (novo), estado, decisões, ficheiros, comandos, o que falhou, o que fazer a seguir, regras e preferências. Corrigidas as duplicações e as contagens desatualizadas do handoff anterior (187 testes, uma frase repetida sobre o push, o diagnóstico descrito duas vezes) e registado o conflito entre o pedido de push do utilizador e o `AGENTS.md` §6.
+- **Porquê:** pedido do utilizador, para outra sessão retomar com o que foi feito e o que falta.
+- **Ficheiros afetados:** `handoff.md`, `PROGRESS.md`, `README.md` (intervalo de REV), `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável** (o `.tex` não foi alterado).
+- **Validação:** `pytest tests/`: 192 passaram e `pdflatex` + `bibtex`: 11 páginas, 0 erros, 0 referências indefinidas (ambos às 00:41 WET); horas e commits lidos do relógio e do `git log`; números copiados de `final_validation.json`, `final_results_windows.json` e do `access_log`.
+- **Limitações:** a tabela da última validação fica desatualizada assim que algo mudar; o handoff diz-o. O `AGENTS.md` §6 e a autorização de push continuam em conflito, sem decisão do utilizador.
+- **Pendentes:** os do handoff («O que fazer a seguir»); push de `d6111f6` e deste commit, só a pedido do utilizador.

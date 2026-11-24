@@ -23,7 +23,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
 - **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15), com a Secção 9 (medição final) antes do anexo (REV-053). Texto estável a preto (REV-043); o novo tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C`, REV-048 `#1B5E20` `#880E4F` (REV-052: 4.3, 4.4, Secção 5, Secção 8 e Anexo A) e `#0D47A1` (REV-053: Secção 9 e as frases sobre o `validation`).
 - **Git:** `origin/main` tem tudo até `548cb8a` (REV-053), enviado a pedido do utilizador em 2026-11-24 00:39 WET (push normal, sem `--force`). Confirmar com `git status -sb`. Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-053.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-054.
 
 ## Decisões do utilizador (vigentes)
 
@@ -872,3 +872,17 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Decisão do utilizador sobre o pós-processamento (só avaliável no `test`); passagens adiadas do LaTeX; push dos commits locais.
+
+### 2026-11-24b — Handoff reescrito (REV-054), 2026-11-24 00:42 WET
+
+**Feito**
+- `handoff.md` reescrito de raiz para outra sessão, com um resumo cronológico do que se fez, o estado atual (Marco 4 e medição final executados), as decisões, os ficheiros, o que falhou e o que falta.
+
+**Validado**
+- `pytest`: 192 passaram; `pdflatex` + `bibtex`: 11 páginas, 0 erros, 0 referências indefinidas (00:41 WET). Horas e commits lidos do `date` e do `git log`.
+
+**Problemas e limitações**
+- O `AGENTS.md` §6 («o agente nunca faz push») continua em conflito com o push que o utilizador autorizou; registado no handoff, sem alterar a regra.
+
+**Pendente**
+- Decisão do utilizador sobre o Marco 5 (só avaliável no `test`); passagens adiadas do LaTeX; push de `d6111f6` e deste commit, a pedido do utilizador.
