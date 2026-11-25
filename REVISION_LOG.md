@@ -998,3 +998,15 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**; 16 páginas (o tamanho trata-se depois), 0 erros.
 - **Validação:** compilação; páginas 1 e 2 inspecionadas; sem números novos.
 - **Pendentes:** lista da releitura das secções 5.3 a 7.3, Problema e Contexto, para decisão do utilizador.
+
+### REV-063 — Tabela da releitura da proposta (docs/05)
+
+- **Data:** 2026-11-25 21:23 WET.
+- **Cor:** Laranja-coral `#FF7043`, RGB (255, 112, 67). Só marcador do registo; o `.tex` não foi alterado.
+- **O quê:** novo `docs/05_releitura_proposta.md` com a tabela A a H das passagens da proposta que ainda contradizem o trabalho (velocidade em m/s, método de Wu et al., «referência central», cooperação humano-IA, figura da abordagem, definição de estabilidade na 7.1, escolhas feitas no `test` e reutilização do `validation` na 7.2, reprodutibilidade), com a recomendação para cada uma. No ponto G, por indicação do utilizador, a escolha dos 301 pontos explica-se pela medição no `test` do comprimento dos blocos de pontos mal classificados e do segmento real mais curto. Handoff, PROGRESS e README atualizados.
+- **Porquê:** pedido do utilizador, antes de aplicar as alterações.
+- **Ficheiros afetados:** `docs/05_releitura_proposta.md`, `handoff.md`, `PROGRESS.md`, `README.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **pendente** (a aplicar em REV-064, quando o utilizador o pedir).
+- **Validação:** 243 testes; LaTeX completo sem erros (16 páginas), às 21:22 WET. Verificado no código que a velocidade usada é `speed_calc_mps`.
+- **Limitações:** a Secção 10.2 (REV-059) tem números dos blocos de erro escritos à mão; devem passar a macros geradas (AGENTS §10). Registado em `docs/05`.
+- **Pendentes:** aplicar A a H.

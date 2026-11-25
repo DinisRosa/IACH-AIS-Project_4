@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-059)
+## Estado atual (REV-063)
 
 | Marco | Estado |
 |---|---|
@@ -39,7 +39,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 - **Critério de seleção (decisão do utilizador):** a menor perda por ponto no `test` escolheu épocas muito cedo (4 e 8), porque a perda no `test` sobe com o treino; a baseline foi escolhida bem mais tarde (162). Mudar o critério (por exemplo, o F1) ou travar o treino mais cedo seria uma decisão metodológica nova, com novo protocolo e nova autorização, e obrigaria a repetir a baseline por igualdade. Por agora fica como está, registado como limitação.
 - **Marco 5:** feito (REV-057). RQ3 sem resposta (J0 e J50 não pós-processadas).
-- **LaTeX (adiado pelo utilizador):** explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o texto a vermelho «human-on-the-loop»; subsecções 5.3 a 5.6 e 6.1 por reler pelo utilizador; a 7.1 ainda descreve a ablação completa (agora marcada como futura).
+- **LaTeX:** passagens adiadas resolvidas em REV-062; falta aplicar a tabela da releitura (`docs/05_releitura_proposta.md`, A a H) e passar a macros os números da Secção 10.2. O número de páginas (16) trata-se depois.
 - **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
 - **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
 
@@ -1014,3 +1014,17 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Decisão do utilizador sobre a lista da releitura (velocidade em nós, Wu et al. e MDL, figura da abordagem, 7.1, 7.2, Contexto, resumo).
+
+### 2026-11-25i — Tabela da releitura da proposta (REV-063), 2026-11-25 21:23 WET
+
+**Feito**
+- `docs/05_releitura_proposta.md`: tabela A a H das passagens ainda por corrigir, com a recomendação para cada uma (ponto G ajustado pelo utilizador). Handoff, README e registo atualizados.
+
+**Validado**
+- `pytest tests/`: 243 passaram; `pdflatex` + `bibtex`: 16 páginas, 0 erros, 0 referências indefinidas (21:22 WET).
+
+**Problemas**
+- Detetado na releitura: a Secção 10.2 (REV-059) tem números dos blocos de erro escritos à mão, contra o AGENTS §10; a corrigir com macros geradas junto com o ponto G.
+
+**Pendente**
+- Aplicar A a H (REV-064) quando o utilizador o pedir; número de páginas depois; arrumação técnica.

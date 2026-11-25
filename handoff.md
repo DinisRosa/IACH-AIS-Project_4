@@ -1,14 +1,14 @@
 # Handoff — Projeto AIS
 
-**Data e hora desta atualização:** 2026-11-25 20:47 WET (UTC+00:00). Reescrito de raiz em REV-061, depois do Marco 5 (pós-processamento) e da Secção de conclusões da proposta. Versões anteriores: REV-044, REV-045, REV-046 a REV-055. Todas as horas deste ficheiro estão em WET (em novembro igual a UTC), lidas com `date`.
+**Data e hora desta atualização:** 21:23 WET de 2026-11-25 (UTC+00:00). Reescrito de raiz em REV-061 (20:47 WET), depois do Marco 5 e da Secção de conclusões; atualizado em REV-062 (passagens adiadas da proposta) e REV-063 (tabela da releitura em `docs/05_releitura_proposta.md`). Versões anteriores: REV-044, REV-045, REV-046 a REV-055. Todas as horas deste ficheiro estão em WET (em novembro igual a UTC), lidas com `date`.
 
 ### Última validação (registada neste handoff)
 
 | Verificação | Resultado | Data e hora (WET) |
 |---|---|---|
-| Testes (`pytest tests/`) | 243 passaram | 2026-11-25 20:46 |
-| LaTeX (`pdflatex` + `bibtex` + 2 × `pdflatex`, em `latex/build/check`) | 15 páginas; 0 erros; 0 referências indefinidas | 2026-11-25 20:46 |
-| Git | `main` com 1 commit à frente de `origin/main` antes deste handoff; este handoff é commitado e enviado a pedido do utilizador. Confirmar com `git status -sb` e `git log origin/main..HEAD` | 2026-11-25 20:46 |
+| Testes (`pytest tests/`) | 243 passaram | 2026-11-25 21:22 |
+| LaTeX (`pdflatex` + `bibtex` + 2 × `pdflatex`, em `latex/build/check`) | 16 páginas; 0 erros; 0 referências indefinidas | 2026-11-25 21:22 |
+| Git | antes deste commit, `main` tinha 1 commit à frente de `origin/main` (`c0af577`, REV-062); este commit e esse são enviados a pedido do utilizador. Confirmar com `git status -sb` e `git log origin/main..HEAD` | 2026-11-25 21:22 |
 | Pós-processamento v1 (13 pontos) no `validation` | execução única, protocolo `posproc_validation_v1`; **histórico interno, fora da proposta** | 2026-11-25 ~19:45 |
 | Análise dos buracos e efeito das janelas no `test` | `postproc_window_analysis` e `postproc_test_eval` no `access_log.jsonl` | 2026-11-25 ~20:00 a 20:07 |
 | Pós-processamento v2 (301 pontos) no `validation` | execução única, protocolo `posproc_validation_v2`; verificação independente 19/19 | 2026-11-25 ~20:30 |
@@ -19,6 +19,8 @@ Quem retomar deve repetir estas verificações e comparar com as horas acima: o 
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `c0af577` | 2026-11-25 21:14 | Alinha as passagens adiadas da proposta com o trabalho feito e ignora docs/bibliografia (REV-062) |
+| `1ab2376` | 2026-11-25 20:48 | Reescreve o handoff depois do Marco 5 e das conclusões (REV-061) |
 | `c7478dc` | 2026-11-25 20:39 | Secção de conclusões na proposta: RQ1, RQ2 e porque fica a RQ3 sem resposta (REV-060) |
 | `fccd79e` | 2026-11-25 20:34 | Documenta o pós-processamento v2: docs/04, PROGRESS, registo, README e handoff (REV-059) |
 | `3a297a5` | 2026-11-25 20:33 | Resultados do pós-processamento v2 (301 pontos) na proposta (REV-059) |
@@ -41,7 +43,8 @@ Há ainda dois commits de correção de hora (`076aa09`, `4ecaf43`). O commit de
 1. `AGENTS.md`: regras fixas. O `CLAUDE.md` manda lê-lo antes de qualquer ação.
 2. Este ficheiro.
 3. `docs/04_pos_processamento.md` (Marco 5, incluindo o histórico interno da v1) e, se for preciso, `docs/00` a `docs/03`.
-4. `PROGRESS.md` (estado vivo no topo; histórico termina em 2026-11-25g) e `REVISION_LOG.md` (REV-001 a REV-061).
+4. `PROGRESS.md` (estado vivo no topo; histórico termina em 2026-11-25i) e `REVISION_LOG.md` (REV-001 a REV-063).
+6. **`docs/05_releitura_proposta.md`**: tabela das passagens da proposta ainda por corrigir (A a H), com a recomendação para cada uma.
 5. Antes de qualquer ação: `git status`, `git log` e `iach-ais-venv-4/bin/python -m pytest tests/` (243 testes a passar).
 
 Mensagem sugerida para abrir a nova sessão: «Lê o AGENTS.md e o handoff.md e continua de onde ficámos. Qual é o ponto de situação e o próximo passo?»
@@ -68,6 +71,8 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por viagem, seed 42, 70/15/15: 
 - **v2, 301 pontos (REV-059):** protocolo v2 commitado antes; programa, testes e verificação gerados pela Abacus e revistos; execução única. Resultado no `validation`: ver «Estado atual». Secção 10 atualizada (números, figuras e os parágrafos que dependiam dos 13 pontos).
 - **Conclusões (REV-060):** Secção 11 com RQ1, RQ2, RQ3 (sem resposta, quatro razões e o desenho fatorial necessário), critérios de sucesso e trabalho futuro.
 - **Este handoff (REV-061)** e push a pedido do utilizador.
+- **Passagens adiadas da proposta (REV-062):** «*human-on-the-loop*» sem vermelho; explicabilidade, calibração e *dashboard* como «previstos, não concluídos nesta fase» (resumo, objetivo 5, 4.6, 7.3, trabalho futuro); objetivo 3 «aplicado ao melhor dos modelos testados»; caixa «Explicabilidade / decisão humana» a tracejado na figura; contribuições reais; 7.1 sem o estudo de ablação. «(Kaggle)» mantido: os PDFs de `docs/bibliografia/` (fora do git) não referem o Zenodo.
+- **Releitura (REV-063):** tabela A a H em `docs/05_releitura_proposta.md`, por aplicar.
 
 ## Estado atual
 
@@ -106,15 +111,15 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por viagem, seed 42, 70/15/15: 
 
 **Âmbito e LaTeX**
 - HMM e Wu et al. não são comparações. Explicabilidade, calibração e *dashboard* fora do mínimo atual.
-- `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera. Toda a alteração ao `.tex` leva `\revtext{revNNN}` com a cor do `REVISION_LOG.md`. **Próximo ID livre: REV-062.** Confirmar no `REVISION_LOG.md` que uma cor nova não foi usada.
-- Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F`, rev053 `#0D47A1`, rev056 `#D84315`, rev057 `#B8860B`, rev059 `#8B008B`, rev060 `#C71585`. Só marcadores Markdown, entre outros: REV-054 `#00BFA5`, REV-055 `#F06292`, REV-058 `#546E7A`, REV-061 `#26C6DA`.
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera. Toda a alteração ao `.tex` leva `\revtext{revNNN}` com a cor do `REVISION_LOG.md`. **Próximo ID livre: REV-064.** Confirmar no `REVISION_LOG.md` que uma cor nova não foi usada.
+- Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F`, rev053 `#0D47A1`, rev056 `#D84315`, rev057 `#B8860B`, rev059 `#8B008B`, rev060 `#C71585`, rev062 `#4682B4`. Só marcadores Markdown, entre outros: REV-054 `#00BFA5`, REV-055 `#F06292`, REV-058 `#546E7A`, REV-061 `#26C6DA`, REV-063 `#FF7043`.
 
 ## Ficheiros principais
 
 | Área | Ficheiros |
 |---|---|
 | Regras e registo | `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md`, `REVISION_LOG.md`, `README.md`, este `handoff.md` |
-| Documentação | `docs/00` a `docs/03`, **`docs/04_pos_processamento.md`** (Marco 5; §5 com o histórico interno da v1) |
+| Documentação | `docs/00` a `docs/03`, **`docs/04_pos_processamento.md`** (Marco 5; §5 com o histórico interno da v1), **`docs/05_releitura_proposta.md`** (passagens da proposta por corrigir) |
 | Biblioteca (`src/ais/phase1/`) | `data.py`, `model.py`, `training.py`, `checks.py`, `utils.py`, `artifacts.py`, `config.py`, `metrics.py`, `inference.py`, `reserved.py`, `selection.py`, `segments.py`, `windows.py`, **`postprocessing.py`** (filtro, buracos, `max_removable_island`) |
 | Programas do pós-processamento | `postproc_validation.py --version v1\|v2` (já executados), `build_postproc_results.py`, `verify_postproc_independent.py [--size N]` (escrito pela Abacus), `plot_postprocessing_kernel.py`, `analyze_error_runs.py --split test\|train`, `eval_postproc_test.py` |
 | Outros programas | preparação, baseline, janelas, diagnóstico e medição final: ver `README.md` |
@@ -150,7 +155,7 @@ Compilar o LaTeX à mão (a partir de `latex/`), sem colidir com o vigilante: `p
 
 ## O que fazer a seguir
 
-1. **LaTeX, passagens adiadas pelo utilizador:** texto a vermelho «human-on-the-loop» (resumo); explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3), fora do âmbito; a 7.1 ainda descreve a ablação completa; o resumo e a introdução ainda falam em Wu et al. e em várias taxas de sobreposição; secções 5.3 a 5.6, 6 e 7.2 por reler. O número de páginas (15) trata-se depois, por decisão do utilizador.
+1. **Aplicar a tabela da releitura** (`docs/05_releitura_proposta.md`, pontos A a H), numa revisão nova (REV-064), quando o utilizador o pedir. Para o ponto G (e para a Secção 10.2, que hoje tem esses números escritos à mão), gerar macros a partir de `results/postproc_window_analysis/test.json`. O número de páginas (16) trata-se depois, por decisão do utilizador.
 2. **Versão final sem cores** só quando o utilizador o pedir.
 3. **Arrumação técnica:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar restos do ensaio de 3 viagens e execuções antigas, se o utilizador quiser.
 4. **Dúvidas de dados (limitações):** CRS (hipótese WGS84), proveniência das anotações, cálculo de `distanceToShore`.
