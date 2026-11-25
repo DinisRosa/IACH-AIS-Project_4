@@ -1,6 +1,6 @@
 # 06 — Plano de reescrita da proposta
 
-[REV-064 | cor #33691E] Plano de 2026-11-25 para reescrever a proposta como **relatório do trabalho feito**. O utilizador aprovou o género e a estrutura base; as decisões da §2 estão **por tomar** e nada se executa antes delas. **Nenhum `.tex` foi criado ou alterado.** Este plano absorve os pontos A a H de `docs/05_releitura_proposta.md`. Revisto às 22:25 WET: acrescentadas D7 (onde escrever) e D8 (versão de segurança), por proposta do utilizador.
+[REV-064 | cor #33691E] Plano de 2026-11-25 para reescrever a proposta como **relatório do trabalho feito**. O utilizador aprovou o género e a estrutura base e, às 22:36 WET, **aceitou todas as recomendações da §2** («Aceito podes avançar»); a execução é a REV-065. Este plano absorve os pontos A a H de `docs/05_releitura_proposta.md`. Revisto às 22:25 WET: acrescentadas D7 (onde escrever) e D8 (versão de segurança), por proposta do utilizador.
 
 ## 1. Princípios
 
@@ -9,7 +9,7 @@
 - Nenhum resultado novo, nenhuma nova abertura de dados e nenhum treino. Os números empíricos entram só por macros geradas (AGENTS §10).
 - A versão atual tem de poder ser recuperada exatamente (D7 e D8). O PDF entregue ao professor não se altera.
 
-## 2. Decisões do utilizador (por tomar)
+## 2. Decisões do utilizador (tomadas: vale a coluna «Recomendação», e em D3 a frase A)
 
 | # | Decisão | Recomendação | Alternativa |
 |---|---|---|---|

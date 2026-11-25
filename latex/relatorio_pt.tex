@@ -1,0 +1,108 @@
+%%%% relatorio_pt.tex
+%%%% Relatório do trabalho feito, no modelo IJCAI--ECAI 26 (REV-065, escrito a preto).
+%%%% A versão anterior, proposta_pt.tex, fica como versão de segurança (etiqueta git proposta-pt-v1).
+%%%% Compilar a partir de latex/.
+
+\typeout{Project report using IJCAI--ECAI 26 formatting}
+
+\documentclass{article}
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+
+\usepackage{FormattingGuidelines-IJCAI-ECAI-26/ijcai26}
+\usepackage{times}
+\usepackage{soul}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[small]{caption}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{placeins}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+\renewcommand{\figurename}{Figura}
+\renewcommand{\tablename}{Tabela}
+
+% Para revisões posteriores à REV-065: \revtext{revNNN}{texto}, com a cor do REVISION_LOG.md.
+\newcommand{\revtext}[2]{{\color{#1}#2}}
+% Número com vírgula decimal em modo matemático (sinal de menos correto).
+\newcommand{\ptnum}[1]{{\mathcode`\,="013B\relax$#1$}}
+
+% Números gerados por código (ais.cli.build_*); não editar à mão.
+\input{generated/resultados}
+\input{generated/resultados_janelas}
+\input{generated/resultados_validacao}
+\input{generated/resultados_posproc}
+
+% Números de linha até à versão final.
+\usepackage[switch]{lineno}
+\linenumbers
+\switchlinenumbers
+
+\urlstyle{same}
+
+% Required PDF metadata block. Keep unchanged.
+\pdfinfo{
+/TemplateVersion (IJCAI.2026.0)
+}
+
+\title{Segmenta\c{c}\~ao sem\^antica de trajet\'orias AIS para dete\c{c}\~ao de atividade de pesca usando janelas sobrepostas e p\'os-processamento temporal}
+
+\author{
+    Dinis Soveral Botelho Rosa
+    \affiliations
+    University of Coimbra / Department of Informatics Engineering
+    \emails
+    dinisrosa22@gmail.com
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+(A escrever no fim.)
+\end{abstract}
+
+\section{Introdução}
+\label{sec:introducao}
+(A escrever.)
+
+\section{Trabalho relacionado}
+\label{sec:relacionado}
+(A escrever.)
+
+\section{Dados e preparação}
+\label{sec:dados}
+(A escrever.)
+
+\section{Método}
+\label{sec:metodo}
+(A escrever.)
+
+\section{Protocolo experimental}
+\label{sec:protocolo}
+(A escrever.)
+
+\section{Resultados e discussão}
+\label{sec:resultados}
+(A escrever.)
+
+\section{Limitações, ética e dimensão humana}
+\label{sec:limitacoes}
+(A escrever.)
+
+\section{Conclusões e trabalho futuro}
+\label{sec:conclusoes}
+(A escrever.)
+
+\appendix
+
+\section{Anexo: pormenores do janelamento}
+\label{sec:anexo}
+(A escrever.)
+
+\end{document}

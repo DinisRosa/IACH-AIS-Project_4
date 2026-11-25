@@ -8,7 +8,25 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 - **Marco 4 (janelamento com a mesma CNN) feito (REV-046, REV-047):** J0 (sem sobreposição) e J50 (50 %), com janelas de 64 pontos, foram treinadas só com o treino, selecionadas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Nenhuma supera a referência por ponto no `test`; J50 reduz a fragmentação face a J0. Números em `results/windows_final/final_results_windows.json` e na Secção 8 do LaTeX.
 - Conjuntos reservados: o `test` serve para selecionar e teve duas aberturas de seleção (referência e janelas), além de leituras posteriores registadas (diagnóstico e pós-processamento); o `validation` é a medição final e foi aberto **uma única vez** (REV-053), só para o modelo escolhido (a referência): exatidão por ponto de 94,4 %. Está gasto; o pós-processamento (REV-057, REV-059) reutilizou as previsões e anotações já guardadas.
 - 243 testes a passar. Ver `PROGRESS.md` (estado e histórico) e `handoff.md` (para retomar numa nova sessão).
-- **Em curso:** reescrita da proposta, com o plano em `docs/06_plano_reescrita.md` (REV-064), à espera das decisões D1 a D8; o `.tex` ainda não mudou. A última versão da proposta está no commit `7d60861`.
+- **Em curso (REV-065):** reescrita como relatório em `latex/relatorio_pt.tex`, segundo `docs/06_plano_reescrita.md`.
+
+## Versão de segurança da proposta
+
+A última versão semi-final da proposta, `latex/proposta_pt.tex` (16 páginas), está marcada com a etiqueta git **`proposta-pt-v1`** (commit `7d60861`, REV-063). O ficheiro não se altera; se o relatório novo não servir, recomeça-se a partir dele.
+
+Ver a versão antiga numa pasta à parte, sem mexer no trabalho atual:
+
+```bash
+git worktree add ../proposta-pt-v1 proposta-pt-v1
+```
+
+Recuperar para o projeto os ficheiros antigos de `latex/`, incluindo figuras e números gerados (fazer antes um commit do trabalho em curso; `--overlay` repõe sem apagar os ficheiros novos):
+
+```bash
+git restore --overlay --source=proposta-pt-v1 -- latex/
+```
+
+A etiqueta é local até ser enviada com `git push origin proposta-pt-v1`. Se não existir noutra cópia do repositório, usar `7d60861` no lugar do nome.
 
 ## Estrutura
 

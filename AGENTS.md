@@ -132,7 +132,9 @@ Cada revisão lógica dos documentos recebe um ID e uma cor. Se originar altera�
 ### Antes de editar
 Ler os documentos de acompanhamento e o .tex real quando fornecido. Identificar macros, cores, pacotes e convenções existentes; não recolorir revisões anteriores. Se o significado das cores não for claro, perguntar. Não reconstruir cronologia/autoria por adivinhação.
 
-O ficheiro da proposta está em `latex/proposta_pt.tex` (a base original é `latex/proposta_IAHC_DINIS_ROSA.pdf`). Não criar um relatório substituto nem afirmar que foi atualizado. Registar atualização pendente quando aplicável. O estado atual de revisão do `.tex` está em `PROGRESS.md`, secção "LaTeX (`latex/proposta_pt.tex`)".
+O documento ativo é o relatório `latex/relatorio_pt.tex` (decisão do utilizador, REV-065). `latex/proposta_pt.tex` fica como versão de segurança e **não se altera** (etiqueta git `proposta-pt-v1`; a base original é `latex/proposta_IAHC_DINIS_ROSA.pdf`). Os dois partilham `latex/generated/`, `latex/figures/` e `references.bib`: nesses ficheiros só se acrescenta; uma figura que mude ganha nome novo. Não criar outro documento substituto sem decisão do utilizador, nem afirmar que um documento foi atualizado sem o ter sido. Registar atualização pendente quando aplicável. O estado atual do LaTeX está em `PROGRESS.md`, secção "Estado atual".
+
+**Exceção às cores (REV-065, por instrução do utilizador):** a escrita do relatório novo faz-se a preto, incluindo as correções para concluir a mesma revisão. As revisões lógicas seguintes voltam a levar cor, pela regra acima.
 
 ### Registo
 Criar/manter REVISION_LOG.md com:
