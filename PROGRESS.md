@@ -11,7 +11,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | 2 Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
 | 3 CNN 1D de referência sobre a viagem completa | **Fechado por decisão do utilizador (REV-041)** |
 | 4 Janelamento com a mesma CNN (L = 64; 0 % e 50 %) | **Feito (REV-046, REV-047)**: J0 e J50 treinadas, selecionadas no `test` numa só abertura e congeladas; resultados no LaTeX (8.2 a 8.4) |
-| 5 Pós-processamento | **Em curso (REV-056)**: decisões do utilizador (janela gaussiana de 13 pontos, σ = 13/6, só a referência, aplicada uma vez às previsões guardadas do `validation`); filtro, testes, figura e Secção 10 da proposta feitos; falta a autorização e a aplicação. Plano em `docs/04_pos_processamento.md` |
+| 5 Pós-processamento | **Em curso (REV-056)**: decisões do utilizador (janela gaussiana de 13 pontos, σ = 13/6, só a referência, aplicada uma vez às previsões guardadas do `validation`); filtro, testes, figura e Secção 10 da proposta feitos; falta o protocolo curto e a aplicação, depois do «sim» do utilizador. Plano em `docs/04_pos_processamento.md` |
 | 6 e 7 Congelar tudo e medição final no `validation` | **Feito (REV-053)**: medido só o modelo escolhido (a referência), uma única vez; J0 e J50 não foram medidas no `validation` |
 
 - **Baseline (CNN de referência):** treinada só com o treino oficial (87 viagens, 300 épocas, um checkpoint por época). **Época 162 e limiar 0,65**, escolhidos no `test` numa só ronda e congelados em `results/baseline_frozen/` (REV-038). Números em `results/baseline_frozen/final_results.json` e, no LaTeX, em macros geradas (REV-040). Os resultados do `test` são otimistas (serviram a escolher) e a perda no `test` é ruidosa entre épocas.
@@ -38,7 +38,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 ## Pendências abertas
 
 - **Critério de seleção (decisão do utilizador):** a menor perda por ponto no `test` escolheu épocas muito cedo (4 e 8), porque a perda no `test` sobe com o treino; a baseline foi escolhida bem mais tarde (162). Mudar o critério (por exemplo, o F1) ou travar o treino mais cedo seria uma decisão metodológica nova, com novo protocolo e nova autorização, e obrigaria a repetir a baseline por igualdade. Por agora fica como está, registado como limitação.
-- **Marco 5 (REV-056):** falta escrever o protocolo e a autorização de uma segunda utilização do `validation` (decisão do utilizador, só sobre as previsões já guardadas), aplicar o filtro uma vez e pôr os resultados na Secção 10. Passos em `docs/04_pos_processamento.md`.
+- **Marco 5 (REV-056):** falta o protocolo curto (filtro fixado antes) e a confirmação do utilizador no chat; usa só as previsões e anotações já guardadas do `validation`, sem reabrir os dados, aplicar o filtro uma vez e pôr os resultados na Secção 10. Passos em `docs/04_pos_processamento.md`.
 - **LaTeX (adiado pelo utilizador):** explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o texto a vermelho «human-on-the-loop»; subsecções 5.3 a 5.6 e 6.1 por reler pelo utilizador; a 7.1 ainda descreve a ablação completa (agora marcada como futura).
 - **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
 - **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
@@ -913,4 +913,5 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - Nenhum dado reservado aberto. A reutilização do `validation` é uma exceção à regra de REV-053, decidida pelo utilizador.
 
 **Pendente**
-- Protocolo e autorização escrita do utilizador; aplicação do filtro; resultados na Secção 10.
+- Protocolo curto e «sim» do utilizador; aplicação do filtro; resultados na Secção 10.
+- Esclarecido com o utilizador: não se reabrem os dados do `validation` nem se volta a correr a CNN; usam-se as probabilidades e as anotações já guardadas, e só as anotações contam como reutilização (para medir). Secção 10.3 e `docs/04` §1.1 atualizadas.

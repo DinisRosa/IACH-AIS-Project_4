@@ -926,5 +926,5 @@ Regras:
 - **Ficheiros afetados:** `latex/proposta_pt.tex` (preâmbulo, 4.5, rótulo da 5.4, Secção 10), `latex/figures/posproc_janela.png`, `src/ais/phase1/postprocessing.py`, `src/ais/cli/plot_postprocessing_kernel.py`, `tests/test_postprocessing.py`, `docs/04_pos_processamento.md`, `PROGRESS.md`, `README.md`, `handoff.md`, `REVISION_LOG.md`.
 - **Correspondência no LaTeX:** **atualizado** (método); resultados pendentes.
 - **Validação:** 203 testes a passar; `pdflatex` + `bibtex` 13 páginas, 0 erros.
-- **Limitações:** segunda utilização do `validation` (exceção a REV-053, decidida pelo utilizador); o exemplo da figura é sintético.
-- **Pendentes:** protocolo, autorização, aplicação e resultados.
+- **Limitações:** as anotações do `validation` são usadas uma segunda vez para medir, a partir das previsões já guardadas, sem reabrir os dados nem voltar a correr a CNN (esclarecido com o utilizador; protocolo curto e confirmação no chat em vez de autorização formal); o exemplo da figura é sintético.
+- **Pendentes:** protocolo curto (depois do «sim» do utilizador), aplicação única e resultados.

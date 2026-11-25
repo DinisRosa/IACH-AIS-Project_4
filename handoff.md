@@ -162,7 +162,7 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
 
 ## O que fazer a seguir
 
-0. **Marco 5 em curso (REV-056, 2026-11-25):** decisões e passos em `docs/04_pos_processamento.md`. Próximo: protocolo e autorização da segunda utilização do `validation`, aplicação única do filtro e resultados na Secção 10. Os pontos 1 e 2 abaixo sobre o Marco 5 estão ultrapassados.
+0. **Marco 5 em curso (REV-056, 2026-11-25):** decisões e passos em `docs/04_pos_processamento.md`. Próximo (depois do «sim» do utilizador): protocolo curto sobre as previsões e anotações já guardadas do `validation` (sem reabrir os dados), aplicação única do filtro e resultados na Secção 10. Os pontos 1 e 2 abaixo sobre o Marco 5 estão ultrapassados.
 1. **Perguntar ao utilizador:**
    - Quer avançar para o **Marco 5** (pós-processamento), dado que a segmentação continua muito fragmentada (pesca: 18 segmentos reais e 486 previstos no `validation`)? A unidade e a largura do filtro teriam de ser aprovadas, e **só se poderia avaliar no `test`** (otimista), porque o `validation` está gasto. A resposta às RQ2 e RQ3 depende disto.
    - O critério de seleção por menor perda (épocas 8 e 4) **já não muda o resultado final**: o modelo medido foi a referência. Recomendação anterior: manter e deixar como limitação.
