@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-067; refeito em REV-066, 2026-11-25 23:12 WET)
+## Estado atual (REV-068, 2026-11-25 23:35 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -21,12 +21,12 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Perguntas:** RQ1, as janelas não superam a viagem completa; RQ2, o filtro reduz muito a fragmentação, com a ressalva acima; RQ3, sem resposta.
 - **Fonte dos números:** macros em `latex/generated/` e ficheiros em `results/` (não versionados).
 - **Conjuntos reservados (`results/access_log.jsonl`):** `test` com 2 aberturas de seleção, 2 leituras de diagnóstico e, sobre previsões guardadas, 3 análises de blocos de erro, 1 avaliação de janelas e 1 geração de figuras do relatório. `validation` aberto 1 vez (medição final, **gasto**); as anotações foram depois reutilizadas nas 2 versões do filtro. Os três conjuntos foram lidos por inteiro só para construir as bases limpas (REV-015).
-- **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, a preto, números de linha ligados), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
+- **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, a preto, números de linha ligados; em REV-068 saiu do resumo a ressalva sobre a medição do filtro), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
 - **Testes:** 247 (sintéticos, mais um que lê 3 viagens de treino), a passar.
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-067.
+- **Registo de revisões:** REV-001 a REV-068.
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -39,11 +39,12 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Relatório (REV-065, D1 a D8):** documento novo em vez da proposta; máximo 15 páginas, alvo 13 ou menos; texto a preto nessa revisão (as seguintes com cor); **declarar a versão de 13 pontos** (revê a decisão anterior de a omitir); figuras com «referência»; título mantido; «Figura» e «Tabela» em português; números de linha até à versão final. Perguntas, objetivos e critérios de sucesso não mudam depois dos resultados.
 - **Documentação (REV-067):** ficam `docs/00` e `docs/01`; `docs/05` e `06` não se repõem.
 - **Proposta antiga (REV-066):** retirar o `.tex`; manter o PDF e a etiqueta; compilar o relatório para `latex/build/`.
+- **Resumo do relatório (REV-068):** sem a frase «este resultado não vem de uma medição independente»; a ressalva mantém-se no corpo (protocolo, resultados, limitações e conclusões). Não a repor no resumo.
 - **Documentos fixos:** `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera. Autor do dataset: Song Wu, Zenodo 10.5281/zenodo.7283281 (CC BY 4.0); o Kaggle é espelho.
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-068), com cor.
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-069), com cor.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
 - **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
@@ -54,7 +55,8 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 | Ficheiro | Estado |
 |---|---|
-| `AGENTS.md`, `CLAUDE.md`, `README.md`, `handoff.md` | Alinhados em REV-067 |
+| `AGENTS.md`, `CLAUDE.md` | Alinhados em REV-067 |
+| `README.md`, `handoff.md` | Alinhados em REV-068 |
 | `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
 | `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
 | `src/ais/`, `pyproject.toml`, `tests/` | Código e 247 testes |
@@ -1184,3 +1186,20 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório pelo utilizador.
+
+### 2026-11-25u — Ressalva retirada do resumo (REV-068), 2026-11-25 23:35 WET
+
+[REV-068 | cor #A0522D]
+
+**Feito**
+- A pedido do utilizador, retirado do resumo do relatório «; este resultado não vem de uma medição independente»; PDF recompilado.
+
+**Validado**
+- `pdflatex` + `bibtex` + 2 × `pdflatex`: 10 páginas, sem erros nem referências em falta; frase ausente do PDF.
+- Testes não repetidos (sem alterações a código).
+
+**Decisões**
+- O resumo fica sem a ressalva; o corpo do relatório mantém-na.
+
+**Pendente**
+- Leitura do relatório pelo utilizador. Commit local por enviar.

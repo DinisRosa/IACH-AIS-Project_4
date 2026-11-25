@@ -1064,3 +1064,15 @@ Regras:
 - **Complemento (23:21 WET, mesma revisão):** o utilizador confirmou a pasta `docs` como ficou; GitHub verificado e já atualizado; `handoff.md`, `README.md` (comportamento do vigilante) e `PROGRESS.md` atualizados, com commit e push a pedido. Sem alterações a código nem ao `.tex`.
 - **Complemento (23:23 WET, mesma revisão):** o utilizador parou o vigilante antigo; `handoff.md` e `PROGRESS.md` acertados. Sem alterações a código nem ao `.tex`.
 - **Complemento (23:24 WET, mesma revisão):** o utilizador parou também o vigilante novo; `handoff.md` e `PROGRESS.md` acertados. Sem alterações a código nem ao `.tex`.
+
+### REV-068 — Ressalva sobre o filtro retirada do resumo
+
+- **Data:** 2026-11-25, 23:34 a 23:35 WET.
+- **Cor:** Terra de Siena `#A0522D`, RGB (160, 82, 45). Marcador no `PROGRESS.md`; no `.tex` só houve eliminação, sem texto novo para colorir.
+- **O quê:** no resumo de `latex/relatorio_pt.tex`, retirado «; este resultado não vem de uma medição independente»; `PROGRESS.md`, `handoff.md` e `README.md` atualizados.
+- **Porquê:** pedido do utilizador.
+- **Texto eliminado:** «este resultado não vem de uma medição independente».
+- **Efeito:** o resumo apresenta os valores do filtro sem ressalva; ela continua no protocolo, nos resultados, nas limitações e nas conclusões.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** relatório com 10 páginas, sem erros nem referências em falta.
+- **Pendentes:** leitura do relatório.
