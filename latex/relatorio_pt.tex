@@ -65,20 +65,61 @@
 \maketitle
 
 \begin{abstract}
-(A escrever no fim.)
+A pesca ilegal, não declarada e não regulamentada ameaça a sustentabilidade dos oceanos, e o \emph{Automatic Identification System} (AIS) permite acompanhar os navios à escala global. Este trabalho segmenta trajetórias AIS em pesca e navegação, com uma previsão por ponto, usando uma rede convolucional unidimensional pequena sobre \resDadosViagens{} viagens anotadas, e estuda o efeito de janelas sobrepostas e de um filtro temporal. No conjunto de teste, usado para escolher os modelos, a sobreposição de \resJCSobrep{} reduz a fragmentação face às janelas sem sobreposição, mas nenhuma variante com janelas supera em exatidão a rede aplicada à viagem completa. Na medição final, essa rede atinge \resVaValidAcc{} de exatidão por ponto, com uma segmentação muito fragmentada. Um filtro gaussiano reduz os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e sobe a exatidão para \resPpDepoisAcc{}, um resultado que não vem de uma medição independente. A interação entre sobreposição e filtro fica sem resposta, e a explicabilidade e o apoio à decisão não foram concluídos.
 \end{abstract}
 
 \section{Introdução}
 \label{sec:introducao}
-(A escrever.)
+A pesca ilegal, não declarada e não regulamentada (IUU) ameaça a sustentabilidade dos oceanos. Agnew et al.~\shortcite{agnew2009} estimam que a pesca ilegal e não declarada cause perdas anuais entre 10 e 23,5 mil milhões de dólares, correspondentes a 11 a 26 milhões de toneladas de pescado; associa-se também à sobre-exploração e ao trabalho ilegal~\cite{chuaysi2020}. Fiscalizá-la exige saber onde e quando os navios pescam, algo difícil de obter só por inspeção, à escala da frota. O \emph{Automatic Identification System} (AIS) difunde a identidade, a posição, a velocidade e o ângulo de viragem de um navio a cada poucos segundos, e permite monitorizar a pesca à escala global~\cite{natale2015,kroodsma2018}.
+
+O problema tratado é \textbf{classificar, ao longo de uma trajetória AIS, cada ponto como pesca ou navegação}, de modo que os intervalos resultantes sirvam a quem fiscaliza. A hipótese de partida era que as previsões ponto a ponto podem partir esses intervalos em muitos fragmentos, e que janelas sobrepostas e um pós-processamento temporal os podem tornar mais consistentes. Na linha da Inteligência Artificial Centrada no Humano (HCAI)~\cite{shneiderman2020}, o sistema destina-se a apoiar, e não a substituir, a decisão do inspetor.
+
+\subsection{Objetivos}
+
+O objetivo principal era desenvolver um sistema de segmentação semântica de trajetórias AIS que detete pesca de forma robusta e interpretável, combinando janelas sobrepostas e pós-processamento temporal, como apoio à decisão de inspetores (\emph{human-on-the-loop}, com o inspetor a supervisionar e a poder intervir). Os objetivos específicos eram:
+\begin{enumerate}
+\item construir um pré-processamento auditável, que recalcula as grandezas derivadas e seleciona as características, sem remover anomalias;
+\item implementar e treinar uma CNN 1D que devolve uma probabilidade por ponto, primeiro sobre a viagem completa, como referência, e depois, com a mesma rede, sobre janelas com sobreposição;
+\item conceber e avaliar um pós-processamento temporal que regularize as fronteiras dos segmentos, aplicado ao melhor dos modelos testados;
+\item avaliar quantitativamente, por ponto e por segmento, e qualitativamente, com visualizações e casos de estudo;
+\item incluir explicabilidade e confiança calibrada que sustentem a decisão do inspetor. Este objetivo não foi concluído nesta fase (Secção~\ref{sec:limitacoes}).
+\end{enumerate}
+
+\subsection{Perguntas de investigação e contribuições}
+
+\textbf{RQ1:} em que medida as janelas sobrepostas reduzem a instabilidade das fronteiras face a janelas não sobrepostas? \textbf{RQ2:} em que medida o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados? \textbf{RQ3:} qual a interação entre sobreposição e pós-processamento?
+
+Os critérios de sucesso definidos foram: (i) caracterizar quantitativamente o efeito das duas componentes face à CNN de referência, aceitando como resultado válido que uma componente não traga ganho; (ii) produzir segmentações temporalmente estáveis; e (iii) fornecer justificações auditáveis para validação por um inspetor.
+
+As contribuições são uma comparação entre uma CNN 1D sobre a viagem completa e a mesma rede sobre janelas, com e sem sobreposição, com os mesmos dados e o mesmo critério de seleção; evidência sobre o efeito de um filtro temporal aplicado ao melhor desses modelos; e um protocolo reprodutível, com conjuntos reservados, autorizações e registo de acessos.
 
 \section{Trabalho relacionado}
 \label{sec:relacionado}
-(A escrever.)
+Os primeiros métodos de identificação de pesca usaram modelos de Markov escondidos sobre dados do \emph{Vessel Monitoring System} (VMS): Peel e Good~\shortcite{peel2011} e Vermard et al.~\shortcite{vermard2010} distinguem estados como a pesca e a navegação a partir do movimento. Com o AIS, a escala aumentou: Natale et al.~\shortcite{natale2015} identificaram a pesca pelos perfis de velocidade e mapearam o esforço da frota sueca, e Kroodsma et al.~\shortcite{kroodsma2018} usaram redes convolucionais para mapear a pegada global da pesca.
+
+Na segmentação de trajetórias, Soares Júnior et al.~\shortcite{soares2018} propuseram um método semi-supervisionado baseado em \emph{Minimum Description Length}. Wu et al.~\shortcite{wu2022}, o trabalho em que este projeto se baseia, classificam com uma floresta aleatória janelas sobrepostas de uma trajetória e juntam, por \emph{run-length encoding}, as janelas de pesca próximas, para detetar atividades de pesca completas.
+
+Com aprendizagem profunda, Arasteh et al.~\shortcite{arasteh2020} classificam segmentos de atividade com uma CNN; Ferreira et al.~\shortcite{ferreira2022} obtêm rótulos por agrupamento da geometria das rotas e treinam redes recorrentes; Hu et al.~\shortcite{hu2026} segmentam subtrajetórias sem supervisão, a partir de campos angulares de Gram, e preveem trajetórias; e o FishFormer~\cite{wang2026} combina atenção local e global para reconhecer quatro estados operacionais. Um problema próximo é identificar o tipo de navio de pesca, por exemplo com redes com atenção~\cite{cheng2025}.
+
+Na dimensão humana, Shneiderman~\shortcite{shneiderman2020} defende combinar elevado controlo humano com elevada automação, em sistemas fiáveis, seguros e de confiança. Para apoiar quem decide, importa que as probabilidades sejam calibradas, o que muitas redes neuronais modernas não garantem~\cite{guo2017}, e métodos como o SHAP atribuem a cada característica a sua importância numa previsão~\cite{lundberg2017}.
+
+Este trabalho não se compara numericamente com estes métodos: estuda, com uma só CNN pequena, o efeito das janelas, da sobreposição e de um filtro temporal na segmentação ponto a ponto, incluindo a sua fragmentação.
 
 \section{Dados e preparação}
 \label{sec:dados}
-(A escrever.)
+\subsection{Conjunto de dados}
+
+Usa-se o conjunto público \emph{Detailed Labelled Fishing Trajectories from AIS} (Kaggle)~\cite{kaggleAIS}: \resDadosViagens{} trajetórias anotadas de navios de pesca, com \resDadosLinhas{} pontos e 13 colunas (12 atributos e o rótulo), entre as quais o identificador do navio e da viagem, o instante, a longitude e a latitude, as coordenadas projetadas, o rumo e a distância à costa. Wu et al.~\shortcite{wu2022} descrevem a origem destes dados: mensagens AIS de navios de pesca, da autoridade marítima dinamarquesa, entre 14 e 20 de novembro de 2021, das quais removeram posições duplicadas e fizeram a média das coordenadas com o mesmo instante, anotadas manualmente. O artigo refere 128 trajetórias e 1\,080\,220 pontos, com um intervalo médio de 10,63~s; o ficheiro público usado aqui tem menos trajetórias e menos pontos, diferença para a qual não se encontrou explicação.
+
+As cinco classes são agregadas num problema binário: pesca (\texttt{02-fishing} e \texttt{04-fishing}) e navegação (\texttt{01-sailing}, \texttt{03-sailing} e \texttt{05-sailing}). A pesca representa \resDadosPercPesca{} dos pontos de treino, \resTestePercPesca{} dos de teste e \resVaPercPesca{} dos de validação. Mantém-se o desequilíbrio natural e as viagens completas.
+
+\subsection{Preparação}
+
+Para cada viagem, a partir das coordenadas projetadas e do instante, recalculam-se o intervalo temporal (s), a distância entre pontos consecutivos (m), o rumo (graus, a partir do norte da grelha UTM), a variação de rumo com sinal, no intervalo $(-180,180]$ graus, e a velocidade (m/s). No treino, o intervalo, a distância e a variação de rumo coincidem com os valores originais em pelo menos \resPrepCoincide{} dos pares (tolerâncias de $10^{-6}$~s, $10^{-3}$~m e 1~grau); o rumo difere em \resPrepBearingMediana\textdegree{} (mediana), pela convergência dos meridianos. A distância à costa é usada tal como vem no conjunto, sem verificação externa.
+
+Nenhuma linha é removida. Os saltos de posição, os intervalos longos e as inversões de rumo mantêm-se, por existirem em dados AIS reais; a robustez do modelo a essas anomalias não foi estudada em separado.
+
+As entradas do modelo são quatro atributos (velocidade, variação de rumo, intervalo temporal e distância à costa), normalizados com a média e o desvio-padrão do treino. O primeiro ponto de cada viagem não tem velocidade, variação de rumo nem intervalo, e o segundo não tem variação de rumo; esses valores ficam a zero depois da normalização, e três indicadores de ausência distinguem-nos de um zero real. Os identificadores, os instantes e as coordenadas não são entradas. A preparação aplica-se a cada conjunto em separado e é verificada com testes sobre dados sintéticos.
 
 \section{Método}
 \label{sec:metodo}
@@ -113,7 +154,7 @@ O modelo é uma rede neuronal convolucional unidimensional (CNN 1D) que devolve,
 \subsection{CNN 1D}
 \label{sec:cnn}
 
-\textbf{Entrada e saída.} A entrada é uma matriz $X\in\mathbf{R}^{7\times N}$, com $N$ pontos e sete canais: velocidade, variação de rumo com sinal, intervalo temporal, distância à costa e três indicadores de ausência (da velocidade, da variação de rumo e do intervalo). A saída são $N$ \emph{logits} $z\in\mathbf{R}^{N}$, um por ponto. A probabilidade de pesca, $p_i=\sigma(z_i)=1/(1+e^{-z_i})$, calcula-se só na inferência. Os identificadores, os instantes e as coordenadas não são entradas.
+\textbf{Entrada e saída.} A entrada é uma matriz $X\in\mathbf{R}^{7\times N}$, com $N$ pontos e sete canais: os quatro atributos e os três indicadores de ausência da Secção~\ref{sec:dados}. A saída são $N$ \emph{logits} $z\in\mathbf{R}^{N}$, um por ponto. A probabilidade de pesca, $p_i=\sigma(z_i)=1/(1+e^{-z_i})$, calcula-se só na inferência.
 
 \textbf{Arquitetura.} A rede é totalmente convolucional (Figura~\ref{fig:cnn}): três convoluções de \emph{kernel} 5, com 32, 64 e 32 filtros e ativação ReLU, e uma cabeça de \emph{kernel} 1 que combina os 32 canais de cada ponto num só \emph{logit}. Usam \emph{stride} 1, dilatação 1 e \emph{padding} de zeros, pelo que o comprimento $N$ se mantém. Não há \emph{pooling}, normalização de lote nem \emph{dropout}. A rede tem \resModParametros{} parâmetros.
 
@@ -401,17 +442,31 @@ Responder-lhe exigiria um desenho fatorial planeado de início, com o mesmo crit
 \item \textbf{Treinos não equivalentes.} As variantes com janelas diferem da referência no lote e no número de passos, e ficaram em épocas muito anteriores.
 \item \textbf{Poucos dados.} Uma só semente, \resVaViagens{} viagens em cada conjunto reservado e sem intervalos de incerteza.
 \item \textbf{Navios.} A divisão é por viagem, pelo que não se afirma generalização a navios inéditos.
+\item \textbf{Um só contexto.} Os dados cobrem uma semana de navios de pesca em águas dinamarquesas (Secção~\ref{sec:dados}); não se sabe como o modelo se comporta noutras regiões ou épocas. As anotações são manuais e não se conhece uma medida da sua fiabilidade.
 \item \textbf{Modelo.} A arquitetura e a taxa de aprendizagem não foram otimizadas, e o campo recetivo (\resModCampo{} pontos) é muito menor do que os blocos de erro mais longos.
 \end{itemize}
 
-(Ética e dimensão humana: a escrever.)
+\textbf{Ética.} Detetar um comportamento compatível com pesca não demonstra ilegalidade: o modelo não verifica licenças, quotas, zonas autorizadas nem infrações. Apesar de os dados serem públicos, a deteção automática não deve, por si só, fundamentar sanções; a decisão tem de ser humana. Um sistema em uso teria de ser transparente e de verificar se erra mais para certos tipos de navio, regiões ou comunidades de pesca, o que não foi avaliado.
+
+\textbf{Dimensão humana.} Para apoiar o inspetor estavam previstas a explicabilidade, através de atribuições de importância~\cite{lundberg2017}, a confiança calibrada~\cite{guo2017} e um \emph{dashboard} de prova de conceito. Estas partes não foram concluídas nesta fase. A probabilidade devolvida pela CNN não é uma confiança calibrada e não deve ser apresentada como tal, e sem um estudo com inspetores não se pode afirmar utilidade operacional.
 
 \section{Conclusões e trabalho futuro}
 \label{sec:conclusoes}
-(A escrever.)
+Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede aplicada a janelas e estudou um filtro temporal sobre as previsões da referência.
+
+\textbf{RQ1.} No teste, J50 prevê menos segmentos de pesca do que J0 (\resJCSegPescaNPred{} contra \resJZSegPescaNPred{}; a referência, \resBsSegPescaNPred{}), sem melhorar de forma consistente o erro de fronteira, e nenhuma variante com janelas supera a exatidão da referência (\resBsTesteAcc{}, contra \resJCTesteAcc{} de J50). Não há base para concluir que as janelas melhorem a segmentação.
+
+\textbf{RQ2.} Neste conjunto, o filtro reduz os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e sobe o F1 de segmentos de pesca de \resPpASegPescaF{} para \resPpDSegPescaF{}, com a exatidão por ponto a passar de \resPpAntesAcc{} para \resPpDepoisAcc{}. A medição não é independente e falta confirmá-la em dados novos.
+
+\textbf{RQ3.} Fica sem resposta (Subsecção~\ref{sec:rq3}).
+
+\textbf{Critérios de sucesso.} O critério (i) cumpre-se com ressalvas: o efeito das janelas foi medido só no teste e o do filtro numa medição não independente. O (ii) cumpre-se em parte: a segmentação fica muito menos fragmentada, mas a fragmentação continua acima de 1 (\resPpDSegPescaFrag{} na pesca e \resPpDSegNavFrag{} na navegação), há erros longos, e a estabilidade perante pequenas alterações não foi medida. O (iii) não se cumpre.
+
+\textbf{Trabalho futuro.} Concluir o apoio à decisão previsto (Secção~\ref{sec:limitacoes}); dar mais contexto à CNN; estudar o limiar em conjunto com o filtro; confirmar o filtro em dados novos; repetir com várias sementes e uma divisão por navio; e responder à RQ3 com um desenho fatorial.
 
 \FloatBarrier
 \appendix
+\raggedbottom
 
 \section{Anexo: pormenores do janelamento}
 \label{sec:anexo}
@@ -445,5 +500,8 @@ J50 & Teste & Pesca & \resJCTestePescaReal & \resJCTestePescaPrec & \resJCTesteP
 \captionof{table}{Métricas por ponto e por classe no treino e no teste (otimista). Ref.: referência.}
 \label{tab:classes}
 \end{center}
+
+\bibliographystyle{FormattingGuidelines-IJCAI-ECAI-26/named}
+\bibliography{references}
 
 \end{document}
