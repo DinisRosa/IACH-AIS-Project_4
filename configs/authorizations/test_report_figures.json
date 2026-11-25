@@ -1,0 +1,13 @@
+{
+  "id": "test_report_figures_2026-11-25",
+  "concedida_por": "utilizador (mensagem no chat, 2026-11-25)",
+  "conjuntos_autorizados": ["test"],
+  "finalidade": "figuras_relatorio",
+  "fonte": "previsoes ja guardadas do test (referencia, J0 e J50) e results/windows_final/final_results_windows.json; sem reabrir o parquet nem correr a CNN sobre o test",
+  "decisoes_cobertas": [
+    "voltar a gerar a figura da exatidao por viagem e a da linha temporal com a legenda referencia em vez de baseline, com nomes de ficheiro novos (decisao D4 de docs/06_plano_reescrita.md)"
+  ],
+  "validation_autorizado": false,
+  "citacao_literal": "Aceito podes avançar",
+  "nota": "Resposta a pergunta sobre as recomendacoes D1 a D8; a D4 descrevia este uso. Nenhuma escolha se faz com estas figuras."
+}
