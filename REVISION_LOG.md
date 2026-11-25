@@ -1062,3 +1062,4 @@ Regras:
 - **Validação:** conteúdo da etiqueta confirmado; remissões revistas. Sem alterações a código nem ao relatório.
 - **Pendentes:** leitura do relatório.
 - **Complemento (23:21 WET, mesma revisão):** o utilizador confirmou a pasta `docs` como ficou; GitHub verificado e já atualizado; `handoff.md`, `README.md` (comportamento do vigilante) e `PROGRESS.md` atualizados, com commit e push a pedido. Sem alterações a código nem ao `.tex`.
+- **Complemento (23:23 WET, mesma revisão):** o utilizador parou o vigilante antigo; `handoff.md` e `PROGRESS.md` acertados. Sem alterações a código nem ao `.tex`.

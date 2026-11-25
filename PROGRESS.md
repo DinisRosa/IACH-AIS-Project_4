@@ -1162,3 +1162,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório pelo utilizador.
+
+### 2026-11-25s — Vigilante antigo parado (REV-067), 2026-11-25 23:23 WET
+
+**Feito**
+- O utilizador parou o vigilante antigo do LaTeX; `handoff.md` e `REVISION_LOG.md` acertados.
+
+**Validado**
+- Só corre o vigilante iniciado às 23:14; `latex/build/` tem apenas o PDF do relatório.
+
+**Pendente**
+- Leitura do relatório pelo utilizador.
