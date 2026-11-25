@@ -1026,7 +1026,7 @@ Regras:
 
 ### REV-065 — Relatório novo (`relatorio_pt.tex`) e versão de segurança
 
-- **Data:** 2026-11-25, 22:36 a 22:45 WET (em curso).
+- **Data:** 2026-11-25, 22:36 a 22:44 WET (em curso).
 - **Cor:** Azul-profundo `#01579B`, RGB (1, 87, 155). Só marcador do registo e dos documentos: por instrução do utilizador (D2), o texto do relatório é escrito **a preto**.
 - **O quê:** etiqueta `proposta-pt-v1` sobre `7d60861` e instruções de recuperação no `README.md`; `AGENTS.md` §8 (documento ativo e exceção às cores); novo `latex/relatorio_pt.tex` com as secções 4 a 6, o anexo e a lista de limitações; `build_window_analysis_macros`, `resultados_buracos.tex`, `build_window_results --report-figures-only`, duas figuras novas e a autorização `test_report_figures`; verificação bibliográfica em `docs/06` §8.
 - **Texto da proposta que não passa para o relatório:** fica integralmente em `proposta_pt.tex`. Nas secções já escritas saem, face a ele: a definição de «estável» (7.1), a frase de que o pós-processamento «ainda não foi estudado» (9), «uma única vez» e «nada é escolhido com estes resultados» sobre o filtro (10.3), a afirmação de que a única diferença é o janelamento (4.2 e 4.4), a tabela da arquitetura, a tabela da escolha do modelo, as matrizes e as barras por segmento.

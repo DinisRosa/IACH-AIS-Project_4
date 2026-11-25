@@ -1056,7 +1056,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 **Pendente**
 - Decisões D1 a D8; commit dos documentos; reescrita (REV-065).
 
-### 2026-11-25l — Relatório novo: método, protocolo e resultados (REV-065), 2026-11-25 22:45 WET
+### 2026-11-25l — Relatório novo: método, protocolo e resultados (REV-065), 2026-11-25 22:44 WET
 
 **Feito**
 - O utilizador aceitou D1 a D8. Commit do plano; etiqueta local `proposta-pt-v1` (commit `7d60861`) e instruções no `README.md`; `AGENTS.md` §8 ajustado.
