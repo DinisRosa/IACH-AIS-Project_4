@@ -1,12 +1,12 @@
 # Handoff — Projeto AIS
 
-**Escrito em 2026-11-25 23:13 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa. Todas as horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-065).
+**Escrito em 2026-11-25 23:13 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa, e atualizado em REV-067 (23:17 WET). Todas as horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-065).
 
 ## Ponto de situação em quatro linhas
 
 - O trabalho técnico está **feito**: preparação, CNN de referência, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O documento ativo é o **relatório** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto), que substituiu a proposta.
-- **O próximo passo é do utilizador: ler o relatório** e pedir ajustes (revisão REV-067, com cor).
+- **O próximo passo é do utilizador: ler o relatório** e pedir ajustes (revisão REV-068, com cor).
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -17,19 +17,20 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 2. Este ficheiro.
 3. O topo do `PROGRESS.md` (estado, decisões, pendências).
 4. `latex/relatorio_pt.tex` ou o PDF em `latex/build/relatorio_pt.pdf`.
-5. Só se for preciso: `docs/00` a `docs/04`; `docs/06` §5 e §8 (correções feitas ao relatório e verificação bibliográfica); `REVISION_LOG.md`.
+5. Só se for preciso: `docs/00` (modelos, protocolos, acesso e referências verificadas), `docs/01` (dados) e `REVISION_LOG.md`.
 6. Antes de agir: `git status -sb`, `git log --oneline -10` e os testes.
 
 ## Última validação
 
 | Verificação | Resultado | Hora (WET, 2026-11-25) |
 |---|---|---|
-| `pytest tests/` | 247 passaram | 23:12 |
+| `pytest tests/` | 247 passaram | 23:17 |
 | Relatório em `latex/build` (`pdflatex` + `bibtex` + 2 × `pdflatex`) | 10 páginas; sem erros nem referências em falta | 23:11 |
 | Recuperação da proposta antiga (num clone temporário) | os dois comandos do `README.md` funcionaram e a proposta compilou | 23:12 |
 | GitHub (`git ls-remote`) | `main` em `661da35`; etiqueta `proposta-pt-v1` em `7d60861` | 23:12 |
-| Git local | `main` à frente do GitHub com os commits da REV-066 (este handoff incluído); **por enviar no momento da escrita** | 23:13 |
+| Git local (antes da REV-067) | `main` à frente do GitHub com os commits da REV-066; enviados depois, a pedido | 23:13 |
 | Revisão independente do relatório (subagente Opus, só leitura) | sem erros graves; achados aplicados | 23:00 |
+| REV-067: etiqueta `docs-historico-v1` com os sete documentos; só mudou documentação | confirmado | 23:17 |
 
 O que mudar depois destas horas **não foi** validado por este handoff.
 
@@ -37,6 +38,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `b8580b5` | 2026-11-25 23:13 | Reescreve o handoff para uma nova conversa (REV-066) |
 | `edc3dda` | 2026-11-25 23:12 | Atualiza o estado e o registo de revisões (REV-066) |
 | `8950471` | 2026-11-25 23:12 | Atualiza regras, README e docs depois de retirar a proposta (REV-066) |
 | `100e2b2` | 2026-11-25 23:12 | Retira a proposta em LaTeX e guarda o seu PDF (REV-066) |
@@ -54,15 +56,16 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 | `38f2857` | 2026-11-25 22:37 | Plano de reescrita da proposta como relatório (REV-064) |
 | `7d60861` | 2026-11-25 21:24 | Última versão da proposta (REV-063; etiqueta `proposta-pt-v1`) |
 
-O commit deste handoff vem a seguir e não está na tabela.
+Os commits da REV-067 vêm a seguir e não estão na tabela.
 
 ## O que se fez nesta conversa (2026-11-25, à noite)
 
 1. Leitura do projeto e diagnóstico da proposta (misturava proposta e relatório, repetia assuntos, tinha contradições).
-2. Plano em `docs/06` (REV-064); o utilizador aceitou as decisões D1 a D8.
+2. Plano da reescrita (REV-064; arquivado, era o `docs/06`); o utilizador aceitou as decisões D1 a D8.
 3. Relatório novo (REV-065): oito secções, anexo e bibliografia; macros novas dos blocos de erro; duas figuras com «referência»; referências confirmadas nos artigos; revisão independente aplicada.
 4. Push do `main` e da etiqueta, a pedido.
 5. Arrumação (REV-066): proposta em LaTeX retirada, PDF guardado, build do relatório direto em `latex/build/`, documentos refeitos.
+6. Documentação (REV-067): ficam `docs/00` (reescrito) e `docs/01`; `docs/02` a `06` na etiqueta `docs-historico-v1`; envio para o GitHub a pedido.
 
 ## Estado e resultados
 
@@ -104,7 +107,7 @@ As figuras do esquema e da CNN são TikZ no próprio `.tex`. Alguns geradores le
 - a menor fragmentação de J50 como efeito só da sobreposição (limiar, época e passos também diferem);
 - «até cerca de 20 % da captura mundial» (não está em Agnew) ou o artigo de Cheng como deteção de pesca (classifica tipos de navio).
 
-**Bibliografia:** verificação em `docs/06` §8. `ferreira2022full` é a entrada que o relatório usa (quatro autores). Shneiderman, Guo e Lundberg só foram confirmados pelos resumos no arXiv.
+**Bibliografia:** verificação em `docs/00` §9. `ferreira2022full` é a entrada que o relatório usa (quatro autores). Shneiderman, Guo e Lundberg só foram confirmados pelos resumos no arXiv.
 
 ## Proposta anterior
 
@@ -112,14 +115,14 @@ As figuras do esquema e da CNN são TikZ no próprio `.tex`. Alguns geradores le
 
 ## Decisões vigentes
 
-A lista completa está no topo do `PROGRESS.md`. As que mais pesam:
+A lista completa está no topo do `PROGRESS.md`; o registo da versão de 13 pontos do filtro está em `docs/00` §5.3. As que mais pesam:
 
 - `test` seleciona, `validation` mede; o `validation` está gasto. **Não voltar a correr** `select_on_test`, `select_windows_on_test`, `final_validation` nem `postproc_validation`.
 - Referência, J0 e J50 fechadas. Sem novos treinos sem decisão do utilizador.
 - Relatório: máximo 15 páginas (alvo 13 ou menos); título mantido; «Figura» e «Tabela» em português; números de linha até à versão final.
 - Perguntas de investigação, objetivos e critérios de sucesso não mudam depois dos resultados.
 - Explicabilidade, calibração e *dashboard*: «previstos, não concluídos nesta fase».
-- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-067, qualquer alteração ao `.tex` leva `\revtext{rev067}{…}`, com `\definecolor{rev067}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. **Próximo ID livre: REV-067.**
+- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer alteração ao `.tex` leva `\revtext{rev068}{…}`, com `\definecolor{rev068}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. **Próximo ID livre: REV-068.**
 
 ## Ficheiros principais
 
@@ -127,7 +130,7 @@ A lista completa está no topo do `PROGRESS.md`. As que mais pesam:
 |---|---|
 | Regras e registo | `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md`, `REVISION_LOG.md`, `README.md`, `handoff.md` |
 | Relatório | `latex/relatorio_pt.tex`, `references.bib`, `figures/`, `generated/` |
-| Documentação | `docs/00` a `docs/06` |
+| Documentação | `docs/00`, `docs/01`; arquivo na etiqueta `docs-historico-v1` (`docs/00` §11) |
 | Código | `src/ais/phase1/` (biblioteca), `src/ais/cli/` (programas, tabela no `README.md`) |
 | Configuração | `configs/` e `configs/authorizations/` |
 | Só nesta máquina (não vão para o git) | `data/`, `results/` (modelos, previsões, `access_log.jsonl`), `iach-ais-venv-4/`, `docs/bibliografia/`, `latex/build/`, `latex/watch_latex.sh` |
@@ -155,9 +158,9 @@ bash latex/watch_latex.sh
 
 ## O que fazer a seguir
 
-1. **Esperar pela leitura do relatório** pelo utilizador e aplicar os ajustes (REV-067).
+1. **Esperar pela leitura do relatório** pelo utilizador e aplicar os ajustes (REV-068).
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido; os commits da REV-066 estavam por enviar quando isto foi escrito.
+3. **Push:** só a pedido. O envio da REV-066 e da REV-067, com a etiqueta nova, foi pedido nesta conversa; confirmar com `git status -sb`.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 

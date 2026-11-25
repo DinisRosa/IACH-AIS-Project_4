@@ -1051,3 +1051,13 @@ Regras:
 - **Validação:** 247 testes; relatório com 10 páginas, sem referências em falta; recuperação ensaiada num clone.
 - **Pendentes:** leitura do relatório; arrumação técnica opcional.
 
+### REV-067 — Documentos concluídos arquivados e `docs/00` reescrito
+
+- **Data:** 2026-11-25, 23:16 a 23:17 WET.
+- **Cor:** Vermelho-índia `#CD5C5C`, RGB (205, 92, 92). Marcador no `docs/00`; sem alterações ao `.tex`.
+- **O quê:** etiqueta `docs-historico-v1` sobre `b8580b5`; `docs/00` reescrito (objetivo, decisões, respostas, marcos, modelos e protocolos, filtro com o registo da versão de 13 pontos, acesso aos dados, avaliação, referências verificadas, ambiente, arquivo); removidos `docs/02_cnn_viagem_completa.md`, `03_cnn_janelamento.md`, `04_pos_processamento.md`, `05_releitura_proposta.md` e `06_plano_reescrita.md`; `docs/01` com as remissões acertadas; `README.md`, `AGENTS.md` §1, `handoff.md` e `PROGRESS.md` atualizados.
+- **Porquê:** pedido do utilizador: documentos desatualizados ou concluídos vão para o GitHub e saem da pasta.
+- **Texto eliminado:** os contratos função a função, a lista de testes, o plano e as tabelas completas da análise de janelas ficam só na etiqueta.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação:** conteúdo da etiqueta confirmado; remissões revistas. Sem alterações a código nem ao relatório.
+- **Pendentes:** leitura do relatório.

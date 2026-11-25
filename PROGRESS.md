@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-066, 2026-11-25 23:12 WET)
+## Estado atual (REV-067; refeito em REV-066, 2026-11-25 23:12 WET)
 
 | Marco | Estado |
 |---|---|
@@ -17,7 +17,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 - **Referência:** treinada só com o treino oficial (87 viagens, 300 épocas); época 162 e limiar 0,65, escolhidos no `test` e congelados em `results/baseline_frozen/`. Exatidão por ponto: 94,7 % no `test` (otimista) e 94,4 % no `validation`.
 - **J0 e J50:** a mesma CNN em janelas de 64 pontos, sem sobreposição e com 50 %; épocas 8 e 4, limiares 0,60 e 0,75. No `test`, 93,4 % e 93,7 %; J50 fragmenta menos. Não medidas no `validation`.
-- **Filtro (301 pontos, só a referência, `validation`):** exatidão 94,4 % → 94,8 %; segmentos de pesca previstos 486 → 32 (reais 18), de navegação 502 → 49 (reais 35); F1 de segmentos de pesca 0,028 → 0,600; melhoram 11 viagens e pioram 7. **Não é uma medição independente** (houve antes uma versão de 13 pontos, `docs/04` §5).
+- **Filtro (301 pontos, só a referência, `validation`):** exatidão 94,4 % → 94,8 %; segmentos de pesca previstos 486 → 32 (reais 18), de navegação 502 → 49 (reais 35); F1 de segmentos de pesca 0,028 → 0,600; melhoram 11 viagens e pioram 7. **Não é uma medição independente** (houve antes uma versão de 13 pontos, `docs/00` §5.3).
 - **Perguntas:** RQ1, as janelas não superam a viagem completa; RQ2, o filtro reduz muito a fragmentação, com a ressalva acima; RQ3, sem resposta.
 - **Fonte dos números:** macros em `latex/generated/` e ficheiros em `results/` (não versionados).
 - **Conjuntos reservados (`results/access_log.jsonl`):** `test` com 2 aberturas de seleção, 2 leituras de diagnóstico e, sobre previsões guardadas, 3 análises de blocos de erro, 1 avaliação de janelas e 1 geração de figuras do relatório. `validation` aberto 1 vez (medição final, **gasto**); as anotações foram depois reutilizadas nas 2 versões do filtro. Os três conjuntos foram lidos por inteiro só para construir as bases limpas (REV-015).
@@ -26,7 +26,8 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-066.
+- **Registo de revisões:** REV-001 a REV-067.
+- **Documentação:** `docs/00` e `docs/01`; os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
 
@@ -41,9 +42,9 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-067), com cor.
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-068), com cor.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
-- **Verificação bibliográfica:** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
+- **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
 - **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); 128 trajetórias no artigo e 123 no ficheiro; fiabilidade das anotações; cálculo de `distanceToShore`.
 - **Arrumação técnica (opcional):** testes dos programas de treino, de figuras e de resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/` (`diag3_*`, `final_*`, `posproc_viagens` e as `janelas_*` antigas), que o utilizador optou por manter; execuções antigas em `results/`.
@@ -52,9 +53,9 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 | Ficheiro | Estado |
 |---|---|
-| `AGENTS.md`, `CLAUDE.md`, `README.md`, `handoff.md` | Alinhados em REV-066 |
-| `docs/00` a `docs/04` | Vigentes (notas REV-066) |
-| `docs/05`, `docs/06` | Históricos da passagem a relatório; `docs/06` §8 com a verificação bibliográfica |
+| `AGENTS.md`, `CLAUDE.md`, `README.md`, `handoff.md` | Alinhados em REV-067 |
+| `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
+| `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
 | `src/ais/`, `pyproject.toml`, `tests/` | Código e 247 testes |
 | `configs/`, `configs/authorizations/` | Configurações, protocolos e autorizações |
 | `latex/relatorio_pt.tex`, `references.bib`, `figures/`, `generated/` | Relatório e artefactos gerados por código |
@@ -1132,3 +1133,16 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 **Pendente**
 - Leitura do relatório; push dos commits desta revisão, só a pedido.
 
+### 2026-11-25q — Documentos concluídos arquivados (REV-067), 2026-11-25 23:17 WET
+
+**Feito**
+- A pedido do utilizador: etiqueta `docs-historico-v1` com `docs/00` a `docs/06`; `docs/00` reescrito como referência única (junta o essencial de `02` a `04` e a verificação bibliográfica de `06`); `docs/02` a `06` retirados. `README.md`, `AGENTS.md`, `handoff.md` e `REVISION_LOG.md` atualizados. Envio para o GitHub pedido pelo utilizador («podem ir para o GitHub»).
+
+**Validado**
+- A etiqueta contém os sete documentos. Sem alterações ao código nem ao relatório.
+
+**Problemas**
+- Entradas antigas deste ficheiro, protocolos em `configs/` e comentários citam documentos arquivados pelo nome: ficam como registo.
+
+**Pendente**
+- Leitura do relatório.
