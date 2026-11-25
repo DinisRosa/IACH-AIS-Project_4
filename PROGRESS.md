@@ -934,3 +934,19 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Passagens adiadas do LaTeX; arrumação técnica; push só a pedido.
+
+### 2026-11-25c — Análise dos buracos no `test` para uma nova janela (REV-058), 2026-11-25 20:25 WET
+
+**Contexto (registo interno; não vai para a proposta)**
+- O utilizador considerou insuficiente a janela de 13 pontos (REV-057) e decidiu refazer o pós-processamento com outra janela, tratando a primeira aplicação como se não tivesse existido **no relatório**. Fica registado aqui e no `REVISION_LOG.md` que a primeira aplicação ao `validation` (13 pontos) **aconteceu** (`results/postproc_validation/`, eventos `postproc_start`/`postproc_done`) e que a nova janela é escolhida depois de ver esse resultado. A nova escolha faz-se no `test` (conjunto de seleção), com autorização própria (`configs/authorizations/test_postproc_window.json`), sobre as previsões já guardadas da referência.
+
+**Feito**
+- `error_runs`, `summarize_runs`, `max_removable_island` em `postprocessing.py` (testes sintéticos) e `ais.cli.analyze_error_runs --split test|train` (recusa o `validation`). Resultados em `results/postproc_window_analysis/`.
+- `test`: 373 buracos (5 502 pontos de erro); média 14,8 pontos, mediana 5, p90 37, p95 55, máximo 286. 79 % dos pontos de erro são navegação prevista no meio de pesca (média 17,2, p90 47). Segmentos reais: pesca ≥ 633 pontos, navegação ≥ 127 (treino: ≥ 584 e ≥ 102).
+- Com o limiar 0,65 e σ = tamanho/6, a janela de 13 só remove navegação isolada de 1 ponto (pesca até 4): explica o pouco efeito de REV-057.
+
+**Validado**
+- `pytest tests/`: 227 passaram. Leituras do `test` registadas no `access_log.jsonl` (`postproc_window_analysis`).
+
+**Pendente**
+- Decisão do utilizador sobre a nova janela; depois, protocolo v2 e aplicação única ao `validation`; atualizar figuras e valores da Secção 10 mantendo o texto.

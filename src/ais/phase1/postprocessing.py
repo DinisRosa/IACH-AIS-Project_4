@@ -65,3 +65,68 @@ def smooth_probabilities(p: np.ndarray, trip_ids: np.ndarray, kernel: np.ndarray
     for s, e in zip(starts, ends):
         out[s:e] = smooth_trip(p[s:e], kernel)
     return out
+
+
+# ---- Análise dos "buracos" para escolher a janela (REV-058) ----
+BINS = [1, 2, 4, 7, 13, 26, 51, 101, 201, 501, np.inf]
+
+
+def error_runs(df, id_col: str = "id", target_col: str = "target", pred_col: str = "predicted"):
+    """Blocos máximos de pontos consecutivos mal classificados, com a mesma classe prevista, dentro de cada
+    viagem. O DataFrame tem de estar ordenado por viagem e tempo. Devolve id, inicio (posição na viagem),
+    comprimento (pontos), classe_real_dominante e classe_prevista."""
+    import pandas as pd
+
+    rows = []
+    for trip, g in df.groupby(id_col, sort=False):
+        tgt, prd = g[target_col].to_numpy(), g[pred_col].to_numpy()
+        wrong = tgt != prd
+        i, n = 0, len(g)
+        while i < n:
+            if not wrong[i]:
+                i += 1
+                continue
+            j = i
+            while j + 1 < n and wrong[j + 1] and prd[j + 1] == prd[i]:
+                j += 1
+            rows.append({"id": trip, "inicio": i, "comprimento": j - i + 1,
+                         "classe_real": int(np.bincount(tgt[i:j + 1], minlength=2).argmax()),
+                         "classe_prevista": int(prd[i])})
+            i = j + 1
+    return pd.DataFrame(rows, columns=["id", "inicio", "comprimento", "classe_real", "classe_prevista"])
+
+
+def summarize_runs(lengths) -> dict:
+    """Média, mediana, quantis (interpolação linear do numpy) e distribuição por classes de comprimento,
+    em número de blocos e em número de pontos."""
+    x = np.asarray(lengths, dtype=float)
+    if x.size == 0:
+        return {"n_blocos": 0}
+    edges = BINS
+    dist = []
+    for lo, hi in zip(edges[:-1], edges[1:]):
+        m = (x >= lo) & (x < hi)
+        dist.append({"de": int(lo), "ate": None if np.isinf(hi) else int(hi - 1), "n_blocos": int(m.sum()),
+                     "perc_blocos": float(m.mean()), "n_pontos": int(x[m].sum()),
+                     "perc_pontos": float(x[m].sum() / x.sum())})
+    return {"n_blocos": int(x.size), "n_pontos": int(x.sum()), "media": float(x.mean()),
+            "mediana": float(np.median(x)), **{f"p{q}": float(np.percentile(x, q)) for q in (75, 90, 95, 99)},
+            "maximo": int(x.max()), "distribuicao": dist}
+
+
+def max_removable_island(size: int, threshold: float, island_cls: int, sigma: float | None = None) -> int:
+    """Maior bloco isolado (probabilidades ideais 0/1) que a janela gaussiana remove por completo.
+    island_cls=1: pesca no meio de navegação; island_cls=0: navegação no meio de pesca."""
+    sigma = size / 6 if sigma is None else sigma
+    k = gaussian_kernel(size, sigma)
+    best = 0
+    for L in range(1, size + 1):
+        bg = 1.0 - island_cls
+        p = np.full(L + 2 * size, bg)
+        p[size:size + L] = float(island_cls)
+        pred = (smooth_trip(p, k) >= threshold).astype(int)
+        if np.all(pred == int(bg)):
+            best = L
+        else:
+            break
+    return best

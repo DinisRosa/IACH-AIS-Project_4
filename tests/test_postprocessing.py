@@ -75,3 +75,31 @@ def test_rejects_non_contiguous_trips_and_nan():
         smooth_probabilities(np.zeros(3), np.array(["a", "b", "a"]))
     with pytest.raises(ValueError):
         smooth_trip(np.array([0.1, np.nan]), gaussian_kernel())
+
+
+def test_error_runs_and_summary():
+    import pandas as pd
+    from ais.phase1.postprocessing import error_runs, summarize_runs
+    df = pd.DataFrame({"id": ["a"] * 8 + ["b"] * 4,
+                       "target":    [0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+                       "predicted": [0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0]})
+    r = error_runs(df)
+    assert r["comprimento"].tolist() == [1, 2, 2, 1, 2]
+    assert r["classe_prevista"].tolist() == [1, 0, 1, 0, 0]
+    s = summarize_runs(r["comprimento"])
+    assert s["n_blocos"] == 5 and s["n_pontos"] == 8 and s["media"] == pytest.approx(1.6)
+    assert s["distribuicao"][0]["n_blocos"] == 2 and s["distribuicao"][1]["n_pontos"] == 6
+
+
+def test_error_run_does_not_cross_trips():
+    import pandas as pd
+    from ais.phase1.postprocessing import error_runs
+    df = pd.DataFrame({"id": ["a", "a", "b", "b"], "target": [0, 0, 0, 0], "predicted": [0, 1, 1, 0]})
+    assert error_runs(df)["comprimento"].tolist() == [1, 1]
+
+
+def test_max_removable_island_grows_with_window():
+    from ais.phase1.postprocessing import max_removable_island
+    a = [max_removable_island(w, 0.65, 1) for w in (13, 51, 101)]
+    assert a[0] >= 1 and a[0] < a[1] < a[2]
+    assert max_removable_island(1, 0.65, 1) == 0

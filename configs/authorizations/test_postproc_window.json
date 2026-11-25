@@ -1,0 +1,15 @@
+{
+  "id": "test_postproc_window_2026-11-25",
+  "concedida_por": "utilizador (mensagem no chat, 2026-11-25)",
+  "conjuntos_autorizados": ["test"],
+  "finalidade": "selecao",
+  "fonte": "results/baseline_frozen/predictions_test_baseline.csv (previsoes ja guardadas da referencia congelada; nao se reabre o parquet do test nem se volta a correr a CNN)",
+  "decisoes_cobertas": [
+    "medir o comprimento dos 'buracos' (blocos de pontos mal classificados e segmentos previstos curtos) nas previsoes da referencia no test",
+    "recomendar o tamanho da janela gaussiana do pos-processamento a partir dessa medicao"
+  ],
+  "validation_autorizado": false,
+  "citacao_literal": "Primeiro quero que testes qual é que é a média dos buracos que há entre segmentos. [...] Mas começa primeiro com testes, não com validação. Vamos fazer com os dados de teste, porque é para depois fazermos apenas uma vez com a validação.",
+  "contexto": "Depois da primeira aplicacao (janela de 13 pontos, REV-057), o utilizador quer escolher uma nova janela no conjunto de selecao (test) e aplica-la depois uma unica vez ao validation. A primeira aplicacao fica registada no PROGRESS e no REVISION_LOG.",
+  "nota": "Cobre so a analise dos buracos e a recomendacao da janela. A aplicacao ao validation precisa de confirmacao propria do utilizador."
+}

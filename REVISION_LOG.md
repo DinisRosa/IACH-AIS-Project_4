@@ -940,3 +940,14 @@ Regras:
 - **Validação:** 224 testes; verificação independente 19/19; execução registada (`postproc_start`, `postproc_done`) em `results/access_log.jsonl`.
 - **Limitações:** segunda utilização das anotações do `validation`; só a referência (RQ3 sem resposta); uma semente, 18 viagens, sem intervalo de incerteza. A segunda implementação foi escrita por um modelo externo a partir da descrição; confere com a do projeto, mas partilha as mesmas convenções descritas.
 - **Pendentes:** nenhum do Marco 5.
+
+### REV-058 — Análise dos buracos no test para escolher uma nova janela do pós-processamento
+
+- **Data:** 2026-11-25 20:25 WET.
+- **Cor:** Azul-acinzentado `#546E7A`, RGB (84, 110, 122). Só marcador do registo; o `.tex` não foi alterado.
+- **O quê:** funções e programa de análise do comprimento dos blocos de erro ("buracos") nas previsões da referência no `test` e no treino; cobertura de cada janela candidata (13 a 401 pontos).
+- **Porquê:** o utilizador considerou insuficiente a janela de 13 (REV-057) e quer escolher outra no `test` antes de uma nova aplicação única ao `validation`. **Registo de integridade:** a aplicação de REV-057 ao `validation` existiu e a nova escolha é posterior a esse resultado; por decisão do utilizador isto não entra na proposta.
+- **Ficheiros afetados:** `src/ais/phase1/postprocessing.py`, `src/ais/cli/analyze_error_runs.py`, `tests/test_postprocessing.py`, `configs/authorizations/test_postproc_window.json`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável** (por agora).
+- **Validação:** 227 testes; leituras do `test` registadas.
+- **Pendentes:** escolha da janela pelo utilizador, protocolo v2, aplicação única, atualização dos números e figuras da Secção 10.
