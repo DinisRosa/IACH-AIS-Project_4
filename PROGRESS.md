@@ -991,3 +991,15 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - A proposta está no limite de 15 páginas: novos acrescentos exigem cortar noutro sítio. Passagens adiadas do LaTeX; handoff; arrumação técnica; push só a pedido.
+
+### 2026-11-25g — Handoff reescrito e push (REV-061), 2026-11-25 20:47 WET
+
+**Feito**
+- `handoff.md` reescrito de raiz: validação, cronologia dos commits, o que se fez na sessão (pós-processamento v1 e v2, análise no `test`, conclusões), estado, decisões, ficheiros, comandos (incluindo a delegação na Abacus), falhas, próximos passos, regras e preferências. Registado que a v1 fica fora da proposta, mas nos registos internos.
+- `docs/00`: a linha do Marco 6 deixa de dizer que o pós-processamento não existe.
+
+**Validado**
+- `pytest tests/`: 243 passaram; `pdflatex` + `bibtex`: 15 páginas, 0 erros, 0 referências indefinidas (20:46 WET).
+
+**Pendente**
+- Passagens adiadas do LaTeX; número de páginas (depois); arrumação técnica.

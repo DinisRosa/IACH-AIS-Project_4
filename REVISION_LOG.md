@@ -975,3 +975,15 @@ Regras:
 - **Validação:** compilação e leitura da página; números só por macros já geradas.
 - **Limitações:** a RQ3 e a explicabilidade (critério iii) não foram estudadas; a proposta ficou no limite de páginas.
 - **Pendentes:** passagens adiadas do LaTeX (resumo, objetivo 5, 4.6, 7.1, 7.3, «human-on-the-loop»).
+
+### REV-061 — Handoff reescrito depois do Marco 5 e das conclusões
+
+- **Data:** 2026-11-25 20:47 WET.
+- **Cor:** Ciano-claro `#26C6DA`, RGB (38, 198, 218). Só marcador do registo; o `.tex` não foi alterado.
+- **O quê:** `handoff.md` reescrito de raiz para o próximo agente; linha do Marco 6 em `docs/00` corrigida.
+- **Porquê:** pedido do utilizador, antes do push.
+- **Ficheiros afetados:** `handoff.md`, `docs/00_projeto_e_decisoes.md`, `PROGRESS.md`, `README.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação:** 243 testes; LaTeX completo sem erros (20:46 WET); horas lidas com `date` e commits com `git log`.
+- **Limitações:** a tabela da última validação desatualiza-se com o próximo commit.
+- **Pendentes:** os do handoff («O que fazer a seguir»).
