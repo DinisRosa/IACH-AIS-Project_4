@@ -79,6 +79,8 @@
 \definecolor{rev053}{RGB}{13,71,161}
 % REV-056 — cor #D84315, RGB (216, 67, 21) (mesma do REVISION_LOG.md). Pós-processamento temporal: secção do método (Secção 10), antes dos resultados.
 \definecolor{rev056}{RGB}{216,67,21}
+% REV-057 — cor #B8860B, RGB (184, 134, 11) (mesma do REVISION_LOG.md). Resultados do pós-processamento (Subsecção 10.4).
+\definecolor{rev057}{RGB}{184,134,11}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 % Números gerados por ais.cli.build_final_results (REV-035): \rv{\resXxx} mostra o valor na cor da revisão.
 \input{generated/resultados}
@@ -86,6 +88,8 @@
 \input{generated/resultados_janelas}
 % Números da medição final no validation gerados por ais.cli.build_validation_results (REV-053).
 \input{generated/resultados_validacao}
+% REV-057: números do pós-processamento, gerados por ais.cli.build_postproc_results.
+\input{generated/resultados_posproc}
 \newcommand{\rv}[1]{#1}
 \usepackage[switch]{lineno}
 
@@ -555,7 +559,7 @@ Teste & Navegação & \resVaTSegNavNRef & \resVaTSegNavNPred & \resVaTSegNavNPar
 \item \textbf{Uma só medição.} Foi feita em \resVaViagens{} viagens, uma delas com exatidão muito baixa, e sem intervalo de incerteza.
 \item \textbf{Só um modelo.} J0 e J50 não foram medidas no conjunto de validação, pelo que a resposta à RQ1 (Subsecção~\ref{sec:resultados-comparacao}) continua a assentar no teste, que é otimista.
 \item \textbf{Navios.} A divisão é por viagem: viagens do mesmo navio podem estar em conjuntos diferentes, pelo que não se afirma generalização a navios inéditos.
-\item \textbf{Fragmentação.} O pós-processamento temporal (RQ2 e RQ3) não foi estudado.
+\item \textbf{Fragmentação.} \revtext{rev057}{O pós-processamento temporal (RQ2) é estudado na Secção~\ref{sec:posproc}; a RQ3 (interação com a sobreposição) fica sem resposta, porque J0 e J50 não foram pós-processadas.}
 \item \textbf{Medição final.} O modelo, a época e o limiar não podem voltar a mudar, e o conjunto de validação não pode ser usado para escolher mais nada.
 \end{itemize}}
 
@@ -591,7 +595,47 @@ em que as somas usam só os pontos que existem na viagem. Depois aplica-se o lim
 
 \revtext{rev056}{O objetivo é reduzir a fragmentação: menos segmentos previstos, mais próximos dos segmentos anotados, sem perder exatidão por ponto. O filtro corrige nos dois sentidos (pesca isolada no meio de navegação e o contrário) e não sabe qual é a classe real: também pode apagar um segmento real mais curto do que a janela, ou deslocar uma fronteira. Corrige trocas curtas, de um ou poucos pontos; blocos de erros mais longos do que a janela ficam como estão.
 
-O filtro aplica-se apenas ao modelo escolhido na Secção~\ref{sec:validacao} (a referência, época 162, limiar 0,65), às previsões já guardadas do conjunto de validação, uma única vez e com o tamanho já fixado. Compara-se o antes e o depois por ponto (exatidão, F1 por classe) e por segmento (F1 de segmentos, fragmentação e erros de fronteira, com as mesmas regras da Tabela~\ref{tab:validacao-segmentos}). Não há nova passagem pela CNN nem nova leitura dos dados de validação: usam-se as probabilidades e as anotações já guardadas na medição final. As anotações servem, pela segunda vez, para medir; por isso o filtro foi todo fixado antes (tamanho, forma e limiar) e nada é escolhido com estes resultados. Os resultados serão acrescentados nesta secção.}
+O filtro aplica-se apenas ao modelo escolhido na Secção~\ref{sec:validacao} (a referência, época 162, limiar 0,65), às previsões já guardadas do conjunto de validação, uma única vez e com o tamanho já fixado. Compara-se o antes e o depois por ponto (exatidão, F1 por classe) e por segmento (F1 de segmentos, fragmentação e erros de fronteira, com as mesmas regras da Tabela~\ref{tab:validacao-segmentos}). Não há nova passagem pela CNN nem nova leitura dos dados de validação: usam-se as probabilidades e as anotações já guardadas na medição final. As anotações servem, pela segunda vez, para medir; por isso o filtro foi todo fixado antes (tamanho, forma e limiar) e nada é escolhido com estes resultados.} \revtext{rev057}{O protocolo foi gravado num \emph{commit} antes da execução, e os números foram confirmados por uma segunda implementação, escrita de forma independente.}
+
+\subsection{\texorpdfstring{\revtext{rev057}{Resultados}}{Resultados}}
+\label{sec:posproc-resultados}
+
+\revtext{rev057}{O filtro mudou de classe \resPpMudam{} pontos (\resPpPercMudam{} dos \resPpAntesPontos{}): \resPpNavParaPesca{} passaram de navegação a pesca e \resPpPescaParaNav{} de pesca a navegação. Destes, \resPpCorrigidos{} ficaram corrigidos e \resPpEstragados{} passaram a estar errados, pelo que há \resPpErrosMenos{} erros a menos. Por ponto, a mudança é pequena: a exatidão passa de \resPpAntesAcc{} para \resPpDepoisAcc{}, e os F1 de pesca e de navegação mudam menos de uma centésima (Tabela~\ref{tab:posproc}).
+
+Por segmento, a mudança é grande. Os segmentos de pesca previstos descem de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} e os de navegação de \resPpASegNavNPred{} para \resPpDSegNavNPred{}, ou seja, cerca de metade: a fragmentação na pesca passa de \resPpASegPescaFrag{} para \resPpDSegPescaFrag{}. O F1 de segmentos sobe de \resPpASegPescaF{} para \resPpDSegPescaF{} na pesca e de \resPpASegNavF{} para \resPpDSegNavF{} na navegação (Figura~\ref{fig:posproc-resultados}). Respondendo à RQ2: o pós-processamento reduz a fragmentação para metade e melhora a concordância com os segmentos anotados, sem perder exatidão por ponto.
+
+Mesmo assim, a segmentação continua longe dos segmentos reais: há \resPpDSegPescaNPred{} segmentos de pesca previstos para \resPpDSegPescaNRef{} reais, e o F1 de segmentos de pesca continua baixo. A Figura~\ref{fig:posproc-resultados}, em baixo, mostra porquê: o filtro elimina as interrupções curtas, mas os blocos longos de navegação previstos no meio de uma atividade de pesca são mais compridos do que a janela de 13 pontos e ficam como estavam. Estes erros vêm da própria CNN e um filtro local não os corrige.}
+
+\begin{table}[t]
+\centering\footnotesize\color{rev057}\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Métrica (validação) & Antes & Depois \\
+\midrule
+Exatidão por ponto & \resPpAntesAcc & \resPpDepoisAcc \\
+F1 pesca (ponto) & \resPpAntesPescaF & \resPpDepoisPescaF \\
+F1 navegação (ponto) & \resPpAntesNavF & \resPpDepoisNavF \\
+Segmentos de pesca previstos (reais \resPpASegPescaNRef) & \resPpASegPescaNPred & \resPpDSegPescaNPred \\
+Segmentos de navegação previstos (reais \resPpASegNavNRef) & \resPpASegNavNPred & \resPpDSegNavNPred \\
+F1 de segmentos, pesca & \resPpASegPescaF & \resPpDSegPescaF \\
+F1 de segmentos, navegação & \resPpASegNavF & \resPpDSegNavF \\
+\bottomrule
+\end{tabular}
+\caption{Pós-processamento no conjunto de validação: referência antes e depois do filtro gaussiano de 13 pontos (limiar 0,65). Segmentos com IoU temporal $\geq$ 0,5, como na Tabela~\ref{tab:validacao-segmentos}.}
+\label{tab:posproc}
+\end{table}
+
+\begin{figure*}[t]
+\centering\color{rev057}
+\includegraphics[width=0.8\textwidth]{figures/posproc_resultados.png}\\[2pt]
+\includegraphics[width=0.9\textwidth]{figures/posproc_viagem.png}
+\caption{Pós-processamento no conjunto de validação. Em cima, os segmentos previstos antes e depois do filtro, ao lado dos reais, e o F1 de segmentos. Em baixo, a viagem com mais segmentos de pesca previstos antes do filtro: classe real, antes e depois, ponto a ponto. As interrupções curtas desaparecem; os blocos longos de navegação no meio da pesca ficam.}
+\label{fig:posproc-resultados}
+\end{figure*}
+
+\subsection{\texorpdfstring{\revtext{rev057}{Limitações}}{Limitações}}
+
+\revtext{rev057}{O conjunto de validação foi usado pela segunda vez, para medir com as previsões já guardadas e sem voltar a correr a CNN. O filtro, incluindo o tamanho, a forma e o limiar, foi fixado antes e nada foi escolhido com estes resultados. Só a referência foi filtrada, por isso a interação com a sobreposição (RQ3) fica por estudar. Continua a haver uma só semente, \resVaViagens{} viagens e nenhum intervalo de incerteza.}
 
 \appendix
 
