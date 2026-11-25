@@ -122,3 +122,27 @@ Paginação: retirar a opção `section` do pacote `placeins` (provável causa d
 - Nenhum número empírico escrito à mão.
 - Nenhum conjunto reservado aberto.
 - A versão `proposta-pt-v1` recupera-se com os comandos da §2.1; se D7 for o ficheiro novo, `proposta_pt.tex` fica igual ao dessa versão.
+
+**Estado em 2026-11-25 22:45 WET:** fases 0 a 3 feitas; da fase 4, escritas as §4, §5 e §6 (mais o anexo e a lista de limitações da §7), com 7 páginas. Em paragem para revisão do utilizador.
+
+## 8. Verificação bibliográfica (fase 3)
+
+[REV-065 | cor #01579B] Confirmação de cada frase de contexto nos PDFs de `docs/bibliografia/` e, para Agnew, na página da PLOS ONE (2026-11-25). Para as secções 1, 2 e 3 do relatório.
+
+| Fonte | O que o artigo diz | Consequência |
+|---|---|---|
+| Agnew et al. (2009) | Perdas anuais de 10 a 23,5 mil milhões de dólares, 11 a 26 milhões de toneladas (pesca ilegal e não declarada). Nas pescarias estudadas, 13 a 31 % (média 18 %) | **«Até cerca de 20 % da captura mundial» não está no artigo.** Usar o intervalo de valor e de toneladas |
+| Chuaysi e Kiattisin (2020) | Liga a pesca IUU à sobre-exploração e a trabalho ilegal; cita 11 a 26 milhões de toneladas | Serve para essas ligações |
+| Kroodsma et al. (2018) | O AIS difunde identidade, posição, velocidade e ângulo de viragem a cada poucos segundos; 22 mil milhões de mensagens; redes convolucionais | Confirma; não diz que o AIS é a «principal» fonte |
+| Natale et al. (2015) | Identifica pesca pelos perfis de velocidade (frota sueca) e mapeia o esforço | Confirma o padrão de velocidade |
+| Peel e Good (2011); Vermard et al. (2010) | Modelos de Markov escondidos sobre VMS | Confirma |
+| Soares Júnior et al. (2018) | Segmentação semi-supervisionada com *Minimum Description Length* | Confirma |
+| Wu et al. (2022) | Classificador (floresta aleatória) sobre janelas sobrepostas; junção das janelas de pesca próximas por *run-length encoding* (WBS-RLE) | Corrige a descrição atual (ponto B) |
+| Wu et al. (2022), dados | AIS da autoridade marítima dinamarquesa, navios de pesca, 14 a 20 de novembro de 2021; posições duplicadas removidas e coordenadas com o mesmo instante calculadas pela média; 128 trajetórias anotadas à mão, 1 080 220 pontos | Esclarece a proveniência das anotações. O ficheiro público tem menos trajetórias e linhas: dizê-lo na §3 |
+| Arasteh et al. (2020), FishNET | CNN para classificar segmentos de atividade | Trabalho próximo; citar |
+| Cheng et al. (2025) | Classifica cinco **tipos** de navio de pesca | Não apresentar como deteção de atividade |
+| Wang et al. (2026) | Quatro estados operacionais, com atenção local e global | Descrever assim |
+| Hu et al. (2026) | Segmentação não supervisionada de subtrajetórias com campos angulares de Gram e previsão de trajetória | Descrever assim |
+| Ferreira et al. (2022) | Rótulos obtidos por agrupamento da geometria; redes recorrentes | Confirma |
+| Shneiderman (2020); Guo et al. (2017); Lundberg e Lee (2017) | PDF fora da pasta | **Não verificados** |
+| Ghazizadeh (2019) | PDF sem texto extraível | Não citado; não verificado |

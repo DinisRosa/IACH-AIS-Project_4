@@ -7,7 +7,7 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 - **Marcos 1 a 3 fechados.** A CNN de referência (viagem completa) foi treinada só com o treino oficial (87 viagens, 300 épocas) e congelada: época 162 e limiar 0,65, escolhidos no conjunto `test` numa só ronda (REV-038, REV-041). Os números estão em `results/baseline_frozen/final_results.json` e, no relatório, em macros geradas por código.
 - **Marco 4 (janelamento com a mesma CNN) feito (REV-046, REV-047):** J0 (sem sobreposição) e J50 (50 %), com janelas de 64 pontos, foram treinadas só com o treino, selecionadas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Nenhuma supera a referência por ponto no `test`; J50 reduz a fragmentação face a J0. Números em `results/windows_final/final_results_windows.json` e na Secção 8 do LaTeX.
 - Conjuntos reservados: o `test` serve para selecionar e teve duas aberturas de seleção (referência e janelas), além de leituras posteriores registadas (diagnóstico e pós-processamento); o `validation` é a medição final e foi aberto **uma única vez** (REV-053), só para o modelo escolhido (a referência): exatidão por ponto de 94,4 %. Está gasto; o pós-processamento (REV-057, REV-059) reutilizou as previsões e anotações já guardadas.
-- 243 testes a passar. Ver `PROGRESS.md` (estado e histórico) e `handoff.md` (para retomar numa nova sessão).
+- 247 testes a passar. Ver `PROGRESS.md` (estado e histórico) e `handoff.md` (para retomar numa nova sessão).
 - **Em curso (REV-065):** reescrita como relatório em `latex/relatorio_pt.tex`, segundo `docs/06_plano_reescrita.md`.
 
 ## Versão de segurança da proposta
@@ -31,7 +31,7 @@ A etiqueta é local até ser enviada com `git push origin proposta-pt-v1`. Se n�
 ## Estrutura
 
 - `AGENTS.md`: regras e instruções do projeto (fonte única). `CLAUDE.md`: manda ler o `AGENTS.md`.
-- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-064). `handoff.md`: ponto de situação para outra sessão.
+- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-065). `handoff.md`: ponto de situação para outra sessão.
 - `docs/`: documentação.
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos e política de acesso aos dados.
   - `01_dados_e_preparacao.md`: dicionário das colunas, unidades verificadas, entradas da CNN e preparação.
@@ -45,7 +45,7 @@ A etiqueta é local até ser enviada com `git push origin proposta-pt-v1`. Se n�
   - `cli/`: programas, que se correm com `python -m ais.cli.<nome>` (ver abaixo).
 - `tests/`: testes sintéticos (um lê 3 viagens de treino).
 - `configs/`: configurações do treino, protocolo de seleção e autorizações (`authorizations/`).
-- `latex/`: proposta (`proposta_pt.tex`, `references.bib`, `figures/`, `generated/resultados.tex` e `generated/resultados_janelas.tex` com as macros geradas) e o PDF entregue ao professor (`proposta_IAHC_DINIS_ROSA.pdf`, não se altera).
+- `latex/`: o relatório (`relatorio_pt.tex`, documento ativo), a proposta anterior (`proposta_pt.tex`, versão de segurança), `references.bib`, `figures/`, `generated/` (macros geradas por código) e o PDF entregue ao professor (`proposta_IAHC_DINIS_ROSA.pdf`, não se altera).
 - `manifests/`: divisão por ID, `split_manifest_seed42.csv` (versionado).
 - `data/` e `results/`: dados e resultados gerados. **Não versionados.**
 - `requirements.txt`: dependências com versões fixas. `iach-ais-venv-4/`: ambiente local (não versionado).
@@ -75,7 +75,8 @@ Executar a partir da raiz do projeto, por exemplo `iach-ais-venv-4/bin/python -m
 | `build_final_results` | Gera `final_results.json`, as macros `latex/generated/resultados.tex` e as figuras `latex/figures/final_*.png`. |
 | `run_window_training <config>` | Treina a mesma CNN sobre janelas (`configs/windows_j0.json`, `windows_j50.json`), só com o treino; um checkpoint por época e limite de tempo. |
 | `select_windows_on_test` | **Uma só abertura** do `test`: escolhe época e limiar de J0 e J50, mede por segmento a baseline, J0 e J50 e congela as duas variantes. Já executado; não repetir. |
-| `build_window_results` | Gera `results/windows_final/final_results_windows.json`, as macros `latex/generated/resultados_janelas.tex` e as figuras `latex/figures/janelas_*.png`. |
+| `build_window_results [--report-figures-only]` | Gera `results/windows_final/final_results_windows.json`, as macros `latex/generated/resultados_janelas.tex` e as figuras `latex/figures/janelas_*.png`; com a opção, só as duas figuras do relatório (`*_ref.png`), com autorização e registo de acesso. |
+| `build_window_analysis_macros` | Macros dos blocos de erro (`latex/generated/resultados_buracos.tex`) a partir dos resumos guardados (REV-065). |
 | `postproc_validation --version posproc_validation_v1\|posproc_validation_v2` | Execução ÚNICA de cada versão do pós-processamento sobre as previsões guardadas da referência no `validation` (v1: 13 pontos, REV-057; v2: 301 pontos, REV-059); as duas já foram executadas. |
 | `build_postproc_results` | Macros e figuras da Secção 10 a partir dos resultados; confirma a verificação independente. |
 | `verify_postproc_independent [--size N] <csv>` | Segunda implementação, independente, das métricas do pós-processamento (REV-057). |

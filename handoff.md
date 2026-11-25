@@ -156,6 +156,7 @@ Compilar o LaTeX à mão (a partir de `latex/`), sem colidir com o vigilante: `p
 ## O que fazer a seguir
 
 1. [REV-064 | cor #33691E] (2026-11-25 21:59 WET) **Reescrever a proposta** segundo `docs/06_plano_reescrita.md`, depois de o utilizador decidir D1 a D8 (inclui ficheiro novo ou o mesmo, e a versão de segurança no commit `7d60861`); a reescrita é a REV-065 e absorve a tabela A a H de `docs/05`. Próximo ID livre: **REV-065** (substitui a indicação de REV-064 mais acima).
+   - [REV-065 | cor #01579B] (2026-11-25 22:45 WET) **Em curso:** D1 a D8 aceites. O documento ativo é `latex/relatorio_pt.tex` (secções 4 a 6, anexo e limitações escritas, 7 páginas; 247 testes). `proposta_pt.tex` não se altera (etiqueta local `proposta-pt-v1`). À espera da revisão do utilizador para escrever o resto (`docs/06` §6 e §8). Próximo ID livre: **REV-066**.
 2. **Versão final sem cores** só quando o utilizador o pedir.
 3. **Arrumação técnica:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar restos do ensaio de 3 viagens e execuções antigas, se o utilizador quiser.
 4. **Dúvidas de dados (limitações):** CRS (hipótese WGS84), proveniência das anotações, cálculo de `distanceToShore`.

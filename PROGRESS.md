@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-064)
+## Estado atual (REV-065, em curso)
 
 | Marco | Estado |
 |---|---|
@@ -19,11 +19,11 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Conjuntos reservados:** o `test` foi aberto **duas vezes**, cada uma ao abrigo da sua autorização (baseline e janelas) e registada em `results/access_log.jsonl`; o `validation` foi aberto **uma única vez**, na medição final (REV-053, autorização `validation_final_2026-11-24`); **está gasto**. Validação e teste foram lidos por inteiro só para construir as bases limpas (REV-015).
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU), pacote `ais` instalado em modo editável (REV-034). Dependências em `requirements.txt`.
 - **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. O janelamento está em `windows.py`, `run_window_training`, `select_windows_on_test` e `build_window_results`; o filtro do pós-processamento está em `postprocessing.py` (REV-056).
-- **Testes:** 243 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
+- **Testes:** 247 (sintéticos, mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
-- **LaTeX:** `latex/proposta_pt.tex` compila com 16 páginas (os registos falam num limite de 15), com as Secções 8 a 11 e o Anexo A. Texto estável a preto (REV-043); o restante tem a cor da sua revisão (preâmbulo do `.tex`). **A reescrever** segundo `docs/06_plano_reescrita.md` (REV-064).
+- **LaTeX:** o documento ativo é o relatório `latex/relatorio_pt.tex` (REV-065, a preto): escritas as secções 4 (método), 5 (protocolo), 6 (resultados), o anexo e a lista de limitações da 7; **por escrever** o resumo, as secções 1 a 3, a ética e dimensão humana da 7 e as conclusões; compila com 7 páginas. `latex/proposta_pt.tex` (16 páginas) é a versão de segurança, etiqueta `proposta-pt-v1`, e não se altera.
 - **Git:** o estado muda a cada commit e push; confirmar com `git status -sb` e `git log origin/main..HEAD`. O push só se faz a pedido explícito do utilizador, sem mais confirmações (REV-055).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-064.
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-065.
 
 ## Decisões do utilizador (vigentes)
 
@@ -39,7 +39,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 - **Critério de seleção (decisão do utilizador):** a menor perda por ponto no `test` escolheu épocas muito cedo (4 e 8), porque a perda no `test` sobe com o treino; a baseline foi escolhida bem mais tarde (162). Mudar o critério (por exemplo, o F1) ou travar o treino mais cedo seria uma decisão metodológica nova, com novo protocolo e nova autorização, e obrigaria a repetir a baseline por igualdade. Por agora fica como está, registado como limitação.
 - **Marco 5:** feito (REV-057). RQ3 sem resposta (J0 e J50 não pós-processadas).
-- **Reescrita da proposta (REV-064):** aprovado o género (relatório do trabalho feito) e a estrutura base; por decidir D1 a D8 de `docs/06_plano_reescrita.md` (páginas, cores, frase sobre o filtro, figuras, título, modelo, ficheiro novo ou o mesmo, versão de segurança). A tabela A a H de `docs/05` e as macros da Secção 10.2 entram nessa reescrita.
+- **Relatório (REV-065):** decisões D1 a D8 aceites (`docs/06` §2). Em paragem para o utilizador rever o PDF até aos resultados; depois, secções 3, 2, 7, 1, 8 e resumo (verificação bibliográfica em `docs/06` §8), revisão final e fecho de `docs/05`.
 - **Documentos desatualizados:** linhas do Marco 5 em `docs/00` e `docs/03` (a corrigir na fase 5 do plano).
 - **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
 - **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
@@ -1055,3 +1055,22 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Decisões D1 a D8; commit dos documentos; reescrita (REV-065).
+
+### 2026-11-25l — Relatório novo: método, protocolo e resultados (REV-065), 2026-11-25 22:45 WET
+
+**Feito**
+- O utilizador aceitou D1 a D8. Commit do plano; etiqueta local `proposta-pt-v1` (commit `7d60861`) e instruções no `README.md`; `AGENTS.md` §8 ajustado.
+- `latex/relatorio_pt.tex`: secções 4, 5 e 6, anexo e limitações; as contradições I a N, Q e R do plano tratadas nestas secções; frase sobre a versão de 13 pontos (D3).
+- `build_window_analysis_macros` (macros dos blocos de erro) e `build_window_results --report-figures-only` (duas figuras com «referência», nomes novos), com a autorização `test_report_figures` e registo do acesso às previsões guardadas do `test`.
+- Verificação bibliográfica (`docs/06` §8).
+- `latex/watch_latex.sh` (não versionado) aponta para o relatório.
+
+**Validado**
+- 247 testes a passar; relatório compilado (7 páginas, sem erros nem referências indefinidas) e páginas inspecionadas; nenhum ficheiro antigo de `latex/` alterado face à etiqueta; recuperação pela etiqueta ensaiada num clone temporário; procura de números escritos à mão no corpo: só nomes e valores de configuração.
+
+**Problemas**
+- «Até cerca de 20 % da captura mundial» não está no artigo de Agnew; o artigo de Cheng classifica tipos de navio. O artigo de Wu descreve a anotação dos dados com 128 trajetórias e 1 080 220 pontos, mais do que o ficheiro público. Shneiderman, Guo e Lundberg não verificados.
+- Afirmação corrigida no relatório: nem toda a leitura dos conjuntos reservados está no registo de acessos (a preparação das bases, REV-015, é anterior).
+
+**Pendente**
+- Revisão do utilizador; resto do relatório; commits por enviar (push e etiqueta só a pedido).

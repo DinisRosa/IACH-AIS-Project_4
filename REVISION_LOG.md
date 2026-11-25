@@ -1023,3 +1023,16 @@ Regras:
 - **Limitações:** as páginas por secção são estimativas; as afirmações do trabalho relacionado ainda não foram confirmadas artigo a artigo (fase 2).
 - **Pendentes:** decisões D1 a D6 e execução do plano.
 - **Complemento (22:25 WET, mesma revisão):** por proposta do utilizador, o plano passa a ter D7 (ficheiro novo `relatorio_pt.tex` ou o mesmo) e D8 (versão de segurança no commit `7d60861`, com etiqueta e instruções no `README.md`). Pendentes: D1 a D8. Sem alterações ao `.tex`, sem etiqueta nem commit.
+
+### REV-065 — Relatório novo (`relatorio_pt.tex`) e versão de segurança
+
+- **Data:** 2026-11-25, 22:36 a 22:45 WET (em curso).
+- **Cor:** Azul-profundo `#01579B`, RGB (1, 87, 155). Só marcador do registo e dos documentos: por instrução do utilizador (D2), o texto do relatório é escrito **a preto**.
+- **O quê:** etiqueta `proposta-pt-v1` sobre `7d60861` e instruções de recuperação no `README.md`; `AGENTS.md` §8 (documento ativo e exceção às cores); novo `latex/relatorio_pt.tex` com as secções 4 a 6, o anexo e a lista de limitações; `build_window_analysis_macros`, `resultados_buracos.tex`, `build_window_results --report-figures-only`, duas figuras novas e a autorização `test_report_figures`; verificação bibliográfica em `docs/06` §8.
+- **Texto da proposta que não passa para o relatório:** fica integralmente em `proposta_pt.tex`. Nas secções já escritas saem, face a ele: a definição de «estável» (7.1), a frase de que o pós-processamento «ainda não foi estudado» (9), «uma única vez» e «nada é escolhido com estes resultados» sobre o filtro (10.3), a afirmação de que a única diferença é o janelamento (4.2 e 4.4), a tabela da arquitetura, a tabela da escolha do modelo, as matrizes e as barras por segmento.
+- **Porquê:** pedido do utilizador (D1 a D8 aceites).
+- **Ficheiros afetados:** `AGENTS.md`, `README.md`, `docs/06_plano_reescrita.md`, `latex/relatorio_pt.tex`, `latex/generated/resultados_buracos.tex`, `latex/figures/janelas_{viagens,linha_temporal}_ref.png`, `src/ais/cli/{build_window_analysis_macros,build_window_results}.py`, `tests/test_window_analysis_macros.py`, `configs/authorizations/test_report_figures.json`, `PROGRESS.md`, `REVISION_LOG.md`, `handoff.md`; `latex/watch_latex.sh` (não versionado).
+- **Correspondência no LaTeX:** **parcial** (`relatorio_pt.tex`; faltam resumo, secções 1 a 3, ética e conclusões).
+- **Validação:** 247 testes; compilação com 7 páginas, sem erros; páginas inspecionadas; ficheiros antigos de `latex/` iguais aos da etiqueta.
+- **Limitações:** sem referências bibliográficas até à secção 2; texto ainda não revisto pelo utilizador nem por revisor independente.
+- **Pendentes:** resto do relatório e fecho de `docs/05`.
