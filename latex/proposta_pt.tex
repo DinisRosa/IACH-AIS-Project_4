@@ -77,6 +77,8 @@
 \definecolor{rev052}{RGB}{136,14,79}
 % REV-053 — cor #0D47A1, RGB (13, 71, 161) (mesma do REVISION_LOG.md). Medição final no conjunto de validação (Secção 9) e frases sobre o validation.
 \definecolor{rev053}{RGB}{13,71,161}
+% REV-056 — cor #D84315, RGB (216, 67, 21) (mesma do REVISION_LOG.md). Pós-processamento temporal: secção do método (Secção 10), antes dos resultados.
+\definecolor{rev056}{RGB}{216,67,21}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 % Números gerados por ais.cli.build_final_results (REV-035): \rv{\resXxx} mostra o valor na cor da revisão.
 \input{generated/resultados}
@@ -102,7 +104,7 @@
 /TemplateVersion (IJCAI.2026.0)
 }
 
-\title{OOI  Segmenta\c{c}\~ao sem\^antica de trajet\'orias AIS para dete\c{c}\~ao de atividade de pesca usando janelas sobrepostas e p\'os-processamento temporal}
+\title{Segmenta\c{c}\~ao sem\^antica de trajet\'orias AIS para dete\c{c}\~ao de atividade de pesca usando janelas sobrepostas e p\'os-processamento temporal}
 
 % For an anonymous submission, replace this block with the track-approved
 % anonymous author declaration. For the camera-ready version, provide all
@@ -223,7 +225,7 @@ J50 & \resJCPasso & \resJCJanelas & \resJCPassos & \resJCSegundos \\
 \subsection{\texorpdfstring{\revtext{rev023}{Pós-processamento temporal}}{Pós-processamento temporal}}
 \label{sec:abordagem-pos}
 
-\revtext{rev021}{As probabilidades por ponto são suavizadas (por exemplo, por votação por vizinhança\revtext{rev042}{, com a unidade e a largura por definir}), produzindo segmentos contíguos e estáveis.}
+\revtext{rev056}{As probabilidades por ponto do modelo escolhido são filtradas com uma janela gaussiana de 13 pontos, para produzir segmentos contíguos e estáveis (Secção~\ref{sec:posproc}).}
 
 \subsection{\texorpdfstring{\revtext{rev023}{Saída, explicabilidade e ferramentas}}{Saída, explicabilidade e ferramentas}}
 \label{sec:abordagem-saida}
@@ -310,6 +312,7 @@ Total & & & \rv{\resModParametros} \\
 \end{itemize}}
 
 \subsection{\texorpdfstring{Campo recetivo}{Campo recetivo}}
+\label{sec:campo-recetivo}
 
 \revtext{rev052}{Com \emph{stride} 1 e dilatação 1, cada convolução de \emph{kernel} $k$ acrescenta $k-1$ pontos, pelo que
 \begin{equation}
@@ -555,6 +558,40 @@ Teste & Navegação & \resVaTSegNavNRef & \resVaTSegNavNPred & \resVaTSegNavNPar
 \item \textbf{Fragmentação.} O pós-processamento temporal (RQ2 e RQ3) não foi estudado.
 \item \textbf{Medição final.} O modelo, a época e o limiar não podem voltar a mudar, e o conjunto de validação não pode ser usado para escolher mais nada.
 \end{itemize}}
+
+\section{\texorpdfstring{\revtext{rev056}{Pós-processamento temporal}}{Pós-processamento temporal}}
+\label{sec:posproc}
+
+\revtext{rev056}{A medição final (Secção~\ref{sec:validacao}) mostra que a referência acerta a maioria dos pontos, mas produz uma segmentação muito fragmentada: pontos isolados, ou pequenos grupos de pontos, recebem a classe contrária à dos blocos que os rodeiam e partem um segmento longo em vários. O pós-processamento corrige esses casos depois da CNN, sem a voltar a treinar, e responde à RQ2.}
+
+\subsection{\texorpdfstring{\revtext{rev056}{Filtro}}{Filtro}}
+
+\revtext{rev056}{Uma janela desliza ponto a ponto ao longo de cada viagem, sobre as probabilidades de pesca previstas pela CNN. Em cada ponto, a probabilidade é substituída pela média pesada das probabilidades dos pontos da janela, de $-6$ a $+6$ em relação a ele:
+\[
+\tilde{p}_i=\frac{\sum_{k=-6}^{6} w_k\,p_{i+k}}{\sum_{k=-6}^{6} w_k},\qquad w_k=\exp\!\left(-\frac{k^2}{2\sigma^2}\right),
+\]
+em que as somas usam só os pontos que existem na viagem. Depois aplica-se o limiar já congelado do modelo (0,65): acima é pesca, abaixo é navegação. Filtram-se as probabilidades e não as classes, para que um vizinho previsto com pouca confiança pese menos do que um previsto com muita.}
+
+\subsection{\texorpdfstring{\revtext{rev056}{Tamanho e forma da janela}}{Tamanho e forma da janela}}
+
+\revtext{rev056}{\textbf{Tamanho: 13 pontos.} É o campo recetivo da CNN de referência (Subsecção~\ref{sec:campo-recetivo}): cada previsão já usa 13 pontos de entrada, e o filtro junta 13 previsões vizinhas, pelo que cada decisão final passa a depender de cerca de 25 pontos da viagem. O valor foi fixado antes de qualquer medição; nenhum conjunto de dados serviu para o escolher.
+
+\textbf{Forma: gaussiana}, com $\sigma = 13/6 \approx 2{,}17$ pontos. O ponto central pesa mais e o peso diminui com a distância, até ser quase nulo nas pontas da janela (Figura~\ref{fig:posproc}, à esquerda). Assim, os vizinhos próximos contam mais do que os afastados, ao contrário de uma média simples, em que todos contam o mesmo.
+
+\textbf{Regras.} A janela nunca atravessa viagens. Nas pontas de uma viagem usa só os pontos existentes, com os pesos reajustados para somarem 1, sem pontos inventados. O filtro é diferente da reconstrução das janelas sobrepostas (Subsecção~\ref{sec:abordagem-janelas}): aquela junta previsões do mesmo ponto, este junta previsões de pontos vizinhos.}
+
+\begin{figure*}[t]
+\centering\color{rev056}
+\includegraphics[width=0.95\textwidth]{figures/posproc_janela.png}
+\caption{Pós-processamento. À esquerda, os pesos da janela gaussiana de 13 pontos ($\sigma \approx 2{,}17$). À direita, um exemplo sintético (não são dados do projeto): pontos isolados com a classe contrária à dos vizinhos passam à classe do bloco, e os dois pontos de navegação no meio da pesca ficam no limite do limiar. Nas fronteiras entre blocos, o filtro pode mudar um ponto de classe.}
+\label{fig:posproc}
+\end{figure*}
+
+\subsection{\texorpdfstring{\revtext{rev056}{Objetivo e medição}}{Objetivo e medição}}
+
+\revtext{rev056}{O objetivo é reduzir a fragmentação: menos segmentos previstos, mais próximos dos segmentos anotados, sem perder exatidão por ponto. O filtro corrige nos dois sentidos (pesca isolada no meio de navegação e o contrário) e não sabe qual é a classe real: também pode apagar um segmento real mais curto do que a janela, ou deslocar uma fronteira. Corrige trocas curtas, de um ou poucos pontos; blocos de erros mais longos do que a janela ficam como estão.
+
+O filtro aplica-se apenas ao modelo escolhido na Secção~\ref{sec:validacao} (a referência, época 162, limiar 0,65), às previsões já guardadas do conjunto de validação, uma única vez e com o tamanho já fixado. Compara-se o antes e o depois por ponto (exatidão, F1 por classe) e por segmento (F1 de segmentos, fragmentação e erros de fronteira, com as mesmas regras da Tabela~\ref{tab:validacao-segmentos}). Trata-se de uma segunda utilização do conjunto de validação, decidida pelo utilizador depois da medição final; por isso nada é escolhido com esses resultados. Os resultados serão acrescentados nesta secção.}
 
 \appendix
 

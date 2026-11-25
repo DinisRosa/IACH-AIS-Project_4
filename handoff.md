@@ -162,10 +162,11 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
 
 ## O que fazer a seguir
 
+0. **Marco 5 em curso (REV-056, 2026-11-25):** decisões e passos em `docs/04_pos_processamento.md`. Próximo: protocolo e autorização da segunda utilização do `validation`, aplicação única do filtro e resultados na Secção 10. Os pontos 1 e 2 abaixo sobre o Marco 5 estão ultrapassados.
 1. **Perguntar ao utilizador:**
    - Quer avançar para o **Marco 5** (pós-processamento), dado que a segmentação continua muito fragmentada (pesca: 18 segmentos reais e 486 previstos no `validation`)? A unidade e a largura do filtro teriam de ser aprovadas, e **só se poderia avaliar no `test`** (otimista), porque o `validation` está gasto. A resposta às RQ2 e RQ3 depende disto.
    - O critério de seleção por menor perda (épocas 8 e 4) **já não muda o resultado final**: o modelo medido foi a referência. Recomendação anterior: manter e deixar como limitação.
-2. **LaTeX, passagens ainda abertas** (o utilizador adiou-as): explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o título começa por «OOI» e há texto a vermelho «human-on-the-loop»; a 7.1 ainda descreve a ablação completa; as secções 6 e 7.2 e as partes a preto das revisões anteriores não foram relidas.
+2. **LaTeX, passagens ainda abertas** (o utilizador adiou-as): explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); há texto a vermelho «human-on-the-loop»; a 7.1 ainda descreve a ablação completa; as secções 6 e 7.2 e as partes a preto das revisões anteriores não foram relidas.
 3. **Arrumação:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas, se o utilizador quiser.
 4. **Push:** só quando o utilizador o pedir (ver as regras); quando pede, enviar sem mais perguntas.
 

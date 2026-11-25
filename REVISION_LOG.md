@@ -723,7 +723,7 @@ Regras:
 - **Ficheiros afetados:** `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`, `handoff.md`.
 - **Correspondência no LaTeX:** **atualizado**. `pdflatex` + `bibtex` sem erros nem referências em falta (8 páginas); página 1 inspecionada. Os termos HMM e Wu só restam na Contexto e na bibliografia.
 - **Validação:** compilação, inspeção visual e procura por HMM, Wu e «baseline» no PDF. Nenhum código nem número alterado.
-- **Limitações:** continuam por resolver as outras passagens da lista de REV-041: as quatro taxas de sobreposição e a ablação (7.1), a explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3), o título com «OOI», o texto a vermelho «human-on-the-loop» e a Secção 6 no futuro. A expressão «referência central» (Wu et al.) pode confundir-se com «CNN de referência».
+- **Limitações:** continuam por resolver as outras passagens da lista de REV-041: as quatro taxas de sobreposição e a ablação (7.1), a explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3), o texto a vermelho «human-on-the-loop» e a Secção 6 no futuro. A expressão «referência central» (Wu et al.) pode confundir-se com «CNN de referência».
 - **Pendentes:** decidir essas passagens; commit local por autorizar.
 
 ### REV-043 — Texto estável do LaTeX passa a preto (cor definitiva)
@@ -813,7 +813,7 @@ Regras:
 - **Ficheiros afetados:** `latex/proposta_pt.tex`.
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** compilação (ver REV-047).
-- **Limitações:** **não** alterei o que o utilizador adiou ou que muda o âmbito (explicabilidade, calibração e *dashboard* no resumo, objetivo 5, 4.6 e 7.3; título com «OOI»; texto a vermelho «human-on-the-loop»). O texto a preto de REV-043 que descreve a referência manteve-se.
+- **Limitações:** **não** alterei o que o utilizador adiou ou que muda o âmbito (explicabilidade, calibração e *dashboard* no resumo, objetivo 5, 4.6 e 7.3; texto a vermelho «human-on-the-loop»). O texto a preto de REV-043 que descreve a referência manteve-se.
 - **Pendentes:** as passagens adiadas acima.
 
 ### REV-049 — Gráfico de diagnóstico de uma viagem do `test`
@@ -874,7 +874,7 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**; `pdflatex` + `bibtex` sem erros, **9 páginas** (antes 11; limite de 15), 0 referências indefinidas, sem caixas largas; páginas inspecionadas.
 - **Validação:** compilação e inspeção visual das páginas; `pytest tests/`: 187 passaram (23:57 WET). Não se alterou código de treino, de seleção nem de dados.
 - **Limitações:** o texto reescrito é meu; o utilizador ainda não o leu. O texto que ficou a preto das revisões anteriores (por exemplo, a tabela da arquitetura, a Secção 6 e 7.2) não foi tocado. Tudo o que foi reescrito está agora na cor desta revisão, por isso a cor deixa de distinguir o que é de revisões anteriores. As quatro figuras `final_*.png` da referência continuam geradas mas já não são usadas.
-- **Pendentes:** as passagens adiadas de REV-041 (explicabilidade, calibração e *dashboard*, título «OOI», «human-on-the-loop»).
+- **Pendentes:** as passagens adiadas de REV-041 (explicabilidade, calibração e *dashboard*, «human-on-the-loop»).
 
 ### REV-053 — Medição final no `validation` e Secção 9
 
@@ -916,3 +916,15 @@ Regras:
 - **Validação:** releitura dos documentos à procura de contradições sobre o push. Sem código nem LaTeX alterados.
 - **Limitações:** a regra é mais permissiva, mas continua a exigir pedido explícito; um pedido genérico («continua») não é pedido de push.
 - **Pendentes:** nenhum.
+
+### REV-056 — Pós-processamento: método na proposta, filtro e plano do Marco 5
+
+- **Data:** 2026-11-25 19:13 WET.
+- **Cor:** Laranja-escuro `#D84315`, RGB (216, 67, 21).
+- **O quê:** decisões do utilizador para o Marco 5 (janela gaussiana de 13 pontos, σ = 13/6, sobre as probabilidades da referência, limiar 0,65, aplicada uma vez às previsões guardadas do `validation`); plano de ação em `docs/04_pos_processamento.md`; filtro em `postprocessing.py` com testes; figura gerada; nova Secção 10 da proposta e frase da 4.5. Na mesma interação, retiradas as menções ao «OOI» dos documentos (sem revisão própria, por decisão do utilizador).
+- **Porquê:** o utilizador quer descrever o método na proposta antes dos resultados.
+- **Ficheiros afetados:** `latex/proposta_pt.tex` (preâmbulo, 4.5, rótulo da 5.4, Secção 10), `latex/figures/posproc_janela.png`, `src/ais/phase1/postprocessing.py`, `src/ais/cli/plot_postprocessing_kernel.py`, `tests/test_postprocessing.py`, `docs/04_pos_processamento.md`, `PROGRESS.md`, `README.md`, `handoff.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado** (método); resultados pendentes.
+- **Validação:** 203 testes a passar; `pdflatex` + `bibtex` 13 páginas, 0 erros.
+- **Limitações:** segunda utilização do `validation` (exceção a REV-053, decidida pelo utilizador); o exemplo da figura é sintético.
+- **Pendentes:** protocolo, autorização, aplicação e resultados.
