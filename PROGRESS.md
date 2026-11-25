@@ -27,7 +27,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
 - **Registo de revisões:** REV-001 a REV-067.
-- **Documentação:** `docs/00` e `docs/01`; os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
+- **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
 
@@ -37,6 +37,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Modelos (REV-041, REV-046):** referência fechada; J0 e J50 com os mesmos valores, lote de 32. Fora do projeto: 25 % e 75 % de sobreposição, outros comprimentos, treinar com J0 e prever com J50.
 - **Âmbito (REV-006, REV-042):** HMM e Wu et al. não são comparações. Explicabilidade, calibração e *dashboard* «previstos, não concluídos nesta fase».
 - **Relatório (REV-065, D1 a D8):** documento novo em vez da proposta; máximo 15 páginas, alvo 13 ou menos; texto a preto nessa revisão (as seguintes com cor); **declarar a versão de 13 pontos** (revê a decisão anterior de a omitir); figuras com «referência»; título mantido; «Figura» e «Tabela» em português; números de linha até à versão final. Perguntas, objetivos e critérios de sucesso não mudam depois dos resultados.
+- **Documentação (REV-067):** ficam `docs/00` e `docs/01`; `docs/05` e `06` não se repõem.
 - **Proposta antiga (REV-066):** retirar o `.tex`; manter o PDF e a etiqueta; compilar o relatório para `latex/build/`.
 - **Documentos fixos:** `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera. Autor do dataset: Song Wu, Zenodo 10.5281/zenodo.7283281 (CC BY 4.0); o Kaggle é espelho.
 
@@ -1146,3 +1147,18 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório.
+
+### 2026-11-25r — Confirmação da pasta docs e do estado no GitHub (REV-067), 2026-11-25 23:21 WET
+
+**Feito**
+- O utilizador confirmou que a pasta `docs` fica como está (não repor `05` nem `06`) e iniciou o vigilante novo (23:14), que compilou o relatório.
+- A pedido, `git push` do `main` e das duas etiquetas: já estava tudo atualizado. Depois, `handoff.md`, `README.md`, este ficheiro e `REVISION_LOG.md` atualizados para novo commit e push, também pedidos.
+
+**Validado (23:21 WET)**
+- `main` local e remoto em `7b9005a` antes deste commit; etiquetas presentes; árvore limpa; 247 testes; relatório com 10 páginas.
+
+**Problemas**
+- Continua aberto o vigilante antigo (iniciado às 18:54, processo 22891), que procura a proposta retirada; fica para o utilizador parar.
+
+**Pendente**
+- Leitura do relatório pelo utilizador.

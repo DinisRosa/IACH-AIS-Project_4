@@ -1,6 +1,6 @@
 # Handoff — Projeto AIS
 
-**Escrito em 2026-11-25 23:13 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa, e atualizado em REV-067 (23:17 WET). Todas as horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-065).
+**Atualizado em 2026-11-25 23:21 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067. Todas as horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-065).
 
 ## Ponto de situação em quatro linhas
 
@@ -24,13 +24,12 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 
 | Verificação | Resultado | Hora (WET, 2026-11-25) |
 |---|---|---|
-| `pytest tests/` | 247 passaram | 23:17 |
-| Relatório em `latex/build` (`pdflatex` + `bibtex` + 2 × `pdflatex`) | 10 páginas; sem erros nem referências em falta | 23:11 |
+| GitHub (`git push` e `git ls-remote`) | já estava atualizado: `main` em `7b9005a`, 0 commits por enviar ou receber; etiquetas `proposta-pt-v1` (`7d60861`) e `docs-historico-v1` (`b8580b5`) presentes | 23:21 |
+| `pytest tests/` | 247 passaram | 23:21 |
+| Relatório em `latex/build/relatorio_pt.pdf` (compilado pelo vigilante) | 10 páginas; `.tex` sem alterações desde `100e2b2` | 23:21 |
+| Compilação com `pdflatex` + `bibtex` + 2 × `pdflatex` | sem erros nem referências em falta | 23:11 |
 | Recuperação da proposta antiga (num clone temporário) | os dois comandos do `README.md` funcionaram e a proposta compilou | 23:12 |
-| GitHub (`git ls-remote`) | `main` em `661da35`; etiqueta `proposta-pt-v1` em `7d60861` | 23:12 |
-| Git local (antes da REV-067) | `main` à frente do GitHub com os commits da REV-066; enviados depois, a pedido | 23:13 |
 | Revisão independente do relatório (subagente Opus, só leitura) | sem erros graves; achados aplicados | 23:00 |
-| REV-067: etiqueta `docs-historico-v1` com os sete documentos; só mudou documentação | confirmado | 23:17 |
 
 O que mudar depois destas horas **não foi** validado por este handoff.
 
@@ -38,6 +37,8 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `7b9005a` | 2026-11-25 23:18 | Regista o arquivo dos documentos e atualiza o handoff (REV-067) |
+| `463606e` | 2026-11-25 23:18 | Arquiva os documentos concluídos e reescreve docs/00 (REV-067) |
 | `b8580b5` | 2026-11-25 23:13 | Reescreve o handoff para uma nova conversa (REV-066) |
 | `edc3dda` | 2026-11-25 23:12 | Atualiza o estado e o registo de revisões (REV-066) |
 | `8950471` | 2026-11-25 23:12 | Atualiza regras, README e docs depois de retirar a proposta (REV-066) |
@@ -56,7 +57,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 | `38f2857` | 2026-11-25 22:37 | Plano de reescrita da proposta como relatório (REV-064) |
 | `7d60861` | 2026-11-25 21:24 | Última versão da proposta (REV-063; etiqueta `proposta-pt-v1`) |
 
-Os commits da REV-067 vêm a seguir e não estão na tabela.
+O commit desta atualização vem a seguir e não está na tabela; o seu envio foi pedido pelo utilizador (confirmar com `git status -sb`).
 
 ## O que se fez nesta conversa (2026-11-25, à noite)
 
@@ -66,6 +67,7 @@ Os commits da REV-067 vêm a seguir e não estão na tabela.
 4. Push do `main` e da etiqueta, a pedido.
 5. Arrumação (REV-066): proposta em LaTeX retirada, PDF guardado, build do relatório direto em `latex/build/`, documentos refeitos.
 6. Documentação (REV-067): ficam `docs/00` (reescrito) e `docs/01`; `docs/02` a `06` na etiqueta `docs-historico-v1`; envio para o GitHub a pedido.
+7. O utilizador confirmou que a pasta `docs` fica assim (não repor o `05` nem o `06`), iniciou o vigilante novo e pediu para confirmar o GitHub, atualizar os registos e voltar a enviar.
 
 ## Estado e resultados
 
@@ -84,7 +86,7 @@ RQ1: as janelas não superam a viagem completa. RQ2: o filtro reduz muito a frag
 
 Estrutura: resumo; 1 Introdução; 2 Trabalho relacionado; 3 Dados e preparação; 4 Método; 5 Protocolo experimental; 6 Resultados e discussão; 7 Limitações, ética e dimensão humana; 8 Conclusões e trabalho futuro; anexo do janelamento.
 
-**Compilar:** `bash latex/watch_latex.sh` (local, não versionado; recompila para `latex/build/relatorio_pt.pdf`) ou os comandos do `README.md`. Um vigilante iniciado antes das 23:10 ainda procura a proposta: parar com Ctrl+C e iniciar de novo.
+**Compilar:** `bash latex/watch_latex.sh` (local, não versionado; recompila para `latex/build/relatorio_pt.pdf`) ou os comandos do `README.md`. O vigilante só reage a `relatorio_pt.tex` e `references.bib`: depois de gerar macros ou figuras, reiniciá-lo. Às 23:21 corria o novo (iniciado às 23:14) e **continuava aberto um antigo** (iniciado às 18:54, processo 22891), que ainda procura a proposta e deve ser parado pelo utilizador.
 
 **Números e figuras** (nunca escrever à mão um número empírico):
 
@@ -117,6 +119,7 @@ As figuras do esquema e da CNN são TikZ no próprio `.tex`. Alguns geradores le
 
 A lista completa está no topo do `PROGRESS.md`; o registo da versão de 13 pontos do filtro está em `docs/00` §5.3. As que mais pesam:
 
+- Documentação: ficam só `docs/00` e `docs/01` (confirmado pelo utilizador; não repor `05` nem `06`).
 - `test` seleciona, `validation` mede; o `validation` está gasto. **Não voltar a correr** `select_on_test`, `select_windows_on_test`, `final_validation` nem `postproc_validation`.
 - Referência, J0 e J50 fechadas. Sem novos treinos sem decisão do utilizador.
 - Relatório: máximo 15 páginas (alvo 13 ou menos); título mantido; «Figura» e «Tabela» em português; números de linha até à versão final.
@@ -154,13 +157,14 @@ bash latex/watch_latex.sh
 - Horas escritas à frente do relógio duas vezes (corrigidas): **usar sempre `date`** antes de escrever uma hora.
 - Frases erradas minhas apanhadas pela revisão independente (ver «Não reintroduzir»): confirmar nos registos a ordem dos factos antes de a descrever.
 - O vigilante antigo deixou um `texput.log` quando a proposta foi retirada.
+- Ao retirar documentos, o utilizador esperava outra escolha: confirmar **quais** antes de apagar (desta vez aceitou como ficou).
 - Dos anteriores: não correr testes nem subagentes durante treinos; ao trocar texto dentro de `\revtext{…}{…}`, conferir as chavetas; `%` nu em `\texorpdfstring` parte o LaTeX; `class_metrics` duplicada.
 
 ## O que fazer a seguir
 
 1. **Esperar pela leitura do relatório** pelo utilizador e aplicar os ajustes (REV-068).
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. O envio da REV-066 e da REV-067, com a etiqueta nova, foi pedido nesta conversa; confirmar com `git status -sb`.
+3. **Push:** só a pedido. Tudo até este handoff foi enviado a pedido nesta conversa; confirmar com `git status -sb`.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 
@@ -176,6 +180,7 @@ bash latex/watch_latex.sh
 ## Preferências do utilizador observadas
 
 - Quer um **plano** antes de uma mudança grande e decide sobre ele; depois dá autonomia.
+- No fim de um bloco de trabalho pede os registos atualizados, commit e push.
 - Quer sempre uma forma de voltar atrás (cópia ou etiqueta) antes de reescrever ou apagar.
 - Decide depressa («aceito», «sim, continua»); registar as decisões como são ditas.
 - Gosta de resultados em tabelas e imagens, com o porquê, em linguagem simples.

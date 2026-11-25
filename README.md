@@ -29,6 +29,8 @@ O PDF é gerado em `latex/build/relatorio_pt.pdf` (pasta não versionada). Para 
 bash latex/watch_latex.sh
 ```
 
+O vigilante só reage a alterações em `relatorio_pt.tex` e `references.bib`; depois de gerar macros ou figuras, pará-lo (Ctrl+C) e iniciá-lo de novo. Basta um vigilante a correr de cada vez.
+
 À mão, a partir de `latex/`:
 
 ```bash
