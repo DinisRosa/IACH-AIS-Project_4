@@ -1,0 +1,33 @@
+{
+  "id": "posproc_validation_v1",
+  "revisao": "REV-057",
+  "declarado_antes_de_medir": true,
+  "decidido_pelo_utilizador": "2026-11-25: filtro gaussiano de 13 pontos sobre as previsoes ja guardadas da referencia no validation, uma so aplicacao",
+  "modelo": "baseline (CNN de referencia, viagem completa), epoca 162, limiar 0,65, congelado em results/baseline_frozen",
+  "fonte": {
+    "ficheiro": "results/final_validation/predictions_validation.csv",
+    "sha256": "d4d8cd91cb2a552793afab379ea874d323b43e3f68a6b37756b5307c997c1d0e",
+    "origem": "gerado por ais.cli.final_validation na medicao final unica (REV-053, protocolo medicao_final_v1)",
+    "colunas_usadas": {"p_fishing": "probabilidade prevista, para filtrar", "target": "classe real anotada, so para medir", "id": "viagem", "t": "ordem temporal e tempos dos segmentos", "point_id": "identificador do ponto"}
+  },
+  "nao_se_faz": [
+    "reabrir o parquet do validation ou ler as caracteristicas",
+    "voltar a correr a CNN",
+    "escolher ou ajustar qualquer valor com estes resultados",
+    "segunda execucao",
+    "aplicar a J0 ou J50"
+  ],
+  "filtro": {
+    "tipo": "media pesada gaussiana das probabilidades de pesca, janela deslizante ponto a ponto dentro de cada viagem",
+    "tamanho_pontos": 13,
+    "posicoes": "-6 a +6",
+    "sigma_pontos": "13/6",
+    "pontas_da_viagem": "so os pontos existentes, pesos reajustados para somarem 1; nunca atravessa viagens",
+    "ordem": "pontos de cada viagem ordenados por t (empate por point_id)",
+    "limiar_depois_do_filtro": 0.65,
+    "implementacao": "ais.phase1.postprocessing (gaussian_kernel, smooth_probabilities)"
+  },
+  "metricas_reportadas": "antes (previsoes guardadas) e depois do filtro: por ponto (exatidao, precisao, sensibilidade, F1 e IoU por classe, matriz de confusao, exatidao por viagem) e por segmento (pesca e navegacao: IoU temporal 0,5 em segundos, correspondencia um-para-um, F1, fragmentacao, erros de fronteira); numero de pontos que mudam de classe e em que sentido. Reporta-se o que sair, melhor ou pior.",
+  "execucoes": 1,
+  "registo": "results/access_log.jsonl (eventos postproc_start e postproc_done)"
+}
