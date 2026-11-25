@@ -980,3 +980,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Passagens adiadas do LaTeX; arrumação técnica; push só a pedido.
+
+### 2026-11-25f — Secção de conclusões na proposta (REV-060), 2026-11-25 20:39 WET
+
+**Feito**
+- Nova Secção 11 «Conclusões» em `rev060` `#C71585`, antes do anexo: respostas à RQ1 (janelamento não supera a referência; J50 fragmenta menos; resposta só no teste) e à RQ2 (o filtro reduz muito a fragmentação, a exatidão sobe pouco); a RQ3 fica sem resposta, com as razões (só a referência foi filtrada; não há conjunto limpo; modelos pouco comparáveis; efeitos sobrepostos) e o desenho fatorial que seria preciso; critérios de sucesso (i) a (iii); trabalho futuro. Todos os números por macros geradas.
+
+**Validado**
+- `pdflatex`: 15 páginas (o limite), 0 erros; página 13 inspecionada.
+
+**Pendente**
+- A proposta está no limite de 15 páginas: novos acrescentos exigem cortar noutro sítio. Passagens adiadas do LaTeX; handoff; arrumação técnica; push só a pedido.

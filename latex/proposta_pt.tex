@@ -83,6 +83,8 @@
 \definecolor{rev057}{RGB}{184,134,11}
 % REV-059 — cor #8B008B, RGB (139, 0, 139) (mesma do REVISION_LOG.md). Pós-processamento com janela de 301 pontos: tamanho, justificação e leitura dos resultados.
 \definecolor{rev059}{RGB}{139,0,139}
+% REV-060 — cor #C71585, RGB (199, 21, 133) (mesma do REVISION_LOG.md). Secção de conclusões (RQ1 a RQ3, critérios de sucesso, trabalho futuro).
+\definecolor{rev060}{RGB}{199,21,133}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 % Números gerados por ais.cli.build_final_results (REV-035): \rv{\resXxx} mostra o valor na cor da revisão.
 \input{generated/resultados}
@@ -638,6 +640,28 @@ F1 de segmentos, navegação & \resPpASegNavF & \resPpDSegNavF \\
 \subsection{\texorpdfstring{\revtext{rev057}{Limitações}}{Limitações}}
 
 \revtext{rev059}{O conjunto de validação foi usado de novo, para medir com as previsões já guardadas e sem voltar a correr a CNN. O tamanho da janela foi escolhido no conjunto de teste, e o filtro (tamanho, forma e limiar) foi fixado antes de medir no conjunto de validação. A janela grande desloca as fronteiras e piora as viagens em que a CNN erra durante muito tempo.} \revtext{rev057}{ Só a referência foi filtrada, por isso a interação com a sobreposição (RQ3) fica por estudar. Continua a haver uma só semente, \resVaViagens{} viagens e nenhum intervalo de incerteza.}
+
+\section{\texorpdfstring{\revtext{rev060}{Conclusões}}{Conclusões}}
+\label{sec:conclusoes}
+
+\revtext{rev060}{Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede aplicada a janelas, com e sem sobreposição, e estudou um pós-processamento temporal das suas previsões. As respostas às três perguntas de investigação são as seguintes.
+
+\textbf{RQ1 (janelas sobrepostas face a janelas não sobrepostas).} No conjunto de teste, a sobreposição de 50\,\% reduz a fragmentação face às janelas sem sobreposição (\resJCSegPescaNPred{} segmentos de pesca previstos, contra \resJZSegPescaNPred{} em J0 e \resBsSegPescaNPred{} na referência), mas não melhora a exatidão por ponto (\resJCTesteAcc{} e \resJZTesteAcc{}, contra \resBsTesteAcc{} da referência) nem o erro de fronteira da pesca. O janelamento, com ou sem sobreposição, não supera a CNN sobre a viagem completa. A resposta assenta só no teste, que serviu para escolher as épocas e os limiares, e as épocas escolhidas para J0 e J50 (\resJZEpoca{} e \resJCEpoca{}) são muito mais precoces do que a da referência (\resBsEpoca{}), pelo que parte da diferença pode vir do critério de seleção (Subsecção~\ref{sec:resultados-comparacao}).
+
+\textbf{RQ2 (pós-processamento).} Sim. No conjunto de validação, o filtro gaussiano reduz os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e sobe o F1 de segmentos de pesca de \resPpASegPescaF{} para \resPpDSegPescaF{}, com a exatidão por ponto a passar de \resPpAntesAcc{} para \resPpDepoisAcc{} (Secção~\ref{sec:posproc}). O ganho é sobretudo na estabilidade dos segmentos e não na exatidão. O filtro não corrige erros longos da CNN e piora as viagens em que a rede erra durante muito tempo.
+
+\textbf{RQ3 (interação entre sobreposição e pós-processamento).} Fica sem resposta. Medir uma interação exige comparar as quatro combinações (sem e com sobreposição, sem e com pós-processamento) nas mesmas condições, e isso não foi possível aqui, por quatro razões:
+\begin{itemize}
+\item \textbf{Só a referência foi pós-processada.} O pós-processamento foi aplicado ao modelo escolhido para a medição final, que foi a referência; J0 e J50 nunca foram filtradas.
+\item \textbf{Não há conjunto limpo onde medir.} J0 e J50 não foram medidas no conjunto de validação, que já foi usado para a medição final e para o pós-processamento. Restaria o teste, mas foi nele que se escolheram as épocas, os limiares e o tamanho da janela do filtro, este último a partir dos erros da referência; uma comparação aí seria otimista e enviesada a favor da referência.
+\item \textbf{Os modelos não são comparáveis o suficiente.} J0 e J50 foram escolhidas em épocas muito precoces e treinadas com lotes e números de passos diferentes dos da referência; uma diferença na interação poderia vir destas escolhas e não da sobreposição.
+\item \textbf{Os dois efeitos sobrepõem-se.} A sobreposição já suaviza as previsões (média das janelas que cobrem cada ponto) e reduz um pouco a fragmentação; o filtro reduz-a muito mais. É plausível que, depois do filtro, a vantagem da sobreposição desapareça, mas isso é uma hipótese, não um resultado, e com uma só semente e \resVaViagens{} viagens por conjunto diferenças pequenas não se distinguiriam do acaso.
+\end{itemize}
+Responder à RQ3 exigiria um desenho fatorial planeado de início: as quatro combinações, o mesmo critério de seleção, várias sementes e um conjunto de teste final ainda por abrir.
+
+\textbf{Critérios de sucesso.} (i) O efeito das duas componentes foi caracterizado face à referência: o janelamento não traz ganho e o pós-processamento traz ganho na segmentação. (ii) Com o pós-processamento, a segmentação fica muito mais estável, embora ainda com erros longos herdados da CNN. (iii) As justificações para um inspetor (explicabilidade) ficaram fora do âmbito e não foram avaliadas.
+
+\textbf{Trabalho futuro.} Dar à CNN mais contexto (o campo recetivo é de \resModCampo{} pontos, muito menor do que os blocos de erro mais longos); estudar o limiar em conjunto com o filtro, que hoje torna a correção assimétrica entre classes; repetir com várias sementes e uma divisão por navio; e testar a RQ3 com o desenho fatorial acima.}
 
 \appendix
 

@@ -12,7 +12,7 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 ## Estrutura
 
 - `AGENTS.md`: regras e instruções do projeto (fonte única). `CLAUDE.md`: manda ler o `AGENTS.md`.
-- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-059). `handoff.md`: ponto de situação para outra sessão.
+- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-060). `handoff.md`: ponto de situação para outra sessão.
 - `docs/`: documentação, em quatro ficheiros.
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos e política de acesso aos dados.
   - `01_dados_e_preparacao.md`: dicionário das colunas, unidades verificadas, entradas da CNN e preparação.

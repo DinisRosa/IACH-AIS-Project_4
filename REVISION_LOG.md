@@ -963,3 +963,15 @@ Regras:
 - **Validação:** 243 testes; verificação independente 19/19; eventos `postproc_start`/`postproc_done` com `posproc_validation_v2` no `access_log.jsonl`.
 - **Limitações:** **registo de integridade** — a v1 (13 pontos) foi aplicada ao `validation` antes desta decisão; por decisão do utilizador não é mencionada na proposta (está em `docs/04` §5 e REV-057/REV-058). Terceira utilização das anotações do `validation`. Uma semente, 18 viagens, sem intervalo de incerteza.
 - **Pendentes:** nenhum do Marco 5.
+
+### REV-060 — Conclusões da proposta (RQ1 a RQ3)
+
+- **Data:** 2026-11-25 20:39 WET.
+- **Cor:** Violeta-avermelhado `#C71585`, RGB (199, 21, 133).
+- **O quê:** nova Secção 11 «Conclusões» (`sec:conclusoes`): RQ1, RQ2, RQ3 sem resposta e porquê, critérios de sucesso e trabalho futuro.
+- **Porquê:** pedido do utilizador; a proposta não tinha uma secção que juntasse as respostas.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `PROGRESS.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**; 15 páginas (limite), 0 erros.
+- **Validação:** compilação e leitura da página; números só por macros já geradas.
+- **Limitações:** a RQ3 e a explicabilidade (critério iii) não foram estudadas; a proposta ficou no limite de páginas.
+- **Pendentes:** passagens adiadas do LaTeX (resumo, objetivo 5, 4.6, 7.1, 7.3, «human-on-the-loop»).

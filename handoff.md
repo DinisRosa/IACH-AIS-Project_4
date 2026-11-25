@@ -111,7 +111,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 
 **Âmbito e LaTeX**
 - HMM e Wu et al. **não** são comparações. Explicabilidade, calibração e *dashboard* estão fora do mínimo atual.
-- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-060**. Verificar sempre no `REVISION_LOG.md` se uma cor já foi usada (duas escolhas iniciais já eram de REV-011 e REV-007).
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-061**. Verificar sempre no `REVISION_LOG.md` se uma cor já foi usada (duas escolhas iniciais já eram de REV-011 e REV-007).
 - Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F`, rev053 `#0D47A1`. Outras estão definidas, sem uso (rev013, rev018, rev020, rev022, rev024 a rev028, rev030 a rev032, rev035, rev036). Só marcadores Markdown: REV-029, REV-033, REV-034, REV-037 a REV-039, REV-044, REV-045, REV-049 a REV-051 e REV-054 (`#00BFA5`).
 
 ## Ficheiros principais
@@ -163,7 +163,7 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
 
 ## O que fazer a seguir
 
-0. **Marco 5 feito (REV-059, 2026-11-25 20:33 WET):** v2 com 301 pontos no `validation`: exatidão 94,4 % → 94,8 % (11 662 → 10 790 erros); segmentos de pesca previstos 486 → 32 (reais 18), de navegação 502 → 49 (reais 35); F1 de segmentos de pesca 0,028 → 0,600 e de navegação 0,119 → 0,786; 4 100 pontos mudam (2 486 corrigidos, 1 614 estragados); melhoram 11 viagens e pioram 7, a pior `219020187-4` de 40,4 % para 19,7 %. A v1 (13 pontos) fica só em `docs/04` §5 e no registo, fora da proposta. **Não voltar a correr `postproc_validation`** (cada versão já executou). Próximo ID livre: **REV-060**. Os pontos sobre o Marco 5 abaixo estão ultrapassados.
+0. **Marco 5 feito (REV-059, 2026-11-25 20:33 WET):** v2 com 301 pontos no `validation`: exatidão 94,4 % → 94,8 % (11 662 → 10 790 erros); segmentos de pesca previstos 486 → 32 (reais 18), de navegação 502 → 49 (reais 35); F1 de segmentos de pesca 0,028 → 0,600 e de navegação 0,119 → 0,786; 4 100 pontos mudam (2 486 corrigidos, 1 614 estragados); melhoram 11 viagens e pioram 7, a pior `219020187-4` de 40,4 % para 19,7 %. A v1 (13 pontos) fica só em `docs/04` §5 e no registo, fora da proposta. **Não voltar a correr `postproc_validation`** (cada versão já executou). Próximo ID livre: **REV-061**. Os pontos sobre o Marco 5 abaixo estão ultrapassados.
 1. **Perguntar ao utilizador:**
    - Quer avançar para o **Marco 5** (pós-processamento), dado que a segmentação continua muito fragmentada (pesca: 18 segmentos reais e 486 previstos no `validation`)? A unidade e a largura do filtro teriam de ser aprovadas, e **só se poderia avaliar no `test`** (otimista), porque o `validation` está gasto. A resposta às RQ2 e RQ3 depende disto.
    - O critério de seleção por menor perda (épocas 8 e 4) **já não muda o resultado final**: o modelo medido foi a referência. Recomendação anterior: manter e deixar como limitação.
