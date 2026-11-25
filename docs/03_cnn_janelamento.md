@@ -55,7 +55,7 @@ Não se acrescenta uma janela final alinhada à direita: criaria sobreposição 
 | Configuração e treino | `src/ais/phase1/windows.py` (`load_window_config`), `src/ais/cli/run_window_training.py`, `configs/windows_j0.json`, `configs/windows_j50.json` | Feito |
 | Seleção no `test` (uma abertura) e medição por segmento da baseline, J0 e J50; congelação | `src/ais/cli/select_windows_on_test.py` | Feito |
 | Resultados, macros do LaTeX e figuras | `src/ais/cli/build_window_results.py` | Feito |
-| Pós-processamento (Marco 5) | — | Por fazer |
+| Pós-processamento (Marco 5) | `src/ais/phase1/postprocessing.py` | Feito (REV-056 a REV-059), só sobre a referência; ver `04` (REV-065) |
 | Medição final no `validation` (Marco 7) | `src/ais/cli/final_validation.py` | Feita (REV-053): só o modelo escolhido (a referência); J0 e J50 não foram medidas |
 
 O modelo reutiliza `build_cnn`; não se duplica a arquitetura. Não se criaram os módulos `windowing`, `reconstruction`, `experiments`, etc. previstos no desenho inicial: agruparam-se em `windows.py`, mantendo as responsabilidades (o AGENTS.md pede marcos executáveis, não módulos vazios).

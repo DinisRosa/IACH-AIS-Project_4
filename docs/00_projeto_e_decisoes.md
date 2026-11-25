@@ -34,7 +34,7 @@ A divisão por viagem mede generalização entre viagens. Viagens do mesmo navio
 - **RQ2:** o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados?
 - **RQ3:** como interagem sobreposição e pós-processamento?
 
-O âmbito mínimo atual só responde a RQ1. Um resultado sem melhoria também é válido: o protocolo não se altera para fabricar ganhos.
+[REV-065 | cor #01579B] A RQ1 e a RQ2 têm resposta, com as ressalvas escritas no relatório (`latex/relatorio_pt.tex`); a RQ3 fica sem resposta. Um resultado sem melhoria também é válido: o protocolo não se altera para fabricar ganhos.
 
 ## 4. Marcos e estado
 
@@ -44,7 +44,7 @@ O âmbito mínimo atual só responde a RQ1. Um resultado sem melhoria também é
 | 2 | Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
 | 3 | CNN 1D de referência sobre a viagem completa | **Fechado (REV-041)**: baseline definida por decisão do utilizador (época 162, limiar 0,65, escolhidos no `test` numa ronda). Não se altera; só volta a ser usada na comparação com as janelas |
 | 4 | Janelamento com sobreposição e a mesma CNN | **Feito (REV-046, REV-047)**: J0 (0 %) e J50 (50 %), L = 64, mesma CNN e mesmos valores da baseline, lote de 32; sobreposição igual no treino e na inferência; escolhidas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Fora do projeto: 25 %, 75 % e outros L. Resultados em `results/windows_final/final_results_windows.json` |
-| 5 | Pós-processamento simples, em ramo separado | **Feito (REV-056, REV-057)**: filtro gaussiano de 13 pontos sobre as previsões guardadas da referência no `validation`, uma execução; ver `docs/04` |
+| 5 | Pós-processamento simples, em ramo separado | **Feito (REV-056 a REV-059)**: filtro gaussiano sobre as previsões guardadas da referência no `validation`; a versão que vale é a de 301 pontos, depois de uma primeira de 13; ver `docs/04` (REV-065) |
 | 6 | Congelar as variantes (baseline, J0 e J50; o pós-processamento só foi aplicado à referência, REV-059) | **Feito (REV-038, REV-047)**: congeladas, cada uma com hash |
 | 7 | Medição final única no conjunto `validation` | **Feito (REV-053)**: por decisão do utilizador, **só o modelo escolhido** (a referência, pelo maior F1 médio por ponto no `test`, critério declarado antes) foi medido, uma só vez; J0 e J50 não foram medidas no `validation`. O `validation` está gasto |
 

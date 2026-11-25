@@ -1074,3 +1074,17 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Revisão do utilizador; resto do relatório; commits por enviar (push e etiqueta só a pedido).
+
+### 2026-11-25m — Relatório completo em rascunho; revisão independente pedida (REV-065), 2026-11-25 22:55 WET
+
+**Feito**
+- Escritas as secções 3, 2, 7 (ética e dimensão humana), 1, 8 e o resumo, e a bibliografia. Resumos de Shneiderman, Guo e Lundberg confirmados nas páginas do arXiv.
+- `docs/00`, `docs/03` e `docs/05` alinhados (Marco 5 e fecho da releitura).
+- Pedida uma revisão só de leitura a um subagente (Opus), sem acesso a `data/` nem `results/`.
+
+**Validado**
+- 10 páginas, sem erros nem citações por resolver; 247 testes; ficheiros antigos de `latex/` iguais aos da etiqueta.
+
+**Pendente**
+- Achados da revisão, PDF final e registos finais.
+
