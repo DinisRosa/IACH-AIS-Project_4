@@ -1,0 +1,14 @@
+{
+  "id": "test_postproc_eval_2026-11-25",
+  "concedida_por": "utilizador (mensagem no chat, 2026-11-25)",
+  "conjuntos_autorizados": ["test"],
+  "finalidade": "selecao",
+  "fonte": "results/baseline_frozen/predictions_test_baseline.csv (previsoes ja guardadas da referencia congelada; sem reabrir o parquet nem correr a CNN)",
+  "decisoes_cobertas": [
+    "aplicar o filtro gaussiano de 301 pontos (escolhido pelo utilizador) as previsoes da referencia no test e medir antes e depois",
+    "comparar, so como contexto, com 13, 201 e 401 pontos"
+  ],
+  "validation_autorizado": false,
+  "citacao_literal": "Sim, acho que podemos fazer de 301. Quero que atualizes o plano para usar estes 301 testes com os pontos de teste e depois me dês os teus findings.",
+  "nota": "A aplicacao ao validation precisa de novo sim do utilizador e de protocolo v2 commitado antes."
+}

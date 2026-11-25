@@ -950,3 +950,15 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Decisão do utilizador sobre a nova janela; depois, protocolo v2 e aplicação única ao `validation`; atualizar figuras e valores da Secção 10 mantendo o texto.
+
+### 2026-11-25d — Janela de 301 pontos aplicada às previsões do `test` (REV-058), 2026-11-25 20:13 WET
+
+**Feito**
+- O utilizador escolheu 301 pontos. Autorização `configs/authorizations/test_postproc_eval.json`; programa `ais.cli.eval_postproc_test` (13, 201, 301 e 401; 301 é a escolha). Resultados em `results/postproc_window_analysis/test_eval.json` e `test_eval_resumo.csv`.
+- `test`, referência antes → 301: exatidão 94,7 % → 95,7 % (5 502 → 4 422 erros); segmentos de pesca previstos 358 → 32 (reais 18), F1 de segmentos 0,032 → 0,600; navegação 376 → 50 (reais 36), F1 0,151 → 0,814. Fronteiras: erro mediano do fim da pesca 100 s → 154 s. Melhoram 9 viagens e pioram 8; `219001624-2` cai de 83,7 % para 48,4 % e `220006000-2` de 74,0 % para 66,2 %.
+
+**Validado**
+- `pytest tests/`: 229 passaram. Leitura do `test` registada (`postproc_test_eval`).
+
+**Pendente**
+- «Sim» do utilizador para o protocolo v2 (301 pontos) e a aplicação única ao `validation`; depois, números e figuras da Secção 10 (texto mantido).

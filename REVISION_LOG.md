@@ -950,4 +950,4 @@ Regras:
 - **Ficheiros afetados:** `src/ais/phase1/postprocessing.py`, `src/ais/cli/analyze_error_runs.py`, `tests/test_postprocessing.py`, `configs/authorizations/test_postproc_window.json`, `PROGRESS.md`, `REVISION_LOG.md`.
 - **Correspondência no LaTeX:** **não aplicável** (por agora).
 - **Validação:** 227 testes; leituras do `test` registadas.
-- **Pendentes:** escolha da janela pelo utilizador, protocolo v2, aplicação única, atualização dos números e figuras da Secção 10.
+- **Pendentes:** protocolo v2 (301 pontos, escolhidos pelo utilizador; efeito no `test` em `results/postproc_window_analysis/test_eval.json`), aplicação única, atualização dos números e figuras da Secção 10.

@@ -103,3 +103,29 @@ def test_max_removable_island_grows_with_window():
     a = [max_removable_island(w, 0.65, 1) for w in (13, 51, 101)]
     assert a[0] >= 1 and a[0] < a[1] < a[2]
     assert max_removable_island(1, 0.65, 1) == 0
+
+
+def test_eval_postproc_test_on_synthetic():
+    import pandas as pd
+    from ais.cli.eval_postproc_test import evaluate
+    # Segmento de pesca de 600 pontos (os reais têm >= 584): as fronteiras recuam ~20 pontos de cada lado.
+    n = 950
+    p = np.r_[np.full(150, 0.02), np.full(600, 0.98), np.full(200, 0.02)]
+    p[60] = 0.9          # pesca isolada
+    p[440:460] = 0.1     # 20 pontos de navegação no meio de pesca
+    tgt = np.r_[np.zeros(150), np.ones(600), np.zeros(200)].astype(int)
+    df = pd.DataFrame({"id": "a", "point_id": range(n), "t": pd.date_range("2021-01-01", periods=n, freq="min").astype(str),
+                       "target": tgt, "p_fishing": p, "label": tgt})
+    df["predicted"] = (df["p_fishing"] >= 0.65).astype(int)
+    r = evaluate(df, sizes=(13, 301))
+    rows = {row["janela"]: row for row in r["resumo"]}
+    assert rows[None]["erros"] == 21
+    assert rows[301]["seg_pesca_previstos"] == 1 and rows[13]["seg_pesca_previstos"] == 2
+    assert rows[301]["erros"] < 60  # remove o buraco, mas as fronteiras recuam
+
+
+def test_large_window_erodes_short_real_segment():
+    # Risco conhecido: com 301 pontos, um segmento real de navegação de 30 pontos no meio de pesca desaparece.
+    p = np.r_[np.full(300, 0.98), np.full(30, 0.02), np.full(300, 0.98)]
+    s = smooth_trip(p, gaussian_kernel(301, 301 / 6))
+    assert np.all(s[300:330] >= 0.65)
