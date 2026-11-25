@@ -155,7 +155,7 @@ Compilar o LaTeX à mão (a partir de `latex/`), sem colidir com o vigilante: `p
 
 ## O que fazer a seguir
 
-1. **Aplicar a tabela da releitura** (`docs/05_releitura_proposta.md`, pontos A a H), numa revisão nova (REV-064), quando o utilizador o pedir. Para o ponto G (e para a Secção 10.2, que hoje tem esses números escritos à mão), gerar macros a partir de `results/postproc_window_analysis/test.json`. O número de páginas (16) trata-se depois, por decisão do utilizador.
+1. [REV-064 | cor #33691E] (2026-11-25 21:59 WET) **Reescrever a proposta** segundo `docs/06_plano_reescrita.md`, depois de o utilizador decidir D1 a D8 (inclui ficheiro novo ou o mesmo, e a versão de segurança no commit `7d60861`); a reescrita é a REV-065 e absorve a tabela A a H de `docs/05`. Próximo ID livre: **REV-065** (substitui a indicação de REV-064 mais acima).
 2. **Versão final sem cores** só quando o utilizador o pedir.
 3. **Arrumação técnica:** testes dos programas de treino e de figuras; unificar `class_metrics`; apagar restos do ensaio de 3 viagens e execuções antigas, se o utilizador quiser.
 4. **Dúvidas de dados (limitações):** CRS (hipótese WGS84), proveniência das anotações, cálculo de `distanceToShore`.

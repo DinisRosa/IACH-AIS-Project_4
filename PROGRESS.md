@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-063)
+## Estado atual (REV-064)
 
 | Marco | Estado |
 |---|---|
@@ -15,15 +15,15 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | 6 e 7 Congelar tudo e medição final no `validation` | **Feito (REV-053)**: medido só o modelo escolhido (a referência), uma única vez; J0 e J50 não foram medidas no `validation` |
 
 - **Baseline (CNN de referência):** treinada só com o treino oficial (87 viagens, 300 épocas, um checkpoint por época). **Época 162 e limiar 0,65**, escolhidos no `test` numa só ronda e congelados em `results/baseline_frozen/` (REV-038). Números em `results/baseline_frozen/final_results.json` e, no LaTeX, em macros geradas (REV-040). Os resultados do `test` são otimistas (serviram a escolher) e a perda no `test` é ruidosa entre épocas.
-- **J0 e J50 (REV-046, REV-047):** a mesma CNN sobre janelas de 64 pontos, sem sobreposição (J0) e com 50 % (J50), 300 épocas, lote de 32 janelas. J0 em 9,8 min e 105 300 passos; J50 em 21,3 min e 208 800 passos. Escolhidas no `test` numa só abertura: **J0 época 8, limiar 0,60; J50 época 4, limiar 0,75** (a perda no `test` sobe com o treino). Exatidão por ponto no `test`: referência 94,7 %, J0 93,5 %, J50 93,8 %; J50 reduz a fragmentação face a J0 e à referência, mas o F1 de segmentos de pesca é baixo (cerca de 0,03) nas três. Congeladas em `results/windows_j0_frozen/` e `results/windows_j50_frozen/`; números em `results/windows_final/final_results_windows.json` (fonte única) e, no LaTeX, em macros geradas. Resultados otimistas (serviram a escolher).
+- **J0 e J50 (REV-046, REV-047):** a mesma CNN sobre janelas de 64 pontos, sem sobreposição (J0) e com 50 % (J50), 300 épocas, lote de 32 janelas. J0 em 9,8 min e 105 300 passos; J50 em 21,3 min e 208 800 passos. Escolhidas no `test` numa só abertura: **J0 época 8, limiar 0,60; J50 época 4, limiar 0,75** (a perda no `test` sobe com o treino). Exatidão por ponto no `test`: referência 94,7 %, J0 93,4 %, J50 93,7 % (valores das macros geradas); J50 reduz a fragmentação face a J0 e à referência, mas o F1 de segmentos de pesca é baixo (cerca de 0,03) nas três. Congeladas em `results/windows_j0_frozen/` e `results/windows_j50_frozen/`; números em `results/windows_final/final_results_windows.json` (fonte única) e, no LaTeX, em macros geradas. Resultados otimistas (serviram a escolher).
 - **Conjuntos reservados:** o `test` foi aberto **duas vezes**, cada uma ao abrigo da sua autorização (baseline e janelas) e registada em `results/access_log.jsonl`; o `validation` foi aberto **uma única vez**, na medição final (REV-053, autorização `validation_final_2026-11-24`); **está gasto**. Validação e teste foram lidos por inteiro só para construir as bases limpas (REV-015).
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU), pacote `ais` instalado em modo editável (REV-034). Dependências em `requirements.txt`.
 - **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. O janelamento está em `windows.py`, `run_window_training`, `select_windows_on_test` e `build_window_results`; o filtro do pós-processamento está em `postprocessing.py` (REV-056).
 - **Testes:** 243 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
-- **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15), com a Secção 9 (medição final) antes do anexo (REV-053). Texto estável a preto (REV-043); o novo tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C`, REV-048 `#1B5E20` `#880E4F` (REV-052: 4.3, 4.4, Secção 5, Secção 8 e Anexo A) e `#0D47A1` (REV-053: Secção 9 e as frases sobre o `validation`).
-- **Git:** o estado muda a cada commit e push; confirmar com `git status -sb` e `git log origin/main..HEAD`. O push só se faz a pedido explícito do utilizador, sem mais confirmações (REV-055). Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-055.
+- **LaTeX:** `latex/proposta_pt.tex` compila com 16 páginas (os registos falam num limite de 15), com as Secções 8 a 11 e o Anexo A. Texto estável a preto (REV-043); o restante tem a cor da sua revisão (preâmbulo do `.tex`). **A reescrever** segundo `docs/06_plano_reescrita.md` (REV-064).
+- **Git:** o estado muda a cada commit e push; confirmar com `git status -sb` e `git log origin/main..HEAD`. O push só se faz a pedido explícito do utilizador, sem mais confirmações (REV-055).
+- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-064.
 
 ## Decisões do utilizador (vigentes)
 
@@ -39,7 +39,8 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 - **Critério de seleção (decisão do utilizador):** a menor perda por ponto no `test` escolheu épocas muito cedo (4 e 8), porque a perda no `test` sobe com o treino; a baseline foi escolhida bem mais tarde (162). Mudar o critério (por exemplo, o F1) ou travar o treino mais cedo seria uma decisão metodológica nova, com novo protocolo e nova autorização, e obrigaria a repetir a baseline por igualdade. Por agora fica como está, registado como limitação.
 - **Marco 5:** feito (REV-057). RQ3 sem resposta (J0 e J50 não pós-processadas).
-- **LaTeX:** passagens adiadas resolvidas em REV-062; falta aplicar a tabela da releitura (`docs/05_releitura_proposta.md`, A a H) e passar a macros os números da Secção 10.2. O número de páginas (16) trata-se depois.
+- **Reescrita da proposta (REV-064):** aprovado o género (relatório do trabalho feito) e a estrutura base; por decidir D1 a D8 de `docs/06_plano_reescrita.md` (páginas, cores, frase sobre o filtro, figuras, título, modelo, ficheiro novo ou o mesmo, versão de segurança). A tabela A a H de `docs/05` e as macros da Secção 10.2 entram nessa reescrita.
+- **Documentos desatualizados:** linhas do Marco 5 em `docs/00` e `docs/03` (a corrigir na fase 5 do plano).
 - **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
 - **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
 
@@ -1028,3 +1029,29 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Aplicar A a H (REV-064) quando o utilizador o pedir; número de páginas depois; arrumação técnica.
+
+### 2026-11-25j — Plano de reescrita da proposta (REV-064), 2026-11-25 21:59 WET
+
+**Feito**
+- Leitura de preparação (handoff, regras, registos, `docs/00` a `05`, `.tex`, macros, PDF; dos artigos só as primeiras páginas, e a tese de Ghazizadeh sem texto extraível).
+- O utilizador aprovou reescrever a proposta como relatório do trabalho feito, com a estrutura base. Escrito `docs/06_plano_reescrita.md`; `docs/05` e `README.md` alinhados; no «Estado atual» corrigidas linhas desatualizadas (exatidões de J0 e J50, LaTeX, git, intervalo de REV).
+
+**Validado**
+- Antes das alterações (21:26 WET): `pytest tests/`, 243 passaram; LaTeX compilado para uma pasta temporária, 16 páginas, sem erros nem referências indefinidas. Depois só mudaram ficheiros Markdown.
+
+**Problemas**
+- Na releitura: contradições novas na proposta (9.2 diz que o pós-processamento não foi estudado; erros de fronteira prometidos na 10.3 e não apresentados; «única diferença» do janelamento) e a 10.3 sugere uma medição independente do filtro. Todas em `docs/06` §5.
+
+**Pendente**
+- Decisões D1 a D6; reescrita (REV-065); commit destes documentos; arrumação técnica.
+
+### 2026-11-25k — Plano revisto: ficheiro novo e versão de segurança (REV-064), 2026-11-25 22:25 WET
+
+**Feito**
+- O utilizador propôs escrever num ficheiro novo (ou reescrever o atual com indicação no `README.md` de como recuperar a versão anterior) e quer decidir antes de se avançar. `docs/06` ganha D7, D8, a §2.1 (versão de segurança) e uma fase própria. Nenhum `.tex`, etiqueta ou commit criado.
+
+**Validado**
+- `latex/` igual ao do commit `7d60861`, que está em `origin/main`; o `.tex` de `1ab2376` é anterior a REV-062. Comando de recuperação ensaiado num clone temporário.
+
+**Pendente**
+- Decisões D1 a D8; commit dos documentos; reescrita (REV-065).

@@ -1,6 +1,6 @@
 # 05 — Releitura da proposta: passagens a corrigir
 
-[REV-063 | cor #FF7043] Resultado da releitura de `latex/proposta_pt.tex` feita em 2026-11-25, depois de REV-062 (passagens adiadas). Lista o que ainda contradiz o trabalho feito, com a recomendação para cada passagem. **Ainda não aplicado:** cada alteração ao `.tex` fica para uma revisão nova (próximo ID livre: REV-064), com cor própria, números só por macros geradas e o texto cortado registado no `REVISION_LOG.md`.
+[REV-063 | cor #FF7043] Resultado da releitura de `latex/proposta_pt.tex` feita em 2026-11-25, depois de REV-062 (passagens adiadas). Lista o que ainda contradiz o trabalho feito, com a recomendação para cada passagem. **Ainda não aplicado.** [REV-064 | cor #33691E] Estes pontos passam a ser aplicados dentro da reescrita planeada em `docs/06_plano_reescrita.md` (revisão REV-065), com números só por macros geradas e o texto cortado registado no `REVISION_LOG.md`.
 
 Critério combinado com o utilizador: o que descreve algo feito de outra forma **reescreve-se**; o que não foi feito mas faz sentido continuar passa a **trabalho futuro** (formulação: «estava previsto e não foi concluído nesta fase», sem dar motivo); o que é simplesmente falso **corta-se** ou **corrige-se**. Nada fica como está se contradisser o trabalho.
 

@@ -1,23 +1,27 @@
 # Projeto AIS
 
-Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto, usando uma rede neuronal convolucional unidimensional (CNN 1D). A ordem é: pré-processamento; CNN 1D de referência sobre a viagem completa (feita e fechada); a mesma CNN 1D sobre janelas com sobreposição (feita: J0 e J50); pós-processamento temporal (só se o utilizador o decidir).
+Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto, usando uma rede neuronal convolucional unidimensional (CNN 1D). A ordem é: pré-processamento; CNN 1D de referência sobre a viagem completa (feita e fechada); a mesma CNN 1D sobre janelas com sobreposição (feita: J0 e J50); pós-processamento temporal (feito: filtro gaussiano de 301 pontos sobre a referência).
 
 ## Estado
 
 - **Marcos 1 a 3 fechados.** A CNN de referência (viagem completa) foi treinada só com o treino oficial (87 viagens, 300 épocas) e congelada: época 162 e limiar 0,65, escolhidos no conjunto `test` numa só ronda (REV-038, REV-041). Os números estão em `results/baseline_frozen/final_results.json` e, no relatório, em macros geradas por código.
 - **Marco 4 (janelamento com a mesma CNN) feito (REV-046, REV-047):** J0 (sem sobreposição) e J50 (50 %), com janelas de 64 pontos, foram treinadas só com o treino, selecionadas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Nenhuma supera a referência por ponto no `test`; J50 reduz a fragmentação face a J0. Números em `results/windows_final/final_results_windows.json` e na Secção 8 do LaTeX.
-- Conjuntos reservados: o `test` serve para selecionar e foi aberto uma só vez; o `validation` é a medição final e foi aberto **uma única vez** (REV-053), só para o modelo escolhido (a referência): exatidão por ponto de 94,4 %. Está gasto.
-- 192 testes sintéticos a passar. Ver `PROGRESS.md` (estado e histórico) e `handoff.md` (para retomar numa nova sessão).
+- Conjuntos reservados: o `test` serve para selecionar e teve duas aberturas de seleção (referência e janelas), além de leituras posteriores registadas (diagnóstico e pós-processamento); o `validation` é a medição final e foi aberto **uma única vez** (REV-053), só para o modelo escolhido (a referência): exatidão por ponto de 94,4 %. Está gasto; o pós-processamento (REV-057, REV-059) reutilizou as previsões e anotações já guardadas.
+- 243 testes a passar. Ver `PROGRESS.md` (estado e histórico) e `handoff.md` (para retomar numa nova sessão).
+- **Em curso:** reescrita da proposta, com o plano em `docs/06_plano_reescrita.md` (REV-064), à espera das decisões D1 a D8; o `.tex` ainda não mudou. A última versão da proposta está no commit `7d60861`.
 
 ## Estrutura
 
 - `AGENTS.md`: regras e instruções do projeto (fonte única). `CLAUDE.md`: manda ler o `AGENTS.md`.
-- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-063). `handoff.md`: ponto de situação para outra sessão.
-- `docs/`: documentação, em quatro ficheiros.
+- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-064). `handoff.md`: ponto de situação para outra sessão.
+- `docs/`: documentação.
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos e política de acesso aos dados.
   - `01_dados_e_preparacao.md`: dicionário das colunas, unidades verificadas, entradas da CNN e preparação.
   - `02_cnn_viagem_completa.md`: a CNN de referência (Marco 3), o que está implementado e o estado.
   - `03_cnn_janelamento.md`: decisões e contratos do Marco 4 (janelas e sobreposição), tal como foram implementados.
+  - `04_pos_processamento.md`: o pós-processamento (Marco 5), com o histórico das duas versões.
+  - `05_releitura_proposta.md`: passagens da proposta por corrigir (A a H), absorvidas pelo plano seguinte.
+  - `06_plano_reescrita.md`: plano e decisões pendentes da reescrita da proposta.
 - `src/ais/`: todo o código (pacote `ais`, instalado em modo editável pelo `pyproject.toml`).
   - `phase1/`: biblioteca (dados e sequências, normalizador, CNN 1D, treino, checkpoints, inferência, métricas, segmentos, acesso aos conjuntos reservados, critérios de seleção).
   - `cli/`: programas, que se correm com `python -m ais.cli.<nome>` (ver abaixo).

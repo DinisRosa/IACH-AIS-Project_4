@@ -1010,3 +1010,16 @@ Regras:
 - **Validação:** 243 testes; LaTeX completo sem erros (16 páginas), às 21:22 WET. Verificado no código que a velocidade usada é `speed_calc_mps`.
 - **Limitações:** a Secção 10.2 (REV-059) tem números dos blocos de erro escritos à mão; devem passar a macros geradas (AGENTS §10). Registado em `docs/05`.
 - **Pendentes:** aplicar A a H.
+
+### REV-064 — Plano de reescrita da proposta (docs/06)
+
+- **Data:** 2026-11-25 21:59 WET.
+- **Cor:** Verde-musgo `#33691E`, RGB (51, 105, 30). Só marcador do registo e dos documentos; o `.tex` não foi alterado.
+- **O quê:** novo `docs/06_plano_reescrita.md`: princípios, decisões pendentes D1 a D6, estrutura nova com orçamento de páginas, destino de figuras e tabelas, correções obrigatórias (A a H e I a R), fases e critérios de conclusão. `docs/05` passa a remeter para o plano; `README.md` e o «Estado atual» do `PROGRESS.md` atualizados (linhas desatualizadas corrigidas); `handoff.md` aponta o novo próximo passo.
+- **Porquê:** o utilizador pediu a reestruturação (reescrita) da proposta, aprovou o género de relatório do trabalho feito e pediu o plano.
+- **Ficheiros afetados:** `docs/06_plano_reescrita.md`, `docs/05_releitura_proposta.md`, `README.md`, `PROGRESS.md`, `handoff.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **pendente** (REV-065, depois das decisões).
+- **Validação:** o plano assenta na leitura do `.tex`, do PDF compilado e do código dos geradores; testes (243) e compilação (16 páginas) feitos às 21:26 WET, antes de só se alterar Markdown.
+- **Limitações:** as páginas por secção são estimativas; as afirmações do trabalho relacionado ainda não foram confirmadas artigo a artigo (fase 2).
+- **Pendentes:** decisões D1 a D6 e execução do plano.
+- **Complemento (22:25 WET, mesma revisão):** por proposta do utilizador, o plano passa a ter D7 (ficheiro novo `relatorio_pt.tex` ou o mesmo) e D8 (versão de segurança no commit `7d60861`, com etiqueta e instruções no `README.md`). Pendentes: D1 a D8. Sem alterações ao `.tex`, sem etiqueta nem commit.
