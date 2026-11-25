@@ -951,3 +951,15 @@ Regras:
 - **Correspondência no LaTeX:** **não aplicável** (por agora).
 - **Validação:** 227 testes; leituras do `test` registadas.
 - **Pendentes:** protocolo v2 (301 pontos, escolhidos pelo utilizador; efeito no `test` em `results/postproc_window_analysis/test_eval.json`), aplicação única, atualização dos números e figuras da Secção 10.
+
+### REV-059 — Pós-processamento v2: janela de 301 pontos no validation
+
+- **Data:** 2026-11-25 20:33 WET.
+- **Cor:** Magenta-escuro `#8B008B`, RGB (139, 0, 139).
+- **O quê:** protocolo v2 e programa com execução única por versão; execução única no `validation`; verificação independente; Secção 10 da proposta (tamanho, σ, justificação, fórmula, legendas, 10.4 e 10.5) e figuras e macros regeneradas. Resultados: exatidão 94,4 % → 94,8 % (11 662 → 10 790 erros); segmentos de pesca previstos 486 → 32 (reais 18), de navegação 502 → 49 (reais 35); F1 de segmentos de pesca 0,028 → 0,600 e de navegação 0,119 → 0,786; 4 100 pontos mudam (2 486 corrigidos, 1 614 estragados); melhoram 11 viagens e pioram 7, a pior `219020187-4` de 40,4 % para 19,7 %.
+- **Porquê:** decisão do utilizador de refazer o pós-processamento com uma janela maior, escolhida no `test` (REV-058).
+- **Ficheiros afetados:** `configs/postproc_protocol_v2.json`, `src/ais/cli/postproc_validation.py`, `src/ais/cli/build_postproc_results.py`, `src/ais/cli/verify_postproc_independent.py`, `src/ais/cli/plot_postprocessing_kernel.py`, `tests/test_postproc_validation.py`, `latex/proposta_pt.tex`, `latex/generated/resultados_posproc.tex`, `latex/figures/posproc_*.png`, `docs/04`, `PROGRESS.md`, `README.md`, `handoff.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**; 14 páginas, 0 erros. O texto de REV-056/REV-057 que dependia dos 13 pontos foi substituído por texto `rev059`; o restante mantém-se.
+- **Validação:** 243 testes; verificação independente 19/19; eventos `postproc_start`/`postproc_done` com `posproc_validation_v2` no `access_log.jsonl`.
+- **Limitações:** **registo de integridade** — a v1 (13 pontos) foi aplicada ao `validation` antes desta decisão; por decisão do utilizador não é mencionada na proposta (está em `docs/04` §5 e REV-057/REV-058). Terceira utilização das anotações do `validation`. Uma semente, 18 viagens, sem intervalo de incerteza.
+- **Pendentes:** nenhum do Marco 5.

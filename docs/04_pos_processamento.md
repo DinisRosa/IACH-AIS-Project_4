@@ -70,16 +70,27 @@ Leitura: com 301 a fragmentação quase desaparece e a exatidão sobe 1 ponto pe
 | # | Passo | Quem | Estado |
 |---|---|---|---|
 | 1 | Este documento atualizado | Coordenador | **Feito (REV-058)** |
-| 2 | Protocolo `configs/postproc_protocol_v2.json` (301 pontos, σ = 301/6, limiar 0,65, mesma fonte e hash; uma execução; regista que a v1 existiu), commitado **antes** de medir | Coordenador (revisão da Abacus) | Por fazer, depois do sinal do utilizador |
-| 3 | Programa: `postproc_validation` passa a aceitar a v2 (uma execução da v2, independente da v1 já feita), com saída em `results/postproc_validation_v2/` | Abacus (gera), coordenador (revê e integra) | Por fazer |
-| 4 | Testes sintéticos da v2 (uma execução, v1 não bloqueia a v2, segunda v2 recusada, hash, tamanho) | Abacus (gera), subagente (corre e corrige os testes) | Por fazer |
-| 5 | Revisão independente do código antes de executar | Abacus | Por fazer |
-| 6 | Execução única da v2 no `validation` | Coordenador | Por fazer |
-| 7 | Confirmação dos números por uma segunda implementação (`verify_postproc_independent` com tamanho 301) | Abacus (adapta), coordenador (corre localmente) | Por fazer |
-| 8 | Macros, figuras e números da Secção 10 atualizados para a v2; o texto mantém-se (só se ajustam o tamanho, o σ e a justificação do 301) | Coordenador | Por fazer |
-| 9 | `PROGRESS.md`, `REVISION_LOG.md`, handoff e commits | Coordenador | Por fazer |
+| 2 | Protocolo `configs/postproc_protocol_v2.json` (301 pontos, σ = 301/6, limiar 0,65, mesma fonte e hash; uma execução; regista que a v1 existiu), commitado **antes** de medir | Coordenador (revisão da Abacus) | **Feito (REV-059)**, commit antes de medir |
+| 3 | Programa: `postproc_validation` passa a aceitar a v2 (uma execução da v2, independente da v1 já feita), com saída em `results/postproc_validation_v2/` | Abacus (gera), coordenador (revê e integra) | **Feito (REV-059)** |
+| 4 | Testes sintéticos da v2 (uma execução, v1 não bloqueia a v2, segunda v2 recusada, hash, tamanho) | Abacus (gera), subagente (corre e corrige os testes) | **Feito (REV-059)**: a falha era do teste |
+| 5 | Revisão independente do código antes de executar | Abacus | **Feito (REV-059)**: corrigidos escrita atómica, hash fixado no código, árvore limpa obrigatória |
+| 6 | Execução única da v2 no `validation` | Coordenador | **Feito (REV-059)**, 2026-11-25, `results/postproc_validation_v2/` |
+| 7 | Confirmação dos números por uma segunda implementação (`verify_postproc_independent` com tamanho 301) | Abacus (adapta), coordenador (corre localmente) | **Feito (REV-059)**: 19/19 |
+| 8 | Macros, figuras e números da Secção 10 atualizados para a v2; o texto mantém-se (só se ajustam o tamanho, o σ e a justificação do 301) | Coordenador | **Feito (REV-059)**: também os parágrafos de resultados cujos números deixaram de estar certos |
+| 9 | `PROGRESS.md`, `REVISION_LOG.md`, handoff e commits | Coordenador | **Feito (REV-059)** |
 
 A Abacus recebe só código, contratos e descrições, nunca dados nem linhas do `validation` ou do `test`.
+
+## 4.1 Resultados da v2 no `validation` (REV-059)
+
+[REV-059 | cor #8B008B] Referência antes → depois (301 pontos): exatidão 94,4 % → 94,8 % (11 662 → 10 790 erros); segmentos de pesca previstos 486 → 32 (reais 18), de navegação 502 → 49 (reais 35); F1 de segmentos de pesca 0,028 → 0,600 e de navegação 0,119 → 0,786; 4 100 pontos mudam (2 486 corrigidos, 1 614 estragados); melhoram 11 viagens e pioram 7, a pior `219020187-4` de 40,4 % para 19,7 %. Números em `results/postproc_validation_v2/postproc_validation.json`, confirmados por `verify_postproc_independent --size 301` (19/19); macros em `latex/generated/resultados_posproc.tex`. Resposta à RQ2: a fragmentação cai muito e a exatidão sobe; as viagens em que a CNN erra durante muito tempo pioram.
+
+Reprodução (não volta a executar: `postproc_validation` recusa uma segunda execução de cada versão):
+```bash
+iach-ais-venv-4/bin/python -m ais.cli.verify_postproc_independent --size 301 results/final_validation/predictions_validation.csv
+iach-ais-venv-4/bin/python -m ais.cli.build_postproc_results
+iach-ais-venv-4/bin/python -m ais.cli.plot_postprocessing_kernel
+```
 
 ## 5. Histórico: v1 (janela de 13 pontos) — registo interno, fora da proposta
 

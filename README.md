@@ -12,7 +12,7 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 ## Estrutura
 
 - `AGENTS.md`: regras e instruções do projeto (fonte única). `CLAUDE.md`: manda ler o `AGENTS.md`.
-- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-057). `handoff.md`: ponto de situação para outra sessão.
+- `PROGRESS.md`: estado, decisões, pendentes e histórico por entrada. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-059). `handoff.md`: ponto de situação para outra sessão.
 - `docs/`: documentação, em quatro ficheiros.
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos e política de acesso aos dados.
   - `01_dados_e_preparacao.md`: dicionário das colunas, unidades verificadas, entradas da CNN e preparação.
@@ -54,9 +54,10 @@ Executar a partir da raiz do projeto, por exemplo `iach-ais-venv-4/bin/python -m
 | `run_window_training <config>` | Treina a mesma CNN sobre janelas (`configs/windows_j0.json`, `windows_j50.json`), só com o treino; um checkpoint por época e limite de tempo. |
 | `select_windows_on_test` | **Uma só abertura** do `test`: escolhe época e limiar de J0 e J50, mede por segmento a baseline, J0 e J50 e congela as duas variantes. Já executado; não repetir. |
 | `build_window_results` | Gera `results/windows_final/final_results_windows.json`, as macros `latex/generated/resultados_janelas.tex` e as figuras `latex/figures/janelas_*.png`. |
-| `postproc_validation` | Execução ÚNICA do pós-processamento sobre as previsões guardadas da referência no `validation` (REV-057); recusa uma segunda execução. |
+| `postproc_validation --version posproc_validation_v1\|posproc_validation_v2` | Execução ÚNICA de cada versão do pós-processamento sobre as previsões guardadas da referência no `validation` (v1: 13 pontos, REV-057; v2: 301 pontos, REV-059); as duas já foram executadas. |
 | `build_postproc_results` | Macros e figuras da Secção 10 a partir dos resultados; confirma a verificação independente. |
-| `verify_postproc_independent <csv>` | Segunda implementação, independente, das métricas do pós-processamento (REV-057). |
+| `verify_postproc_independent [--size N] <csv>` | Segunda implementação, independente, das métricas do pós-processamento (REV-057). |
+| `analyze_error_runs --split test\|train` e `eval_postproc_test` | Buracos nas previsões e efeito das janelas no `test` (REV-058). |
 | `plot_postprocessing_kernel` | Figura da janela gaussiana do pós-processamento (pesos e exemplo sintético), sem ler dados (REV-056). |
 | `plot_trip_diagnostic <id da viagem>` | Gráfico de diagnóstico de uma viagem do `test` (classe real e prevista pela referência, J0 e J50, e probabilidades), só a partir das previsões já geradas (REV-049); com `--xy`, as coordenadas, que exigem uma autorização de diagnóstico própria (REV-050). Sem teste automático. |
 | `final_validation` | **Medição final, uma só abertura do `validation`**: escolhe o modelo pelo critério declarado (só com o `test`), mede só esse modelo por ponto e por segmento. Já executado; não repetir (REV-053). |
