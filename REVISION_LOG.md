@@ -1077,3 +1077,4 @@ Regras:
 - **Validação:** relatório com 10 páginas, sem erros nem referências em falta.
 - **Pendentes:** leitura do relatório.
 - **Complemento (23:37 WET, mesma revisão):** envio para o GitHub pedido pelo utilizador; `handoff.md` e `PROGRESS.md` acertados. Sem alterações a código nem ao `.tex`.
+- **Complemento (23:39 WET, mesma revisão):** a pedido do utilizador, `handoff.md` e `PROGRESS.md` preparados para uma nova conversa, com nova validação (247 testes, relatório com 10 páginas, GitHub em `6249d54`). Sem alterações a código nem ao `.tex`.

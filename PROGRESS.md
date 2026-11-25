@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-068, 2026-11-25 23:35 WET; refeito em REV-066)
+## Estado atual (REV-068, 2026-11-25 23:39 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -45,6 +45,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 ## Pendências abertas
 
 - **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-069), com cor.
+- **Em aberto no resumo:** proposta de começar a frase do filtro por «Numa análise posterior, …», para não se ler como parte da medição final; sem resposta do utilizador.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
 - **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
@@ -1206,3 +1207,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Envio (23:37 WET)**
 - O utilizador pediu o envio da REV-068 para o GitHub.
+
+### 2026-11-25v — Handoff preparado para uma nova conversa (REV-068), 2026-11-25 23:39 WET
+
+**Feito**
+- `handoff.md` atualizado: validação, cronologia, próximo passo e o ponto em aberto no resumo.
+
+**Validado (23:39 WET)**
+- 247 testes; relatório com 10 páginas, sem erros nem referências em falta; `main` local e remoto em `6249d54`; as duas etiquetas no remoto; nenhum vigilante a correr.
+
+**Pendente**
+- Leitura do relatório pelo utilizador e decisão sobre a frase do filtro no resumo.

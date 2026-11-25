@@ -1,12 +1,12 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-25 23:37 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 e REV-068. Todas as horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-065).
+**Atualizado em 2026-11-25 23:39 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 e REV-068. Todas as horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-065).
 
 ## Ponto de situação em quatro linhas
 
 - O trabalho técnico está **feito**: preparação, CNN de referência, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O documento ativo é o **relatório** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto), que substituiu a proposta.
-- **O próximo passo é do utilizador: ler o relatório** e pedir ajustes (revisão REV-069, com cor). O primeiro ajuste (REV-068, resumo) já está feito.
+- **O próximo passo é continuar o relatório** a partir da leitura do utilizador (revisão REV-069, com cor). O primeiro ajuste (REV-068, resumo) está feito e enviado; há um ponto em aberto sobre o resumo (secção «O relatório»).
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -24,13 +24,12 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 
 | Verificação | Resultado | Hora (WET, 2026-11-25) |
 |---|---|---|
-| Relatório depois da REV-068 (`pdflatex` + `bibtex` + 2 × `pdflatex`) | 10 páginas, sem erros nem referências em falta; frase ausente do resumo no PDF. Os testes não foram repetidos (sem alterações a código) | 23:34 |
-| GitHub (`git push` e `git ls-remote`) | já estava atualizado: `main` em `7b9005a`, 0 commits por enviar ou receber; etiquetas `proposta-pt-v1` (`7d60861`) e `docs-historico-v1` (`b8580b5`) presentes | 23:21 |
-| `pytest tests/` | 247 passaram | 23:21 |
-| Relatório em `latex/build/relatorio_pt.pdf` (compilado pelo vigilante) | 10 páginas; `.tex` sem alterações desde `100e2b2` | 23:21 |
-| Compilação com `pdflatex` + `bibtex` + 2 × `pdflatex` | sem erros nem referências em falta | 23:11 |
+| `pytest tests/` | 247 passaram | 23:39 |
+| Relatório (`pdflatex` + `bibtex` + 2 × `pdflatex`) | 10 páginas, sem erros nem referências em falta | 23:39 |
+| GitHub (`git fetch` e `git ls-remote`) | `main` local e remoto em `6249d54`, 0 commits por enviar ou receber; etiquetas `proposta-pt-v1` (`7d60861`) e `docs-historico-v1` (`b8580b5`) presentes | 23:39 |
+| Vigilante do LaTeX | nenhum a correr | 23:39 |
 | Recuperação da proposta antiga (num clone temporário) | os dois comandos do `README.md` funcionaram e a proposta compilou | 23:12 |
-| Revisão independente do relatório (subagente Opus, só leitura) | sem erros graves; achados aplicados | 23:00 |
+| Revisão independente do relatório (subagente Opus, só leitura; anterior à REV-068) | sem erros graves; achados aplicados | 23:00 |
 
 O que mudar depois destas horas **não foi** validado por este handoff.
 
@@ -38,6 +37,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `6249d54` | 2026-11-25 23:37 | Regista o pedido de envio da REV-068 |
 | `5ee8117` | 2026-11-25 23:35 | Retira do resumo a ressalva sobre o filtro (REV-068) |
 | `d750eb1` | 2026-11-25 23:24 | Regista que nenhum vigilante fica a correr (REV-067) |
 | `79eca07` | 2026-11-25 23:23 | Regista que o vigilante antigo foi parado (REV-067) |
@@ -62,7 +62,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 | `38f2857` | 2026-11-25 22:37 | Plano de reescrita da proposta como relatório (REV-064) |
 | `7d60861` | 2026-11-25 21:24 | Última versão da proposta (REV-063; etiqueta `proposta-pt-v1`) |
 
-O commit desta atualização vem a seguir e não está na tabela; o envio foi pedido pelo utilizador (confirmar com `git status -sb`).
+O commit desta atualização do handoff vem a seguir e não está na tabela; confirmar com `git status -sb` se já foi enviado.
 
 ## O que se fez nesta conversa (2026-11-25, à noite)
 
@@ -73,6 +73,8 @@ O commit desta atualização vem a seguir e não está na tabela; o envio foi pe
 5. Arrumação (REV-066): proposta em LaTeX retirada, PDF guardado, build do relatório direto em `latex/build/`, documentos refeitos.
 6. Documentação (REV-067): ficam `docs/00` (reescrito) e `docs/01`; `docs/02` a `06` na etiqueta `docs-historico-v1`; envio para o GitHub a pedido.
 7. O utilizador confirmou que a pasta `docs` fica assim (não repor o `05` nem o `06`), iniciou o vigilante novo e pediu para confirmar o GitHub, atualizar os registos e voltar a enviar.
+8. Ajuste ao resumo (REV-068): retirada a ressalva sobre o filtro, PDF recompilado e enviado ao utilizador, push a pedido.
+9. Handoff e registos atualizados e validados de novo, para continuar numa conversa nova.
 
 ## Estado e resultados
 
@@ -108,6 +110,8 @@ Estrutura: resumo; 1 Introdução; 2 Trabalho relacionado; 3 Dados e preparaçã
 As figuras do esquema e da CNN são TikZ no próprio `.tex`. Alguns geradores leem previsões já guardadas dos conjuntos reservados: não os correr sem necessidade e, para o `test` ou o `validation`, pedir autorização.
 
 **Resumo (REV-068):** o utilizador mandou retirar «este resultado não vem de uma medição independente». Não a repor no resumo; a ressalva continua no corpo e não se retira de lá sem pedido.
+
+**Em aberto no resumo (sem decisão do utilizador):** a frase do filtro vem logo a seguir a «Na medição final…», e quem ler só o resumo pode tomar os 94,8 % como medição final independente. Foi proposto começá-la por «Numa análise posterior, um filtro gaussiano…», sem repor a frase retirada; o utilizador ainda não respondeu. Não aplicar sem o seu acordo.
 
 **Não reintroduzir** (corrigido em REV-065, algumas coisas pela revisão independente):
 - o resultado do filtro como medição independente, ou «medido uma única vez»; a versão de 13 pontos está declarada;
@@ -169,9 +173,9 @@ bash latex/watch_latex.sh
 
 ## O que fazer a seguir
 
-1. **Esperar pela leitura do relatório** pelo utilizador e aplicar os ajustes (REV-069).
+1. **Continuar o relatório** com o que o utilizador pedir (REV-069); lembrar o ponto em aberto no resumo.
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. O envio da REV-068 foi pedido pelo utilizador; confirmar com `git status -sb`.
+3. **Push:** só a pedido. Até `6249d54` está no GitHub; para o que vier depois, confirmar com `git status -sb`.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 
