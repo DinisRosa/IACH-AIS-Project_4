@@ -1076,3 +1076,4 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** relatório com 10 páginas, sem erros nem referências em falta.
 - **Pendentes:** leitura do relatório.
+- **Complemento (23:37 WET, mesma revisão):** envio para o GitHub pedido pelo utilizador; `handoff.md` e `PROGRESS.md` acertados. Sem alterações a código nem ao `.tex`.

@@ -1202,4 +1202,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - O resumo fica sem a ressalva; o corpo do relatório mantém-na.
 
 **Pendente**
-- Leitura do relatório pelo utilizador. Commit local por enviar.
+- Leitura do relatório pelo utilizador.
+
+**Envio (23:37 WET)**
+- O utilizador pediu o envio da REV-068 para o GitHub.

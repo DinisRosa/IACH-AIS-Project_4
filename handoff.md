@@ -1,6 +1,6 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-25 23:35 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 e REV-068. Todas as horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-065).
+**Atualizado em 2026-11-25 23:37 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 e REV-068. Todas as horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-065).
 
 ## Ponto de situação em quatro linhas
 
@@ -38,6 +38,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `5ee8117` | 2026-11-25 23:35 | Retira do resumo a ressalva sobre o filtro (REV-068) |
 | `d750eb1` | 2026-11-25 23:24 | Regista que nenhum vigilante fica a correr (REV-067) |
 | `79eca07` | 2026-11-25 23:23 | Regista que o vigilante antigo foi parado (REV-067) |
 | `552c0fc` | 2026-11-25 23:22 | Atualiza o handoff e os registos depois de confirmar o GitHub (REV-067) |
@@ -61,7 +62,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 | `38f2857` | 2026-11-25 22:37 | Plano de reescrita da proposta como relatório (REV-064) |
 | `7d60861` | 2026-11-25 21:24 | Última versão da proposta (REV-063; etiqueta `proposta-pt-v1`) |
 
-O commit da REV-068 vem a seguir, não está na tabela e **não foi enviado** (não houve pedido de push); confirmar com `git status -sb`.
+O commit desta atualização vem a seguir e não está na tabela; o envio foi pedido pelo utilizador (confirmar com `git status -sb`).
 
 ## O que se fez nesta conversa (2026-11-25, à noite)
 
@@ -170,7 +171,7 @@ bash latex/watch_latex.sh
 
 1. **Esperar pela leitura do relatório** pelo utilizador e aplicar os ajustes (REV-069).
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. Foi enviado tudo até `d750eb1`; a REV-068 está só no repositório local.
+3. **Push:** só a pedido. O envio da REV-068 foi pedido pelo utilizador; confirmar com `git status -sb`.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 
