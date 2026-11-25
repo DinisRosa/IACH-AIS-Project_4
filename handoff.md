@@ -86,7 +86,7 @@ RQ1: as janelas não superam a viagem completa. RQ2: o filtro reduz muito a frag
 
 Estrutura: resumo; 1 Introdução; 2 Trabalho relacionado; 3 Dados e preparação; 4 Método; 5 Protocolo experimental; 6 Resultados e discussão; 7 Limitações, ética e dimensão humana; 8 Conclusões e trabalho futuro; anexo do janelamento.
 
-**Compilar:** `bash latex/watch_latex.sh` (local, não versionado; recompila para `latex/build/relatorio_pt.pdf`) ou os comandos do `README.md`. O vigilante só reage a `relatorio_pt.tex` e `references.bib`: depois de gerar macros ou figuras, reiniciá-lo. Às 23:23 corria só o novo (iniciado às 23:14); o antigo, que procurava a proposta, foi parado pelo utilizador.
+**Compilar:** `bash latex/watch_latex.sh` (local, não versionado; recompila para `latex/build/relatorio_pt.pdf`) ou os comandos do `README.md`. O vigilante só reage a `relatorio_pt.tex` e `references.bib`: depois de gerar macros ou figuras, reiniciá-lo. Às 23:24 não havia nenhum vigilante a correr (o utilizador parou os dois): iniciá-lo com o comando acima quando for preciso.
 
 **Números e figuras** (nunca escrever à mão um número empírico):
 

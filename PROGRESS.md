@@ -1173,3 +1173,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório pelo utilizador.
+
+### 2026-11-25t — Nenhum vigilante a correr (REV-067), 2026-11-25 23:24 WET
+
+**Feito**
+- O utilizador parou também o vigilante novo; `handoff.md` e `REVISION_LOG.md` acertados.
+
+**Validado**
+- Nenhum processo `watch_latex.sh`; `latex/build/` tem o PDF do relatório.
+
+**Pendente**
+- Leitura do relatório pelo utilizador.
