@@ -943,7 +943,7 @@ Regras:
 
 ### REV-058 — Análise dos buracos no test para escolher uma nova janela do pós-processamento
 
-- **Data:** 2026-11-25 20:25 WET.
+- **Data:** 2026-11-25 20:00 WET.
 - **Cor:** Azul-acinzentado `#546E7A`, RGB (84, 110, 122). Só marcador do registo; o `.tex` não foi alterado.
 - **O quê:** funções e programa de análise do comprimento dos blocos de erro ("buracos") nas previsões da referência no `test` e no treino; cobertura de cada janela candidata (13 a 401 pontos).
 - **Porquê:** o utilizador considerou insuficiente a janela de 13 (REV-057) e quer escolher outra no `test` antes de uma nova aplicação única ao `validation`. **Registo de integridade:** a aplicação de REV-057 ao `validation` existiu e a nova escolha é posterior a esse resultado; por decisão do utilizador isto não entra na proposta.

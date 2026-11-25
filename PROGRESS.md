@@ -935,7 +935,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 **Pendente**
 - Passagens adiadas do LaTeX; arrumação técnica; push só a pedido.
 
-### 2026-11-25c — Análise dos buracos no `test` para uma nova janela (REV-058), 2026-11-25 20:25 WET
+### 2026-11-25c — Análise dos buracos no `test` para uma nova janela (REV-058), 2026-11-25 20:00 WET
 
 **Contexto (registo interno; não vai para a proposta)**
 - O utilizador considerou insuficiente a janela de 13 pontos (REV-057) e decidiu refazer o pós-processamento com outra janela, tratando a primeira aplicação como se não tivesse existido **no relatório**. Fica registado aqui e no `REVISION_LOG.md` que a primeira aplicação ao `validation` (13 pontos) **aconteceu** (`results/postproc_validation/`, eventos `postproc_start`/`postproc_done`) e que a nova janela é escolhida depois de ver esse resultado. A nova escolha faz-se no `test` (conjunto de seleção), com autorização própria (`configs/authorizations/test_postproc_window.json`), sobre as previsões já guardadas da referência.
