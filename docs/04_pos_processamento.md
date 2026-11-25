@@ -2,6 +2,8 @@
 
 [REV-056 | cor #D84315] Plano e registo do Marco 5. Regras gerais: `AGENTS.md`; dados: `01`; modelo: `02`. Responde à **RQ2** (o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados?). A RQ3 (interação com a sobreposição) fica sem resposta, porque J0 e J50 não entram.
 
+[REV-066 | cor #8E24AA] Este documento é anterior ao relatório: onde diz «proposta» e «Secção 10», refere-se à proposta retirada (etiqueta `proposta-pt-v1`). No relatório (`latex/relatorio_pt.tex`) o filtro está nas secções 4.4, 5.4, 5.6 e 6.3, e **a versão de 13 pontos é declarada** nas limitações (decisão do utilizador, REV-065), o que substitui a decisão de a deixar de fora.
+
 [REV-058 | cor #546E7A] **Estado:** a primeira versão (janela de 13 pontos, v1) foi aplicada ao `validation` e ficou aquém do pretendido. O utilizador decidiu refazer com uma janela de **301 pontos** (v2), escolhida no `test`. A v2 vai ser aplicada uma única vez ao `validation` e substitui a v1 nos **números e figuras** da proposta; o texto da Secção 10 mantém-se. A v1 **fica registada aqui** (§3), no `PROGRESS.md` e no `REVISION_LOG.md`, mas, por decisão do utilizador, **não entra na proposta**.
 
 ## 1. Decisões comuns (v1 e v2)

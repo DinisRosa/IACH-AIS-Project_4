@@ -45,6 +45,8 @@ git restore --overlay --source=proposta-pt-v1 -- latex/
 
 O comando de recuperação foi ensaiado num clone temporário, com o número do commit: repôs `proposta_pt.tex` e manteve um ficheiro novo.
 
+[REV-066 | cor #8E24AA] **Substituído:** `proposta_pt.tex` foi retirado e a regra de só acrescentar ficheiros partilhados deixou de se aplicar. Não usar o `git restore` de `latex/` inteiro (repunha o `references.bib` antigo e partia uma citação do relatório); os comandos que valem estão no `README.md`.
+
 ## 3. Estrutura nova
 
 As páginas são estimativas, a confirmar na compilação.
@@ -123,7 +125,7 @@ Paginação: retirar a opção `section` do pacote `placeins` (provável causa d
 - Nenhum conjunto reservado aberto.
 - A versão `proposta-pt-v1` recupera-se com os comandos da §2.1; se D7 for o ficheiro novo, `proposta_pt.tex` fica igual ao dessa versão.
 
-**Estado em 2026-11-25 23:00 WET:** fases 0 a 6 executadas; relatório completo com 10 páginas e revisão independente aplicada. Falta a leitura do utilizador.
+**Estado em 2026-11-25 23:00 WET:** fases 0 a 6 executadas; relatório completo com 10 páginas e revisão independente aplicada. Falta a leitura do utilizador. O ponto de situação atual está no `handoff.md`.
 
 ## 8. Verificação bibliográfica (fase 3)
 

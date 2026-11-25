@@ -8,6 +8,8 @@ Este documento resume o que o projeto pretende, o que foi decidido e em que pont
 
 Segmentar viagens AIS de pesca em **pesca** e **navegação**, com uma previsão por ponto, usando uma CNN 1D totalmente convolucional. A entidade operacional é a viagem (`id` completo, por exemplo `211477000-2`).
 
+[REV-066 | cor #8E24AA] Documento ativo: o relatório `latex/relatorio_pt.tex`. A proposta em LaTeX foi retirada (etiqueta git `proposta-pt-v1`).
+
 Fontes: proposta «Segmentação semântica de trajetórias AIS para deteção de atividade de pesca usando janelas sobrepostas e pós-processamento temporal» (Dinis Rosa), decisões do utilizador registadas em `PROGRESS.md` e `REVISION_LOG.md`, e dados do Zenodo (Song Wu, DOI 10.5281/zenodo.7283281, CC BY 4.0).
 
 Detetar comportamento compatível com pesca não demonstra ilegalidade: o modelo não verifica licenças, quotas, zonas autorizadas ou infrações. A decisão de fiscalização continua humana.
@@ -66,7 +68,7 @@ As regras completas estão no `AGENTS.md` §3. Resumo operacional:
 | B — Seleção | `test` | Só com autorização explícita (âmbito das decisões declarado), depois de congelar a implementação; pode ser consultado mais do que uma vez dentro do âmbito autorizado |
 | C — Medição final | `validation` | Só com nova autorização, **uma só vez**, depois de congelar modelo, limiar, número de épocas e lista de variantes. **Feita em REV-053 (2026-11-24 00:32 UTC); o `validation` está gasto** |
 
-- **Nomes e papéis (REV-036):** os conjuntos mantêm os nomes `validation` e `test` nos ficheiros e no manifesto, mas os papéis estão trocados face ao habitual: `test` serve para **selecionar** (épocas, limiar, treinar mais, escolher entre variantes) e `validation` é a **medição final**, usada uma só vez com tudo congelado. Os resultados no `test` são otimistas por terem servido a escolher; o número final da proposta é o do `validation`.
+- **Nomes e papéis (REV-036):** os conjuntos mantêm os nomes `validation` e `test` nos ficheiros e no manifesto, mas os papéis estão trocados face ao habitual: `test` serve para **selecionar** (épocas, limiar, treinar mais, escolher entre variantes) e `validation` é a **medição final**, usada uma só vez com tudo congelado. Os resultados no `test` são otimistas por terem servido a escolher; o número final do relatório é o do `validation`.
 - A divisão foi feita antes de qualquer exploração, só com IDs e contagens técnicas; a tabela `id → split` está em `manifests/split_manifest_seed42.csv` e não se refaz.
 - Normalizadores e qualquer objeto aprendido ajustam-se só no treino (ou só no treino interno, se a monitorização tiver de ser independente).
 - Monitorização interna: separar por ID dentro do treino, antes do ajuste de transformações e da criação de janelas.

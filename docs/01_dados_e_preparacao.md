@@ -4,7 +4,7 @@
 
 ## 1. O dataset
 
-- **123 viagens (IDs únicos) e 1 026 279 linhas**, verificados por `src/ais/cli/verify_trip_count.py` (REV-007). O nome do ficheiro e a página do Zenodo dizem 128; o ficheiro local tem 123. O PDF entregue ao professor diz 128 e não se altera; o `latex/proposta_pt.tex` diz 123.
+- **123 viagens (IDs únicos) e 1 026 279 linhas**, verificados por `src/ais/cli/verify_trip_count.py` (REV-007). O nome do ficheiro e a página do Zenodo dizem 128; o ficheiro local tem 123. O PDF entregue ao professor diz 128 e não se altera; o relatório (`latex/relatorio_pt.tex`) usa 123 e indica a diferença.
 - Divisão por ID completo, seed 42: treino 87 viagens (713 854 linhas), validação 18 (209 016), teste 18 (103 409).
 - O `id` é uma string composta (navio + `-` + viagem). Não se converte para número, não é entrada da CNN e não se assume que o sufixo seja um contador diário.
 - Todas as linhas, sequências e janelas de um ID ficam no mesmo conjunto.
@@ -98,7 +98,7 @@ Quantificadas por `src/ais/cli/count_anomalies_train.py` (REV-017): 55 saltos ac
 ## 9. Dúvidas ainda abertas
 
 - CRS de longitude e latitude (hipótese WGS84).
-- Proveniência das anotações e convenção dos intervalos.
+- Anotações: [REV-066 | cor #8E24AA] o artigo de Wu et al. (2022) descreve anotação manual de 128 trajetórias (1 080 220 pontos) de uma semana de AIS dinamarquês (`docs/06` §8); falta explicar a diferença para as 123 do ficheiro, a fiabilidade das anotações e a convenção dos intervalos.
 - Alinhamento do rumo em tempo real: a análise é offline; uma aplicação em tempo real teria de especificar causalidade à parte.
 
 Nenhuma destas incertezas autoriza abrir validação ou teste.

@@ -5,7 +5,7 @@ Instruções comuns para qualquer agente que trabalhe no projeto. Implementaçã
 
 Objetivo: segmentar viagens AIS em pesca/navegação, com uma previsão por ponto. Desenvolver preparação comum, CNN com viagem completa e CNN com janelas/sobreposição; comparar também um ramo de pós-processamento simples com método aprovado. HMM, reprodução de Wu et al., dashboard, calibração e explicabilidade avançada não pertencem ao mínimo atual salvo nova instrução.
 
-Ler este ficheiro, `docs/00_projeto_e_decisoes.md`, `docs/01_dados_e_preparacao.md` e o documento da fase em causa (`docs/02_…` ou `docs/03_…`) antes de executar. Decisões explícitas recentes do utilizador prevalecem sobre sugestões antigas, sem autorizar implicitamente dados reservados, publicação ou ações destrutivas. Perguntar quando houver conflito não resolvido.
+Ler este ficheiro, o `handoff.md` (ponto de situação), `docs/00_projeto_e_decisoes.md`, `docs/01_dados_e_preparacao.md` e o documento da fase em causa (`docs/02_…` a `docs/04_…`) antes de executar. Decisões explícitas recentes do utilizador prevalecem sobre sugestões antigas, sem autorizar implicitamente dados reservados, publicação ou ações destrutivas. Perguntar quando houver conflito não resolvido.
 
 As funções especificadas nos documentos são contratos orientadores, não obrigação de criar módulos vazios. Implementar por marcos executáveis. Nunca simular resultados, subagentes, testes ou funcionalidades concluídas.
 
@@ -132,7 +132,7 @@ Cada revisão lógica dos documentos recebe um ID e uma cor. Se originar altera�
 ### Antes de editar
 Ler os documentos de acompanhamento e o .tex real quando fornecido. Identificar macros, cores, pacotes e convenções existentes; não recolorir revisões anteriores. Se o significado das cores não for claro, perguntar. Não reconstruir cronologia/autoria por adivinhação.
 
-O documento ativo é o relatório `latex/relatorio_pt.tex` (decisão do utilizador, REV-065). `latex/proposta_pt.tex` fica como versão de segurança e **não se altera** (etiqueta git `proposta-pt-v1`; a base original é `latex/proposta_IAHC_DINIS_ROSA.pdf`). Os dois partilham `latex/generated/`, `latex/figures/` e `references.bib`: nesses ficheiros só se acrescenta; uma figura que mude ganha nome novo. Não criar outro documento substituto sem decisão do utilizador, nem afirmar que um documento foi atualizado sem o ter sido. Registar atualização pendente quando aplicável. O estado atual do LaTeX está em `PROGRESS.md`, secção "Estado atual".
+O único documento LaTeX do projeto é o relatório `latex/relatorio_pt.tex` (decisão do utilizador, REV-065), compilado para `latex/build/`. A proposta anterior, `latex/proposta_pt.tex`, foi retirada a pedido do utilizador (REV-066): a última versão está na etiqueta git `proposta-pt-v1`, com o PDF em `latex/proposta_pt.pdf`. `latex/proposta_IAHC_DINIS_ROSA.pdf` é a versão entregue ao professor e **não se altera**. Não criar outro documento substituto sem decisão do utilizador, nem afirmar que um documento foi atualizado sem o ter sido. Registar atualização pendente quando aplicável. O estado atual do LaTeX está em `PROGRESS.md`, secção "Estado atual".
 
 **Exceção às cores (REV-065, por instrução do utilizador):** a escrita do relatório novo faz-se a preto, incluindo as correções para concluir a mesma revisão. As revisões lógicas seguintes voltam a levar cor, pela regra acima.
 
