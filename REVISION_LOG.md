@@ -1039,3 +1039,15 @@ Regras:
 - **Complemento (22:55 WET, mesma revisão):** escritas as secções 1 a 3, a ética e dimensão humana, as conclusões, o resumo e a bibliografia (10 páginas, sem citações por resolver; 247 testes). `docs/00`, `docs/03` e `docs/05` alinhados. Face à proposta, saem ainda: «até cerca de 20 % da captura mundial», substituído pelos valores de Agnew; a frase «principal fonte» sobre o AIS; Cheng apresentado como deteção de pesca. Revisão independente em curso.
 - **Complemento (23:00 WET, mesma revisão):** achados da revisão independente aplicados (escolha da janela, critério da medição final, atribuição à sobreposição, resumo, usos da validação, afirmações sobre o AIS e o F1 de segmentos, 128 viagens, entrada `ferreira2022full`). 247 testes; 10 páginas sem erros. **Correspondência no LaTeX: atualizado** (`relatorio_pt.tex`). Pendente: leitura do utilizador.
 - **Complemento (23:03 WET, mesma revisão):** a pedido do utilizador, envio do `main` e da etiqueta `proposta-pt-v1` para o GitHub; `README.md`, `handoff.md` e `PROGRESS.md` acertados. Sem alterações ao `.tex`.
+
+### REV-066 — Retirada a proposta em LaTeX; documentos preparados para nova conversa
+
+- **Data:** 2026-11-25, 23:09 a 23:12 WET.
+- **Cor:** Roxo-vivo `#8E24AA`, RGB (142, 36, 170). Marcador nos documentos; no `.tex` só mudou um comentário, sem texto visível, por isso sem cor.
+- **O quê:** removido `latex/proposta_pt.tex`; acrescentado `latex/proposta_pt.pdf`; relatório compilado para `latex/build/`; apagadas as pastas locais `build/check` e `build/relatorio`; `README.md` refeito; `handoff.md` reescrito de raiz; topo do `PROGRESS.md` refeito; `AGENTS.md` §1 e §8, `CLAUDE.md` e `docs/00`, `01`, `04`, `05`, `06` atualizados.
+- **Porquê:** pedido do utilizador, para arrumar o que já não se usa e continuar numa nova conversa.
+- **Recuperação:** etiqueta `proposta-pt-v1` (commit `7d60861`). A regra de só acrescentar ficheiros partilhados deixa de existir; repor `latex/` inteiro pela etiqueta partiria uma citação do relatório (avisado no `README.md` e em `docs/06`).
+- **Correspondência no LaTeX:** **atualizado** (só o comentário do `relatorio_pt.tex`).
+- **Validação:** 247 testes; relatório com 10 páginas, sem referências em falta; recuperação ensaiada num clone.
+- **Pendentes:** leitura do relatório; arrumação técnica opcional.
+

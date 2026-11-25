@@ -3,62 +3,65 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-065)
+## Estado atual (REV-066, 2026-11-25 23:12 WET)
 
 | Marco | Estado |
 |---|---|
 | 1 Ambiente, divisão por ID, isolamento | Fechado |
 | 2 Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
-| 3 CNN 1D de referência sobre a viagem completa | **Fechado por decisão do utilizador (REV-041)** |
-| 4 Janelamento com a mesma CNN (L = 64; 0 % e 50 %) | **Feito (REV-046, REV-047)**: J0 e J50 treinadas, selecionadas no `test` numa só abertura e congeladas; resultados no LaTeX (8.2 a 8.4) |
-| 5 Pós-processamento | **Feito (REV-056 a REV-059)**: v2, janela gaussiana de 301 pontos (escolhida no `test`), aplicada uma vez às previsões guardadas da referência no `validation`: exatidão 94,4 % → 94,8 % (11 662 → 10 790 erros); segmentos de pesca previstos 486 → 32 (reais 18), de navegação 502 → 49 (reais 35); F1 de segmentos de pesca 0,028 → 0,600 e de navegação 0,119 → 0,786; 4 100 pontos mudam (2 486 corrigidos, 1 614 estragados); melhoram 11 viagens e pioram 7, a pior `219020187-4` de 40,4 % para 19,7 %. A v1 (13 pontos) fica só como histórico interno (`docs/04` §5). Secção 10 da proposta |
-| 6 e 7 Congelar tudo e medição final no `validation` | **Feito (REV-053)**: medido só o modelo escolhido (a referência), uma única vez; J0 e J50 não foram medidas no `validation` |
+| 3 CNN 1D de referência sobre a viagem completa | Fechado por decisão do utilizador (REV-041) |
+| 4 Janelamento com a mesma CNN (L = 64; 0 % e 50 %) | Feito (REV-046, REV-047) |
+| 5 Pós-processamento | Feito (REV-056 a REV-059): filtro gaussiano de 301 pontos |
+| 6 e 7 Congelar e medição final no `validation` | Feito (REV-053), só a referência |
+| Relatório do trabalho feito | **Completo (REV-065); falta a leitura do utilizador** |
 
-- **Baseline (CNN de referência):** treinada só com o treino oficial (87 viagens, 300 épocas, um checkpoint por época). **Época 162 e limiar 0,65**, escolhidos no `test` numa só ronda e congelados em `results/baseline_frozen/` (REV-038). Números em `results/baseline_frozen/final_results.json` e, no LaTeX, em macros geradas (REV-040). Os resultados do `test` são otimistas (serviram a escolher) e a perda no `test` é ruidosa entre épocas.
-- **J0 e J50 (REV-046, REV-047):** a mesma CNN sobre janelas de 64 pontos, sem sobreposição (J0) e com 50 % (J50), 300 épocas, lote de 32 janelas. J0 em 9,8 min e 105 300 passos; J50 em 21,3 min e 208 800 passos. Escolhidas no `test` numa só abertura: **J0 época 8, limiar 0,60; J50 época 4, limiar 0,75** (a perda no `test` sobe com o treino). Exatidão por ponto no `test`: referência 94,7 %, J0 93,4 %, J50 93,7 % (valores das macros geradas); J50 reduz a fragmentação face a J0 e à referência, mas o F1 de segmentos de pesca é baixo (cerca de 0,03) nas três. Congeladas em `results/windows_j0_frozen/` e `results/windows_j50_frozen/`; números em `results/windows_final/final_results_windows.json` (fonte única) e, no LaTeX, em macros geradas. Resultados otimistas (serviram a escolher).
-- **Conjuntos reservados:** o `test` foi aberto **duas vezes**, cada uma ao abrigo da sua autorização (baseline e janelas) e registada em `results/access_log.jsonl`; o `validation` foi aberto **uma única vez**, na medição final (REV-053, autorização `validation_final_2026-11-24`); **está gasto**. Validação e teste foram lidos por inteiro só para construir as bases limpas (REV-015).
-- **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU), pacote `ais` instalado em modo editável (REV-034). Dependências em `requirements.txt`.
-- **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. O janelamento está em `windows.py`, `run_window_training`, `select_windows_on_test` e `build_window_results`; o filtro do pós-processamento está em `postprocessing.py` (REV-056).
-- **Testes:** 247 (sintéticos, mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
-- **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
-- **LaTeX:** o documento ativo é o relatório `latex/relatorio_pt.tex` (REV-065, a preto): completo (resumo, secções 1 a 8, anexo e bibliografia), 10 páginas, com revisão independente aplicada; **à espera da revisão do utilizador**. `latex/proposta_pt.tex` (16 páginas) é a versão de segurança, etiqueta `proposta-pt-v1`, e não se altera.
-- **Git:** o estado muda a cada commit e push; confirmar com `git status -sb` e `git log origin/main..HEAD`. O push só se faz a pedido explícito do utilizador, sem mais confirmações (REV-055).
-- **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-065.
+- **Referência:** treinada só com o treino oficial (87 viagens, 300 épocas); época 162 e limiar 0,65, escolhidos no `test` e congelados em `results/baseline_frozen/`. Exatidão por ponto: 94,7 % no `test` (otimista) e 94,4 % no `validation`.
+- **J0 e J50:** a mesma CNN em janelas de 64 pontos, sem sobreposição e com 50 %; épocas 8 e 4, limiares 0,60 e 0,75. No `test`, 93,4 % e 93,7 %; J50 fragmenta menos. Não medidas no `validation`.
+- **Filtro (301 pontos, só a referência, `validation`):** exatidão 94,4 % → 94,8 %; segmentos de pesca previstos 486 → 32 (reais 18), de navegação 502 → 49 (reais 35); F1 de segmentos de pesca 0,028 → 0,600; melhoram 11 viagens e pioram 7. **Não é uma medição independente** (houve antes uma versão de 13 pontos, `docs/04` §5).
+- **Perguntas:** RQ1, as janelas não superam a viagem completa; RQ2, o filtro reduz muito a fragmentação, com a ressalva acima; RQ3, sem resposta.
+- **Fonte dos números:** macros em `latex/generated/` e ficheiros em `results/` (não versionados).
+- **Conjuntos reservados (`results/access_log.jsonl`):** `test` com 2 aberturas de seleção, 2 leituras de diagnóstico e, sobre previsões guardadas, 3 análises de blocos de erro, 1 avaliação de janelas e 1 geração de figuras do relatório. `validation` aberto 1 vez (medição final, **gasto**); as anotações foram depois reutilizadas nas 2 versões do filtro. Os três conjuntos foram lidos por inteiro só para construir as bases limpas (REV-015).
+- **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, a preto, números de linha ligados), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
+- **Testes:** 247 (sintéticos, mais um que lê 3 viagens de treino), a passar.
+- **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
+- **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
+- **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
+- **Registo de revisões:** REV-001 a REV-066.
 
 ## Decisões do utilizador (vigentes)
 
-- **Divisão (REV-001, REV-002):** seed 42; 70/15/15 por ID completo (viagem); validação e teste arredondados ao inteiro mais próximo. Fuso horário de `t` ignorado. Viagens do mesmo navio podem estar em conjuntos diferentes; **a questão dos navios partilhados foi desconsiderada** (sem quantificar, sem refazer, sem declarar no texto).
-- **Dados (REV-012, REV-019, REV-011, REV-022):** limpeza IQR retirada; anomalias mantidas; `bearing` pela grelha UTM; `distanceToShore` aceite como correto; características `speed`, `signed_turn`, `time_gap` e `distanceToShore` (`x` e `y` fora); valores em falta a zero depois de normalizar, mais máscara.
-- **Baseline fechada (REV-041):** a CNN sobre a viagem completa fica como está (época 162, limiar 0,65); só volta na comparação com as janelas e na escolha final.
-- **Papéis dos conjuntos reservados (REV-036):** `test` seleciona; `validation` é a medição final, aberta uma só vez, no fim, com todas as variantes congeladas (REV-037).
-- **Marco 4 (REV-041, REV-046):** mesma CNN, mesmos valores da baseline (300 épocas, lr 1e-3, seed 42), sobre janelas de L = 64 com 0 % (J0) e 50 % (J50), lote de 32; a sobreposição é a mesma no treino e na inferência; a última janela fica mais curta (sem pontos falsos); os intervalos de tempo dentro de uma viagem não cortam a sequência; seleção no `test` numa só abertura com o critério da baseline; limite de 45 min por treino; se a época escolhida for ≥ 291 só se regista. **Ficam fora do projeto:** treinar com J0 e prever com J50, 25 % e 75 % de sobreposição, outros L (REV-002).
-- **Âmbito (REV-006, REV-042):** HMM e Wu et al. não são comparações (só literatura). Explicabilidade, calibração e *dashboard* fora do mínimo atual.
-- **LaTeX (REV-006, REV-043):** `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera; texto estável a preto, o que pode mudar mantém a cor. Manifesto da divisão versionado. Autor do dataset: Song Wu, Zenodo DOI 10.5281/zenodo.7283281 (CC BY 4.0); o Kaggle é espelho.
+- **Divisão (REV-001, REV-002):** seed 42; 70/15/15 por viagem. Fuso de `t` ignorado. Viagens do mesmo navio podem estar em conjuntos diferentes; a questão dos navios partilhados foi desconsiderada (sem quantificar nem refazer). O relatório diz que não se afirma generalização a navios inéditos.
+- **Dados (REV-011, REV-012, REV-019, REV-022):** sem limpeza por IQR; anomalias mantidas; `bearing` pela grelha UTM; `distanceToShore` aceite; quatro características (`speed`, `signed_turn`, `time_gap`, `distanceToShore`); ausentes a zero depois de normalizar, com máscara.
+- **Papéis dos conjuntos (REV-036):** `test` seleciona; `validation` mede no fim, uma só vez.
+- **Modelos (REV-041, REV-046):** referência fechada; J0 e J50 com os mesmos valores, lote de 32. Fora do projeto: 25 % e 75 % de sobreposição, outros comprimentos, treinar com J0 e prever com J50.
+- **Âmbito (REV-006, REV-042):** HMM e Wu et al. não são comparações. Explicabilidade, calibração e *dashboard* «previstos, não concluídos nesta fase».
+- **Relatório (REV-065, D1 a D8):** documento novo em vez da proposta; máximo 15 páginas, alvo 13 ou menos; texto a preto nessa revisão (as seguintes com cor); **declarar a versão de 13 pontos** (revê a decisão anterior de a omitir); figuras com «referência»; título mantido; «Figura» e «Tabela» em português; números de linha até à versão final. Perguntas, objetivos e critérios de sucesso não mudam depois dos resultados.
+- **Proposta antiga (REV-066):** retirar o `.tex`; manter o PDF e a etiqueta; compilar o relatório para `latex/build/`.
+- **Documentos fixos:** `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera. Autor do dataset: Song Wu, Zenodo 10.5281/zenodo.7283281 (CC BY 4.0); o Kaggle é espelho.
 
 ## Pendências abertas
 
-- **Critério de seleção (decisão do utilizador):** a menor perda por ponto no `test` escolheu épocas muito cedo (4 e 8), porque a perda no `test` sobe com o treino; a baseline foi escolhida bem mais tarde (162). Mudar o critério (por exemplo, o F1) ou travar o treino mais cedo seria uma decisão metodológica nova, com novo protocolo e nova autorização, e obrigaria a repetir a baseline por igualdade. Por agora fica como está, registado como limitação.
-- **Marco 5:** feito (REV-057). RQ3 sem resposta (J0 e J50 não pós-processadas).
-- **Relatório (REV-065):** decisões D1 a D8 aceites (`docs/06` §2). Plano executado (fases 0 a 6); `docs/05` fechado. Falta a leitura do utilizador e a versão final sem números de linha (quando pedida).
-- **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
-- **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-067), com cor.
+- **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
+- **Verificação bibliográfica:** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
+- **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
+- **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); 128 trajetórias no artigo e 123 no ficheiro; fiabilidade das anotações; cálculo de `distanceToShore`.
+- **Arrumação técnica (opcional):** testes dos programas de treino, de figuras e de resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/` (`diag3_*`, `final_*`, `posproc_viagens` e as `janelas_*` antigas), que o utilizador optou por manter; execuções antigas em `results/`.
 
 ## Artefactos do projeto
 
 | Ficheiro | Estado |
 |---|---|
-| `AGENTS.md`, `CLAUDE.md`, `README.md`, `handoff.md` | Alinhados em REV-044; `AGENTS.md` §3 com os papéis dos conjuntos (REV-036) |
-| `docs/00` a `docs/03` | Fundidos em REV-033; atualizados em REV-036, REV-038, REV-041, REV-044 e REV-046 (`docs/03` reescrito) |
-| `src/ais/phase1/`, `src/ais/cli/` | Código do projeto (REV-034 a REV-040) |
-| `pyproject.toml` | Pacote `ais` e configuração do pytest (REV-034) |
-| `tests/` | 243 testes |
-| `configs/` | `phase1_select.json` (baseline), `selection_protocol.json`, `authorizations/test_selection.json`; `windows_j0.json`, `windows_j50.json`, `selection_protocol_windows.json`, `authorizations/test_selection_windows.json` (REV-046, REV-047); históricos `phase1_run1.json` e `phase1_final.json` |
-| `manifests/split_manifest_seed42.csv` | Gerado; **versionado** (REV-006) |
-| `latex/proposta_pt.tex`, `latex/references.bib`, `latex/figures/`, `latex/generated/resultados.tex`, `latex/generated/resultados_janelas.tex` | Proposta; macros e figuras geradas por `build_final_results` e `build_window_results` |
-| `latex/proposta_IAHC_DINIS_ROSA.pdf` | Versão entregue ao professor; **não se altera** |
-| `data/`, `results/`, `latex/build/` | Gerados; não versionados |
-| `results/baseline_frozen/`, `results/phase1_select/`, `results/access_log.jsonl` | Baseline, seleção e registo de acessos (REV-038) |
-| `results/windows_j0/`, `results/windows_j50/`, `results/windows_j0_frozen/`, `results/windows_j50_frozen/`, `results/windows_final/` | Treinos (checkpoints por época, histórico), seleção, congelações e `final_results_windows.json` (REV-046, REV-047) |
+| `AGENTS.md`, `CLAUDE.md`, `README.md`, `handoff.md` | Alinhados em REV-066 |
+| `docs/00` a `docs/04` | Vigentes (notas REV-066) |
+| `docs/05`, `docs/06` | Históricos da passagem a relatório; `docs/06` §8 com a verificação bibliográfica |
+| `src/ais/`, `pyproject.toml`, `tests/` | Código e 247 testes |
+| `configs/`, `configs/authorizations/` | Configurações, protocolos e autorizações |
+| `latex/relatorio_pt.tex`, `references.bib`, `figures/`, `generated/` | Relatório e artefactos gerados por código |
+| `latex/proposta_pt.pdf` | Proposta anterior, só para consulta |
+| `latex/proposta_IAHC_DINIS_ROSA.pdf` | Entregue ao professor; não se altera |
+| `latex/build/`, `latex/watch_latex.sh`, `docs/bibliografia/` | Locais, não versionados |
+| `data/`, `results/` | Locais, não versionados |
 
 ## Entradas do registo
 
@@ -1113,3 +1116,19 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do utilizador; arrumação técnica antiga.
+
+### 2026-11-25p — Retirada a proposta em LaTeX e documentos preparados para nova conversa (REV-066), 2026-11-25 23:12 WET
+
+**Feito**
+- A pedido do utilizador: `latex/proposta_pt.tex` removido; o seu PDF passou de `latex/build/` para `latex/proposta_pt.pdf`; o relatório compila direto para `latex/build/`; apagadas `latex/build/check` e `latex/build/relatorio`.
+- `README.md` refeito, topo deste ficheiro refeito, `AGENTS.md`, `CLAUDE.md`, `docs/00`, `01`, `04`, `05`, `06`, `REVISION_LOG.md` e `handoff.md` atualizados.
+
+**Validado**
+- Antes de remover, o `.tex` era igual ao da etiqueta `proposta-pt-v1`, presente no GitHub. Relatório compilado em `latex/build` (10 páginas, sem referências em falta); 247 testes. Num clone de ensaio, os dois comandos de recuperação do `README.md` funcionaram e a proposta antiga compilou.
+
+**Problemas**
+- O vigilante iniciado antes (ainda com a proposta) falhou ao desaparecer o `.tex` e deixou um `texput.log`, apagado; precisa de ser reiniciado.
+
+**Pendente**
+- Leitura do relatório; push dos commits desta revisão, só a pedido.
+
