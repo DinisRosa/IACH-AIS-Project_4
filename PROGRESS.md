@@ -951,7 +951,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 **Pendente**
 - Decisão do utilizador sobre a nova janela; depois, protocolo v2 e aplicação única ao `validation`; atualizar figuras e valores da Secção 10 mantendo o texto.
 
-### 2026-11-25d — Janela de 301 pontos aplicada às previsões do `test` (REV-058), 2026-11-25 20:13 WET
+### 2026-11-25d — Janela de 301 pontos aplicada às previsões do `test` (REV-058), 2026-11-25 20:07 WET
 
 **Feito**
 - O utilizador escolheu 301 pontos. Autorização `configs/authorizations/test_postproc_eval.json`; programa `ais.cli.eval_postproc_test` (13, 201, 301 e 401; 301 é a escolha). Resultados em `results/postproc_window_analysis/test_eval.json` e `test_eval_resumo.csv`.
