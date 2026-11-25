@@ -30,12 +30,22 @@ O filtro não é a reconstrução das janelas sobrepostas: esta junta previsões
 | 1 | Secção 10 da proposta (método, tamanho, forma, objetivo, figura), antes dos resultados | **Feito (REV-056)** |
 | 2 | Filtro em `src/ais/phase1/postprocessing.py` (`gaussian_kernel`, `smooth_trip`, `smooth_probabilities`) | **Feito (REV-056)**, 11 testes sintéticos em `tests/test_postprocessing.py` |
 | 3 | Figura `latex/figures/posproc_janela.png` (pesos e exemplo sintético) por `python -m ais.cli.plot_postprocessing_kernel` | **Feito (REV-056)** |
-| 4 | Protocolo curto `configs/postproc_protocol.json` (filtro fixado: 13 pontos, σ = 13/6, limiar 0,65; uma execução; métricas a reportar), escrito e commitado **antes** de medir | Por fazer; **só depois do «sim» do utilizador** |
-| 5 | Programa `ais.cli.postproc_validation`: confirma por hash que o ficheiro de previsões é o da medição final, aplica o filtro uma vez, regista a execução e guarda `results/postproc_validation/` (recusa uma segunda execução) | Por fazer; testes sintéticos |
-| 6 | Métricas antes e depois: por ponto (exatidão, F1 por classe, matriz de confusão) e por segmento (F1, fragmentação, erros de fronteira, IoU 0,5); figura de uma viagem antes e depois | Por fazer |
-| 7 | Resultados na Secção 10 do LaTeX (macros e figuras geradas), limitações, docs, `PROGRESS.md`, `REVISION_LOG.md` e handoff | Por fazer |
+| 4 | Protocolo curto `configs/postproc_protocol.json` (filtro fixado: 13 pontos, σ = 13/6, limiar 0,65; uma execução; métricas a reportar), escrito e commitado **antes** de medir | **Feito (REV-057)**, commit `3359890`, antes da execução |
+| 5 | Programa `ais.cli.postproc_validation`: confirma por hash que o ficheiro de previsões é o da medição final, aplica o filtro uma vez, regista a execução e guarda `results/postproc_validation/` (recusa uma segunda execução) | **Feito e executado uma vez (REV-057)**, 2026-11-25; testes sintéticos (subagente Sonnet) e revisão da Abacus |
+| 6 | Métricas antes e depois: por ponto (exatidão, F1 por classe, matriz de confusão) e por segmento (F1, fragmentação, erros de fronteira, IoU 0,5); figura de uma viagem antes e depois | **Feito (REV-057)**: `results/postproc_validation/`, confirmado por uma implementação independente (`verify_postproc_independent`, 19/19) |
+| 7 | Resultados na Secção 10 do LaTeX (macros e figuras geradas), limitações, docs, `PROGRESS.md`, `REVISION_LOG.md` e handoff | **Feito (REV-057)**: Subsecções 10.4 e 10.5 |
 
-## 3. Limitações já conhecidas
+## 3. Resultados (REV-057)
+
+[REV-057 | cor #B8860B] No `validation`, referência antes → depois: exatidão 94,4 % → 94,5 %; segmentos de pesca previstos 486 → 255 (reais 18), de navegação 502 → 272 (reais 35); F1 de segmentos de pesca 0,028 → 0,066 e de navegação 0,119 → 0,221; 784 pontos mudam (514 corrigidos, 270 estragados). Números em `results/postproc_validation/postproc_validation.json`; macros em `latex/generated/resultados_posproc.tex`. Resposta à RQ2: o filtro reduz a fragmentação para cerca de metade e melhora o F1 de segmentos sem perder exatidão por ponto; os blocos longos de navegação no meio da pesca (erros da CNN mais longos que a janela) ficam.
+
+Reprodução (não volta a executar: `postproc_validation` recusa uma segunda execução):
+```bash
+iach-ais-venv-4/bin/python -m ais.cli.verify_postproc_independent results/final_validation/predictions_validation.csv
+iach-ais-venv-4/bin/python -m ais.cli.build_postproc_results
+```
+
+## 4. Limitações já conhecidas
 - As anotações do `validation` são usadas pela segunda vez para medir (sem nova passagem pela CNN): o resultado é uma medição, não uma escolha, desde que nada mude depois de o ver.
 - O filtro só corrige trocas curtas (até alguns pontos); blocos de erros mais longos que a janela ficam; pode apagar segmentos reais curtos e deslocar fronteiras.
 - Uma semente, 18 viagens, sem intervalo de incerteza; J0 e J50 não são pós-processadas.

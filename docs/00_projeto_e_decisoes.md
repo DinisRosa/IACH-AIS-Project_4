@@ -44,7 +44,7 @@ O âmbito mínimo atual só responde a RQ1. Um resultado sem melhoria também é
 | 2 | Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
 | 3 | CNN 1D de referência sobre a viagem completa | **Fechado (REV-041)**: baseline definida por decisão do utilizador (época 162, limiar 0,65, escolhidos no `test` numa ronda). Não se altera; só volta a ser usada na comparação com as janelas |
 | 4 | Janelamento com sobreposição e a mesma CNN | **Feito (REV-046, REV-047)**: J0 (0 %) e J50 (50 %), L = 64, mesma CNN e mesmos valores da baseline, lote de 32; sobreposição igual no treino e na inferência; escolhidas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Fora do projeto: 25 %, 75 % e outros L. Resultados em `results/windows_final/final_results_windows.json` |
-| 5 | Pós-processamento simples, em ramo separado | Por fazer; só avança se o Marco 4 mostrar benefício da sobreposição; precisa de aprovação da unidade/largura do filtro e do protocolo |
+| 5 | Pós-processamento simples, em ramo separado | **Feito (REV-056, REV-057)**: filtro gaussiano de 13 pontos sobre as previsões guardadas da referência no `validation`, uma execução; ver `docs/04` |
 | 6 | Congelar as variantes (baseline, J0 e J50; pós-processamento não existe) | **Feito (REV-038, REV-047)**: congeladas, cada uma com hash |
 | 7 | Medição final única no conjunto `validation` | **Feito (REV-053)**: por decisão do utilizador, **só o modelo escolhido** (a referência, pelo maior F1 médio por ponto no `test`, critério declarado antes) foi medido, uma só vez; J0 e J50 não foram medidas no `validation`. O `validation` está gasto |
 

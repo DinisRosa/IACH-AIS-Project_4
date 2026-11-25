@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-056)
+## Estado atual (REV-057)
 
 | Marco | Estado |
 |---|---|
@@ -11,7 +11,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | 2 Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
 | 3 CNN 1D de referência sobre a viagem completa | **Fechado por decisão do utilizador (REV-041)** |
 | 4 Janelamento com a mesma CNN (L = 64; 0 % e 50 %) | **Feito (REV-046, REV-047)**: J0 e J50 treinadas, selecionadas no `test` numa só abertura e congeladas; resultados no LaTeX (8.2 a 8.4) |
-| 5 Pós-processamento | **Em curso (REV-056)**: decisões do utilizador (janela gaussiana de 13 pontos, σ = 13/6, só a referência, aplicada uma vez às previsões guardadas do `validation`); filtro, testes, figura e Secção 10 da proposta feitos; falta o protocolo curto e a aplicação, depois do «sim» do utilizador. Plano em `docs/04_pos_processamento.md` |
+| 5 Pós-processamento | **Feito (REV-056, REV-057)**: filtro gaussiano de 13 pontos aplicado uma vez às previsões guardadas da referência no `validation`; exatidão 94,4 % → 94,5 %; segmentos de pesca previstos 486 → 255 (reais 18), de navegação 502 → 272 (reais 35); F1 de segmentos de pesca 0,028 → 0,066 e de navegação 0,119 → 0,221; 784 pontos mudam (514 corrigidos, 270 estragados). Secção 10 da proposta; `docs/04_pos_processamento.md` |
 | 6 e 7 Congelar tudo e medição final no `validation` | **Feito (REV-053)**: medido só o modelo escolhido (a referência), uma única vez; J0 e J50 não foram medidas no `validation` |
 
 - **Baseline (CNN de referência):** treinada só com o treino oficial (87 viagens, 300 épocas, um checkpoint por época). **Época 162 e limiar 0,65**, escolhidos no `test` numa só ronda e congelados em `results/baseline_frozen/` (REV-038). Números em `results/baseline_frozen/final_results.json` e, no LaTeX, em macros geradas (REV-040). Os resultados do `test` são otimistas (serviram a escolher) e a perda no `test` é ruidosa entre épocas.
@@ -19,7 +19,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Conjuntos reservados:** o `test` foi aberto **duas vezes**, cada uma ao abrigo da sua autorização (baseline e janelas) e registada em `results/access_log.jsonl`; o `validation` foi aberto **uma única vez**, na medição final (REV-053, autorização `validation_final_2026-11-24`); **está gasto**. Validação e teste foram lidos por inteiro só para construir as bases limpas (REV-015).
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU), pacote `ais` instalado em modo editável (REV-034). Dependências em `requirements.txt`.
 - **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. O janelamento está em `windows.py`, `run_window_training`, `select_windows_on_test` e `build_window_results`; o filtro do pós-processamento está em `postprocessing.py` (REV-056).
-- **Testes:** 203 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
+- **Testes:** 224 sintéticos (mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
 - **LaTeX:** `latex/proposta_pt.tex` compila (11 páginas; limite de 15), com a Secção 9 (medição final) antes do anexo (REV-053). Texto estável a preto (REV-043); o novo tem a cor de REV-046 `#00B0FF`, REV-047 `#4A148C`, REV-048 `#1B5E20` `#880E4F` (REV-052: 4.3, 4.4, Secção 5, Secção 8 e Anexo A) e `#0D47A1` (REV-053: Secção 9 e as frases sobre o `validation`).
 - **Git:** o estado muda a cada commit e push; confirmar com `git status -sb` e `git log origin/main..HEAD`. O push só se faz a pedido explícito do utilizador, sem mais confirmações (REV-055). Confirmar com `git status -sb`; cada push precisa de autorização explícita nova do utilizador.
@@ -38,7 +38,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 ## Pendências abertas
 
 - **Critério de seleção (decisão do utilizador):** a menor perda por ponto no `test` escolheu épocas muito cedo (4 e 8), porque a perda no `test` sobe com o treino; a baseline foi escolhida bem mais tarde (162). Mudar o critério (por exemplo, o F1) ou travar o treino mais cedo seria uma decisão metodológica nova, com novo protocolo e nova autorização, e obrigaria a repetir a baseline por igualdade. Por agora fica como está, registado como limitação.
-- **Marco 5 (REV-056):** falta o protocolo curto (filtro fixado antes) e a confirmação do utilizador no chat; usa só as previsões e anotações já guardadas do `validation`, sem reabrir os dados, aplicar o filtro uma vez e pôr os resultados na Secção 10. Passos em `docs/04_pos_processamento.md`.
+- **Marco 5:** feito (REV-057). RQ3 sem resposta (J0 e J50 não pós-processadas).
 - **LaTeX (adiado pelo utilizador):** explicabilidade, calibração e *dashboard* (resumo, objetivo 5, 4.6, 7.3); o texto a vermelho «human-on-the-loop»; subsecções 5.3 a 5.6 e 6.1 por reler pelo utilizador; a 7.1 ainda descreve a ablação completa (agora marcada como futura).
 - **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
 - **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
@@ -51,7 +51,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | `docs/00` a `docs/03` | Fundidos em REV-033; atualizados em REV-036, REV-038, REV-041, REV-044 e REV-046 (`docs/03` reescrito) |
 | `src/ais/phase1/`, `src/ais/cli/` | Código do projeto (REV-034 a REV-040) |
 | `pyproject.toml` | Pacote `ais` e configuração do pytest (REV-034) |
-| `tests/` | 203 testes |
+| `tests/` | 224 testes |
 | `configs/` | `phase1_select.json` (baseline), `selection_protocol.json`, `authorizations/test_selection.json`; `windows_j0.json`, `windows_j50.json`, `selection_protocol_windows.json`, `authorizations/test_selection_windows.json` (REV-046, REV-047); históricos `phase1_run1.json` e `phase1_final.json` |
 | `manifests/split_manifest_seed42.csv` | Gerado; **versionado** (REV-006) |
 | `latex/proposta_pt.tex`, `latex/references.bib`, `latex/figures/`, `latex/generated/resultados.tex`, `latex/generated/resultados_janelas.tex` | Proposta; macros e figuras geradas por `build_final_results` e `build_window_results` |
@@ -915,3 +915,22 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 **Pendente**
 - Protocolo curto e «sim» do utilizador; aplicação do filtro; resultados na Secção 10.
 - Esclarecido com o utilizador: não se reabrem os dados do `validation` nem se volta a correr a CNN; usam-se as probabilidades e as anotações já guardadas, e só as anotações contam como reutilização (para medir). Secção 10.3 e `docs/04` §1.1 atualizadas.
+
+### 2026-11-25b — Pós-processamento executado e resultados (REV-057), 2026-11-25 19:50 WET
+
+**Feito**
+- Protocolo `configs/postproc_protocol.json` commitado antes de medir (`3359890`).
+- `ais.cli.postproc_validation` (execução única sobre as previsões guardadas, sem reabrir os dados nem correr a CNN), `build_postproc_results` (macros e figuras) e `verify_postproc_independent` (segunda implementação, escrita pela Abacus só a partir da descrição).
+- Execução única em 2026-11-25: exatidão 94,4 % → 94,5 %; segmentos de pesca previstos 486 → 255 (reais 18), de navegação 502 → 272 (reais 35); F1 de segmentos de pesca 0,028 → 0,066 e de navegação 0,119 → 0,221; 784 pontos mudam (514 corrigidos, 270 estragados).
+- Proposta: Subsecções 10.4 (Resultados) e 10.5 (Limitações), tabela e figura novas, frase final da 10.3 e limitação «Fragmentação» da Secção 9, em `rev057` `#B8860B`.
+
+**Validado**
+- `pytest tests/`: 224 passaram. Verificação independente: 19/19 números iguais. `pdflatex` + `bibtex`: 14 páginas (limite de 15), 0 erros, páginas inspecionadas.
+
+**Problemas e limitações**
+- Subagente (testes) e Abacus (revisão) encontraram um erro antes da execução: `np.convolve(mode="same")` devolvia 13 valores em viagens mais curtas que a janela; corrigido. Outras proteções acrescentadas a partir da revisão (nada é registado antes de tudo estar calculado; bloqueio para qualquer id; limiar e origem fixados).
+- O script `delegate.sh` da skill não existe na pasta do plugin; usou-se `abacusai -p` diretamente, a partir do scratchpad, só com código e descrições (nenhum dado enviado).
+- Segunda utilização das anotações do `validation` (decisão do utilizador). RQ3 sem resposta.
+
+**Pendente**
+- Passagens adiadas do LaTeX; arrumação técnica; push só a pedido.

@@ -928,3 +928,15 @@ Regras:
 - **Validação:** 203 testes a passar; `pdflatex` + `bibtex` 13 páginas, 0 erros.
 - **Limitações:** as anotações do `validation` são usadas uma segunda vez para medir, a partir das previsões já guardadas, sem reabrir os dados nem voltar a correr a CNN (esclarecido com o utilizador; protocolo curto e confirmação no chat em vez de autorização formal); o exemplo da figura é sintético.
 - **Pendentes:** protocolo curto (depois do «sim» do utilizador), aplicação única e resultados.
+
+### REV-057 — Pós-processamento executado: resultados no validation
+
+- **Data:** 2026-11-25 19:50 WET.
+- **Cor:** Dourado-escuro `#B8860B`, RGB (184, 134, 11).
+- **O quê:** protocolo `posproc_validation_v1` commitado antes; programa de execução única, testes, verificação independente, macros e figuras; execução única; Subsecções 10.4 e 10.5 da proposta, frase final da 10.3 e limitação «Fragmentação» da Secção 9. Resultados: exatidão 94,4 % → 94,5 %; segmentos de pesca previstos 486 → 255 (reais 18), de navegação 502 → 272 (reais 35); F1 de segmentos de pesca 0,028 → 0,066 e de navegação 0,119 → 0,221; 784 pontos mudam (514 corrigidos, 270 estragados).
+- **Porquê:** decisão do utilizador de medir o pós-processamento sobre as previsões já guardadas da medição final.
+- **Ficheiros afetados:** `configs/postproc_protocol.json`, `src/ais/cli/postproc_validation.py`, `src/ais/cli/build_postproc_results.py`, `src/ais/cli/verify_postproc_independent.py`, `src/ais/phase1/postprocessing.py`, `tests/test_postproc_validation.py`, `tests/test_postprocessing.py`, `latex/proposta_pt.tex`, `latex/generated/resultados_posproc.tex`, `latex/figures/posproc_resultados.png`, `latex/figures/posproc_viagem.png`, `docs/00`, `docs/04`, `PROGRESS.md`, `README.md`, `handoff.md`, `REVISION_LOG.md`.
+- **Correspondência no LaTeX:** **atualizado**; 14 páginas, 0 erros.
+- **Validação:** 224 testes; verificação independente 19/19; execução registada (`postproc_start`, `postproc_done`) em `results/access_log.jsonl`.
+- **Limitações:** segunda utilização das anotações do `validation`; só a referência (RQ3 sem resposta); uma semente, 18 viagens, sem intervalo de incerteza. A segunda implementação foi escrita por um modelo externo a partir da descrição; confere com a do projeto, mas partilha as mesmas convenções descritas.
+- **Pendentes:** nenhum do Marco 5.

@@ -79,7 +79,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 | 2 Preparação auditável | Fechado |
 | 3 CNN de referência (viagem completa) | **Fechado por decisão do utilizador (REV-041)** |
 | 4 Janelamento com a mesma CNN | **Feito (REV-046, REV-047)**: J0 e J50 treinadas, escolhidas no `test` numa só abertura e congeladas |
-| 5 Pós-processamento | Por fazer; só com decisão do utilizador (só poderia ser avaliado no `test`) |
+| 5 Pós-processamento | **Feito (REV-056, REV-057)**: ver `docs/04_pos_processamento.md` |
 | 6 e 7 Congelar e medição final no `validation` | **Feito (REV-053)**: só o modelo escolhido (a referência), uma só vez |
 
 - **Baseline (CNN de referência):** 87 viagens de treino, 300 épocas, ~19 min em CPU. **Época 162 e limiar 0,65**, escolhidos no `test` numa só ronda e congelados em `results/baseline_frozen/`. Exatidão por ponto de 93,5 % no treino e de 94,7 % no `test` (regra da classe maioritária: 61,2 %).
@@ -111,7 +111,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 
 **Âmbito e LaTeX**
 - HMM e Wu et al. **não** são comparações. Explicabilidade, calibração e *dashboard* estão fora do mínimo atual.
-- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-056**. Verificar sempre no `REVISION_LOG.md` se uma cor já foi usada (duas escolhas iniciais já eram de REV-011 e REV-007).
+- `latex/proposta_IAHC_DINIS_ROSA.pdf` **não se altera**. Toda a alteração ao `.tex` leva cor `\revtext{revNNN}`, igual à do `REVISION_LOG.md`. Próximo ID livre: **REV-058**. Verificar sempre no `REVISION_LOG.md` se uma cor já foi usada (duas escolhas iniciais já eram de REV-011 e REV-007).
 - Cores no `.tex` em uso: rev021 `#D500F9`, rev023 `#0277BD`, rev040 `#7F0000`, rev041 `#FF1744`, rev042 `#0A3D62`, rev046 `#00B0FF`, rev047 `#4A148C`, rev048 `#1B5E20`, rev052 `#880E4F`, rev053 `#0D47A1`. Outras estão definidas, sem uso (rev013, rev018, rev020, rev022, rev024 a rev028, rev030 a rev032, rev035, rev036). Só marcadores Markdown: REV-029, REV-033, REV-034, REV-037 a REV-039, REV-044, REV-045, REV-049 a REV-051 e REV-054 (`#00BFA5`).
 
 ## Ficheiros principais
@@ -126,6 +126,7 @@ Dataset: 123 viagens, 1 026 279 linhas. Divisão por ID completo (viagem), seed 
 | Programas, janelas (REV-046, REV-047) | `run_window_training.py`, `select_windows_on_test.py`, `build_window_results.py` |
 | Programas, diagnóstico (REV-049 a REV-051) | `plot_trip_diagnostic.py` (`--xy --auth` para as coordenadas) |
 | Programas, medição final (REV-053) | `final_validation.py`, `build_validation_results.py` |
+| Programas, pós-processamento (REV-056, REV-057) | `postproc_validation.py` (execução única, já feita), `build_postproc_results.py`, `verify_postproc_independent.py`, `plot_postprocessing_kernel.py` |
 | Programas do ensaio antigo (sem uso) | `diagnostic_fit_3_trips.py`, `plot_diagnostic_3trips.py` |
 | Configuração | `configs/phase1_select.json` (baseline), `windows_j0.json`, `windows_j50.json`; protocolos `selection_protocol.json`, `selection_protocol_windows.json`, `selection_protocol_validation.json`; autorizações em `configs/authorizations/` (`test_selection`, `test_selection_windows`, `test_diagnostic_trip_219001624-2` e `..._leitura2`, `validation_final`); históricos `phase1_run1.json`, `phase1_final.json` |
 | Testes | `tests/` (o `pyproject.toml` põe `src/` no path do pytest); novos nesta sessão: `test_windows.py`, `test_select_windows.py`, `test_reserved_diagnostic.py`, `test_final_validation.py` |
@@ -162,7 +163,7 @@ iach-ais-venv-4/bin/python -m ais.cli.segment_metrics CAMINHO_PREVISOES.csv     
 
 ## O que fazer a seguir
 
-0. **Marco 5 em curso (REV-056, 2026-11-25):** decisões e passos em `docs/04_pos_processamento.md`. Próximo (depois do «sim» do utilizador): protocolo curto sobre as previsões e anotações já guardadas do `validation` (sem reabrir os dados), aplicação única do filtro e resultados na Secção 10. Os pontos 1 e 2 abaixo sobre o Marco 5 estão ultrapassados.
+0. **Marco 5 feito (REV-057, 2026-11-25 19:50 WET):** exatidão 94,4 % → 94,5 %; segmentos de pesca previstos 486 → 255 (reais 18), de navegação 502 → 272 (reais 35); F1 de segmentos de pesca 0,028 → 0,066 e de navegação 0,119 → 0,221; 784 pontos mudam (514 corrigidos, 270 estragados). **Não voltar a correr `postproc_validation`** (execução única). Próximo ID livre: **REV-058**. Os pontos sobre o Marco 5 abaixo estão ultrapassados.
 1. **Perguntar ao utilizador:**
    - Quer avançar para o **Marco 5** (pós-processamento), dado que a segmentação continua muito fragmentada (pesca: 18 segmentos reais e 486 previstos no `validation`)? A unidade e a largura do filtro teriam de ser aprovadas, e **só se poderia avaliar no `test`** (otimista), porque o `validation` está gasto. A resposta às RQ2 e RQ3 depende disto.
    - O critério de seleção por menor perda (épocas 8 e 4) **já não muda o resultado final**: o modelo medido foi a referência. Recomendação anterior: manter e deixar como limitação.
