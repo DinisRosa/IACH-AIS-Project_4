@@ -37,6 +37,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `aa918ae` | 2026-11-25 23:39 | Prepara o handoff para uma nova conversa (REV-068) |
 | `6249d54` | 2026-11-25 23:37 | Regista o pedido de envio da REV-068 |
 | `5ee8117` | 2026-11-25 23:35 | Retira do resumo a ressalva sobre o filtro (REV-068) |
 | `d750eb1` | 2026-11-25 23:24 | Regista que nenhum vigilante fica a correr (REV-067) |
