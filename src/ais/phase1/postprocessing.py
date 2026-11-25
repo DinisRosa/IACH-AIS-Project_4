@@ -35,9 +35,17 @@ def smooth_trip(p: np.ndarray, kernel: np.ndarray) -> np.ndarray:
         raise ValueError("p tem de ser um vetor")
     if not np.all(np.isfinite(p)):
         raise ValueError("p tem valores não finitos")
-    num = np.convolve(p, kernel, mode="same")
-    den = np.convolve(np.ones_like(p), kernel, mode="same")
-    return num / den
+    kernel = np.asarray(kernel, dtype=float)
+    if kernel.ndim != 1 or len(kernel) % 2 == 0:
+        raise ValueError("a janela tem de ter um número ímpar de posições")
+    h = len(kernel) // 2
+    n = len(p)
+    out = np.empty(n)
+    for i in range(n):  # explícito: funciona também em viagens mais curtas do que a janela
+        lo, hi = max(0, i - h), min(n, i + h + 1)
+        w = kernel[lo - i + h: hi - i + h]
+        out[i] = np.dot(w, p[lo:hi]) / w.sum()
+    return out
 
 
 def smooth_probabilities(p: np.ndarray, trip_ids: np.ndarray, kernel: np.ndarray | None = None) -> np.ndarray:

@@ -43,7 +43,24 @@ def test_long_block_is_kept():
 
 def test_constant_stays_constant_including_edges():
     p = np.full(5, 0.4)  # viagem mais curta que a janela
-    assert np.allclose(smooth_trip(p, gaussian_kernel()), 0.4)
+    s = smooth_trip(p, gaussian_kernel())
+    assert s.shape == (5,) and np.allclose(s, 0.4)
+
+
+def test_matches_manual_truncated_weighted_mean():
+    rng = np.random.default_rng(0)
+    p = rng.random(20)
+    w = gaussian_kernel()
+    s = smooth_trip(p, w)
+    for i in (0, 3, 10, 19):
+        idx = [j for j in range(i - 6, i + 7) if 0 <= j < 20]
+        ww = np.array([w[j - i + 6] for j in idx])
+        assert s[i] == pytest.approx(np.dot(ww, p[idx]) / ww.sum())
+
+
+def test_rejects_even_kernel():
+    with pytest.raises(ValueError):
+        smooth_trip(np.zeros(5), np.ones(4) / 4)
 
 
 def test_does_not_cross_trips():
