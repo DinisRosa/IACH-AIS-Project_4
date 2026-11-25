@@ -8,7 +8,7 @@ Segmentação de viagens AIS em pesca e navegação, com uma previsão por ponto
 - **Marco 4 (janelamento com a mesma CNN) feito (REV-046, REV-047):** J0 (sem sobreposição) e J50 (50 %), com janelas de 64 pontos, foram treinadas só com o treino, selecionadas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Nenhuma supera a referência por ponto no `test`; J50 reduz a fragmentação face a J0. Números em `results/windows_final/final_results_windows.json` e na Secção 8 do LaTeX.
 - Conjuntos reservados: o `test` serve para selecionar e teve duas aberturas de seleção (referência e janelas), além de leituras posteriores registadas (diagnóstico e pós-processamento); o `validation` é a medição final e foi aberto **uma única vez** (REV-053), só para o modelo escolhido (a referência): exatidão por ponto de 94,4 %. Está gasto; o pós-processamento (REV-057, REV-059) reutilizou as previsões e anotações já guardadas.
 - 247 testes a passar. Ver `PROGRESS.md` (estado e histórico) e `handoff.md` (para retomar numa nova sessão).
-- **Em curso (REV-065):** reescrita como relatório em `latex/relatorio_pt.tex`, segundo `docs/06_plano_reescrita.md`.
+- **Relatório (REV-065):** reescrito em `latex/relatorio_pt.tex` (10 páginas), segundo `docs/06_plano_reescrita.md`; à espera da leitura do autor.
 
 ## Versão de segurança da proposta
 

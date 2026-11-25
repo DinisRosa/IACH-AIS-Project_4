@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-065, em curso)
+## Estado atual (REV-065)
 
 | Marco | Estado |
 |---|---|
@@ -21,7 +21,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Código:** `src/ais/phase1/` (biblioteca) e `src/ais/cli/` (programas, `python -m ais.cli.<nome>`); lista em `README.md` e em `docs/02` §4. O janelamento está em `windows.py`, `run_window_training`, `select_windows_on_test` e `build_window_results`; o filtro do pós-processamento está em `postprocessing.py` (REV-056).
 - **Testes:** 247 (sintéticos, mais um que lê 3 viagens de treino), todos a passar (`pytest tests/`).
 - **Dados:** `data/123_fishing_trajs.csv`, 123 viagens e 1 026 279 linhas (REV-007). Bases limpas em `data/123_fishing_trajs_clean_{train,validation,test}.parquet`, com 713 854, 209 016 e 103 409 linhas (87, 18 e 18 viagens). Manifesto `manifests/split_manifest_seed42.csv` (versionado).
-- **LaTeX:** o documento ativo é o relatório `latex/relatorio_pt.tex` (REV-065, a preto): escritas as secções 4 (método), 5 (protocolo), 6 (resultados), o anexo e a lista de limitações da 7; **por escrever** o resumo, as secções 1 a 3, a ética e dimensão humana da 7 e as conclusões; compila com 7 páginas. `latex/proposta_pt.tex` (16 páginas) é a versão de segurança, etiqueta `proposta-pt-v1`, e não se altera.
+- **LaTeX:** o documento ativo é o relatório `latex/relatorio_pt.tex` (REV-065, a preto): completo (resumo, secções 1 a 8, anexo e bibliografia), 10 páginas, com revisão independente aplicada; **à espera da revisão do utilizador**. `latex/proposta_pt.tex` (16 páginas) é a versão de segurança, etiqueta `proposta-pt-v1`, e não se altera.
 - **Git:** o estado muda a cada commit e push; confirmar com `git status -sb` e `git log origin/main..HEAD`. O push só se faz a pedido explícito do utilizador, sem mais confirmações (REV-055).
 - **Registo de revisões:** `REVISION_LOG.md` com REV-001 a REV-065.
 
@@ -39,8 +39,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 - **Critério de seleção (decisão do utilizador):** a menor perda por ponto no `test` escolheu épocas muito cedo (4 e 8), porque a perda no `test` sobe com o treino; a baseline foi escolhida bem mais tarde (162). Mudar o critério (por exemplo, o F1) ou travar o treino mais cedo seria uma decisão metodológica nova, com novo protocolo e nova autorização, e obrigaria a repetir a baseline por igualdade. Por agora fica como está, registado como limitação.
 - **Marco 5:** feito (REV-057). RQ3 sem resposta (J0 e J50 não pós-processadas).
-- **Relatório (REV-065):** decisões D1 a D8 aceites (`docs/06` §2). Em paragem para o utilizador rever o PDF até aos resultados; depois, secções 3, 2, 7, 1, 8 e resumo (verificação bibliográfica em `docs/06` §8), revisão final e fecho de `docs/05`.
-- **Documentos desatualizados:** linhas do Marco 5 em `docs/00` e `docs/03` (a corrigir na fase 5 do plano).
+- **Relatório (REV-065):** decisões D1 a D8 aceites (`docs/06` §2). Plano executado (fases 0 a 6); `docs/05` fechado. Falta a leitura do utilizador, a versão final sem números de linha (quando pedida) e o push (só a pedido).
 - **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
 - **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
 
@@ -1088,3 +1087,18 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 **Pendente**
 - Achados da revisão, PDF final e registos finais.
 
+### 2026-11-25n — Achados da revisão independente aplicados e fecho (REV-065), 2026-11-25 23:00 WET
+
+**Feito**
+- Revisão só de leitura por um subagente (Opus): sem erros graves; 4 achados médios e vários menores. Confirmados nos registos e nos artigos antes de corrigir.
+- Corrigido no relatório: a janela de 301 foi escolhida sem regra declarada antes e o efeito no `test` só se mediu depois (o relatório dizia «comparando várias dimensões»); o critério da medição final foi declarado já com os resultados do teste conhecidos; a diferença de fragmentação entre J0 e J50 não se atribui só à sobreposição; o resumo indica a regra maioritária e as viagens que pioram; três usos das anotações da validação; precisão por segmento; AIS; 128 viagens; entrada de Ferreira com os quatro autores (entrada nova no `.bib`).
+
+**Validado**
+- 247 testes (23:00 WET); relatório com 10 páginas, sem erros nem citações por resolver; páginas 1 e 9 revistas depois das correções; face à etiqueta, em `latex/` só `references.bib` mudou entre os ficheiros antigos (uma entrada acrescentada).
+
+**Problemas e limitações**
+- Não aplicado: traduzir «Abstract» e «References» (a decisão D6 só abrangeu «Figura» e «Tabela»). A revisão não abriu `results/`.
+- Duas horas escritas à frente do relógio nesta sessão, corrigidas.
+
+**Pendente**
+- Leitura do utilizador; push dos commits e da etiqueta, só a pedido; arrumação técnica antiga.

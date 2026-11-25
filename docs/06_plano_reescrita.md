@@ -123,7 +123,7 @@ Paginação: retirar a opção `section` do pacote `placeins` (provável causa d
 - Nenhum conjunto reservado aberto.
 - A versão `proposta-pt-v1` recupera-se com os comandos da §2.1; se D7 for o ficheiro novo, `proposta_pt.tex` fica igual ao dessa versão.
 
-**Estado em 2026-11-25 22:44 WET:** fases 0 a 3 feitas; da fase 4, escritas as §4, §5 e §6 (mais o anexo e a lista de limitações da §7), com 7 páginas. Em paragem para revisão do utilizador.
+**Estado em 2026-11-25 23:00 WET:** fases 0 a 6 executadas; relatório completo com 10 páginas e revisão independente aplicada. Falta a leitura do utilizador.
 
 ## 8. Verificação bibliográfica (fase 3)
 

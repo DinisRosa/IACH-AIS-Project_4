@@ -1037,4 +1037,4 @@ Regras:
 - **Limitações:** sem referências bibliográficas até à secção 2; texto ainda não revisto pelo utilizador nem por revisor independente.
 - **Pendentes:** resto do relatório e fecho de `docs/05`.
 - **Complemento (22:55 WET, mesma revisão):** escritas as secções 1 a 3, a ética e dimensão humana, as conclusões, o resumo e a bibliografia (10 páginas, sem citações por resolver; 247 testes). `docs/00`, `docs/03` e `docs/05` alinhados. Face à proposta, saem ainda: «até cerca de 20 % da captura mundial», substituído pelos valores de Agnew; a frase «principal fonte» sobre o AIS; Cheng apresentado como deteção de pesca. Revisão independente em curso.
-
+- **Complemento (23:00 WET, mesma revisão):** achados da revisão independente aplicados (escolha da janela, critério da medição final, atribuição à sobreposição, resumo, usos da validação, afirmações sobre o AIS e o F1 de segmentos, 128 viagens, entrada `ferreira2022full`). 247 testes; 10 páginas sem erros. **Correspondência no LaTeX: atualizado** (`relatorio_pt.tex`). Pendente: leitura do utilizador.
