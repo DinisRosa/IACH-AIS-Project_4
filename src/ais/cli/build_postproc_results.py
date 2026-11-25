@@ -112,6 +112,31 @@ def fig_trip(R: dict) -> tuple[str, str]:
     return save(fig, "posproc_viagem.png"), str(trip)
 
 
+def trip_table(R: dict) -> pd.DataFrame:
+    """Exatidão e erros por viagem, antes e depois (das tabelas já calculadas na execução única)."""
+    a, d = R["antes"]["ponto"]["por_viagem"], R["depois"]["ponto"]["por_viagem"]
+    rows = [{"id": i, "pontos": a[i]["n_points"], "acc_antes": a[i]["accuracy"], "acc_depois": d[i]["accuracy"],
+             "erros_antes": a[i]["n_errors"], "erros_depois": d[i]["n_errors"],
+             "acc_maioritaria": a[i]["accuracy_maioritaria"]} for i in a]
+    return pd.DataFrame(rows).sort_values(["acc_antes", "id"]).reset_index(drop=True)
+
+
+def fig_trips(T: pd.DataFrame) -> str:
+    """Exatidão por viagem antes e depois do filtro, por ordem crescente de exatidão antes (como a Figura 6)."""
+    fig, ax = plt.subplots(figsize=(6.9, 2.4))
+    x = np.arange(len(T))
+    ax.bar(x - 0.2, 100 * T["acc_antes"], 0.4, color="0.7", label="antes")
+    ax.bar(x + 0.2, 100 * T["acc_depois"], 0.4, color=NAV, label="depois do filtro")
+    ax.scatter(x, 100 * T["acc_maioritaria"], color="black", s=10, zorder=3,
+               label="prever sempre a classe maioritária da viagem")
+    ax.set_xticks(x, T["id"], rotation=60, ha="right", fontsize=5.5)
+    ax.set(ylabel="Exatidão (%)", ylim=(0, 102), xlim=(-0.7, len(T) - 0.3))
+    ax.set_title("Exatidão por viagem, antes e depois (por ordem crescente de exatidão antes)", fontsize=8)
+    ax.legend(fontsize=6.5, frameon=False, loc="lower right")
+    fig.tight_layout()
+    return save(fig, "posproc_viagens.png")
+
+
 def main() -> None:
     R = json.loads((PP / "postproc_validation.json").read_text(encoding="utf-8"))
     V = json.loads((PP / "verificacao_independente.json").read_text(encoding="utf-8"))
@@ -123,8 +148,11 @@ def main() -> None:
     (GEN / "resultados_posproc.tex").write_text(latex_macros(R), encoding="utf-8")
     f1 = fig_results(R)
     f2, trip = fig_trip(R)
+    T = trip_table(R)
+    T.to_csv(PP / "exatidao_por_viagem.csv", index=False)
+    f3 = fig_trips(T)
     info = {"verificacao_independente_confere": checks, "execucoes_registadas": events,
-            "figuras": [f1, f2], "viagem_da_figura": {"id": trip, "regra": "mais segmentos de pesca previstos antes do filtro"},
+            "figuras": [f1, f2, f3], "viagem_da_figura": {"id": trip, "regra": "mais segmentos de pesca previstos antes do filtro"},
             "macros_latex": "latex/generated/resultados_posproc.tex"}
     (PP / "build_info.json").write_text(json.dumps(info, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"verificação independente: {sum(checks.values())}/{len(checks)} conferem; viagem da figura {trip}")
