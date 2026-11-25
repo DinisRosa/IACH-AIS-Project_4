@@ -59,18 +59,22 @@ git restore --source=proposta-pt-v1 -- latex/proposta_pt.tex
 
 Não repor a pasta `latex/` inteira a partir da etiqueta: o `references.bib` antigo não tem uma entrada que o relatório usa. Se a etiqueta faltar numa cópia do repositório, correr `git fetch --tags`.
 
+## Documentos arquivados
+
+Os documentos concluídos (`docs/02` a `docs/06`) saíram da pasta e estão no git, na etiqueta **`docs-historico-v1`**. Para ler um deles:
+
+```bash
+git show docs-historico-v1:docs/04_pos_processamento.md
+```
+
 ## Estrutura
 
 - `AGENTS.md`: regras do projeto (fonte única). `CLAUDE.md`: manda lê-las.
 - `handoff.md`: ponto de situação para uma nova conversa.
-- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-066).
+- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-067).
 - `docs/`:
-  - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos e acesso aos dados.
+  - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos, modelos e protocolos, acesso aos dados e referências verificadas.
   - `01_dados_e_preparacao.md`: colunas, unidades, entradas da CNN e preparação.
-  - `02_cnn_viagem_completa.md`: a CNN de referência.
-  - `03_cnn_janelamento.md`: janelas e sobreposição.
-  - `04_pos_processamento.md`: o filtro temporal, com o histórico das duas versões.
-  - `05_releitura_proposta.md` e `06_plano_reescrita.md`: históricos da passagem da proposta ao relatório; `06` §8 tem a verificação bibliográfica.
   - `bibliografia/`: PDF dos artigos (local, não versionado).
 - `src/ais/`: código (pacote `ais`): `phase1/` (biblioteca) e `cli/` (programas).
 - `tests/`: testes com dados sintéticos (um lê 3 viagens de treino).

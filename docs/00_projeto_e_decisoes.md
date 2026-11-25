@@ -1,62 +1,83 @@
-# 00 — Projeto, decisões e política de acesso
+# 00 — Projeto, decisões, modelos e acesso aos dados
 
-[REV-033 | cor #3E2723] Documento fundido a partir de `00_contexto…`, `00_5_orientacoes…` e da política de acesso de `01_preparacao_comum`. Ler primeiro o `AGENTS.md` (regras fixas), depois este documento, depois `01`, e `02` ou `03` conforme a fase.
-
-Este documento resume o que o projeto pretende, o que foi decidido e em que ponto está. Decisões recentes do utilizador prevalecem sobre a proposta em PDF e sobre qualquer texto antigo. Não confundir objetivos futuros com funcionalidades já implementadas.
+[REV-067 | cor #CD5C5C] Documento de referência do projeto: junta o que continua vivo dos antigos `docs/00` e `docs/02` a `docs/06`. Os originais completos estão na etiqueta git `docs-historico-v1` (§11). Ler primeiro o `AGENTS.md` (regras fixas) e o `handoff.md` (ponto de situação); os dados e a preparação estão em `01`.
 
 ## 1. Problema e objetivo
 
 Segmentar viagens AIS de pesca em **pesca** e **navegação**, com uma previsão por ponto, usando uma CNN 1D totalmente convolucional. A entidade operacional é a viagem (`id` completo, por exemplo `211477000-2`).
 
-[REV-066 | cor #8E24AA] Documento ativo: o relatório `latex/relatorio_pt.tex`. A proposta em LaTeX foi retirada (etiqueta git `proposta-pt-v1`).
-
-Fontes: proposta «Segmentação semântica de trajetórias AIS para deteção de atividade de pesca usando janelas sobrepostas e pós-processamento temporal» (Dinis Rosa), decisões do utilizador registadas em `PROGRESS.md` e `REVISION_LOG.md`, e dados do Zenodo (Song Wu, DOI 10.5281/zenodo.7283281, CC BY 4.0).
+Documento ativo: o relatório `latex/relatorio_pt.tex`. Dados do Zenodo (Song Wu, DOI 10.5281/zenodo.7283281, CC BY 4.0).
 
 Detetar comportamento compatível com pesca não demonstra ilegalidade: o modelo não verifica licenças, quotas, zonas autorizadas ou infrações. A decisão de fiscalização continua humana.
 
-## 2. Proposta original e decisões atuais
+## 2. Proposta original e decisões
 
-| Aspeto | Proposta PDF | Decisão atual |
+| Aspeto | Proposta entregue (PDF) | Decisão |
 |---|---|---|
 | Modelo | Recorrente ou convolucional, possivelmente com atenção | CNN 1D |
 | Divisão | Por navio | Por ID completo de viagem (70/15/15, seed 42) |
 | 1.ª experiência | Janelas e pós-processamento | Referência com a viagem completa, sem janelas |
-| 2.ª experiência | Janelas sobrepostas | Janelas com a mesma CNN; sobreposição **0 % e 50 % prioritárias**, 25 % e 75 % a decidir depois (REV-002) |
+| 2.ª experiência | Janelas sobrepostas | A mesma CNN em janelas, 0 % e 50 %; 25 % e 75 % ficaram de fora |
 | Saída | Classificação de janelas | Probabilidade de pesca por ponto |
-| Pós-processamento | Objetivo central | Ramo separado e identificado, depois de aprovado (Marco 5); a média das janelas é reconstrução, não suavização |
-| HMM e Wu et al. (2022) | Baselines previstas | Fora por agora (REV-006) |
-| Explicabilidade, calibração, dashboard | Previstos | Fora do mínimo atual |
-| Dados reservados | Treino/validação/teste | Desenvolvimento só em treino; os conjuntos reservados só com autorização explícita e com papéis trocados face ao habitual (§6): `test` seleciona, `validation` mede no fim |
+| Pós-processamento | Objetivo central | Filtro temporal num ramo separado; a média das janelas é reconstrução, não suavização |
+| HMM e Wu et al. (2022) | Comparações previstas | Só literatura (REV-006, REV-042) |
+| Explicabilidade, calibração, *dashboard* | Previstos | Não concluídos nesta fase |
+| Dados reservados | Treino/validação/teste | Papéis trocados (§6): `test` seleciona, `validation` mede no fim |
 
 A divisão por viagem mede generalização entre viagens. Viagens do mesmo navio podem estar em conjuntos diferentes (decisão do utilizador), por isso **não se afirma generalização para navios inéditos**.
 
-## 3. Perguntas de investigação
+## 3. Perguntas de investigação e respostas
 
-- **RQ1:** a sobreposição reduz a instabilidade das fronteiras face a janelas sem sobreposição?
-- **RQ2:** o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados?
-- **RQ3:** como interagem sobreposição e pós-processamento?
+- **RQ1** (a sobreposição reduz a instabilidade das fronteiras face a janelas sem sobreposição?): no `test`, J50 fragmenta menos, sem melhorar de forma consistente o erro de fronteira; as janelas não superam a viagem completa.
+- **RQ2** (o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos?): sim, no `validation`, numa medição que não é independente.
+- **RQ3** (como interagem?): sem resposta.
 
-[REV-065 | cor #01579B] A RQ1 e a RQ2 têm resposta, com as ressalvas escritas no relatório (`latex/relatorio_pt.tex`); a RQ3 fica sem resposta. Um resultado sem melhoria também é válido: o protocolo não se altera para fabricar ganhos.
+As ressalvas completas estão no relatório. Um resultado sem melhoria é válido: o protocolo não se altera para fabricar ganhos.
 
-## 4. Marcos e estado
+## 4. Marcos
 
 | # | Marco | Estado |
 |---|---|---|
 | 1 | Ambiente, divisão por ID, isolamento | Fechado |
 | 2 | Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
-| 3 | CNN 1D de referência sobre a viagem completa | **Fechado (REV-041)**: baseline definida por decisão do utilizador (época 162, limiar 0,65, escolhidos no `test` numa ronda). Não se altera; só volta a ser usada na comparação com as janelas |
-| 4 | Janelamento com sobreposição e a mesma CNN | **Feito (REV-046, REV-047)**: J0 (0 %) e J50 (50 %), L = 64, mesma CNN e mesmos valores da baseline, lote de 32; sobreposição igual no treino e na inferência; escolhidas no `test` numa só abertura (J0 época 8, J50 época 4) e congeladas. Fora do projeto: 25 %, 75 % e outros L. Resultados em `results/windows_final/final_results_windows.json` |
-| 5 | Pós-processamento simples, em ramo separado | **Feito (REV-056 a REV-059)**: filtro gaussiano sobre as previsões guardadas da referência no `validation`; a versão que vale é a de 301 pontos, depois de uma primeira de 13; ver `docs/04` (REV-065) |
-| 6 | Congelar as variantes (baseline, J0 e J50; o pós-processamento só foi aplicado à referência, REV-059) | **Feito (REV-038, REV-047)**: congeladas, cada uma com hash |
-| 7 | Medição final única no conjunto `validation` | **Feito (REV-053)**: por decisão do utilizador, **só o modelo escolhido** (a referência, pelo maior F1 médio por ponto no `test`, critério declarado antes) foi medido, uma só vez; J0 e J50 não foram medidas no `validation`. O `validation` está gasto |
+| 3 | CNN 1D de referência sobre a viagem completa | Fechado (REV-041); não se altera |
+| 4 | A mesma CNN em janelas | Feito (REV-046, REV-047) |
+| 5 | Pós-processamento | Feito (REV-056 a REV-059) |
+| 6 e 7 | Congelar as variantes e medição final no `validation` | Feito (REV-053), só a referência |
+| — | Relatório | Completo (REV-065); falta a leitura do utilizador |
 
-O pós-processamento (um filtro que altera as previsões) não é o mesmo que extrair segmentos (só agrupar pontos consecutivos da mesma classe, sem suavizar): a extração é uma ferramenta de medição e vem antes. O `validation` só se abre no fim, para todas as variantes de uma vez, e não já para a baseline.
+## 5. Modelos e protocolos
 
-O estado detalhado, com datas e resultados, está em `PROGRESS.md`.
+Os números dos resultados não se repetem aqui: estão em `results/` e, no relatório, em macros geradas.
 
-## 5. Ambiente
+### 5.1 CNN de referência (viagem completa)
 
-Python com `venv` + `pip` (`iach-ais-venv-4/`, ignorado pelo git); dependências com versões fixas em `requirements.txt`. Hardware informado: Intel i7 de 12.ª geração, 16 GB de RAM, GPU integrada. Começa-se em CPU e mede-se o custo no treino antes de prometer viabilidade. KNIME só entraria como contingência por decisão do utilizador.
+```text
+[7, N] → Conv1D 32 (k5, same) → ReLU → Conv1D 64 (k5, same) → ReLU
+       → Conv1D 32 (k5, same) → ReLU → Conv1D 1 (k1) → logits [1, N]
+```
+
+- Campo recetivo de 13 pontos; 21 761 parâmetros (`src/ais/phase1/model.py`). A entrada completa não dá contexto global.
+- O modelo devolve logits; `BCEWithLogitsLoss` sem pesos de classe; a sigmoide aplica-se uma só vez, na inferência. `id`, `point_id` e `t` nunca são entradas.
+- Adam, lr 1e-3, 300 épocas sem paragem antecipada, uma viagem por passo, seed 42, CPU, um checkpoint por época (`configs/phase1_select.json`). Valores iniciais, não otimizados.
+- Seleção no `test` numa só ronda (`configs/selection_protocol.json`): época pela menor perda por ponto (162) e limiar pelo F1 médio (0,65). Congelada em `results/baseline_frozen/`.
+- Limitação: a perda no `test` oscila entre épocas e a época escolhida é um mínimo estreito.
+
+### 5.2 Janelas (J0 e J50)
+
+- Janelas de L = 64 pontos; J0 com passo 64, J50 com passo 32; a mesma sobreposição no treino e na inferência. Mesma CNN, normalizador, seed e valores da referência, mas lote de 32 janelas e limite de 45 minutos (`configs/windows_j0.json`, `windows_j50.json`; `src/ais/phase1/windows.py`).
+- Cada viagem começa no índice 0 e pára na primeira janela que alcança o fim; a última pode ficar mais curta, sem pontos falsos. Nenhuma janela atravessa viagens; os intervalos de tempo dentro de uma viagem não cortam a sequência.
+- O enchimento serve só para empilhar: a máscara tira-o da perda e da média e a rede põe-no a zero depois de cada ReLU. Perda: média das posições reais do lote.
+- Probabilidade por ponto: média simples das janelas que o cobrem (float64); o limiar aplica-se depois.
+- Seleção no `test` numa só abertura (`configs/selection_protocol_windows.json`), com os critérios da referência sobre a probabilidade reconstruída: J0 época 8, limiar 0,60; J50 época 4, limiar 0,75. A perda no `test` sobe com o treino.
+
+### 5.3 Filtro temporal
+
+- Média pesada gaussiana das probabilidades de pesca, ponto a ponto, dentro de cada viagem; σ = tamanho/6; nas pontas usam-se só os pontos existentes, com pesos reajustados; depois o limiar 0,65 (`src/ais/phase1/postprocessing.py`). Só a referência.
+- Aplicado às previsões **já guardadas** da medição final: não se reabriu o parquet nem se correu a CNN; as anotações foram reutilizadas para medir.
+- **Registo de integridade.** A v1 (13 pontos, protocolo `posproc_validation_v1`) foi aplicada primeiro ao `validation`: exatidão 94,4 % → 94,5 %; segmentos de pesca previstos 486 → 255 (reais 18); F1 de segmentos de pesca 0,028 → 0,066. Por ter ficado aquém, decidiu-se procurar outra janela **depois de ver esse resultado**.
+- Escolha dos 301 pontos: a partir dos blocos de erro no `test` e do cálculo com probabilidades ideais (o limiar 0,65 torna o filtro assimétrico); o efeito no `test` (13, 201, 301 e 401 pontos) só se mediu **depois** da escolha. No `test`, 301 levou a exatidão de 94,7 % a 95,7 % e piorou 8 de 18 viagens.
+- A v2 (301 pontos, `configs/postproc_protocol_v2.json`) correu uma vez no `validation`, com uma segunda implementação a confirmar 19 de 19 valores (`verify_postproc_independent --size 301 results/final_validation/predictions_validation.csv`). **O resultado não é uma medição independente** e o relatório declara-o (decisão do utilizador, REV-065, que substitui a de omitir a v1).
 
 ## 6. Política de acesso aos dados
 
@@ -65,33 +86,74 @@ As regras completas estão no `AGENTS.md` §3. Resumo operacional:
 | Etapa | Dados permitidos | Condição |
 |---|---|---|
 | A — Desenvolvimento | Treino oficial ou sintéticos | Autorizada. Inclui debugging, gráficos, benchmarks, inspeção e testes de integração |
-| B — Seleção | `test` | Só com autorização explícita (âmbito das decisões declarado), depois de congelar a implementação; pode ser consultado mais do que uma vez dentro do âmbito autorizado |
-| C — Medição final | `validation` | Só com nova autorização, **uma só vez**, depois de congelar modelo, limiar, número de épocas e lista de variantes. **Feita em REV-053 (2026-11-24 00:32 UTC); o `validation` está gasto** |
+| B — Seleção | `test` | Só com autorização explícita (âmbito declarado), depois de congelar a implementação |
+| C — Medição final | `validation` | Só com nova autorização, uma só vez, com tudo congelado. **Feita em REV-053 (2026-11-24 00:32 UTC); o `validation` está gasto** |
 
-- **Nomes e papéis (REV-036):** os conjuntos mantêm os nomes `validation` e `test` nos ficheiros e no manifesto, mas os papéis estão trocados face ao habitual: `test` serve para **selecionar** (épocas, limiar, treinar mais, escolher entre variantes) e `validation` é a **medição final**, usada uma só vez com tudo congelado. Os resultados no `test` são otimistas por terem servido a escolher; o número final do relatório é o do `validation`.
-- A divisão foi feita antes de qualquer exploração, só com IDs e contagens técnicas; a tabela `id → split` está em `manifests/split_manifest_seed42.csv` e não se refaz.
-- Normalizadores e qualquer objeto aprendido ajustam-se só no treino (ou só no treino interno, se a monitorização tiver de ser independente).
-- Monitorização interna: separar por ID dentro do treino, antes do ajuste de transformações e da criação de janelas.
-- **Mecanismo (REV-038):** só se abre um conjunto reservado com um ficheiro de autorização escrito a partir de uma instrução do utilizador (`configs/authorizations/`), um protocolo declarado antes (`configs/selection_protocol.json`) e `ais.phase1.reserved`, que regista cada abertura em `results/access_log.jsonl`, recusa uma segunda ronda e recusa o `validation` sem autorização própria e execução congelada. É uma salvaguarda do código, não uma prova de que ninguém pode contornar.
-- Uma flag no código ou uma decisão do agente nunca é autorização. Um erro numa execução reservada reproduz-se e corrige-se com treino ou sintéticos, e a exposição documenta-se.
-- Exposição já ocorrida (REV-015): validação e teste foram lidos por inteiro só para construir as bases limpas e contar linhas e viagens, sem análise de resultados nem uso para escolher modelos ou regras.
+- **Nomes e papéis (REV-036):** os ficheiros mantêm os nomes `validation` e `test`, mas os papéis estão trocados face ao habitual. Os resultados no `test` são otimistas por terem servido a escolher; o número final do relatório é o do `validation`.
+- A divisão foi feita antes de qualquer exploração, só com IDs e contagens; `manifests/split_manifest_seed42.csv` não se refaz.
+- Normalizadores e qualquer objeto aprendido ajustam-se só no treino (ou no treino interno, separado por ID antes de transformações e janelas).
+- **Mecanismo (REV-038):** autorização em `configs/authorizations/` a partir de uma instrução do utilizador, protocolo declarado antes e registo em `results/access_log.jsonl`; `ais.phase1.reserved` recusa uma segunda ronda e o `validation` sem autorização própria. É uma salvaguarda do código, não uma garantia.
+- Uma flag no código ou uma decisão do agente nunca é autorização.
+- **Não voltar a correr** `select_on_test`, `select_windows_on_test`, `final_validation` nem `postproc_validation`.
+- Exposição já ocorrida (REV-015): validação e teste foram lidos por inteiro só para construir as bases limpas e contar linhas e viagens.
 - Nenhum valor empírico usado como evidência pode depender só de um cálculo informal do agente (`AGENTS.md` §10).
 
-## 7. Avaliação prevista
+## 7. Avaliação (como foi implementada)
 
-- **Por ponto:** precisão, sensibilidade, F1, IoU e matriz de confusão.
-- **Por segmento:** correspondência um-para-um com limiar de IoU temporal declarado.
-- **Fronteiras:** desvios de início e fim em unidade temporal explícita.
-- **Fragmentação:** número de segmentos face à anotação; menos segmentos não é automaticamente melhor.
-- **Estabilidade:** resposta a pequenas alterações de parâmetros e janelas.
-- **Custo:** tempo, passos de treino, memória e custo de inferência.
-
-Mantêm-se os mesmos IDs, características e definições de métricas entre comparações. Declara-se se a sobreposição varia no treino, na inferência ou em ambos, e o orçamento de otimização. Variantes nunca se escolhem a partir do conjunto de medição final (`validation`).
+- **Por ponto:** exatidão, precisão, sensibilidade, F1, IoU e matriz de confusão; comparação com a classe maioritária.
+- **Por segmento** (`src/ais/phase1/segments.py`): blocos máximos da mesma classe por viagem, sem suavizar; IoU temporal em segundos; correspondência um-para-um, gulosa, com IoU ≥ 0,5; F1 de segmentos; fragmentação (previstos/reais); erro de fronteira (mediana do desvio absoluto nos pares).
+- A estabilidade perante pequenas alterações de parâmetros **não foi medida**.
 
 ## 8. Dimensão humana e limites
 
-A proposta prevê apoiar o inspetor com mapas, segmentos e probabilidades. Uma probabilidade bruta não é confiança calibrada. O sistema não fundamenta sanções de forma autónoma, e uma prova de conceito sem estudo com inspetores não comprova utilidade operacional.
+O objetivo previa apoiar o inspetor. Uma probabilidade bruta não é confiança calibrada; o sistema não fundamenta sanções de forma autónoma; sem estudo com inspetores não se afirma utilidade operacional.
 
-## 9. Referências da proposta
+## 9. Referências verificadas
 
-Identificadas na proposta, sem verificação bibliográfica independente aqui: Wu et al. (2022), segmentação semântica de atividades completas; Peel e Good (2011), HMM; Soares Júnior et al. (2018); Kroodsma et al. (2018) e Natale et al. (2015); Shneiderman (2020); Guo et al. (2017), calibração; Lundberg e Lee (2017). Citar esta lista não valida implementações nem resultados desses métodos.
+Confirmação das frases do relatório nos PDF de `docs/bibliografia/` (pasta local, não versionada) e, para Agnew, na página da PLOS ONE (2026-11-25). O relatório usa a entrada `ferreira2022full` (quatro autores).
+
+| Fonte | O que o artigo diz | Consequência |
+|---|---|---|
+| Agnew et al. (2009) | Perdas anuais de 10 a 23,5 mil milhões de dólares, 11 a 26 milhões de toneladas (pesca ilegal e não declarada). Nas pescarias estudadas, 13 a 31 % (média 18 %) | **«Até cerca de 20 % da captura mundial» não está no artigo.** O relatório usa o intervalo de valor e de toneladas |
+| Chuaysi e Kiattisin (2020) | Liga a pesca IUU à sobre-exploração e a trabalho ilegal; cita 11 a 26 milhões de toneladas | Serve para essas ligações |
+| Kroodsma et al. (2018) | O AIS difunde identidade, posição, velocidade e ângulo de viragem a cada poucos segundos; 22 mil milhões de mensagens; redes convolucionais | Confirma; não diz que o AIS é a «principal» fonte |
+| Natale et al. (2015) | Identifica pesca pelos perfis de velocidade (frota sueca) e mapeia o esforço | Confirma o padrão de velocidade; também os intervalos das mensagens AIS (2 s a 3 min) |
+| Peel e Good (2011); Vermard et al. (2010) | Modelos de Markov escondidos sobre VMS | Confirma |
+| Soares Júnior et al. (2018) | Segmentação semi-supervisionada com *Minimum Description Length* | Confirma |
+| Wu et al. (2022) | Classificador (floresta aleatória) sobre janelas sobrepostas; junção das janelas de pesca próximas por *run-length encoding* (WBS-RLE) | É a descrição usada no relatório |
+| Wu et al. (2022), dados | AIS da autoridade marítima dinamarquesa, navios de pesca, 14 a 20 de novembro de 2021; posições duplicadas removidas e coordenadas com o mesmo instante calculadas pela média; 128 trajetórias anotadas à mão, 1 080 220 pontos | Esclarece a proveniência das anotações. O ficheiro público tem menos trajetórias e linhas; o relatório diz-o |
+| Arasteh et al. (2020), FishNET | CNN para classificar segmentos de atividade | Trabalho próximo, citado |
+| Cheng et al. (2025) | Classifica cinco **tipos** de navio de pesca | Não é deteção de atividade |
+| Wang et al. (2026) | Quatro estados operacionais, com atenção local e global | É a descrição usada no relatório |
+| Hu et al. (2026) | Segmentação não supervisionada de subtrajetórias com campos angulares de Gram e previsão de trajetória | É a descrição usada no relatório |
+| Ferreira et al. (2022) | Rótulos obtidos por agrupamento da geometria; redes recorrentes | Confirma |
+| Shneiderman (2020); Guo et al. (2017); Lundberg e Lee (2017) | PDF fora da pasta | Confirmados depois só pelos resumos no arXiv |
+| Ghazizadeh (2019) | PDF sem texto extraível | Não citado; não verificado |
+
+## 10. Ambiente
+
+Python com `venv` + `pip` (`iach-ais-venv-4/`, ignorado pelo git); versões fixas em `requirements.txt`. Intel i7 de 12.ª geração, 16 GB de RAM, GPU integrada: tudo em CPU. KNIME só como contingência por decisão do utilizador.
+
+## 11. Documentos arquivados
+
+Retirados da pasta em REV-067, por estarem concluídos ou desatualizados. Continuam na etiqueta git `docs-historico-v1`; os registos (`PROGRESS.md`, `REVISION_LOG.md`), os protocolos em `configs/` e comentários antigos podem citá-los pelo nome.
+
+| Documento | Conteúdo | O essencial passou para |
+|---|---|---|
+| `02_cnn_viagem_completa.md` | Contratos e implementação da referência | §5.1 |
+| `03_cnn_janelamento.md` | Contratos e testes do janelamento | §5.2 |
+| `04_pos_processamento.md` | Plano e registo do filtro, análise no `test`, v1 e v2 | §5.3 |
+| `05_releitura_proposta.md` | Passagens da proposta por corrigir (A a H), todas fechadas | — |
+| `06_plano_reescrita.md` | Plano da passagem a relatório | §9 (verificação bibliográfica) |
+
+Ler um deles sem o repor:
+
+```bash
+git show docs-historico-v1:docs/04_pos_processamento.md
+```
+
+Trazer um de volta:
+
+```bash
+git restore --source=docs-historico-v1 -- docs/04_pos_processamento.md
+```

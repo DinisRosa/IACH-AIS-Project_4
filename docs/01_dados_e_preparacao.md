@@ -85,7 +85,7 @@ A preparação faz-se com scripts, não com os 25 módulos que as primeiras espe
 | Unidades (só treino) | `src/ais/cli/check_units_train.py` | `results/units_check_train/` |
 | Base limpa | `src/ais/cli/build_clean_dataset.py --split train\|validation\|test` | `data/123_fishing_trajs_clean_{train,validation,test}.parquet` |
 | Anomalias (só treino) | `src/ais/cli/count_anomalies_train.py` | `results/anomalies_train/` |
-| Leitura, validação, sequências e normalização | `src/ais/phase1/data.py` | ver `02` |
+| Leitura, validação, sequências e normalização | `src/ais/phase1/data.py` | ver `00` §5.1 |
 
 Princípios mantidos: preservar originais e `point_id`; transformações devolvem cópias; diagnóstico não implica exclusão; nada de unidades ou referenciais por adivinhação; qualquer valor aprendido só no treino; versões físicas e normalizadas distinguidas. `point_id` é um inteiro estável atribuído antes de qualquer ordenação.
 
@@ -98,7 +98,7 @@ Quantificadas por `src/ais/cli/count_anomalies_train.py` (REV-017): 55 saltos ac
 ## 9. Dúvidas ainda abertas
 
 - CRS de longitude e latitude (hipótese WGS84).
-- Anotações: [REV-066 | cor #8E24AA] o artigo de Wu et al. (2022) descreve anotação manual de 128 trajetórias (1 080 220 pontos) de uma semana de AIS dinamarquês (`docs/06` §8); falta explicar a diferença para as 123 do ficheiro, a fiabilidade das anotações e a convenção dos intervalos.
+- Anotações: [REV-066 | cor #8E24AA] o artigo de Wu et al. (2022) descreve anotação manual de 128 trajetórias (1 080 220 pontos) de uma semana de AIS dinamarquês (`00` §9); falta explicar a diferença para as 123 do ficheiro, a fiabilidade das anotações e a convenção dos intervalos.
 - Alinhamento do rumo em tempo real: a análise é offline; uma aplicação em tempo real teria de especificar causalidade à parte.
 
 Nenhuma destas incertezas autoriza abrir validação ou teste.
