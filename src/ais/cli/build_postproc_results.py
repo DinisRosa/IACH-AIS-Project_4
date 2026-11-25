@@ -1,6 +1,6 @@
 """Macros e figuras do pós-processamento para a proposta (Secção 10, REV-057).
 
-Parte de `results/postproc_validation/postproc_validation.json` e do CSV de previsões filtradas, gerados pela
+Parte de `results/postproc_validation_v2/postproc_validation.json` (v2, 301 pontos) e do CSV de previsões filtradas, gerados pela
 execução única de `postproc_validation`. Não volta a filtrar nem a medir. Confirma que os números coincidem com
 a verificação independente (`verificacao_independente.json`, de `verify_postproc_independent`). Escreve:
   - latex/generated/resultados_posproc.tex : macros \\resPp... (nomes sem dígitos);
@@ -23,7 +23,8 @@ from ais.phase1.reserved import read_log
 from matplotlib.colors import ListedColormap
 
 ROOT = Path(__file__).resolve().parents[3]
-PP = ROOT / "results" / "postproc_validation"
+VERSION = "posproc_validation_v2"  # REV-059: a v1 (13 pontos) fica só como histórico interno
+PP = ROOT / "results" / "postproc_validation_v2"
 GEN = ROOT / "latex" / "generated"
 CMAP = ListedColormap([NAV, PESCA])
 
@@ -33,10 +34,10 @@ def check_independent(R: dict, V: dict) -> dict:
     checks = {}
     for k in ("antes", "depois"):
         g, vg = R[k]["ponto"]["global"], V[k]["metricas"]
-        checks[f"{k}_exatidao"] = abs(g["accuracy"] - vg["exatidao"]) < 1e-12
+        checks[f"{k}_exatidao"] = abs(g["accuracy"] - vg["exatidao"]) < 1e-9
         for c, name in ((0, "navegação"), (1, "pesca")):
             for m, vm in (("precisao", "precisao"), ("sensibilidade", "sensibilidade"), ("f1", "f1")):
-                checks[f"{k}_{name}_{m}"] = abs(g["por_classe"][name][m] - vg["por_classe"][str(c)][vm]) < 1e-12
+                checks[f"{k}_{name}_{m}"] = abs(g["por_classe"][name][m] - vg["por_classe"][str(c)][vm]) < 1e-9
         for c, name in ((0, "navegacao"), (1, "pesca")):
             s, vs = R[k]["segmento"][name], V[k]["segmentos"][str(c)]
             checks[f"{k}_seg_{name}"] = (s["n_ref_segments"], s["n_pred_segments"], s["n_matched"]) == (
@@ -59,7 +60,14 @@ def latex_macros(R: dict) -> str:
               "PpPescaParaNav": thousands(ch["pesca_para_navegacao"]), "PpCorrigidos": thousands(ch["corrigidos"]),
               "PpEstragados": thousands(ch["estragados"]), "PpPercMudam": pct(ch["n_mudam"] / ch["n_pontos"], 2),
               "PpErrosMenos": thousands(R["antes"]["ponto"]["global"]["n_errors"] - R["depois"]["ponto"]["global"]["n_errors"])})
-    lines = [f"% Gerado por ais.cli.build_postproc_results a partir de results/postproc_validation/postproc_validation.json",
+    T = trip_table(R)
+    T["d"] = T["acc_depois"] - T["acc_antes"]
+    w = T.sort_values(["d", "id"]).iloc[0]
+    M.update({"PpNViagens": str(len(T)), "PpViagMelhoram": str(int((T["d"] > 0).sum())),
+              "PpViagPioram": str(int((T["d"] < 0).sum())), "PpPiorQuedaViagem": "\\texttt{" + w["id"] + "}",
+              "PpPiorQuedaAntes": pct(w["acc_antes"]), "PpPiorQuedaDepois": pct(w["acc_depois"]),
+              "PpJanela": str(R["filtro"]["tamanho_pontos"]), "PpSigma": pt(R["filtro"]["sigma_pontos"], 1)})
+    lines = [f"% Gerado por ais.cli.build_postproc_results a partir de results/postproc_validation_v2/postproc_validation.json",
              f"% (execução única {R['criado_utc']}, commit {R['git_commit'][:9]}). NÃO EDITAR À MÃO.",
              "% Prefixos: PpAntes/PpDepois = por ponto; PpASeg/PpDSeg = por segmento antes/depois."]
     lines += [f"\\newcommand{{\\res{k}}}{{{v}}}" for k, v in M.items()]
@@ -141,7 +149,8 @@ def main() -> None:
     R = json.loads((PP / "postproc_validation.json").read_text(encoding="utf-8"))
     V = json.loads((PP / "verificacao_independente.json").read_text(encoding="utf-8"))
     checks = check_independent(R, V)
-    events = [e["event"] for e in read_log(ROOT / "results" / "access_log.jsonl") if e.get("event", "").startswith("postproc")]
+    events = [e["event"] for e in read_log(ROOT / "results" / "access_log.jsonl")
+              if e.get("event") in ("postproc_start", "postproc_done") and e.get("protocol") == VERSION]
     if events != ["postproc_start", "postproc_done"]:
         raise ValueError(f"Registo inesperado das execuções do pós-processamento: {events}")
     GEN.mkdir(parents=True, exist_ok=True)

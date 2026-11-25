@@ -4,9 +4,14 @@ Escrito pela Abacus.AI (delegate-terminal) só a partir da descrição do filtro
 nem os dados do projeto; revisto e corrido localmente. Serve para confirmar, por uma segunda implementação, os
 números de `ais.cli.postproc_validation`. Lê o CSV das previsões e imprime JSON; não escreve ficheiros.
 
+A janela da média pesada gaussiana é configurável: `--size N` (inteiro ímpar, por omissão 13), com k de -h a +h,
+h = N//2 e sigma = N/6.
+
 Execução:
     iach-ais-venv-4/bin/python -m ais.cli.verify_postproc_independent results/final_validation/predictions_validation.csv
+    iach-ais-venv-4/bin/python -m ais.cli.verify_postproc_independent previsoes.csv --size 301
 """
+import argparse
 import sys
 import json
 import numpy as np
@@ -25,18 +30,25 @@ def carregar(caminho):
     return df.reset_index(drop=True)
 
 
-def filtrar(p, s=13.0 / 6.0, raio=6):
+def filtrar(p, size=13):
+    p = np.asarray(p, dtype=float)
     n = len(p)
-    saida = np.empty(n, dtype=float)
+    if n == 0:
+        return np.empty(0, dtype=float)
+
+    raio = size // 2
+    sigma = size / 6.0
     k = np.arange(-raio, raio + 1)
-    w = np.exp(-(k ** 2) / (2.0 * s * s))
-    for i in range(n):
-        lo = max(0, i - raio)
-        hi = min(n - 1, i + raio)
-        kk = np.arange(lo, hi + 1) - i
-        ww = w[kk + raio]
-        saida[i] = float(np.dot(ww, p[lo:hi + 1]) / ww.sum())
-    return saida
+    w = np.exp(-(k ** 2) / (2.0 * sigma * sigma))
+
+    # Numerador: convolução completa e deslocamento de `raio` para alinhar o centro do kernel.
+    # O comprimento é sempre n, mesmo quando a viagem é mais curta do que a janela.
+    num = np.convolve(p, w, mode="full")[raio:raio + n]
+
+    # Denominador: soma dos pesos efectivamente usados em cada índice (só pontos existentes).
+    den = np.convolve(np.ones(n, dtype=float), w, mode="full")[raio:raio + n]
+
+    return num / den
 
 
 def metricas(y_real, y_prev):
@@ -135,7 +147,22 @@ def avaliar_segmentos(viagens, chave_classe):
 
 
 def main():
-    df = carregar(sys.argv[1])
+    parser = argparse.ArgumentParser(
+        description="Verificação independente do pós-processamento (REV-057)."
+    )
+    parser.add_argument("csv", help="CSV das previsões")
+    parser.add_argument(
+        "--size",
+        type=int,
+        default=13,
+        help="tamanho da janela gaussiana (inteiro ímpar, por omissão 13)",
+    )
+    args = parser.parse_args()
+
+    if args.size < 1 or args.size % 2 == 0:
+        parser.error("--size tem de ser um inteiro ímpar positivo")
+
+    df = carregar(args.csv)
 
     ids = df["id"].to_numpy()
     p = df["p_fishing"].to_numpy(dtype=float)
@@ -147,7 +174,7 @@ def main():
     for a, b in zip(limites[:-1], limites[1:]):
         if b <= a:
             continue
-        pf = filtrar(p[a:b])
+        pf = filtrar(p[a:b], args.size)
         depois[a:b] = (pf >= 0.65).astype(int)
 
     viagens = []

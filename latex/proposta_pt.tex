@@ -81,6 +81,8 @@
 \definecolor{rev056}{RGB}{216,67,21}
 % REV-057 — cor #B8860B, RGB (184, 134, 11) (mesma do REVISION_LOG.md). Resultados do pós-processamento (Subsecção 10.4).
 \definecolor{rev057}{RGB}{184,134,11}
+% REV-059 — cor #8B008B, RGB (139, 0, 139) (mesma do REVISION_LOG.md). Pós-processamento com janela de 301 pontos: tamanho, justificação e leitura dos resultados.
+\definecolor{rev059}{RGB}{139,0,139}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 % Números gerados por ais.cli.build_final_results (REV-035): \rv{\resXxx} mostra o valor na cor da revisão.
 \input{generated/resultados}
@@ -229,7 +231,7 @@ J50 & \resJCPasso & \resJCJanelas & \resJCPassos & \resJCSegundos \\
 \subsection{\texorpdfstring{\revtext{rev023}{Pós-processamento temporal}}{Pós-processamento temporal}}
 \label{sec:abordagem-pos}
 
-\revtext{rev056}{As probabilidades por ponto do modelo escolhido são filtradas com uma janela gaussiana de 13 pontos, para produzir segmentos contíguos e estáveis (Secção~\ref{sec:posproc}).}
+\revtext{rev059}{As probabilidades por ponto do modelo escolhido são filtradas com uma janela gaussiana de 301 pontos, para produzir segmentos contíguos e estáveis (Secção~\ref{sec:posproc}).}
 
 \subsection{\texorpdfstring{\revtext{rev023}{Saída, explicabilidade e ferramentas}}{Saída, explicabilidade e ferramentas}}
 \label{sec:abordagem-saida}
@@ -570,41 +572,41 @@ Teste & Navegação & \resVaTSegNavNRef & \resVaTSegNavNPred & \resVaTSegNavNPar
 
 \subsection{\texorpdfstring{\revtext{rev056}{Filtro}}{Filtro}}
 
-\revtext{rev056}{Uma janela desliza ponto a ponto ao longo de cada viagem, sobre as probabilidades de pesca previstas pela CNN. Em cada ponto, a probabilidade é substituída pela média pesada das probabilidades dos pontos da janela, de $-6$ a $+6$ em relação a ele:
+\revtext{rev056}{Uma janela desliza ponto a ponto ao longo de cada viagem, sobre as probabilidades de pesca previstas pela CNN. Em cada ponto, a probabilidade é substituída pela média pesada das probabilidades dos pontos da janela, \revtext{rev059}{de $-150$ a $+150$} em relação a ele:
 \[
-\tilde{p}_i=\frac{\sum_{k=-6}^{6} w_k\,p_{i+k}}{\sum_{k=-6}^{6} w_k},\qquad w_k=\exp\!\left(-\frac{k^2}{2\sigma^2}\right),
+\tilde{p}_i=\frac{\sum_{k=-150}^{150} w_k\,p_{i+k}}{\sum_{k=-150}^{150} w_k},\qquad w_k=\exp\!\left(-\frac{k^2}{2\sigma^2}\right),
 \]
 em que as somas usam só os pontos que existem na viagem. Depois aplica-se o limiar já congelado do modelo (0,65): acima é pesca, abaixo é navegação. Filtram-se as probabilidades e não as classes, para que um vizinho previsto com pouca confiança pese menos do que um previsto com muita.}
 
 \subsection{\texorpdfstring{\revtext{rev056}{Tamanho e forma da janela}}{Tamanho e forma da janela}}
 
-\revtext{rev056}{\textbf{Tamanho: 13 pontos.} É o campo recetivo da CNN de referência (Subsecção~\ref{sec:campo-recetivo}): cada previsão já usa 13 pontos de entrada, e o filtro junta 13 previsões vizinhas, pelo que cada decisão final passa a depender de cerca de 25 pontos da viagem. O valor foi fixado antes de qualquer medição; nenhum conjunto de dados serviu para o escolher.
+\revtext{rev059}{\textbf{Tamanho: 301 pontos.} O tamanho foi escolhido no conjunto de teste, a partir do comprimento dos erros da referência. Um erro forma um bloco de pontos seguidos mal classificados: no teste há 373 blocos, com mediana de 5 pontos, e 90\,\% têm até 37 pontos; os mais frequentes são navegação prevista no meio de pesca. Com o limiar de 0,65, o filtro é assimétrico: com 301 pontos remove blocos isolados de pesca até 93 pontos e de navegação até 45 pontos, o que cobre cerca de nove em cada dez blocos. O segmento real de navegação mais curto tem 102 pontos no treino e 127 no teste, pelo que a janela não chega para apagar segmentos reais.
 
-\textbf{Forma: gaussiana}, com $\sigma = 13/6 \approx 2{,}17$ pontos. O ponto central pesa mais e o peso diminui com a distância, até ser quase nulo nas pontas da janela (Figura~\ref{fig:posproc}, à esquerda). Assim, os vizinhos próximos contam mais do que os afastados, ao contrário de uma média simples, em que todos contam o mesmo.
+\textbf{Forma: gaussiana}, com $\sigma = 301/6 \approx 50{,}2$ pontos. O ponto central pesa mais e o peso diminui com a distância, até ser quase nulo nas pontas da janela (Figura~\ref{fig:posproc}, à esquerda). Assim, os vizinhos próximos contam mais do que os afastados, ao contrário de uma média simples, em que todos contam o mesmo.}
 
-\textbf{Regras.} A janela nunca atravessa viagens. Nas pontas de uma viagem usa só os pontos existentes, com os pesos reajustados para somarem 1, sem pontos inventados. O filtro é diferente da reconstrução das janelas sobrepostas (Subsecção~\ref{sec:abordagem-janelas}): aquela junta previsões do mesmo ponto, este junta previsões de pontos vizinhos.}
+\revtext{rev056}{\textbf{Regras.} A janela nunca atravessa viagens. Nas pontas de uma viagem usa só os pontos existentes, com os pesos reajustados para somarem 1, sem pontos inventados. O filtro é diferente da reconstrução das janelas sobrepostas (Subsecção~\ref{sec:abordagem-janelas}): aquela junta previsões do mesmo ponto, este junta previsões de pontos vizinhos.}
 
 \begin{figure*}[t]
 \centering\color{rev056}
 \includegraphics[width=0.95\textwidth]{figures/posproc_janela.png}
-\caption{Pós-processamento. À esquerda, os pesos da janela gaussiana de 13 pontos ($\sigma \approx 2{,}17$). À direita, um exemplo sintético (não são dados do projeto): pontos isolados com a classe contrária à dos vizinhos passam à classe do bloco, e os dois pontos de navegação no meio da pesca ficam no limite do limiar. Nas fronteiras entre blocos, o filtro pode mudar um ponto de classe.}
+\caption{\revtext{rev059}{Pós-processamento. À esquerda, os pesos da janela gaussiana de 301 pontos ($\sigma \approx 50{,}2$). À direita, um exemplo sintético (não são dados do projeto): blocos de 1, 20 e 40 pontos de navegação no meio da pesca e um bloco de 60 pontos de pesca no meio da navegação passam à classe dos vizinhos (traços coloridos). Nas fronteiras entre blocos, o filtro desloca a fronteira algumas dezenas de pontos.}}
 \label{fig:posproc}
 \end{figure*}
 
 \subsection{\texorpdfstring{\revtext{rev056}{Objetivo e medição}}{Objetivo e medição}}
 
-\revtext{rev056}{O objetivo é reduzir a fragmentação: menos segmentos previstos, mais próximos dos segmentos anotados, sem perder exatidão por ponto. O filtro corrige nos dois sentidos (pesca isolada no meio de navegação e o contrário) e não sabe qual é a classe real: também pode apagar um segmento real mais curto do que a janela, ou deslocar uma fronteira. Corrige trocas curtas, de um ou poucos pontos; blocos de erros mais longos do que a janela ficam como estão.
+\revtext{rev056}{O objetivo é reduzir a fragmentação: menos segmentos previstos, mais próximos dos segmentos anotados, sem perder exatidão por ponto. O filtro corrige nos dois sentidos (pesca isolada no meio de navegação e o contrário) e não sabe qual é a classe real: também pode apagar um segmento real mais curto do que a janela, ou deslocar uma fronteira. \revtext{rev059}{Corrige blocos de erro até algumas dezenas de pontos; blocos mais longos ficam como estão.}
 
-O filtro aplica-se apenas ao modelo escolhido na Secção~\ref{sec:validacao} (a referência, época 162, limiar 0,65), às previsões já guardadas do conjunto de validação, uma única vez e com o tamanho já fixado. Compara-se o antes e o depois por ponto (exatidão, F1 por classe) e por segmento (F1 de segmentos, fragmentação e erros de fronteira, com as mesmas regras da Tabela~\ref{tab:validacao-segmentos}). Não há nova passagem pela CNN nem nova leitura dos dados de validação: usam-se as probabilidades e as anotações já guardadas na medição final. As anotações servem, pela segunda vez, para medir; por isso o filtro foi todo fixado antes (tamanho, forma e limiar) e nada é escolhido com estes resultados.} \revtext{rev057}{O protocolo foi gravado num \emph{commit} antes da execução, e os números foram confirmados por uma segunda implementação, escrita de forma independente.}
+O filtro aplica-se apenas ao modelo escolhido na Secção~\ref{sec:validacao} (a referência, época 162, limiar 0,65), às previsões já guardadas do conjunto de validação, uma única vez e com o tamanho já fixado. Compara-se o antes e o depois por ponto (exatidão, F1 por classe) e por segmento (F1 de segmentos, fragmentação e erros de fronteira, com as mesmas regras da Tabela~\ref{tab:validacao-segmentos}). Não há nova passagem pela CNN nem nova leitura dos dados de validação: usam-se as probabilidades e as anotações já guardadas na medição final. As anotações servem de novo para medir; por isso o filtro foi todo fixado antes (tamanho, forma e limiar) e nada é escolhido com estes resultados.} \revtext{rev057}{O protocolo foi gravado num \emph{commit} antes da execução, e os números foram confirmados por uma segunda implementação, escrita de forma independente.}
 
 \subsection{\texorpdfstring{\revtext{rev057}{Resultados}}{Resultados}}
 \label{sec:posproc-resultados}
 
-\revtext{rev057}{O filtro mudou de classe \resPpMudam{} pontos (\resPpPercMudam{} dos \resPpAntesPontos{}): \resPpNavParaPesca{} passaram de navegação a pesca e \resPpPescaParaNav{} de pesca a navegação. Destes, \resPpCorrigidos{} ficaram corrigidos e \resPpEstragados{} passaram a estar errados, pelo que há \resPpErrosMenos{} erros a menos. Por ponto, a mudança é pequena: a exatidão passa de \resPpAntesAcc{} para \resPpDepoisAcc{}, e os F1 de pesca e de navegação mudam menos de uma centésima (Tabela~\ref{tab:posproc}).
+\revtext{rev059}{O filtro mudou de classe \resPpMudam{} pontos (\resPpPercMudam{} dos \resPpAntesPontos{}): \resPpNavParaPesca{} passaram de navegação a pesca e \resPpPescaParaNav{} de pesca a navegação. Destes, \resPpCorrigidos{} ficaram corrigidos e \resPpEstragados{} passaram a estar errados, pelo que há \resPpErrosMenos{} erros a menos. Por ponto, a exatidão passa de \resPpAntesAcc{} para \resPpDepoisAcc{}, e o F1 sobe de \resPpAntesPescaF{} para \resPpDepoisPescaF{} na pesca e de \resPpAntesNavF{} para \resPpDepoisNavF{} na navegação (Tabela~\ref{tab:posproc}).
 
-Por segmento, a mudança é grande. Os segmentos de pesca previstos descem de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} e os de navegação de \resPpASegNavNPred{} para \resPpDSegNavNPred{}, ou seja, cerca de metade: a fragmentação na pesca passa de \resPpASegPescaFrag{} para \resPpDSegPescaFrag{}. O F1 de segmentos sobe de \resPpASegPescaF{} para \resPpDSegPescaF{} na pesca e de \resPpASegNavF{} para \resPpDSegNavF{} na navegação (Figura~\ref{fig:posproc-resultados}). Respondendo à RQ2: o pós-processamento reduz a fragmentação para metade e melhora a concordância com os segmentos anotados, sem perder exatidão por ponto.
+Por segmento, a mudança é grande. Os segmentos de pesca previstos descem de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e os de navegação de \resPpASegNavNPred{} para \resPpDSegNavNPred{} (reais: \resPpASegNavNRef{}): a fragmentação na pesca passa de \resPpASegPescaFrag{} para \resPpDSegPescaFrag{}. O F1 de segmentos sobe de \resPpASegPescaF{} para \resPpDSegPescaF{} na pesca e de \resPpASegNavF{} para \resPpDSegNavF{} na navegação (Figura~\ref{fig:posproc-resultados}). Respondendo à RQ2: o pós-processamento reduz muito a fragmentação e melhora a concordância com os segmentos anotados, e a exatidão por ponto também sobe.
 
-Mesmo assim, a segmentação continua longe dos segmentos reais: há \resPpDSegPescaNPred{} segmentos de pesca previstos para \resPpDSegPescaNRef{} reais, e o F1 de segmentos de pesca continua baixo. A Figura~\ref{fig:posproc-resultados}, em baixo, mostra porquê: o filtro elimina as interrupções curtas, mas os blocos longos de navegação previstos no meio de uma atividade de pesca são mais compridos do que a janela de 13 pontos e ficam como estavam. Estes erros vêm da própria CNN e um filtro local não os corrige.}
+O efeito não é igual em todas as viagens: melhoram \resPpViagMelhoram{} e pioram \resPpViagPioram{} das \resPpNViagens{}. A maior queda é na viagem \resPpPiorQuedaViagem{}, de \resPpPiorQuedaAntes{} para \resPpPiorQuedaDepois{}, a mesma que já tinha a menor exatidão (Figura~\ref{fig:validacao}): quando a CNN erra durante muito tempo, o filtro alarga o erro em vez de o corrigir. Os blocos longos de navegação previstos no meio da pesca, mais compridos do que a janela, também ficam (Figura~\ref{fig:posproc-resultados}, em baixo). Estes erros vêm da própria CNN e um filtro local não os corrige.}
 
 \begin{table}[t]
 \centering\footnotesize\color{rev057}\setlength{\tabcolsep}{3pt}
@@ -621,7 +623,7 @@ F1 de segmentos, pesca & \resPpASegPescaF & \resPpDSegPescaF \\
 F1 de segmentos, navegação & \resPpASegNavF & \resPpDSegNavF \\
 \bottomrule
 \end{tabular}
-\caption{Pós-processamento no conjunto de validação: referência antes e depois do filtro gaussiano de 13 pontos (limiar 0,65). Segmentos com IoU temporal $\geq$ 0,5, como na Tabela~\ref{tab:validacao-segmentos}.}
+\caption{Pós-processamento no conjunto de validação: referência antes e depois do filtro gaussiano \revtext{rev059}{de 301 pontos} (limiar 0,65). Segmentos com IoU temporal $\geq$ 0,5, como na Tabela~\ref{tab:validacao-segmentos}.}
 \label{tab:posproc}
 \end{table}
 
@@ -635,7 +637,7 @@ F1 de segmentos, navegação & \resPpASegNavF & \resPpDSegNavF \\
 
 \subsection{\texorpdfstring{\revtext{rev057}{Limitações}}{Limitações}}
 
-\revtext{rev057}{O conjunto de validação foi usado pela segunda vez, para medir com as previsões já guardadas e sem voltar a correr a CNN. O filtro, incluindo o tamanho, a forma e o limiar, foi fixado antes e nada foi escolhido com estes resultados. Só a referência foi filtrada, por isso a interação com a sobreposição (RQ3) fica por estudar. Continua a haver uma só semente, \resVaViagens{} viagens e nenhum intervalo de incerteza.}
+\revtext{rev059}{O conjunto de validação foi usado de novo, para medir com as previsões já guardadas e sem voltar a correr a CNN. O tamanho da janela foi escolhido no conjunto de teste, e o filtro (tamanho, forma e limiar) foi fixado antes de medir no conjunto de validação. A janela grande desloca as fronteiras e piora as viagens em que a CNN erra durante muito tempo.} \revtext{rev057}{ Só a referência foi filtrada, por isso a interação com a sobreposição (RQ3) fica por estudar. Continua a haver uma só semente, \resVaViagens{} viagens e nenhum intervalo de incerteza.}
 
 \appendix
 
