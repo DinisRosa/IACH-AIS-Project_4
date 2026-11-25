@@ -8,9 +8,13 @@ a verificação independente (`verificacao_independente.json`, de `verify_postpr
 
 Execução (a partir da raiz do projeto, depois de `postproc_validation`):
     iach-ais-venv-4/bin/python -m ais.cli.build_postproc_results
+
+Com `--first-version-only` (REV-069) escreve só `latex/generated/resultados_posproc_v1.tex` (macros \\resPpVi...,
+primeira versão, 13 pontos), a partir dos resumos em `results/postproc_validation/`. Não lê previsões nem faz figuras.
 """
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -23,8 +27,10 @@ from ais.phase1.reserved import read_log
 from matplotlib.colors import ListedColormap
 
 ROOT = Path(__file__).resolve().parents[3]
-VERSION = "posproc_validation_v2"  # REV-059: a v1 (13 pontos) fica só como histórico interno
+VERSION = "posproc_validation_v2"
 PP = ROOT / "results" / "postproc_validation_v2"
+VERSION_V1 = "posproc_validation_v1"  # primeira versão (13 pontos), declarada no relatório
+PP_V1 = ROOT / "results" / "postproc_validation"
 GEN = ROOT / "latex" / "generated"
 CMAP = ListedColormap([NAV, PESCA])
 
@@ -72,6 +78,37 @@ def latex_macros(R: dict) -> str:
              "% Prefixos: PpAntes/PpDepois = por ponto; PpASeg/PpDSeg = por segmento antes/depois."]
     lines += [f"\\newcommand{{\\res{k}}}{{{v}}}" for k, v in M.items()]
     return "\n".join(lines) + "\n"
+
+
+def first_version_macros(R: dict) -> str:
+    """Macros da primeira versão do filtro, dos mesmos resumos guardados na sua execução única."""
+    T = trip_table(R)
+    d = T["acc_depois"] - T["acc_antes"]
+    fish = R["depois"]["segmento"]["pesca"]
+    M = {"PpViJanela": str(R["filtro"]["tamanho_pontos"]),
+         "PpViDepoisAcc": pct(R["depois"]["ponto"]["global"]["accuracy"]),
+         "PpViSegPescaNPred": thousands(fish["n_pred_segments"]), "PpViSegPescaF": pt(fish["f1"], 3),
+         "PpViViagMelhoram": str(int((d > 0).sum())), "PpViViagPioram": str(int((d < 0).sum()))}
+    lines = ["% Gerado por ais.cli.build_postproc_results --first-version-only a partir de results/postproc_validation/postproc_validation.json",
+             f"% (execução única {R['criado_utc']}, commit {R['git_commit'][:9]}). NÃO EDITAR À MÃO."]
+    lines += [f"\\newcommand{{\\res{k}}}{{{v}}}" for k, v in M.items()]
+    return "\n".join(lines) + "\n"
+
+
+def check_logged(version: str) -> list[str]:
+    """Confirma no registo de acessos que a versão correu exatamente uma vez."""
+    events = [e["event"] for e in read_log(ROOT / "results" / "access_log.jsonl")
+              if e.get("event") in ("postproc_start", "postproc_done") and e.get("protocol") == version]
+    if events != ["postproc_start", "postproc_done"]:
+        raise ValueError(f"Registo inesperado das execuções do pós-processamento ({version}): {events}")
+    return events
+
+
+def load_checked(folder: Path) -> tuple[dict, dict]:
+    """Resumo da execução e confirmação de que coincide com a verificação independente."""
+    R = json.loads((folder / "postproc_validation.json").read_text(encoding="utf-8"))
+    V = json.loads((folder / "verificacao_independente.json").read_text(encoding="utf-8"))
+    return R, check_independent(R, V)
 
 
 def fig_results(R: dict) -> str:
@@ -146,14 +183,18 @@ def fig_trips(T: pd.DataFrame) -> str:
 
 
 def main() -> None:
-    R = json.loads((PP / "postproc_validation.json").read_text(encoding="utf-8"))
-    V = json.loads((PP / "verificacao_independente.json").read_text(encoding="utf-8"))
-    checks = check_independent(R, V)
-    events = [e["event"] for e in read_log(ROOT / "results" / "access_log.jsonl")
-              if e.get("event") in ("postproc_start", "postproc_done") and e.get("protocol") == VERSION]
-    if events != ["postproc_start", "postproc_done"]:
-        raise ValueError(f"Registo inesperado das execuções do pós-processamento: {events}")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--first-version-only", action="store_true", help="só as macros da versão de 13 pontos")
+    args = parser.parse_args()
     GEN.mkdir(parents=True, exist_ok=True)
+    if args.first_version_only:
+        R, checks = load_checked(PP_V1)
+        check_logged(VERSION_V1)
+        (GEN / "resultados_posproc_v1.tex").write_text(first_version_macros(R), encoding="utf-8")
+        print(f"verificação independente (v1): {sum(checks.values())}/{len(checks)} conferem")
+        return
+    R, checks = load_checked(PP)
+    events = check_logged(VERSION)
     (GEN / "resultados_posproc.tex").write_text(latex_macros(R), encoding="utf-8")
     f1 = fig_results(R)
     f2, trip = fig_trip(R)

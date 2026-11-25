@@ -1078,3 +1078,15 @@ Regras:
 - **Pendentes:** leitura do relatório.
 - **Complemento (23:37 WET, mesma revisão):** envio para o GitHub pedido pelo utilizador; `handoff.md` e `PROGRESS.md` acertados. Sem alterações a código nem ao `.tex`.
 - **Complemento (23:39 WET, mesma revisão):** a pedido do utilizador, `handoff.md` e `PROGRESS.md` preparados para uma nova conversa, com nova validação (247 testes, relatório com 10 páginas, GitHub em `6249d54`). Sem alterações a código nem ao `.tex`.
+
+### REV-069 — Primeira janela do filtro (13 pontos) contada no relatório
+
+- **Data:** 2026-11-25, até 23:55 WET.
+- **Cor:** Azul-ardósia médio `#7B68EE`, RGB (123, 104, 238).
+- **O quê:** `latex/relatorio_pt.tex`: resumo, «Escolha da janela do filtro», «Filtro temporal (RQ2)» e trabalho futuro (outras dimensões, maiores e menores, e outros tipos de janela); `xcolor` e `rev069` no preâmbulo. `build_postproc_results --first-version-only` gera `latex/generated/resultados_posproc_v1.tex` dos resumos guardados da v1 (sem ler previsões), com teste sintético novo. `README.md`, `docs/00` §5.3, `PROGRESS.md` e `handoff.md` atualizados.
+- **Porquê:** pedido do utilizador: dizer que se testou primeiro 13 pontos e depois 301, e deixar o estudo de mais valores e tipos de janela para trabalho futuro.
+- **Rigor:** o utilizador admitiu que a versão de 13 pontos talvez tivesse piorado um pouco; os registos mostram um ganho pequeno no total (12 viagens melhoram, 6 pioram), e é isso que o relatório diz.
+- **Texto eliminado:** «Um filtro gaussiano» (resumo, substituído); «O tamanho» passou a «Este tamanho»; «Esta foi também posterior à medição de uma primeira versão do filtro na validação (Secção das limitações).».
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** 248 testes; verificação independente da v1 com 19 de 19 valores; relatório com 10 páginas, sem erros nem referências em falta.
+- **Pendentes:** leitura do relatório.

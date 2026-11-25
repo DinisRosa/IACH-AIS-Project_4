@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-068, 2026-11-25 23:39 WET; refeito em REV-066)
+## Estado atual (REV-069, 2026-11-25 23:55 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -21,12 +21,12 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Perguntas:** RQ1, as janelas não superam a viagem completa; RQ2, o filtro reduz muito a fragmentação, com a ressalva acima; RQ3, sem resposta.
 - **Fonte dos números:** macros em `latex/generated/` e ficheiros em `results/` (não versionados).
 - **Conjuntos reservados (`results/access_log.jsonl`):** `test` com 2 aberturas de seleção, 2 leituras de diagnóstico e, sobre previsões guardadas, 3 análises de blocos de erro, 1 avaliação de janelas e 1 geração de figuras do relatório. `validation` aberto 1 vez (medição final, **gasto**); as anotações foram depois reutilizadas nas 2 versões do filtro. Os três conjuntos foram lidos por inteiro só para construir as bases limpas (REV-015).
-- **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, a preto, números de linha ligados; em REV-068 saiu do resumo a ressalva sobre a medição do filtro), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
-- **Testes:** 247 (sintéticos, mais um que lê 3 viagens de treino), a passar.
+- **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, números de linha ligados; preto, salvo o texto de REV-069 a cor; em REV-068 saiu do resumo a ressalva sobre a medição do filtro), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
+- **Testes:** 248 (sintéticos, mais um que lê 3 viagens de treino), a passar.
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-068.
+- **Registo de revisões:** REV-001 a REV-069.
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -40,12 +40,12 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Documentação (REV-067):** ficam `docs/00` e `docs/01`; `docs/05` e `06` não se repõem.
 - **Proposta antiga (REV-066):** retirar o `.tex`; manter o PDF e a etiqueta; compilar o relatório para `latex/build/`.
 - **Resumo do relatório (REV-068):** sem a frase «este resultado não vem de uma medição independente»; a ressalva mantém-se no corpo (protocolo, resultados, limitações e conclusões). Não a repor no resumo.
+- **Filtro no relatório (REV-069):** contar que se testou primeiro 13 pontos (ganho pequeno) e depois 301; estudar mais dimensões e tipos de janela fica para trabalho futuro.
 - **Documentos fixos:** `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera. Autor do dataset: Song Wu, Zenodo 10.5281/zenodo.7283281 (CC BY 4.0); o Kaggle é espelho.
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-069), com cor.
-- **Em aberto no resumo:** proposta de começar a frase do filtro por «Numa análise posterior, …», para não se ler como parte da medição final; sem resposta do utilizador.
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-070), com cor.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
 - **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
@@ -57,10 +57,10 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md` | Alinhados em REV-067 |
-| `README.md`, `handoff.md` | Alinhados em REV-068 |
+| `README.md`, `handoff.md` | Alinhados em REV-069 |
 | `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
 | `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
-| `src/ais/`, `pyproject.toml`, `tests/` | Código e 247 testes |
+| `src/ais/`, `pyproject.toml`, `tests/` | Código e 248 testes |
 | `configs/`, `configs/authorizations/` | Configurações, protocolos e autorizações |
 | `latex/relatorio_pt.tex`, `references.bib`, `figures/`, `generated/` | Relatório e artefactos gerados por código |
 | `latex/proposta_pt.pdf` | Proposta anterior, só para consulta |
@@ -1218,3 +1218,21 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório pelo utilizador e decisão sobre a frase do filtro no resumo.
+
+### 2026-11-25w — Primeira janela do filtro contada no relatório (REV-069), 2026-11-25 23:55 WET
+
+[REV-069 | cor #7B68EE]
+
+**Feito**
+- Relatório: resumo, escolha da janela, resultados do filtro e trabalho futuro.
+- `build_postproc_results --first-version-only` e `resultados_posproc_v1.tex`; teste sintético novo.
+
+**Validado**
+- 248 testes; v1 confere com a verificação independente (19/19); relatório com 10 páginas, sem erros nem referências em falta.
+- Lidos só os resumos agregados guardados da v1; nenhuma previsão nem conjunto reservado foi aberto, e nada voltou a ser medido.
+
+**Decisões**
+- A nova frase do resumo começa por «Sobre as previsões dessa medição», o que fecha o ponto em aberto sobre os 94,8 % se lerem como medição final.
+
+**Pendente**
+- Leitura do relatório pelo utilizador. Commit local; sem push (não pedido).

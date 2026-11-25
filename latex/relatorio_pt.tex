@@ -22,6 +22,8 @@
 \usetikzlibrary{positioning,arrows.meta}
 \usepackage{amsmath}
 \usepackage{booktabs}
+\usepackage{xcolor}
+\definecolor{rev069}{HTML}{7B68EE}
 
 \renewcommand{\figurename}{Figura}
 \renewcommand{\tablename}{Tabela}
@@ -36,6 +38,7 @@
 \input{generated/resultados_janelas}
 \input{generated/resultados_validacao}
 \input{generated/resultados_posproc}
+\input{generated/resultados_posproc_v1}
 \input{generated/resultados_buracos}
 
 % Números de linha até à versão final.
@@ -65,7 +68,7 @@
 \maketitle
 
 \begin{abstract}
-A pesca ilegal, não declarada e não regulamentada ameaça a sustentabilidade dos oceanos, e o \emph{Automatic Identification System} (AIS) permite acompanhar os navios à escala global. Este trabalho segmenta trajetórias AIS em pesca e navegação, com uma previsão por ponto, usando uma rede convolucional unidimensional pequena sobre \resDadosViagens{} viagens anotadas, e estuda o efeito de janelas sobrepostas e de um filtro temporal. No conjunto de teste, usado para escolher os modelos, as janelas com \resJCSobrep{} de sobreposição fragmentam menos do que as sem sobreposição, mas nenhuma variante com janelas supera em exatidão a rede aplicada à viagem completa. Na medição final, essa rede atinge \resVaValidAcc{} de exatidão por ponto (prever sempre a classe maioritária dá \resVaValidAccMaj{}), com uma segmentação muito fragmentada. Um filtro gaussiano reduz os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e sobe a exatidão para \resPpDepoisAcc{}, mas piora \resPpViagPioram{} das \resPpNViagens{} viagens. A interação entre sobreposição e filtro fica sem resposta, e a explicabilidade e o apoio à decisão não foram concluídos.
+A pesca ilegal, não declarada e não regulamentada ameaça a sustentabilidade dos oceanos, e o \emph{Automatic Identification System} (AIS) permite acompanhar os navios à escala global. Este trabalho segmenta trajetórias AIS em pesca e navegação, com uma previsão por ponto, usando uma rede convolucional unidimensional pequena sobre \resDadosViagens{} viagens anotadas, e estuda o efeito de janelas sobrepostas e de um filtro temporal. No conjunto de teste, usado para escolher os modelos, as janelas com \resJCSobrep{} de sobreposição fragmentam menos do que as sem sobreposição, mas nenhuma variante com janelas supera em exatidão a rede aplicada à viagem completa. Na medição final, essa rede atinge \resVaValidAcc{} de exatidão por ponto (prever sempre a classe maioritária dá \resVaValidAccMaj{}), com uma segmentação muito fragmentada. \revtext{rev069}{Sobre as previsões dessa medição, testou-se um filtro gaussiano primeiro com \resPpViJanela{} pontos, com um ganho pequeno, e depois com \resPpJanela{}. Esta segunda janela} reduz os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e sobe a exatidão para \resPpDepoisAcc{}, mas piora \resPpViagPioram{} das \resPpNViagens{} viagens. A interação entre sobreposição e filtro fica sem resposta, e a explicabilidade e o apoio à decisão não foram concluídos.
 \end{abstract}
 
 \section{Introdução}
@@ -262,7 +265,7 @@ Os critérios foram declarados antes de abrir o conjunto de teste e são iguais 
 \subsection{Escolha da janela do filtro}
 \label{sec:escolha-janela}
 
-O tamanho da janela foi escolhido com o conjunto de teste, sem uma regra declarada antes, a partir da distribuição dos erros da referência e do cálculo aproximado descrito abaixo; o efeito no teste, comparado com o de outras dimensões, só foi medido depois da escolha. Esta foi também posterior à medição de uma primeira versão do filtro na validação (Secção~\ref{sec:limitacoes}). Um \emph{bloco de erro} é uma sequência de pontos seguidos mal classificados com a mesma classe prevista. No teste há \resBuTesteBlocos{} blocos, que somam \resBuTesteErros{} pontos errados, com mediana de \resBuTesteMediana{} pontos, média de \resBuTesteMedia{}, 90\,\% até \resBuTesteNoventa{} pontos e um máximo de \resBuTesteMaximo{}. A navegação prevista no meio da pesca representa \resBuTesteNavPercPontos{} dos pontos errados.
+\revtext{rev069}{Testou-se primeiro um filtro de \resPpViJanela{} pontos, sobre as previsões guardadas da validação. O ganho foi pequeno (Subsecção~\ref{sec:rq2}), pelo que se passou a uma janela maior, de \resPpJanela{} pontos.} \revtext{rev069}{Este} tamanho foi escolhido com o conjunto de teste, sem uma regra declarada antes, a partir da distribuição dos erros da referência e do cálculo aproximado descrito abaixo; o efeito no teste, comparado com o de outras dimensões, só foi medido depois da escolha. Um \emph{bloco de erro} é uma sequência de pontos seguidos mal classificados com a mesma classe prevista. No teste há \resBuTesteBlocos{} blocos, que somam \resBuTesteErros{} pontos errados, com mediana de \resBuTesteMediana{} pontos, média de \resBuTesteMedia{}, 90\,\% até \resBuTesteNoventa{} pontos e um máximo de \resBuTesteMaximo{}. A navegação prevista no meio da pesca representa \resBuTesteNavPercPontos{} dos pontos errados.
 
 Como o limiar do modelo (\resSelLimiar{}) não está a meio da escala, o filtro é assimétrico. Num cálculo com probabilidades ideais (0 ou 1), uma janela de \resPpJanela{} pontos remove blocos isolados de pesca até \resBuRemovePesca{} pontos e de navegação até \resBuRemoveNav{}. Por este critério aproximado, abrange \resBuTesteBlocosCobertos{} dos blocos do teste, mas só \resBuTestePontosCobertos{} dos pontos errados, porque os blocos longos concentram muitos erros. O segmento real de navegação mais curto tem \resBuTreinoRealNavMin{} pontos no treino e \resBuTesteRealNavMin{} no teste, acima do que o filtro remove.
 
@@ -389,6 +392,8 @@ Por viagem, a exatidão vai de \resVaViagMin{} (viagem \resVaPiorViagem) a \resV
 \subsection{Filtro temporal (RQ2)}
 \label{sec:rq2}
 
+\revtext{rev069}{Com a primeira janela, de \resPpViJanela{} pontos, o ganho foi pequeno: a exatidão por ponto passou de \resPpAntesAcc{} para \resPpViDepoisAcc{}, os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpViSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e o F1 de segmentos de pesca de \resPpASegPescaF{} para \resPpViSegPescaF{}, melhorando \resPpViViagMelhoram{} viagens e piorando \resPpViViagPioram{}. Os resultados seguintes são os da janela de \resPpJanela{} pontos.}
+
 O filtro muda a classe de \resPpMudam{} pontos (\resPpPercMudam{}): \resPpCorrigidos{} passam a estar certos e \resPpEstragados{} passam a estar errados, ou seja, há \resPpErrosMenos{} erros a menos. A exatidão por ponto passa de \resPpAntesAcc{} para \resPpDepoisAcc{}. O efeito principal está nos segmentos (Tabela~\ref{tab:filtro} e Figura~\ref{fig:filtro}): os de pesca previstos descem de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e os de navegação de \resPpASegNavNPred{} para \resPpDSegNavNPred{} (reais: \resPpASegNavNRef{}), e o F1 de segmentos sobe nas duas classes. Os erros de fronteira também descem ou mantêm-se, mas as medianas calculam-se sobre os pares correspondidos, que mudam (na pesca, de \resPpASegPescaNPar{} para \resPpDSegPescaNPar{}), pelo que o antes e o depois não comparam os mesmos segmentos.
 
 \begin{table*}[t]
@@ -462,7 +467,7 @@ Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede a
 
 \textbf{Critérios de sucesso.} O critério (i) cumpre-se com ressalvas: o efeito das janelas foi medido só no teste e o do filtro numa medição não independente. O (ii) cumpre-se em parte: a segmentação fica muito menos fragmentada, mas a fragmentação continua acima de 1 (\resPpDSegPescaFrag{} na pesca e \resPpDSegNavFrag{} na navegação), há erros longos, e a estabilidade perante pequenas alterações não foi medida. O (iii) não se cumpre.
 
-\textbf{Trabalho futuro.} Concluir o apoio à decisão previsto (Secção~\ref{sec:limitacoes}); dar mais contexto à CNN; estudar o limiar em conjunto com o filtro; confirmar o filtro em dados novos; repetir com várias sementes e uma divisão por navio; e responder à RQ3 com um desenho fatorial.
+\textbf{Trabalho futuro.} Concluir o apoio à decisão previsto (Secção~\ref{sec:limitacoes}); dar mais contexto à CNN; estudar o limiar em conjunto com o filtro; \revtext{rev069}{testar mais dimensões da janela do filtro, maiores e menores, e outros tipos de janela, para perceber como mudam os resultados;} confirmar o filtro em dados novos; repetir com várias sementes e uma divisão por navio; e responder à RQ3 com um desenho fatorial.
 
 \FloatBarrier
 \appendix
