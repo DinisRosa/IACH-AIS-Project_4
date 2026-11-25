@@ -26,7 +26,7 @@ Recuperar para o projeto os ficheiros antigos de `latex/`, incluindo figuras e n
 git restore --overlay --source=proposta-pt-v1 -- latex/
 ```
 
-A etiqueta é local até ser enviada com `git push origin proposta-pt-v1`. Se não existir noutra cópia do repositório, usar `7d60861` no lugar do nome.
+A etiqueta é enviada para o GitHub com o `main` (REV-065). Se faltar numa cópia do repositório, correr `git fetch --tags`, ou usar `7d60861` no lugar do nome.
 
 ## Estrutura
 

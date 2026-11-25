@@ -39,7 +39,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 - **Critério de seleção (decisão do utilizador):** a menor perda por ponto no `test` escolheu épocas muito cedo (4 e 8), porque a perda no `test` sobe com o treino; a baseline foi escolhida bem mais tarde (162). Mudar o critério (por exemplo, o F1) ou travar o treino mais cedo seria uma decisão metodológica nova, com novo protocolo e nova autorização, e obrigaria a repetir a baseline por igualdade. Por agora fica como está, registado como limitação.
 - **Marco 5:** feito (REV-057). RQ3 sem resposta (J0 e J50 não pós-processadas).
-- **Relatório (REV-065):** decisões D1 a D8 aceites (`docs/06` §2). Plano executado (fases 0 a 6); `docs/05` fechado. Falta a leitura do utilizador, a versão final sem números de linha (quando pedida) e o push (só a pedido).
+- **Relatório (REV-065):** decisões D1 a D8 aceites (`docs/06` §2). Plano executado (fases 0 a 6); `docs/05` fechado. Falta a leitura do utilizador e a versão final sem números de linha (quando pedida).
 - **Técnicas:** testes dos programas de treino, de figuras e de geração de resultados; unificar `class_metrics`; apagar os restos do ensaio de 3 viagens e das execuções antigas.
 - **Dúvidas de dados:** CRS de longitude e latitude (hipótese WGS84); proveniência das anotações; método de cálculo de `distanceToShore`.
 
@@ -1102,3 +1102,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do utilizador; push dos commits e da etiqueta, só a pedido; arrumação técnica antiga.
+
+### 2026-11-25o — Envio para o GitHub a pedido do utilizador (REV-065), 2026-11-25 23:03 WET
+
+**Feito**
+- O utilizador pediu o envio («Sim, envia»): `main` e etiqueta `proposta-pt-v1`, sem `--force`.
+
+**Validado antes de enviar**
+- `main` remoto em `7d60861`, avanço simples; sem etiquetas no remoto; sem ficheiros de dados, resultados ou segredos nos commits.
+
+**Pendente**
+- Leitura do utilizador; arrumação técnica antiga.

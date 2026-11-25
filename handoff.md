@@ -2,10 +2,10 @@
 
 ## Atualização REV-065 (2026-11-25 23:00 WET) — prevalece sobre o que se segue
 
-- **Documento ativo:** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto). `latex/proposta_pt.tex` não se altera: etiqueta local `proposta-pt-v1` (commit `7d60861`), recuperação no `README.md`.
+- **Documento ativo:** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto). `latex/proposta_pt.tex` não se altera: etiqueta `proposta-pt-v1` (commit `7d60861`), recuperação no `README.md`.
 - **Validação:** `pytest tests/`, 247 passaram (23:00); relatório compilado sem erros nem citações por resolver (23:00); revisão independente só de leitura aplicada.
 - **Compilar:** a partir de `latex/`, `pdflatex` + `bibtex` + 2 × `pdflatex` com `-output-directory=build/relatorio` (`BIBINPUTS` e `BSTINPUTS` = `../..:`).
-- **Git:** commits locais por enviar, incluindo a etiqueta; push só a pedido (`git push origin main proposta-pt-v1`).
+- **Git:** a pedido do utilizador (23:03 WET), envio do `main` e da etiqueta `proposta-pt-v1`; confirmar com `git status -sb` e `git ls-remote origin`. Próximos pushes só a pedido.
 - **A seguir:** leitura do utilizador; versão sem números de linha quando pedida; decidir se «Abstract» e «References» se traduzem; arrumação técnica antiga. Próximo ID livre: **REV-066** (com cor).
 - As secções abaixo descrevem a proposta antes da reescrita (REV-063) e mantêm-se como registo.
 
