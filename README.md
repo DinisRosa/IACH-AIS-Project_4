@@ -29,7 +29,7 @@ O PDF é gerado em `latex/build/relatorio_pt.pdf` (pasta não versionada). Para 
 bash latex/watch_latex.sh
 ```
 
-O vigilante só reage a alterações em `relatorio_pt.tex` e `references.bib`; depois de gerar macros ou figuras, pará-lo (Ctrl+C) e iniciá-lo de novo. Basta um vigilante a correr de cada vez.
+O vigilante só reage a alterações em `relatorio_pt.tex` e `references.bib`; depois de gerar macros ou figuras, pará-lo (Ctrl+C) e iniciá-lo de novo. Para compilar uma só vez: `bash latex/watch_latex.sh --once`. Basta um vigilante a correr de cada vez.
 
 À mão, a partir de `latex/`:
 
@@ -41,7 +41,7 @@ pdflatex -interaction=nonstopmode -output-directory=build relatorio_pt.tex
 (cd build && BIBINPUTS=..: BSTINPUTS=..: bibtex relatorio_pt)
 ```
 
-Repetir o primeiro comando duas vezes. Os números do relatório vêm das macros em `latex/generated/`, que não se editam à mão.
+Depois, repetir o primeiro comando pelo menos três vezes, até o `.aux` deixar de mudar: com menos passagens, alguns números de linha aparecem entre as colunas. Os números do relatório vêm das macros em `latex/generated/`, que não se editam à mão.
 
 ## Proposta anterior
 
@@ -73,7 +73,7 @@ git show docs-historico-v1:docs/04_pos_processamento.md
 
 - `AGENTS.md`: regras do projeto (fonte única). `CLAUDE.md`: manda lê-las.
 - `handoff.md`: ponto de situação para uma nova conversa.
-- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-069).
+- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-070).
 - `docs/`:
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos, modelos e protocolos, acesso aos dados e referências verificadas.
   - `01_dados_e_preparacao.md`: colunas, unidades, entradas da CNN e preparação.

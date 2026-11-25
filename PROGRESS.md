@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-069, 2026-11-25 23:55 WET; refeito em REV-066)
+## Estado atual (REV-070, 2026-11-25 23:59 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -26,7 +26,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-069.
+- **Registo de revisões:** REV-001 a REV-070.
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -45,7 +45,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-070), com cor.
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-071), com cor.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
 - **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
@@ -57,7 +57,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md` | Alinhados em REV-067 |
-| `README.md`, `handoff.md` | Alinhados em REV-069 |
+| `README.md`, `handoff.md` | Alinhados em REV-070 |
 | `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
 | `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
 | `src/ais/`, `pyproject.toml`, `tests/` | Código e 248 testes |
@@ -1236,3 +1236,22 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório pelo utilizador. Commit local; sem push (não pedido).
+
+### 2026-11-25x — Números de linha nas margens (REV-070), 2026-11-25 23:59 WET
+
+[REV-070 | cor #2F4F4F]
+
+**Feito**
+- Vigilante do LaTeX compila até o `.aux` estabilizar e aceita `--once`; procedimento manual do `README.md` corrigido.
+
+**Problemas**
+- Desde pelo menos a REV-069, o PDF tinha números de linha entre as colunas; a validação só via erros, referências e páginas.
+
+**Validado**
+- Compilação do zero: 10 páginas; 647 números de linha, todos nas margens exteriores; páginas revistas em imagem.
+
+**Observação (sem alteração)**
+- A página 7 fica com a coluna direita vazia e muito espaço em branco antes do anexo.
+
+**Pendente**
+- Reiniciar o vigilante em execução (usa a versão antiga). Leitura do relatório. Envio para o GitHub depois de o utilizador ver o PDF.

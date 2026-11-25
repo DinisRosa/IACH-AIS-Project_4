@@ -1090,3 +1090,14 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** 248 testes; verificação independente da v1 com 19 de 19 valores; relatório com 10 páginas, sem erros nem referências em falta.
 - **Pendentes:** leitura do relatório.
+
+### REV-070 — Números de linha nas margens exteriores
+
+- **Data:** 2026-11-25, até 23:59 WET.
+- **Cor:** Cinzento-esverdeado escuro `#2F4F4F`, RGB (47, 79, 79). Marcador no `PROGRESS.md`; sem alterações ao `.tex`.
+- **O quê:** `latex/watch_latex.sh` (local, não versionado) repete o `pdflatex` depois do `bibtex` até o `.aux` estabilizar (máximo 8 passagens) e ganha `--once`; `README.md` com o procedimento manual corrigido; `PROGRESS.md` e `handoff.md` atualizados.
+- **Porquê:** o utilizador viu números de linha entre as colunas (por exemplo 41, 42, 81, 82, 137 e 188).
+- **Causa:** o `lineno` decide a margem com o que ficou no `.aux` da passagem anterior; depois do `bibtex` eram precisas mais passagens do que as duas feitas.
+- **Correspondência no LaTeX:** **não aplicável** (o texto não mudou; só a compilação).
+- **Validação:** compilação do zero: 10 páginas, os 647 números de linha nas margens exteriores (posições lidas com `pdftotext -bbox` e páginas revistas em imagem). Testes não repetidos (sem alterações a código Python).
+- **Pendentes:** o utilizador reiniciar o vigilante que está a correr.

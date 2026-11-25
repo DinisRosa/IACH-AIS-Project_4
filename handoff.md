@@ -1,12 +1,12 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-25 23:55 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-069. Todas as horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-065).
+**Atualizado em 2026-11-25 23:59 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-070. Todas as horas são WET, lidas com `date` ou do `git log`.
 
 ## Ponto de situação em quatro linhas
 
 - O trabalho técnico está **feito**: preparação, CNN de referência, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O documento ativo é o **relatório** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto), que substituiu a proposta.
-- **O próximo passo é continuar o relatório** a partir da leitura do utilizador (revisão REV-070, com cor). A REV-069 (as duas janelas do filtro) está em commit local, **por enviar**.
+- **O próximo passo é continuar o relatório** a partir da leitura do utilizador (revisão REV-071, com cor). A REV-069 (as duas janelas do filtro) e a REV-070 (números de linha) estão em commits locais, **por enviar**.
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -25,9 +25,9 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 | Verificação | Resultado | Hora (WET, 2026-11-25) |
 |---|---|---|
 | `pytest tests/` | 248 passaram | 23:55 |
-| Relatório (`pdflatex` + `bibtex` + 2 × `pdflatex`) | 10 páginas, sem erros nem referências em falta | 23:55 |
+| Relatório (compilação do zero com `watch_latex.sh --once`) | 10 páginas; os 647 números de linha nas margens exteriores | 23:59 |
 | GitHub (`git fetch` e `git ls-remote`) | confirmado antes da REV-069: `main` igual ao remoto (`aa918ae`); etiquetas presentes | 23:42 |
-| Vigilante do LaTeX | um a correr (iniciado pelo utilizador) | 23:55 |
+| Vigilante do LaTeX | um a correr, ainda com a versão antiga do script: reiniciar | 23:59 |
 | Recuperação da proposta antiga (num clone temporário) | os dois comandos do `README.md` funcionaram e a proposta compilou | 23:12 |
 | Revisão independente do relatório (subagente Opus, só leitura; anterior à REV-068) | sem erros graves; achados aplicados | 23:00 |
 
@@ -37,6 +37,8 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `7cef3e2` | 2026-11-25 23:56 | Acrescenta um commit em falta à cronologia do handoff (REV-069) |
+| `0760bec` | 2026-11-25 23:56 | Conta no relatório as duas janelas do filtro (REV-069) |
 | `aa918ae` | 2026-11-25 23:39 | Prepara o handoff para uma nova conversa (REV-068) |
 | `6249d54` | 2026-11-25 23:37 | Regista o pedido de envio da REV-068 |
 | `5ee8117` | 2026-11-25 23:35 | Retira do resumo a ressalva sobre o filtro (REV-068) |
@@ -94,7 +96,7 @@ RQ1: as janelas não superam a viagem completa. RQ2: o filtro reduz muito a frag
 
 Estrutura: resumo; 1 Introdução; 2 Trabalho relacionado; 3 Dados e preparação; 4 Método; 5 Protocolo experimental; 6 Resultados e discussão; 7 Limitações, ética e dimensão humana; 8 Conclusões e trabalho futuro; anexo do janelamento.
 
-**Compilar:** `bash latex/watch_latex.sh` (local, não versionado; recompila para `latex/build/relatorio_pt.pdf`) ou os comandos do `README.md`. O vigilante só reage a `relatorio_pt.tex` e `references.bib`: depois de gerar macros ou figuras, reiniciá-lo. Às 23:24 não havia nenhum vigilante a correr (o utilizador parou os dois): iniciá-lo com o comando acima quando for preciso.
+**Compilar:** `bash latex/watch_latex.sh` (local, não versionado; recompila para `latex/build/relatorio_pt.pdf`) ou os comandos do `README.md`. O vigilante só reage a `relatorio_pt.tex` e `references.bib`: depois de gerar macros ou figuras, reiniciá-lo. Desde a REV-070 compila até o `.aux` estabilizar (para os números de linha ficarem nas margens) e `--once` compila uma só vez. Depois de mudar o próprio script, reiniciar o vigilante.
 
 **Números e figuras** (nunca escrever à mão um número empírico):
 
@@ -138,7 +140,7 @@ A lista completa está no topo do `PROGRESS.md`; o registo da versão de 13 pont
 - Relatório: máximo 15 páginas (alvo 13 ou menos); título mantido; «Figura» e «Tabela» em português; números de linha até à versão final.
 - Perguntas de investigação, objetivos e critérios de sucesso não mudam depois dos resultados.
 - Explicabilidade, calibração e *dashboard*: «previstos, não concluídos nesta fase».
-- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer texto novo ou substituído no `.tex` leva `\revtext{revNNN}{…}`, com `\definecolor{revNNN}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. A REV-068 só eliminou texto, por isso não há cor no `.tex`. **Próximo ID livre: REV-070.**
+- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer texto novo ou substituído no `.tex` leva `\revtext{revNNN}{…}`, com `\definecolor{revNNN}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. A REV-068 só eliminou texto, por isso não há cor no `.tex`. **Próximo ID livre: REV-071.**
 
 ## Ficheiros principais
 
@@ -175,9 +177,9 @@ bash latex/watch_latex.sh
 
 ## O que fazer a seguir
 
-1. **Continuar o relatório** com o que o utilizador pedir (REV-070).
+1. **Continuar o relatório** com o que o utilizador pedir (REV-071). Opcional: o espaço em branco da página 7.
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. A REV-069 está por enviar; confirmar com `git status -sb`.
+3. **Push:** só a pedido. A REV-069 e a REV-070 estão por enviar; confirmar com `git status -sb`.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 
