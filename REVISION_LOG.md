@@ -987,3 +987,14 @@ Regras:
 - **Validação:** 243 testes; LaTeX completo sem erros (20:46 WET); horas lidas com `date` e commits com `git log`.
 - **Limitações:** a tabela da última validação desatualiza-se com o próximo commit.
 - **Pendentes:** os do handoff («O que fazer a seguir»).
+
+### REV-062 — Passagens adiadas da proposta: texto alinhado com o que foi feito
+
+- **Data:** 2026-11-25 21:14 WET.
+- **Cor:** Azul-aço `#4682B4`, RGB (70, 130, 180).
+- **O quê:** (1) «*human-on-the-loop*» deixa de estar a vermelho (resumo e objetivos); (2) resumo: explicabilidade e confiança calibrada estavam previstas, não foram concluídas, ficam para trabalho futuro; (3) «(Kaggle)» mantido (os PDFs da bibliografia não referem o Zenodo; decisão do utilizador); (4) objetivo 3: pós-processamento aplicado ao melhor modelo testado; (5) objetivo 5: nota de não concluído; (6) figura da abordagem: caixa «Explicabilidade / decisão humana» e a seta para ela a tracejado, com nota na legenda; (7) contribuições reais em vez de «contribuições esperadas»; (8) 4.6: a saída real e nota de não concluído; (9) 7.1: **cortado** o estudo de ablação com quatro variantes e as taxas de 25 % e 75 % (texto antigo: «O estudo de ablação previsto, com quatro variantes […] ficam por analisar as de 25 % e 75 % e o nível de regularização temporal»), título passa a «Métricas»; (10) 7.3: o que se fez e nota de não concluído; (11) trabalho futuro remete para a caixa a tracejado. Formulação pedida pelo utilizador: estava previsto e não foi concluído nesta fase, sem dar motivo.
+- **Porquê:** pedido do utilizador; eram passagens que contradiziam o trabalho feito.
+- **Ficheiros afetados:** `latex/proposta_pt.tex`, `.gitignore` (`docs/bibliografia/`, decisão do utilizador), `PROGRESS.md`, `REVISION_LOG.md`, `handoff.md`.
+- **Correspondência no LaTeX:** **atualizado**; 16 páginas (o tamanho trata-se depois), 0 erros.
+- **Validação:** compilação; páginas 1 e 2 inspecionadas; sem números novos.
+- **Pendentes:** lista da releitura das secções 5.3 a 7.3, Problema e Contexto, para decisão do utilizador.

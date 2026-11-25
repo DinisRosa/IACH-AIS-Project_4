@@ -85,6 +85,8 @@
 \definecolor{rev059}{RGB}{139,0,139}
 % REV-060 — cor #C71585, RGB (199, 21, 133) (mesma do REVISION_LOG.md). Secção de conclusões (RQ1 a RQ3, critérios de sucesso, trabalho futuro).
 \definecolor{rev060}{RGB}{199,21,133}
+% REV-062 — cor #4682B4, RGB (70, 130, 180) (mesma do REVISION_LOG.md). Passagens adiadas: o texto passa a refletir o que foi feito e o que ficou por concluir.
+\definecolor{rev062}{RGB}{70,130,180}
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 % Números gerados por ais.cli.build_final_results (REV-035): \rv{\resXxx} mostra o valor na cor da revisão.
 \input{generated/resultados}
@@ -130,7 +132,7 @@
 \maketitle
 
 \begin{abstract}
-A pesca ilegal, não declarada e não regulamentada (IUU) ameaça a sustentabilidade dos oceanos. O \emph{Automatic Identification System} (AIS) permite monitorizar navios à escala global, mas converter trajetórias em deteções úteis à fiscalização exige métodos robustos e interpretáveis. Propõe-se investigar se a combinação de janelas sobrepostas e pós-processamento temporal melhora a qualidade e a estabilidade da segmentação semântica de trajetórias AIS para detetar pesca, como apoio à decisão de inspetores humanos (\textcolor{red}{\emph{human-on-the-loop}}), segundo princípios de Inteligência Artificial Centrada no Humano (HCAI): explicabilidade, confiança calibrada e decisão humana final. A avaliação usa \rv{\resDadosViagens} trajetórias anotadas (Kaggle), \revtext{rev042}{comparando a CNN sobre a viagem completa com a CNN sobre janelas sobrepostas} através de precisão, sensibilidade, F1 e \emph{intersection-over-union} (IoU), complementadas por análise qualitativa.
+A pesca ilegal, não declarada e não regulamentada (IUU) ameaça a sustentabilidade dos oceanos. O \emph{Automatic Identification System} (AIS) permite monitorizar navios à escala global, mas converter trajetórias em deteções úteis à fiscalização exige métodos robustos e interpretáveis. Propõe-se investigar se a combinação de janelas sobrepostas e pós-processamento temporal melhora a qualidade e a estabilidade da segmentação semântica de trajetórias AIS para detetar pesca, como apoio à decisão de inspetores humanos (\revtext{rev062}{\emph{human-on-the-loop}}), segundo princípios de Inteligência Artificial Centrada no Humano (HCAI)\revtext{rev062}{, com a decisão final sempre a cargo do inspetor. A explicabilidade e a confiança calibrada estavam previstas, mas não foram concluídas nesta fase e ficam para trabalho futuro}. A avaliação usa \rv{\resDadosViagens} trajetórias anotadas (Kaggle), \revtext{rev042}{comparando a CNN sobre a viagem completa com a CNN sobre janelas sobrepostas} através de precisão, sensibilidade, F1 e \emph{intersection-over-union} (IoU), complementadas por análise qualitativa.
 \end{abstract}
 
 \section{Problema e Motivação}
@@ -150,17 +152,17 @@ Subsistem, porém, duas limitações. Primeiro, as predições ponto-a-ponto sã
 \section{Objetivos}
 \label{sec:objetivos}
 
-O objetivo principal é desenvolver um sistema de segmentação semântica de trajetórias AIS que detete pesca de forma robusta e interpretável, combinando \textbf{janelas sobrepostas} e \textbf{pós-processamento temporal}, como \textbf{apoio à decisão de inspetores} (\textcolor{red}{\emph{human-on-the-loop}}, \textcolor{red}{com o inspetor a supervisionar e a poder intervir na decisão}). Os objetivos específicos são:
+O objetivo principal é desenvolver um sistema de segmentação semântica de trajetórias AIS que detete pesca de forma robusta e interpretável, combinando \textbf{janelas sobrepostas} e \textbf{pós-processamento temporal}, como \textbf{apoio à decisão de inspetores} (\revtext{rev062}{\emph{human-on-the-loop}, com o inspetor a supervisionar e a poder intervir na decisão}). Os objetivos específicos são:
 
 \begin{enumerate}
     \item Construir um \emph{pipeline} de pré-processamento auditável, que recalcula as grandezas derivadas e seleciona as características, sem remover anomalias.
     \item Implementar e treinar uma \emph{rede neuronal convolucional} unidimensional (CNN 1D) que devolve uma probabilidade por ponto: primeiro sobre a viagem completa, como referência, e depois, com a mesma rede, sobre janelas com sobreposição. A CNN sobre a viagem completa é a referência com que se compara a CNN sobre janelas.
-    \item Conceber e avaliar um pós-processamento temporal que combine as predições das janelas sobrepostas e regularize as fronteiras dos segmentos.
+    \item Conceber e avaliar um pós-processamento temporal \revtext{rev062}{que regularize as fronteiras dos segmentos, aplicado ao melhor dos modelos testados, para verificar se o melhora}.
     \item Avaliar quantitativamente (por segmento e por ponto) e qualitativamente (visualização e casos de estudo).
-    \item Incluir explicabilidade (atribuições de importância~\cite{lundberg2017}) e confiança calibrada~\cite{guo2017} que sustentem a decisão do inspetor.
+    \item Incluir explicabilidade (atribuições de importância~\cite{lundberg2017}) e confiança calibrada~\cite{guo2017} que sustentem a decisão do inspetor. \revtext{rev062}{Este objetivo não foi concluído nesta fase e fica para trabalho futuro (Secção~\ref{sec:conclusoes}).}
 \end{enumerate}
 
-O trabalho guia-se por três perguntas de investigação: (RQ1) em que medida as janelas sobrepostas reduzem a instabilidade das fronteiras face a janelas não sobrepostas? (RQ2) em que medida o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados? (RQ3) qual a interação entre sobreposição e pós-processamento? Será bem-sucedido se (i) caracterizar quantitativamente o efeito de ambas as componentes face à CNN de referência --- aceitando como resultado válido a demonstração de que uma componente não traz ganho ---, (ii) produzir segmentações temporalmente estáveis e (iii) fornecer justificações auditáveis para validação por um inspetor. Contribuições esperadas: um método de janelas sobrepostas com pós-processamento temporal para deteção de pesca, uma avaliação que integra a perspetiva HCAI e evidência empírica sobre o valor do pós-processamento.
+O trabalho guia-se por três perguntas de investigação: (RQ1) em que medida as janelas sobrepostas reduzem a instabilidade das fronteiras face a janelas não sobrepostas? (RQ2) em que medida o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados? (RQ3) qual a interação entre sobreposição e pós-processamento? Será bem-sucedido se (i) caracterizar quantitativamente o efeito de ambas as componentes face à CNN de referência --- aceitando como resultado válido a demonstração de que uma componente não traz ganho ---, (ii) produzir segmentações temporalmente estáveis e (iii) fornecer justificações auditáveis para validação por um inspetor. \revtext{rev062}{Contribuições: uma comparação controlada entre a CNN 1D sobre a viagem completa e a mesma rede sobre janelas, com e sem sobreposição; evidência empírica sobre o valor de um pós-processamento temporal aplicado ao melhor modelo; e um protocolo de avaliação reprodutível, com conjuntos reservados e registo de acessos.}
 
 \section{Abordagem}
 \label{sec:abordagem}
@@ -178,16 +180,16 @@ O modelo de aprendizagem automática é uma \textbf{CNN 1D}, que devolve uma pro
 \node[box] (e) at (2.9,-1.7) {\revtext{rev041}{Mesma CNN 1D sobre janelas}};
 \node[box] (f) at (0,-1.7) {Pós-processamento temporal};
 \node[box] (g) at (0,-3.4) {Segmentos semânticos};
-\node[box] (h) at (2.9,-3.4) {Explicabilidade / decisão humana};
+\node[box, dashed] (h) at (2.9,-3.4) {Explicabilidade / decisão humana};
 \draw[->] (a) -- (b);
 \draw[->] (b) -- (c);
 \draw[->] (c) -- (d);
 \draw[->] (d) -- (e);
 \draw[->] (e) -- (f);
 \draw[->] (f) -- (g);
-\draw[->] (g) -- (h);
+\draw[->, dashed] (g) -- (h);
 \end{tikzpicture}
-\captionof{figure}{Esquema do \emph{pipeline} proposto: a CNN 1D é usada primeiro sobre viagens completas (referência) e depois, \revtext{rev041}{a mesma rede,} sobre janelas com sobreposição.}
+\captionof{figure}{Esquema do \emph{pipeline} proposto: a CNN 1D é usada primeiro sobre viagens completas (referência) e depois, \revtext{rev041}{a mesma rede,} sobre janelas com sobreposição. \revtext{rev062}{A caixa a tracejado (explicabilidade e apoio à decisão) estava prevista, mas não foi concluída nesta fase.}}
 \label{fig:pipeline}
 \end{center}
 
@@ -238,7 +240,7 @@ J50 & \resJCPasso & \resJCJanelas & \resJCPassos & \resJCSegundos \\
 \subsection{\texorpdfstring{\revtext{rev023}{Saída, explicabilidade e ferramentas}}{Saída, explicabilidade e ferramentas}}
 \label{sec:abordagem-saida}
 
-\revtext{rev021}{Trajetória segmentada com confiança por segmento e justificações (importâncias de características) que apoiam --- e não substituem --- o inspetor. A divisão dos dados e as características são as mesmas em todas as fases, para que as comparações sejam diretas.} A implementação usa Python, PyTorch, scikit-learn e pandas.
+\revtext{rev062}{Para cada ponto, a probabilidade de pesca e a classe prevista; depois do pós-processamento, os segmentos de pesca e de navegação de cada viagem. A confiança por segmento e as justificações (importâncias de características) que apoiariam --- sem substituir --- o inspetor estavam previstas, mas não foram concluídas nesta fase.} \revtext{rev021}{A divisão dos dados e as características são as mesmas em todas as fases, para que as comparações sejam diretas.} A implementação usa Python, PyTorch, scikit-learn e pandas.
 
 \section{\texorpdfstring{Especificação da CNN 1D de referência}{Especificação da CNN 1D de referência}}
 \label{sec:cnn-especificacao}
@@ -361,10 +363,10 @@ Na CNN, o primeiro ponto de cada viagem não tem \texttt{time\_gap}, \texttt{spe
 \section{Avaliação}
 \label{sec:avaliacao}
 
-\subsection{\texorpdfstring{\revtext{rev023}{Métricas e estudo de ablação}}{Métricas e estudo de ablação}}
+\subsection{\texorpdfstring{\revtext{rev062}{Métricas}}{Métricas}}
 \label{sec:avaliacao-metricas}
 
-Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e por ponto), \revtext{rev042}{comparando a CNN sobre janelas com a CNN de referência sobre a viagem completa}. \revtext{rev047}{Nesta fase medem-se a referência, J0 e J50 por ponto e por segmento (IoU temporal de 0,5, em segundos, com correspondência um-para-um e sem suavizar as previsões), no conjunto de teste, com os resultados na Secção~\ref{sec:resultados}.} \revtext{rev048}{O estudo de ablação previsto, com quatro variantes que isolam cada componente: (i) sem sobreposição nem pós-processamento; (ii) só sobreposição; (iii) só pós-processamento; (iv) ambos (método proposto), só se fará se o janelamento mostrar benefício. Já se mediram as taxas de sobreposição de 0\,\% e de 50\,\%; ficam por analisar as de 25\,\% e 75\,\% e o nível de regularização temporal.} A estabilidade mede-se pela fragmentação (número de segmentos por trajetória) e pelo erro de fronteira (desvio entre início/fim previsto e real); ``estável'' designa uma segmentação que muda pouco sob pequenas alterações da janela ou do pós-processamento.
+Quantitativamente, medem-se precisão, sensibilidade, F1 e IoU por segmento (e por ponto), \revtext{rev042}{comparando a CNN sobre janelas com a CNN de referência sobre a viagem completa}. \revtext{rev047}{Nesta fase medem-se a referência, J0 e J50 por ponto e por segmento (IoU temporal de 0,5, em segundos, com correspondência um-para-um e sem suavizar as previsões), no conjunto de teste, com os resultados na Secção~\ref{sec:resultados}.} \revtext{rev062}{Mediram-se depois o modelo escolhido, no conjunto de validação (Secção~\ref{sec:validacao}), e o pós-processamento aplicado a esse modelo (Secção~\ref{sec:posproc}). O estudo de ablação com as quatro combinações de sobreposição e pós-processamento não foi feito (Secção~\ref{sec:conclusoes}, RQ3).} A estabilidade mede-se pela fragmentação (número de segmentos por trajetória) e pelo erro de fronteira (desvio entre início/fim previsto e real); ``estável'' designa uma segmentação que muda pouco sob pequenas alterações da janela ou do pós-processamento.
 
 \subsection{\texorpdfstring{Divisão dos dados e protocolo}{Divisão dos dados e protocolo}}
 \label{sec:avaliacao-protocolo}
@@ -374,7 +376,7 @@ Os dados são divididos por trajetória completa (ID completo, composto pelo ide
 \subsection{\texorpdfstring{\revtext{rev023}{Avaliação qualitativa e dimensão humana}}{Avaliação qualitativa e dimensão humana}}
 \label{sec:avaliacao-qualitativa}
 
-Qualitativamente, produzir-se-ão mapas das trajetórias com os segmentos preditos sobrepostos à verdade de referência e analisar-se-ão casos de sucesso e falha. Para a dimensão HCAI~\cite{shneiderman2020}, prevê-se avaliar de forma preliminar a explicabilidade (verificando se as atribuições~\cite{lundberg2017} correspondem aos padrões de movimento esperados) e a utilidade como apoio à decisão, através de um \emph{dashboard} de prova de conceito com segmentação, confiança calibrada~\cite{guo2017} e justificações.
+\revtext{rev062}{Qualitativamente, compararam-se, viagem a viagem e ao longo do tempo, as classes previstas com as anotadas (Figuras~\ref{fig:validacao} e~\ref{fig:posproc-resultados}) e analisaram-se os casos de falha, como a viagem de menor exatidão. Para a dimensão HCAI~\cite{shneiderman2020}, estava prevista uma avaliação preliminar da explicabilidade (verificando se as atribuições~\cite{lundberg2017} correspondem aos padrões de movimento esperados) e da utilidade como apoio à decisão, através de um \emph{dashboard} de prova de conceito com segmentação, confiança calibrada~\cite{guo2017} e justificações; esta parte não foi concluída nesta fase e fica para trabalho futuro.}
 
 \section{\texorpdfstring{\revtext{rev041}{Resultados}}{Resultados}}
 \label{sec:resultados}
@@ -661,7 +663,7 @@ Responder à RQ3 exigiria um desenho fatorial planeado de início: as quatro com
 
 \textbf{Critérios de sucesso.} (i) O efeito das duas componentes foi caracterizado face à referência: o janelamento não traz ganho e o pós-processamento traz ganho na segmentação. (ii) Com o pós-processamento, a segmentação fica muito mais estável, embora ainda com erros longos herdados da CNN. (iii) As justificações para um inspetor (explicabilidade) ficaram fora do âmbito e não foram avaliadas.
 
-\textbf{Trabalho futuro.} Dar à CNN mais contexto (o campo recetivo é de \resModCampo{} pontos, muito menor do que os blocos de erro mais longos); estudar o limiar em conjunto com o filtro, que hoje torna a correção assimétrica entre classes; repetir com várias sementes e uma divisão por navio; e testar a RQ3 com o desenho fatorial acima.}
+\textbf{Trabalho futuro.} \revtext{rev062}{Concluir a parte de explicabilidade e apoio à decisão prevista na abordagem (a caixa a tracejado da Figura~\ref{fig:pipeline}): atribuições de importância, confiança calibrada e um \emph{dashboard} para o inspetor;} dar à CNN mais contexto (o campo recetivo é de \resModCampo{} pontos, muito menor do que os blocos de erro mais longos); estudar o limiar em conjunto com o filtro, que hoje torna a correção assimétrica entre classes; repetir com várias sementes e uma divisão por navio; e testar a RQ3 com o desenho fatorial acima.}
 
 \appendix
 

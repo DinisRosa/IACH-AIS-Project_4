@@ -49,3 +49,6 @@ latex/build/
 # Script só de visualização da proposta (não faz parte do projeto)
 latex/watch_latex.sh
 *.egg-info/
+
+# Bibliografia local (PDFs de artigos; não vão para o GitHub, decisão do utilizador 2026-11-25)
+docs/bibliografia/

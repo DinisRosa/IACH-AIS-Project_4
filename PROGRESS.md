@@ -1003,3 +1003,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Passagens adiadas do LaTeX; número de páginas (depois); arrumação técnica.
+
+### 2026-11-25h — Passagens adiadas da proposta (REV-062), 2026-11-25 21:14 WET
+
+**Feito**
+- Pontos 1 a 11 do plano aprovado (resumo, objetivos 3 e 5, figura da abordagem a tracejado, contribuições, 4.6, 7.1 sem ablação, 7.3, trabalho futuro), em `rev062` `#4682B4`. Lidos os PDFs de `docs/bibliografia/`: o artigo de base (Wu et al., 2022) não refere Kaggle nem Zenodo; mantém-se «(Kaggle)». `docs/bibliografia/` no `.gitignore`.
+
+**Validado**
+- `pdflatex`: 16 páginas, 0 erros.
+
+**Pendente**
+- Decisão do utilizador sobre a lista da releitura (velocidade em nós, Wu et al. e MDL, figura da abordagem, 7.1, 7.2, Contexto, resumo).
