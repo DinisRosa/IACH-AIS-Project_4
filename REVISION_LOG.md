@@ -1134,3 +1134,13 @@ Regras:
 - **Correspondência no LaTeX:** **não aplicável**.
 - **Validação:** 253 testes; antes de escrever, 181 valores do teste e 108 da validação coincidem com os resultados já gravados e as viagens com o manifesto; 36 ligações de imagem resolvem; imagens revistas em folhas de conjunto. A apresentação no GitHub só se vê depois do envio.
 - **Pendentes:** envio a pedido.
+
+### REV-074 — Figura 7 com «baseline» em vez de «previsto»
+
+- **Data:** 2026-11-26, até 00:31 WET.
+- **Cor:** Vermelho-escuro `#8B0000`, RGB (139, 0, 0). Marcador no `PROGRESS.md`; no `.tex` não há alterações.
+- **O quê:** `latex/figures/validacao_pior_viagem.png` com as linhas «real» e «baseline»; `build_validation_results --worst-trip-figure-only`, autorização `validation_report_figure_baseline.json` e um teste; README, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** pedido do utilizador: a figura ainda não usava o nome do modelo.
+- **Correspondência no LaTeX:** **atualizado** (só a figura).
+- **Validação:** 254 testes; relatório com 10 páginas; 647 números de linha nas margens; página 8 revista em imagem.
+- **Pendentes:** leitura do relatório.

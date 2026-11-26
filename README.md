@@ -23,7 +23,7 @@ Os números estão no relatório (gerados por código) e em `PROGRESS.md`. Em re
 
 Conjuntos reservados: o `test` serve para **selecionar** e o `validation` para a **medição final** (papéis trocados face ao habitual). O `validation` está gasto. Qualquer novo acesso a um deles exige autorização explícita (`AGENTS.md` §3).
 
-Testes: 253 a passar (`iach-ais-venv-4/bin/python -m pytest tests/`).
+Testes: 254 a passar (`iach-ais-venv-4/bin/python -m pytest tests/`).
 
 ## Relatório
 
@@ -77,7 +77,7 @@ git show docs-historico-v1:docs/04_pos_processamento.md
 
 - `AGENTS.md`: regras do projeto (fonte única). `CLAUDE.md`: manda lê-las.
 - `handoff.md`: ponto de situação para uma nova conversa.
-- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-073).
+- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-074).
 - `docs/`:
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos, modelos e protocolos, acesso aos dados e referências verificadas.
   - `01_dados_e_preparacao.md`: colunas, unidades, entradas da CNN e preparação.
@@ -124,7 +124,7 @@ Executar a partir da raiz, com `iach-ais-venv-4/bin/python -m ais.cli.<nome>`. O
 | `select_windows_on_test` | Escolhe J0 e J50 no `test`. **Não repetir.** |
 | `build_window_results [--report-figures-only]` | Macros `resultados_janelas.tex` e figuras `janelas_*`; com a opção, só as três figuras do relatório com o nome do modelo (`janelas_viagens_baseline`, `janelas_linha_temporal_baseline`, `janelas_perda`; exige a autorização `test_report_figures_baseline` e regista o acesso). |
 | `final_validation` | Medição final no `validation`. **Não repetir.** |
-| `build_validation_results` | Macros e figuras da medição final, a partir de resultados guardados. |
+| `build_validation_results [--worst-trip-figure-only]` | Macros e figuras da medição final, a partir de resultados guardados; com a opção, só a linha temporal da Figura 7 (exige a autorização `validation_report_figure_baseline` e regista a leitura). |
 | `analyze_error_runs --split test\|train` | Blocos de erro (o `test` exige autorização). |
 | `eval_postproc_test` | Efeito de várias janelas no `test` (exige autorização). |
 | `postproc_validation --version <protocolo>` | Filtro sobre as previsões guardadas do `validation`. **Não repetir** (as duas versões já correram). |
