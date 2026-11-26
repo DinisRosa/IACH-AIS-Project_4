@@ -11,6 +11,7 @@ Execução (a partir da raiz do projeto, depois de `postproc_validation`):
 
 Com `--first-version-only` (REV-069) escreve só `latex/generated/resultados_posproc_v1.tex` (macros \\resPpVi...,
 primeira versão, 13 pontos), a partir dos resumos em `results/postproc_validation/`. Não lê previsões nem faz figuras.
+Com `--results-figure-only` (REV-075) volta a gerar só `posproc_resultados.png`, dos resumos da v2, sem ler previsões.
 """
 from __future__ import annotations
 
@@ -130,7 +131,8 @@ def fig_results(R: dict) -> str:
         a.set_xticks(x, ["pesca", "navegação"])
     a1.set_title("Segmentos (validação)")
     a2.set_title("F1 de segmentos (IoU ≥ 0,5)")
-    a1.legend(fontsize=6.5, frameon=False)
+    a1.set_xlim(-0.5, 1.75)  # espaço à direita para a legenda não tapar barras (REV-075)
+    a1.legend(fontsize=6.5, frameon=False, loc="upper right")
     a2.legend(fontsize=6.5, frameon=False)
     fig.tight_layout()
     return save(fig, "posproc_resultados.png")
@@ -185,6 +187,7 @@ def fig_trips(T: pd.DataFrame) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--first-version-only", action="store_true", help="só as macros da versão de 13 pontos")
+    parser.add_argument("--results-figure-only", action="store_true", help="só a figura dos segmentos e do F1")
     args = parser.parse_args()
     GEN.mkdir(parents=True, exist_ok=True)
     if args.first_version_only:
@@ -195,6 +198,9 @@ def main() -> None:
         return
     R, checks = load_checked(PP)
     events = check_logged(VERSION)
+    if args.results_figure_only:
+        print(f"escrita {fig_results(R)}")
+        return
     (GEN / "resultados_posproc.tex").write_text(latex_macros(R), encoding="utf-8")
     f1 = fig_results(R)
     f2, trip = fig_trip(R)

@@ -53,7 +53,7 @@ def main() -> None:
     a2.set_ylabel("P(pesca)")
     a2.set_ylim(-0.05, 1.05)
     a2.set_title("Efeito: os buracos passam à classe dos vizinhos (traços coloridos)", fontsize=9)
-    a2.legend(fontsize=7, loc="center right", frameon=False)
+    a2.legend(fontsize=7, loc="upper right", frameon=False)  # canto sem dados (acima do limiar, à direita)
     fig.tight_layout()
     save(fig, "posproc_janela.png")
 
