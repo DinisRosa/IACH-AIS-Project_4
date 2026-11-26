@@ -1154,3 +1154,14 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado** (só as figuras).
 - **Validação:** 254 testes; as duas figuras e as páginas 4 e 9 revistas em imagem; 10 páginas; 647 números de linha nas margens. A Figura 3 usa dados sintéticos; a 8 usa só os resumos guardados.
 - **Pendentes:** leitura do relatório.
+
+### REV-076 — Legenda da Tabela 6 explica «otimista»
+
+- **Data:** 2026-11-26, até 00:45 WET.
+- **Cor:** Verde-mar `#2E8B57`, RGB (46, 139, 87). Marcador no `PROGRESS.md`; no `.tex` o texto ficou **preto**, por instrução do utilizador só para esta revisão.
+- **O quê:** em `latex/relatorio_pt.tex`, legenda da Tabela 6: «Métricas por ponto e por classe no treino e no teste. Os valores do teste são otimistas, porque este conjunto serviu para escolher as épocas e os limiares. Base: *baseline*.»; `AGENTS.md` §8 (exceção), README, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** o utilizador perguntou o que queria dizer «(otimista)» e aceitou a legenda proposta.
+- **Texto eliminado:** «(otimista)».
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** 10 páginas, sem referências em falta; 647 números de linha nas margens; páginas 8 e 9 revistas em imagem. Testes não repetidos (sem alterações a código).
+- **Pendentes:** leitura do relatório.

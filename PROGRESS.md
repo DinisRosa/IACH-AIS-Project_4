@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-075, 2026-11-26 00:38 WET; refeito em REV-066)
+## Estado atual (REV-076, 2026-11-26 00:45 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -26,7 +26,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-075.
+- **Registo de revisões:** REV-001 a REV-076.
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -47,7 +47,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-076).
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-077), com cor, salvo instrução.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
 - **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
@@ -59,7 +59,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md` | Alinhados em REV-067 |
-| `README.md`, `handoff.md` | Alinhados em REV-075 |
+| `README.md`, `handoff.md` | Alinhados em REV-076 |
 | `viagens/` | Galeria gerada por código (REV-073); não editar à mão |
 | `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
 | `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
@@ -1361,6 +1361,22 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Validado**
 - Antes do envio: `main` 4 commits à frente de `origin/main` e nenhum atrás; código, teste, autorização, três figuras e documentos.
+
+**Pendente**
+- Leitura do relatório.
+
+### 2026-11-26h — Legenda da Tabela 6 (REV-076), 2026-11-26 00:45 WET
+
+[REV-076 | cor #2E8B57]
+
+**Feito**
+- Nova legenda da Tabela 6, que diz porque os valores do teste são otimistas. O utilizador pediu commit e envio.
+
+**Validado**
+- 10 páginas, sem referências em falta; 647 números de linha nas margens; páginas 8 e 9 revistas.
+
+**Decisões**
+- Texto a preto só nesta revisão; as seguintes levam cor, salvo nova instrução.
 
 **Pendente**
 - Leitura do relatório.
