@@ -16,7 +16,7 @@ Detetar comportamento compatível com pesca não demonstra ilegalidade: o modelo
 |---|---|---|
 | Modelo | Recorrente ou convolucional, possivelmente com atenção | CNN 1D |
 | Divisão | Por navio | Por ID completo de viagem (70/15/15, seed 42) |
-| 1.ª experiência | Janelas e pós-processamento | Referência com a viagem completa, sem janelas |
+| 1.ª experiência | Janelas e pós-processamento | Baseline com a viagem completa, sem janelas |
 | 2.ª experiência | Janelas sobrepostas | A mesma CNN em janelas, 0 % e 50 %; 25 % e 75 % ficaram de fora |
 | Saída | Classificação de janelas | Probabilidade de pesca por ponto |
 | Pós-processamento | Objetivo central | Filtro temporal num ramo separado; a média das janelas é reconstrução, não suavização |
@@ -40,17 +40,17 @@ As ressalvas completas estão no relatório. Um resultado sem melhoria é válid
 |---|---|---|
 | 1 | Ambiente, divisão por ID, isolamento | Fechado |
 | 2 | Preparação auditável (só treino/sintéticos) | Fechado (REV-019) |
-| 3 | CNN 1D de referência sobre a viagem completa | Fechado (REV-041); não se altera |
+| 3 | CNN 1D baseline sobre a viagem completa | Fechado (REV-041); não se altera |
 | 4 | A mesma CNN em janelas | Feito (REV-046, REV-047) |
 | 5 | Pós-processamento | Feito (REV-056 a REV-059) |
-| 6 e 7 | Congelar as variantes e medição final no `validation` | Feito (REV-053), só a referência |
+| 6 e 7 | Congelar as variantes e medição final no `validation` | Feito (REV-053), só a baseline |
 | — | Relatório | Completo (REV-065); falta a leitura do utilizador |
 
 ## 5. Modelos e protocolos
 
 Os números dos resultados não se repetem aqui: estão em `results/` e, no relatório, em macros geradas.
 
-### 5.1 CNN de referência (viagem completa)
+### 5.1 CNN baseline (viagem completa)
 
 ```text
 [7, N] → Conv1D 32 (k5, same) → ReLU → Conv1D 64 (k5, same) → ReLU
@@ -65,15 +65,15 @@ Os números dos resultados não se repetem aqui: estão em `results/` e, no rela
 
 ### 5.2 Janelas (J0 e J50)
 
-- Janelas de L = 64 pontos; J0 com passo 64, J50 com passo 32; a mesma sobreposição no treino e na inferência. Mesma CNN, normalizador, seed e valores da referência, mas lote de 32 janelas e limite de 45 minutos (`configs/windows_j0.json`, `windows_j50.json`; `src/ais/phase1/windows.py`).
+- Janelas de L = 64 pontos; J0 com passo 64, J50 com passo 32; a mesma sobreposição no treino e na inferência. Mesma CNN, normalizador, seed e valores da baseline, mas lote de 32 janelas e limite de 45 minutos (`configs/windows_j0.json`, `windows_j50.json`; `src/ais/phase1/windows.py`).
 - Cada viagem começa no índice 0 e pára na primeira janela que alcança o fim; a última pode ficar mais curta, sem pontos falsos. Nenhuma janela atravessa viagens; os intervalos de tempo dentro de uma viagem não cortam a sequência.
 - O enchimento serve só para empilhar: a máscara tira-o da perda e da média e a rede põe-no a zero depois de cada ReLU. Perda: média das posições reais do lote.
 - Probabilidade por ponto: média simples das janelas que o cobrem (float64); o limiar aplica-se depois.
-- Seleção no `test` numa só abertura (`configs/selection_protocol_windows.json`), com os critérios da referência sobre a probabilidade reconstruída: J0 época 8, limiar 0,60; J50 época 4, limiar 0,75. A perda no `test` sobe com o treino.
+- Seleção no `test` numa só abertura (`configs/selection_protocol_windows.json`), com os critérios da baseline sobre a probabilidade reconstruída: J0 época 8, limiar 0,60; J50 época 4, limiar 0,75. A perda no `test` sobe com o treino.
 
 ### 5.3 Filtro temporal
 
-- Média pesada gaussiana das probabilidades de pesca, ponto a ponto, dentro de cada viagem; σ = tamanho/6; nas pontas usam-se só os pontos existentes, com pesos reajustados; depois o limiar 0,65 (`src/ais/phase1/postprocessing.py`). Só a referência.
+- Média pesada gaussiana das probabilidades de pesca, ponto a ponto, dentro de cada viagem; σ = tamanho/6; nas pontas usam-se só os pontos existentes, com pesos reajustados; depois o limiar 0,65 (`src/ais/phase1/postprocessing.py`). Só a baseline.
 - Aplicado às previsões **já guardadas** da medição final: não se reabriu o parquet nem se correu a CNN; as anotações foram reutilizadas para medir.
 - **Registo de integridade.** A v1 (13 pontos, protocolo `posproc_validation_v1`) foi aplicada primeiro ao `validation`: exatidão 94,4 % → 94,5 %; segmentos de pesca previstos 486 → 255 (reais 18); F1 de segmentos de pesca 0,028 → 0,066. Por ter ficado aquém, decidiu-se procurar outra janela **depois de ver esse resultado**.
 - [REV-069 | cor #7B68EE] O relatório conta as duas janelas, com os valores da v1 em macros (`build_postproc_results --first-version-only`).
@@ -142,7 +142,7 @@ Retirados da pasta em REV-067, por estarem concluídos ou desatualizados. Contin
 
 | Documento | Conteúdo | O essencial passou para |
 |---|---|---|
-| `02_cnn_viagem_completa.md` | Contratos e implementação da referência | §5.1 |
+| `02_cnn_viagem_completa.md` | Contratos e implementação da baseline | §5.1 |
 | `03_cnn_janelamento.md` | Contratos e testes do janelamento | §5.2 |
 | `04_pos_processamento.md` | Plano e registo do filtro, análise no `test`, v1 e v2 | §5.3 |
 | `05_releitura_proposta.md` | Passagens da proposta por corrigir (A a H), todas fechadas | — |

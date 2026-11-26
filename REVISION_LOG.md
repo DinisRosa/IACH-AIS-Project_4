@@ -1112,15 +1112,17 @@ Regras:
 - **Validação:** 10 páginas, sem referências em falta; 647 números de linha nas margens exteriores; páginas 8 e 9 revistas em imagem. Testes não repetidos (sem alterações a código).
 - **Pendentes:** leitura do relatório.
 
-### REV-072 — «Referência» passa a «baseline» no relatório (por fazer)
+### REV-072 — «Referência» passa a «baseline» e texto do relatório todo a preto
 
-- **Data:** decidida em 2026-11-26; **ainda não aplicada**.
-- **Cor:** Castanho-sela `#8B4513`, RGB (139, 69, 19). Reservada para o texto a trocar no `.tex`.
-- **O quê:** trocar «referência» por *baseline* no texto, nas tabelas, no esquema e nas figuras 4, 5 e 6 do relatório, e nos documentos atuais.
-- **Porquê:** o utilizador apontou que «referência» se confunde com a classe real; concordância do agente (o próprio código usa «referência» para os segmentos reais).
-- **Correspondência no LaTeX:** **pendente**, por instrução do utilizador («Vamos não alterar o LaTeX por agora»).
-- **Validação:** não aplicável.
-- **Pendentes:** toda a revisão. Substitui, quando aplicada, a parte da decisão D4 (REV-065) sobre «referência».
+- **Data:** decidida em 2026-11-26 antes da REV-073 e aplicada depois dela, até 00:27 WET.
+- **Cor:** **preto**, por instrução do utilizador (a cor `#8B4513`, antes reservada, não é usada). Retirada também a cor `rev069` do `.tex`.
+- **O quê:** *baseline* no texto, tabelas («Baseline»; «Base» no anexo), esquema e figuras 4, 5 e 6; na primeira definição, «o termo de comparação»; `build_window_results` (nomes novos `janelas_viagens_baseline.png` e `janelas_linha_temporal_baseline.png`; `--report-figures-only` refaz também a perda); galeria sem a nota sobre o nome antigo; README, `docs/00`, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** «referência» confunde-se com a classe real; pedido do utilizador.
+- **Texto eliminado:** todas as ocorrências de «referência» e «Ref.» ligadas ao modelo.
+- **Fica como estava:** os objetivos e critérios de sucesso só mudam o nome; os registos históricos; a macro não usada `resVaModelo`; os ficheiros `*_ref.png`, já sem uso.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** 253 testes; 10 páginas; 647 números de linha nas margens; sem «referênci…» no PDF.
+- **Pendentes:** leitura do relatório.
 
 ### REV-073 — Galeria de viagens no repositório
 

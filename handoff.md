@@ -1,13 +1,13 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-26 00:22 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-073. As horas são WET, lidas com `date` ou do `git log`.
+**Atualizado em 2026-11-26 00:27 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-073 (a REV-072 foi aplicada depois da 073). As horas são WET, lidas com `date` ou do `git log`.
 
 ## Ponto de situação em quatro linhas
 
-- O trabalho técnico está **feito**: preparação, CNN de referência, janelas (J0, J50), medição final no `validation` e filtro temporal.
+- O trabalho técnico está **feito**: preparação, CNN baseline, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O documento ativo é o **relatório** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto), que substituiu a proposta.
-- **Galeria feita (REV-073):** `viagens/`, ligada ao `README.md`; em commits locais, **por enviar**.
-- **Por fazer:** REV-072 (passar «referência» a «baseline» no relatório, a pedido do utilizador, mais tarde) e a leitura do relatório pelo utilizador (REV-074, com cor).
+- **Galeria (REV-073)** em `viagens/`, ligada ao `README.md` e enviada; **REV-072** aplicada: o modelo da viagem completa chama-se **baseline** e o relatório está todo a preto.
+- **Por fazer:** a leitura do relatório pelo utilizador (REV-074).
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -25,9 +25,9 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 
 | Verificação | Resultado | Hora (WET; 2026-11-25 salvo indicação) |
 |---|---|---|
-| `pytest tests/` | 253 passaram; 2026-11-26 | 00:22 |
-| Relatório (vigilante, versão da REV-070) | 10 páginas, sem referências em falta; 647 números de linha nas margens; 2026-11-26 | 00:03 |
-| GitHub (`git fetch`, antes do envio) | `main` 4 commits à frente e 0 atrás de `origin/main`; envio pedido pelo utilizador; 2026-11-26 | 00:04 |
+| `pytest tests/` | 253 passaram; 2026-11-26 | 00:27 |
+| Relatório (vigilante) | 10 páginas, sem referências em falta; 647 números de linha nas margens; 2026-11-26 | 00:27 |
+| GitHub (`git push` da REV-073) | `main` local e remoto em `f707939` antes da REV-072; envio da REV-072 pedido; 2026-11-26 | 00:27 |
 | Vigilante do LaTeX | um a correr, com a versão nova (reiniciado às 00:00 de 2026-11-26) | 00:03 |
 | Recuperação da proposta antiga (num clone temporário) | os dois comandos do `README.md` funcionaram e a proposta compilou | 23:12 |
 | Revisão independente do relatório (subagente Opus, só leitura; anterior à REV-068) | sem erros graves; achados aplicados | 23:00 |
@@ -38,6 +38,8 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `e2bed4b` | 2026-11-26 00:25 | Figuras e galeria passam a dizer «baseline» no código (REV-072) |
+| `f707939` | 2026-11-26 00:22 | Acrescenta a galeria de viagens ao repositório (REV-073) |
 | `abd8cab` | 2026-11-26 00:21 | Cria o programa da galeria de viagens e grava as autorizações (REV-073) |
 | `ff050a8` | 2026-11-26 00:04 | Regista o pedido de envio das REV-069 a REV-071 |
 | `442a19f` | 2026-11-26 00:03 | Preenche a página 8 do relatório com o início do anexo (REV-071) |
@@ -90,8 +92,8 @@ Dataset: 123 viagens, 1 026 279 pontos; divisão por viagem, seed 42: treino 87 
 
 | Resultado | Valor | Conjunto |
 |---|---|---|
-| Referência (época 162, limiar 0,65) | exatidão 94,7 % | `test` (otimista) |
-| Referência, medição final | exatidão 94,4 % (classe maioritária: 83,2 %) | `validation` |
+| Baseline (época 162, limiar 0,65) | exatidão 94,7 % | `test` (otimista) |
+| Baseline, medição final | exatidão 94,4 % (classe maioritária: 83,2 %) | `validation` |
 | J0 (época 8, limiar 0,60) e J50 (época 4, limiar 0,75) | 93,4 % e 93,7 %; J50 fragmenta menos | `test` |
 | Filtro de 301 pontos | 94,4 % → 94,8 %; segmentos de pesca previstos 486 → 32 (reais 18); piora 7 de 18 viagens | `validation`, **não independente** |
 
@@ -108,8 +110,8 @@ Estrutura: resumo; 1 Introdução; 2 Trabalho relacionado; 3 Dados e preparaçã
 | Ficheiro em `latex/` | Gerado por (`ais.cli.…`) |
 |---|---|
 | `generated/resultados.tex` | `build_final_results` |
-| `generated/resultados_janelas.tex`, `figures/janelas_perda.png` | `build_window_results` |
-| `figures/janelas_viagens_ref.png`, `janelas_linha_temporal_ref.png` | `build_window_results --report-figures-only` |
+| `generated/resultados_janelas.tex`, `figures/janelas_perda.png` (a figura também se refaz com `--report-figures-only`) | `build_window_results` |
+| `figures/janelas_viagens_baseline.png`, `janelas_linha_temporal_baseline.png` | `build_window_results --report-figures-only` |
 | `generated/resultados_validacao.tex`, `figures/validacao_*.png` | `build_validation_results` |
 | `generated/resultados_posproc.tex`, `figures/posproc_resultados.png`, `posproc_viagem.png` | `build_postproc_results` |
 | `generated/resultados_posproc_v1.tex` | `build_postproc_results --first-version-only` |
@@ -141,11 +143,11 @@ A lista completa está no topo do `PROGRESS.md`; o registo da versão de 13 pont
 
 - Documentação: ficam só `docs/00` e `docs/01` (confirmado pelo utilizador; não repor `05` nem `06`).
 - `test` seleciona, `validation` mede; o `validation` está gasto. **Não voltar a correr** `select_on_test`, `select_windows_on_test`, `final_validation` nem `postproc_validation`.
-- Referência, J0 e J50 fechadas. Sem novos treinos sem decisão do utilizador.
+- Baseline, J0 e J50 fechadas. Sem novos treinos sem decisão do utilizador.
 - Relatório: máximo 15 páginas (alvo 13 ou menos); título mantido; «Figura» e «Tabela» em português; números de linha até à versão final.
 - Perguntas de investigação, objetivos e critérios de sucesso não mudam depois dos resultados.
 - Explicabilidade, calibração e *dashboard*: «previstos, não concluídos nesta fase».
-- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer texto novo ou substituído no `.tex` leva `\revtext{revNNN}{…}`, com `\definecolor{revNNN}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. A REV-068 só eliminou texto, por isso não há cor no `.tex`. **Próximo ID livre: REV-074** (a REV-072 está reservada e por aplicar).
+- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer texto novo ou substituído no `.tex` leva `\revtext{revNNN}{…}`, com `\definecolor{revNNN}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. A REV-068 só eliminou texto, por isso não há cor no `.tex`. Na REV-072 o utilizador mandou usar preto e passar todo o texto a preto. **Próximo ID livre: REV-074.**
 
 ## Ficheiros principais
 
@@ -183,9 +185,9 @@ bash latex/watch_latex.sh
 
 ## O que fazer a seguir
 
-1. Quando o utilizador pedir: **REV-072** («baseline» no relatório e figuras 4 a 6) e os ajustes da leitura (REV-074).
+1. Os ajustes que vierem da leitura do utilizador (REV-074).
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. A REV-073 está por enviar; o repositório é público.
+3. **Push:** só a pedido; o da REV-072 foi pedido. Confirmar com `git status -sb`. O repositório é público.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 

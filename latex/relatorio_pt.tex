@@ -23,12 +23,11 @@
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{xcolor}
-\definecolor{rev069}{HTML}{7B68EE}
 
 \renewcommand{\figurename}{Figura}
 \renewcommand{\tablename}{Tabela}
 
-% Para revisões posteriores à REV-065: \revtext{revNNN}{texto}, com a cor do REVISION_LOG.md.
+% Para marcar revisões: \revtext{revNNN}{texto}, com a cor do REVISION_LOG.md. Em REV-072, a pedido, todo o texto está a preto.
 \newcommand{\revtext}[2]{{\color{#1}#2}}
 % Número com vírgula decimal em modo matemático (sinal de menos correto).
 \newcommand{\ptnum}[1]{{\mathcode`\,="013B\relax$#1$}}
@@ -68,7 +67,7 @@
 \maketitle
 
 \begin{abstract}
-A pesca ilegal, não declarada e não regulamentada ameaça a sustentabilidade dos oceanos, e o \emph{Automatic Identification System} (AIS) permite acompanhar os navios à escala global. Este trabalho segmenta trajetórias AIS em pesca e navegação, com uma previsão por ponto, usando uma rede convolucional unidimensional pequena sobre \resDadosViagens{} viagens anotadas, e estuda o efeito de janelas sobrepostas e de um filtro temporal. No conjunto de teste, usado para escolher os modelos, as janelas com \resJCSobrep{} de sobreposição fragmentam menos do que as sem sobreposição, mas nenhuma variante com janelas supera em exatidão a rede aplicada à viagem completa. Na medição final, essa rede atinge \resVaValidAcc{} de exatidão por ponto (prever sempre a classe maioritária dá \resVaValidAccMaj{}), com uma segmentação muito fragmentada. \revtext{rev069}{Sobre as previsões dessa medição, testou-se um filtro gaussiano primeiro com \resPpViJanela{} pontos, com um ganho pequeno, e depois com \resPpJanela{}. Esta segunda janela} reduz os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e sobe a exatidão para \resPpDepoisAcc{}, mas piora \resPpViagPioram{} das \resPpNViagens{} viagens. A interação entre sobreposição e filtro fica sem resposta, e a explicabilidade e o apoio à decisão não foram concluídos.
+A pesca ilegal, não declarada e não regulamentada ameaça a sustentabilidade dos oceanos, e o \emph{Automatic Identification System} (AIS) permite acompanhar os navios à escala global. Este trabalho segmenta trajetórias AIS em pesca e navegação, com uma previsão por ponto, usando uma rede convolucional unidimensional pequena sobre \resDadosViagens{} viagens anotadas, e estuda o efeito de janelas sobrepostas e de um filtro temporal. No conjunto de teste, usado para escolher os modelos, as janelas com \resJCSobrep{} de sobreposição fragmentam menos do que as sem sobreposição, mas nenhuma variante com janelas supera em exatidão a rede aplicada à viagem completa. Na medição final, essa rede atinge \resVaValidAcc{} de exatidão por ponto (prever sempre a classe maioritária dá \resVaValidAccMaj{}), com uma segmentação muito fragmentada. Sobre as previsões dessa medição, testou-se um filtro gaussiano primeiro com \resPpViJanela{} pontos, com um ganho pequeno, e depois com \resPpJanela{}. Esta segunda janela reduz os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e sobe a exatidão para \resPpDepoisAcc{}, mas piora \resPpViagPioram{} das \resPpNViagens{} viagens. A interação entre sobreposição e filtro fica sem resposta, e a explicabilidade e o apoio à decisão não foram concluídos.
 \end{abstract}
 
 \section{Introdução}
@@ -82,7 +81,7 @@ O problema tratado é \textbf{classificar, ao longo de uma trajetória AIS, cada
 O objetivo principal era desenvolver um sistema de segmentação semântica de trajetórias AIS que detete pesca de forma robusta e interpretável, combinando janelas sobrepostas e pós-processamento temporal, como apoio à decisão de inspetores (\emph{human-on-the-loop}, com o inspetor a supervisionar e a poder intervir). Os objetivos específicos eram:
 \begin{enumerate}
 \item construir um pré-processamento auditável, que recalcula as grandezas derivadas e seleciona as características, sem remover anomalias;
-\item implementar e treinar uma CNN 1D que devolve uma probabilidade por ponto, primeiro sobre a viagem completa, como referência, e depois, com a mesma rede, sobre janelas com sobreposição;
+\item implementar e treinar uma CNN 1D que devolve uma probabilidade por ponto, primeiro sobre a viagem completa, como \emph{baseline}, e depois, com a mesma rede, sobre janelas com sobreposição;
 \item conceber e avaliar um pós-processamento temporal que regularize as fronteiras dos segmentos, aplicado ao melhor dos modelos testados;
 \item avaliar quantitativamente, por ponto e por segmento, e qualitativamente, com visualizações e casos de estudo;
 \item incluir explicabilidade e confiança calibrada que sustentem a decisão do inspetor. Este objetivo não foi concluído nesta fase (Secção~\ref{sec:limitacoes}).
@@ -92,7 +91,7 @@ O objetivo principal era desenvolver um sistema de segmentação semântica de t
 
 \textbf{RQ1:} em que medida as janelas sobrepostas reduzem a instabilidade das fronteiras face a janelas não sobrepostas? \textbf{RQ2:} em que medida o pós-processamento reduz a fragmentação e melhora a concordância com os segmentos anotados? \textbf{RQ3:} qual a interação entre sobreposição e pós-processamento?
 
-Os critérios de sucesso definidos foram: (i) caracterizar quantitativamente o efeito das duas componentes face à CNN de referência, aceitando como resultado válido que uma componente não traga ganho; (ii) produzir segmentações temporalmente estáveis; e (iii) fornecer justificações auditáveis para validação por um inspetor.
+Os critérios de sucesso definidos foram: (i) caracterizar quantitativamente o efeito das duas componentes face à CNN \emph{baseline}, aceitando como resultado válido que uma componente não traga ganho; (ii) produzir segmentações temporalmente estáveis; e (iii) fornecer justificações auditáveis para validação por um inspetor.
 
 As contribuições são uma comparação entre uma CNN 1D sobre a viagem completa e a mesma rede sobre janelas, com e sem sobreposição, com os mesmos dados e o mesmo critério de seleção; evidência sobre o efeito de um filtro temporal aplicado ao melhor desses modelos; e um protocolo reprodutível, com conjuntos reservados, autorizações e registo de acessos.
 
@@ -129,7 +128,7 @@ As entradas do modelo são quatro atributos (velocidade, variação de rumo, int
 
 \subsection{Visão geral}
 
-O modelo é uma rede neuronal convolucional unidimensional (CNN 1D) que devolve, para cada ponto de uma viagem, a probabilidade de ele ser de pesca. A mesma rede é usada de duas formas: sobre a viagem completa, que serve de \textbf{referência}, e sobre janelas, sem e com sobreposição. Ao modelo escolhido aplica-se depois um filtro temporal que regulariza as previsões, e os segmentos de pesca e de navegação são os blocos de pontos seguidos com a mesma classe (Figura~\ref{fig:pipeline}).
+O modelo é uma rede neuronal convolucional unidimensional (CNN 1D) que devolve, para cada ponto de uma viagem, a probabilidade de ele ser de pesca. A mesma rede é usada de duas formas: sobre a viagem completa, que serve de \textbf{\emph{baseline}}, o termo de comparação, e sobre janelas, sem e com sobreposição. Ao modelo escolhido aplica-se depois um filtro temporal que regulariza as previsões, e os segmentos de pesca e de navegação são os blocos de pontos seguidos com a mesma classe (Figura~\ref{fig:pipeline}).
 
 \begin{center}
 \begin{tikzpicture}[font=\scriptsize, >={Stealth[length=4pt]},
@@ -137,7 +136,7 @@ O modelo é uma rede neuronal convolucional unidimensional (CNN 1D) que devolve,
   ref/.style={box, fill=gray!12}]
 \node[box] (a) at (0,0) {Trajetória AIS};
 \node[box] (b) at (2.9,0) {Preparação};
-\node[ref] (c) at (1.45,-1.35) {CNN 1D, viagem completa (referência)};
+\node[ref] (c) at (1.45,-1.35) {CNN 1D, viagem completa (\emph{baseline})};
 \node[box] (d) at (4.35,-1.35) {Mesma CNN 1D, janelas (J0 e J50)};
 \node[box] (e) at (2.9,-2.7) {Escolha do\\modelo no teste};
 \node[box] (f) at (1.45,-4.0) {Filtro\\gaussiano};
@@ -150,7 +149,7 @@ O modelo é uma rede neuronal convolucional unidimensional (CNN 1D) que devolve,
 \draw[->] (e) -- (f);
 \draw[->] (f) -- (g);
 \end{tikzpicture}
-\captionof{figure}{Esquema do trabalho. A preparação é comum; a referência e as variantes com janelas usam a mesma rede; o filtro aplica-se ao modelo escolhido no conjunto de teste.}
+\captionof{figure}{Esquema do trabalho. A preparação é comum; a \emph{baseline} e as variantes com janelas usam a mesma rede; o filtro aplica-se ao modelo escolhido no conjunto de teste.}
 \label{fig:pipeline}
 \end{center}
 
@@ -209,7 +208,7 @@ com $y_i=1$ para pesca e $0$ para navegação. Todos os pontos entram na perda. 
 \subsection{Janelas e sobreposição}
 \label{sec:janelas}
 
-A rede é também treinada e avaliada sobre janelas de $L=\resJZL$ pontos, em duas variantes: \textbf{J0}, sem sobreposição (passo de \resJZPasso{} pontos), e \textbf{J50}, com \resJCSobrep{} de sobreposição (passo de \resJCPasso{} pontos). A sobreposição é a mesma no treino e na inferência. A probabilidade final de cada ponto é a média das probabilidades das janelas que o cobrem; é uma reconstrução e não uma suavização temporal. A rede, os dados, o normalizador e o critério de seleção são os da referência, mas o treino não é igual em tudo: o tamanho do lote e o número de passos também mudam (Tabela~\ref{tab:treino}). O Anexo~\ref{sec:anexo} descreve os pormenores.
+A rede é também treinada e avaliada sobre janelas de $L=\resJZL$ pontos, em duas variantes: \textbf{J0}, sem sobreposição (passo de \resJZPasso{} pontos), e \textbf{J50}, com \resJCSobrep{} de sobreposição (passo de \resJCPasso{} pontos). A sobreposição é a mesma no treino e na inferência. A probabilidade final de cada ponto é a média das probabilidades das janelas que o cobrem; é uma reconstrução e não uma suavização temporal. A rede, os dados, o normalizador e o critério de seleção são os da \emph{baseline}, mas o treino não é igual em tudo: o tamanho do lote e o número de passos também mudam (Tabela~\ref{tab:treino}). O Anexo~\ref{sec:anexo} descreve os pormenores.
 
 \subsection{Filtro temporal}
 \label{sec:filtro}
@@ -240,7 +239,7 @@ Os nomes dos dois conjuntos reservados têm aqui os \textbf{papéis trocados fac
 \subsection{Treino}
 \label{sec:treino}
 
-As três experiências usam o otimizador Adam, com taxa de aprendizagem $10^{-3}$ (o valor por omissão, não ajustado), sem decaimento de pesos nem calendário, durante \resTrEpocas{} épocas sem paragem antecipada, e guardam um modelo por época. Partem dos mesmos pesos iniciais (semente \resTrSemente{}) e do mesmo normalizador, ajustado só no treino. A referência usa uma viagem por passo, em ordem aleatória reprodutível, pelo que as viagens longas pesam menos por ponto; J0 e J50 usam lotes de \resJZLote{} janelas e um limite de \resJZOrcamentoMin{} minutos (Tabela~\ref{tab:treino}). Todo o treino foi feito em CPU.
+As três experiências usam o otimizador Adam, com taxa de aprendizagem $10^{-3}$ (o valor por omissão, não ajustado), sem decaimento de pesos nem calendário, durante \resTrEpocas{} épocas sem paragem antecipada, e guardam um modelo por época. Partem dos mesmos pesos iniciais (semente \resTrSemente{}) e do mesmo normalizador, ajustado só no treino. A \emph{baseline} usa uma viagem por passo, em ordem aleatória reprodutível, pelo que as viagens longas pesam menos por ponto; J0 e J50 usam lotes de \resJZLote{} janelas e um limite de \resJZOrcamentoMin{} minutos (Tabela~\ref{tab:treino}). Todo o treino foi feito em CPU.
 
 \begin{table}[t]
 \centering\footnotesize\setlength{\tabcolsep}{3.5pt}
@@ -248,7 +247,7 @@ As três experiências usam o otimizador Adam, com taxa de aprendizagem $10^{-3}
 \toprule
 Modelo & Passo & Janelas & Passos/época & Tempo (min) \\
 \midrule
-Referência & --- & (\resTrViagens{} viagens) & \resBsPassos & \resBsSegundos \\
+Baseline & --- & (\resTrViagens{} viagens) & \resBsPassos & \resBsSegundos \\
 J0 & \resJZPasso & \resJZJanelas & \resJZPassos & \resJZSegundos \\
 J50 & \resJCPasso & \resJCJanelas & \resJCPassos & \resJCSegundos \\
 \bottomrule
@@ -260,12 +259,12 @@ J50 & \resJCPasso & \resJCJanelas & \resJCPassos & \resJCSegundos \\
 \subsection{Escolha da época e do limiar}
 \label{sec:selecao}
 
-Os critérios foram declarados antes de abrir o conjunto de teste e são iguais para os três modelos: a época com a menor perda por ponto entre as \resSelNCand{} guardadas (nas janelas, calculada depois de reconstruir uma probabilidade por ponto) e, nessa época, o limiar entre \resSelGrelhaMin{} e \resSelGrelhaMax{} (passo 0,05) que maximiza a média dos F1 das duas classes. A referência foi escolhida numa abertura do conjunto de teste, e J0 e J50 numa segunda.
+Os critérios foram declarados antes de abrir o conjunto de teste e são iguais para os três modelos: a época com a menor perda por ponto entre as \resSelNCand{} guardadas (nas janelas, calculada depois de reconstruir uma probabilidade por ponto) e, nessa época, o limiar entre \resSelGrelhaMin{} e \resSelGrelhaMax{} (passo 0,05) que maximiza a média dos F1 das duas classes. A \emph{baseline} foi escolhida numa abertura do conjunto de teste, e J0 e J50 numa segunda.
 
 \subsection{Escolha da janela do filtro}
 \label{sec:escolha-janela}
 
-\revtext{rev069}{Testou-se primeiro um filtro de \resPpViJanela{} pontos, sobre as previsões guardadas da validação. O ganho foi pequeno (Subsecção~\ref{sec:rq2}), pelo que se passou a uma janela maior, de \resPpJanela{} pontos.} \revtext{rev069}{Este} tamanho foi escolhido com o conjunto de teste, sem uma regra declarada antes, a partir da distribuição dos erros da referência e do cálculo aproximado descrito abaixo; o efeito no teste, comparado com o de outras dimensões, só foi medido depois da escolha. Um \emph{bloco de erro} é uma sequência de pontos seguidos mal classificados com a mesma classe prevista. No teste há \resBuTesteBlocos{} blocos, que somam \resBuTesteErros{} pontos errados, com mediana de \resBuTesteMediana{} pontos, média de \resBuTesteMedia{}, 90\,\% até \resBuTesteNoventa{} pontos e um máximo de \resBuTesteMaximo{}. A navegação prevista no meio da pesca representa \resBuTesteNavPercPontos{} dos pontos errados.
+Testou-se primeiro um filtro de \resPpViJanela{} pontos, sobre as previsões guardadas da validação. O ganho foi pequeno (Subsecção~\ref{sec:rq2}), pelo que se passou a uma janela maior, de \resPpJanela{} pontos. Este tamanho foi escolhido com o conjunto de teste, sem uma regra declarada antes, a partir da distribuição dos erros da \emph{baseline} e do cálculo aproximado descrito abaixo; o efeito no teste, comparado com o de outras dimensões, só foi medido depois da escolha. Um \emph{bloco de erro} é uma sequência de pontos seguidos mal classificados com a mesma classe prevista. No teste há \resBuTesteBlocos{} blocos, que somam \resBuTesteErros{} pontos errados, com mediana de \resBuTesteMediana{} pontos, média de \resBuTesteMedia{}, 90\,\% até \resBuTesteNoventa{} pontos e um máximo de \resBuTesteMaximo{}. A navegação prevista no meio da pesca representa \resBuTesteNavPercPontos{} dos pontos errados.
 
 Como o limiar do modelo (\resSelLimiar{}) não está a meio da escala, o filtro é assimétrico. Num cálculo com probabilidades ideais (0 ou 1), uma janela de \resPpJanela{} pontos remove blocos isolados de pesca até \resBuRemovePesca{} pontos e de navegação até \resBuRemoveNav{}. Por este critério aproximado, abrange \resBuTesteBlocosCobertos{} dos blocos do teste, mas só \resBuTestePontosCobertos{} dos pontos errados, porque os blocos longos concentram muitos erros. O segmento real de navegação mais curto tem \resBuTreinoRealNavMin{} pontos no treino e \resBuTesteRealNavMin{} no teste, acima do que o filtro remove.
 
@@ -279,7 +278,7 @@ Como o limiar do modelo (\resSelLimiar{}) não está a meio da escala, o filtro 
 \subsection{Medições no conjunto de validação}
 \label{sec:medicoes}
 
-\textbf{Medição final.} Antes de abrir o conjunto, mas já conhecidos os resultados dos três modelos no teste, declarou-se que se mediria só o modelo com o maior F1 médio por ponto no teste, com a exatidão a desempatar. Foi a referência (F1 médio de \resVaFMedioBs{}, contra \resVaFMedioJC{} de J50 e \resVaFMedioJZ{} de J0). O conjunto foi aberto uma vez, com o modelo, a época (\resVaEpoca{}) e o limiar (\resVaLimiar{}) fixados.
+\textbf{Medição final.} Antes de abrir o conjunto, mas já conhecidos os resultados dos três modelos no teste, declarou-se que se mediria só o modelo com o maior F1 médio por ponto no teste, com a exatidão a desempatar. Foi a \emph{baseline} (F1 médio de \resVaFMedioBs{}, contra \resVaFMedioJC{} de J50 e \resVaFMedioJZ{} de J0). O conjunto foi aberto uma vez, com o modelo, a época (\resVaEpoca{}) e o limiar (\resVaLimiar{}) fixados.
 
 \textbf{Pós-processamento.} O filtro aplicou-se às probabilidades guardadas nessa medição, sem voltar a ler os dados nem a correr a CNN, e comparou-se com as anotações antes e depois. O protocolo da versão de \resPpJanela{} pontos (houve uma anterior; Secção~\ref{sec:limitacoes}) foi gravado num \emph{commit} antes da execução, e uma segunda implementação confirmou os números. Esta medição não é independente (Secção~\ref{sec:limitacoes}).
 
@@ -295,7 +294,7 @@ O código foi verificado com testes automáticos sobre dados sintéticos (e, par
 
 Esta comparação usa o conjunto de teste, que serviu para escolher a época e o limiar de cada modelo.
 
-\textbf{Por segmento}, os três modelos fragmentam muito (Tabela~\ref{tab:segmentos}): há \resBsSegPescaNRef{} segmentos reais de pesca, e a referência prevê \resBsSegPescaNPred{}, J0 \resJZSegPescaNPred{} e J50 \resJCSegPescaNPred{}. A fragmentação de J50 é a menor (na pesca, \resJCSegPescaFrag{} contra \resJZSegPescaFrag{} de J0 e \resBsSegPescaFrag{} da referência; na navegação, \resJCSegNavFrag{} contra \resJZSegNavFrag{} e \resBsSegNavFrag{}), mas continua muito acima de 1. O F1 de segmentos de pesca é muito baixo nos três, sobretudo porque há centenas de segmentos previstos para poucos reais (na referência, a precisão por segmento é de \resBsSegPescaPrec{}); além disso, há em média um segmento real de pesca por viagem, e um previsto só lhe corresponde se o IoU temporal chegar ao limiar. O erro de fronteira da pesca não mostra um padrão e assenta em poucos pares (\resBsSegPescaNPar{}, \resJZSegPescaNPar{} e \resJCSegPescaNPar{}). A Figura~\ref{fig:linha} mostra a viagem de teste com mais segmentos reais.
+\textbf{Por segmento}, os três modelos fragmentam muito (Tabela~\ref{tab:segmentos}): há \resBsSegPescaNRef{} segmentos reais de pesca, e a \emph{baseline} prevê \resBsSegPescaNPred{}, J0 \resJZSegPescaNPred{} e J50 \resJCSegPescaNPred{}. A fragmentação de J50 é a menor (na pesca, \resJCSegPescaFrag{} contra \resJZSegPescaFrag{} de J0 e \resBsSegPescaFrag{} da \emph{baseline}; na navegação, \resJCSegNavFrag{} contra \resJZSegNavFrag{} e \resBsSegNavFrag{}), mas continua muito acima de 1. O F1 de segmentos de pesca é muito baixo nos três, sobretudo porque há centenas de segmentos previstos para poucos reais (na \emph{baseline}, a precisão por segmento é de \resBsSegPescaPrec{}); além disso, há em média um segmento real de pesca por viagem, e um previsto só lhe corresponde se o IoU temporal chegar ao limiar. O erro de fronteira da pesca não mostra um padrão e assenta em poucos pares (\resBsSegPescaNPar{}, \resJZSegPescaNPar{} e \resJCSegPescaNPar{}). A Figura~\ref{fig:linha} mostra a viagem de teste com mais segmentos reais.
 
 \begin{table*}[t]
 \centering\footnotesize\setlength{\tabcolsep}{4pt}
@@ -303,11 +302,11 @@ Esta comparação usa o conjunto de teste, que serviu para escolher a época e o
 \toprule
 Modelo & Classe & Reais & Previstos & Pares & F1 & Fragm. & Erro início (s) & Erro fim (s) \\
 \midrule
-Referência & Pesca & \resBsSegPescaNRef & \resBsSegPescaNPred & \resBsSegPescaNPar & \resBsSegPescaF & \resBsSegPescaFrag & \resBsSegPescaIniMed & \resBsSegPescaFimMed \\
+Baseline & Pesca & \resBsSegPescaNRef & \resBsSegPescaNPred & \resBsSegPescaNPar & \resBsSegPescaF & \resBsSegPescaFrag & \resBsSegPescaIniMed & \resBsSegPescaFimMed \\
 J0 & Pesca & \resJZSegPescaNRef & \resJZSegPescaNPred & \resJZSegPescaNPar & \resJZSegPescaF & \resJZSegPescaFrag & \resJZSegPescaIniMed & \resJZSegPescaFimMed \\
 J50 & Pesca & \resJCSegPescaNRef & \resJCSegPescaNPred & \resJCSegPescaNPar & \resJCSegPescaF & \resJCSegPescaFrag & \resJCSegPescaIniMed & \resJCSegPescaFimMed \\
 \midrule
-Referência & Navegação & \resBsSegNavNRef & \resBsSegNavNPred & \resBsSegNavNPar & \resBsSegNavF & \resBsSegNavFrag & \resBsSegNavIniMed & \resBsSegNavFimMed \\
+Baseline & Navegação & \resBsSegNavNRef & \resBsSegNavNPred & \resBsSegNavNPar & \resBsSegNavF & \resBsSegNavFrag & \resBsSegNavIniMed & \resBsSegNavFimMed \\
 J0 & Navegação & \resJZSegNavNRef & \resJZSegNavNPred & \resJZSegNavNPar & \resJZSegNavF & \resJZSegNavFrag & \resJZSegNavIniMed & \resJZSegNavFimMed \\
 J50 & Navegação & \resJCSegNavNRef & \resJCSegNavNPred & \resJCSegNavNPar & \resJCSegNavF & \resJCSegNavFrag & \resJCSegNavIniMed & \resJCSegNavFimMed \\
 \bottomrule
@@ -318,12 +317,12 @@ J50 & Navegação & \resJCSegNavNRef & \resJCSegNavNPred & \resJCSegNavNPar & \r
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/janelas_linha_temporal_ref.png}
-\caption{Uma viagem do conjunto de teste: classe real e classe prevista pela referência, por J0 e por J50, ponto a ponto.}
+\includegraphics[width=0.85\textwidth]{figures/janelas_linha_temporal_baseline.png}
+\caption{Uma viagem do conjunto de teste: classe real e classe prevista pela \emph{baseline}, por J0 e por J50, ponto a ponto.}
 \label{fig:linha}
 \end{figure*}
 
-\textbf{Por ponto}, nenhuma variante com janelas supera a referência em exatidão (Tabela~\ref{tab:pontos}). Face a ela, J0 tem exatidão maior em \resJZViagMelhor{} viagens e menor em \resJZViagPior{} (diferença mediana de \ptnum{\resJZViagDifMed} pontos percentuais), e J50 maior em \resJCViagMelhor{} e menor em \resJCViagPior{} (\ptnum{\resJCViagDifMed}). A referência acerta mais na navegação (sensibilidade de \resBsTesteNavSens{}, contra \resJZTesteNavSens{} e \resJCTesteNavSens{}) e tem melhor precisão na pesca (\resBsTestePescaPrec{}, contra \resJZTestePescaPrec{} e \resJCTestePescaPrec{}). Por viagem, o valor mais baixo é de J0, que desce a \resJZTesteViagMin{}, quando a referência não desce abaixo de \resTesteViagMin{} (Figura~\ref{fig:viagens}). As métricas por classe estão no Anexo~\ref{sec:anexo}.
+\textbf{Por ponto}, nenhuma variante com janelas supera a \emph{baseline} em exatidão (Tabela~\ref{tab:pontos}). Face a ela, J0 tem exatidão maior em \resJZViagMelhor{} viagens e menor em \resJZViagPior{} (diferença mediana de \ptnum{\resJZViagDifMed} pontos percentuais), e J50 maior em \resJCViagMelhor{} e menor em \resJCViagPior{} (\ptnum{\resJCViagDifMed}). A \emph{baseline} acerta mais na navegação (sensibilidade de \resBsTesteNavSens{}, contra \resJZTesteNavSens{} e \resJCTesteNavSens{}) e tem melhor precisão na pesca (\resBsTestePescaPrec{}, contra \resJZTestePescaPrec{} e \resJCTestePescaPrec{}). Por viagem, o valor mais baixo é de J0, que desce a \resJZTesteViagMin{}, quando a \emph{baseline} não desce abaixo de \resTesteViagMin{} (Figura~\ref{fig:viagens}). As métricas por classe estão no Anexo~\ref{sec:anexo}.
 
 \begin{table}[t]
 \centering\footnotesize\setlength{\tabcolsep}{3.5pt}
@@ -331,7 +330,7 @@ J50 & Navegação & \resJCSegNavNRef & \resJCSegNavNPred & \resJCSegNavNPar & \r
 \toprule
 Modelo & Época & Limiar & Treino & Teste & F1 nav. & F1 pesca \\
 \midrule
-Referência & \resBsEpoca & \resBsLimiar & \resBsTreinoAcc & \resBsTesteAcc & \resBsTesteNavF & \resBsTestePescaF \\
+Baseline & \resBsEpoca & \resBsLimiar & \resBsTreinoAcc & \resBsTesteAcc & \resBsTesteNavF & \resBsTestePescaF \\
 J0 & \resJZEpoca & \resJZLimiar & \resJZTreinoAcc & \resJZTesteAcc & \resJZTesteNavF & \resJZTestePescaF \\
 J50 & \resJCEpoca & \resJCLimiar & \resJCTreinoAcc & \resJCTesteAcc & \resJCTesteNavF & \resJCTestePescaF \\
 \bottomrule
@@ -342,12 +341,12 @@ J50 & \resJCEpoca & \resJCLimiar & \resJCTreinoAcc & \resJCTesteAcc & \resJCTest
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.75\textwidth]{figures/janelas_viagens_ref.png}
-\caption{Exatidão por viagem no conjunto de teste, com as viagens ordenadas pela exatidão da referência.}
+\includegraphics[width=0.75\textwidth]{figures/janelas_viagens_baseline.png}
+\caption{Exatidão por viagem no conjunto de teste, com as viagens ordenadas pela exatidão da \emph{baseline}.}
 \label{fig:viagens}
 \end{figure*}
 
-\textbf{Épocas escolhidas.} J0 e J50 ficam nas épocas \resJZEpoca{} e \resJCEpoca{}, muito antes da época \resBsEpoca{} da referência, porque a sua perda no teste sobe com o treino enquanto a do treino desce (Figura~\ref{fig:perda}), o que é compatível com ajuste excessivo às viagens de treino. Na referência a perda no teste oscila entre épocas, pelo que também a sua escolha é sensível a essa oscilação.
+\textbf{Épocas escolhidas.} J0 e J50 ficam nas épocas \resJZEpoca{} e \resJCEpoca{}, muito antes da época \resBsEpoca{} da \emph{baseline}, porque a sua perda no teste sobe com o treino enquanto a do treino desce (Figura~\ref{fig:perda}), o que é compatível com ajuste excessivo às viagens de treino. Na \emph{baseline} a perda no teste oscila entre épocas, pelo que também a sua escolha é sensível a essa oscilação.
 
 \begin{figure*}[t]
 \centering
@@ -356,9 +355,9 @@ J50 & \resJCEpoca & \resJCLimiar & \resJCTreinoAcc & \resJCTesteAcc & \resJCTest
 \label{fig:perda}
 \end{figure*}
 
-\textbf{Resposta à RQ1.} Neste conjunto, J50 fragmenta menos do que J0 e do que a referência, mas não melhora o erro de fronteira da pesca de forma consistente. Por ponto, J50 fica ligeiramente acima de J0 (\resJCTesteAcc{} contra \resJZTesteAcc{}) e abaixo da referência (\resBsTesteAcc{}); com uma só semente, a diferença entre J0 e J50 não permite concluir. J0 não supera a referência, e J50 troca menos fragmentos por menor exatidão: não se conclui que o janelamento ou a sobreposição melhorem a segmentação. A instabilidade das fronteiras é aqui avaliada pela fragmentação e pelo erro de fronteira. Como J50 e J0 diferem também no limiar (\resJCLimiar{} e \resJZLimiar{}), na época e no número de passos (J50 faz \resJCPassosVezes{} vezes os de J0), a diferença de fragmentação não se pode atribuir só à sobreposição.
+\textbf{Resposta à RQ1.} Neste conjunto, J50 fragmenta menos do que J0 e do que a \emph{baseline}, mas não melhora o erro de fronteira da pesca de forma consistente. Por ponto, J50 fica ligeiramente acima de J0 (\resJCTesteAcc{} contra \resJZTesteAcc{}) e abaixo da \emph{baseline} (\resBsTesteAcc{}); com uma só semente, a diferença entre J0 e J50 não permite concluir. J0 não supera a \emph{baseline}, e J50 troca menos fragmentos por menor exatidão: não se conclui que o janelamento ou a sobreposição melhorem a segmentação. A instabilidade das fronteiras é aqui avaliada pela fragmentação e pelo erro de fronteira. Como J50 e J0 diferem também no limiar (\resJCLimiar{} e \resJZLimiar{}), na época e no número de passos (J50 faz \resJCPassosVezes{} vezes os de J0), a diferença de fragmentação não se pode atribuir só à sobreposição.
 
-\subsection{Medição final da referência}
+\subsection{Medição final da \emph{baseline}}
 \label{sec:validacao}
 
 No conjunto de validação, a exatidão por ponto é de \resVaValidAcc{} (\resVaValidErros{} erros em \resVaValidPontos{} pontos), contra \resVaValidAccMaj{} da regra da classe maioritária (pesca, \resVaPercPesca{} dos pontos). No teste, a mesma rede tem \resVaTesteAcc{}, contra \resVaTesteAccMaj{}; como a proporção de pesca é muito diferente entre os conjuntos, as exatidões não são diretamente comparáveis. A pesca é bem detetada (Tabela~\ref{tab:validacao}), mas a precisão da navegação desce para \resVaValidNavPrec{} (\resVaTesteNavPrec{} no teste): há \resVaValidFN{} pontos de pesca previstos como navegação, contra \resVaValidTN{} pontos de navegação certos, e a navegação é a classe minoritária.
@@ -375,7 +374,7 @@ Teste & Navegação & \resVaTesteNavReal & \resVaTesteNavPrec & \resVaTesteNavSe
 Teste & Pesca & \resVaTestePescaReal & \resVaTestePescaPrec & \resVaTestePescaSens & \resVaTestePescaF & \resVaTestePescaIoU \\
 \bottomrule
 \end{tabular}
-\caption{Referência por ponto: medição final (validação) e, para comparação, teste (otimista).}
+\caption{\emph{Baseline} por ponto: medição final (validação) e, para comparação, teste (otimista).}
 \label{tab:validacao}
 \end{table}
 
@@ -392,7 +391,7 @@ Por viagem, a exatidão vai de \resVaViagMin{} (viagem \resVaPiorViagem) a \resV
 \subsection{Filtro temporal (RQ2)}
 \label{sec:rq2}
 
-\revtext{rev069}{Com a primeira janela, de \resPpViJanela{} pontos, o ganho foi pequeno: a exatidão por ponto passou de \resPpAntesAcc{} para \resPpViDepoisAcc{}, os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpViSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e o F1 de segmentos de pesca de \resPpASegPescaF{} para \resPpViSegPescaF{}, melhorando \resPpViViagMelhoram{} viagens e piorando \resPpViViagPioram{}. Os resultados seguintes são os da janela de \resPpJanela{} pontos.}
+Com a primeira janela, de \resPpViJanela{} pontos, o ganho foi pequeno: a exatidão por ponto passou de \resPpAntesAcc{} para \resPpViDepoisAcc{}, os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpViSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e o F1 de segmentos de pesca de \resPpASegPescaF{} para \resPpViSegPescaF{}, melhorando \resPpViViagMelhoram{} viagens e piorando \resPpViViagPioram{}. Os resultados seguintes são os da janela de \resPpJanela{} pontos.
 
 O filtro muda a classe de \resPpMudam{} pontos (\resPpPercMudam{}): \resPpCorrigidos{} passam a estar certos e \resPpEstragados{} passam a estar errados, ou seja, há \resPpErrosMenos{} erros a menos. A exatidão por ponto passa de \resPpAntesAcc{} para \resPpDepoisAcc{}. O efeito principal está nos segmentos (Tabela~\ref{tab:filtro} e Figura~\ref{fig:filtro}): os de pesca previstos descem de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e os de navegação de \resPpASegNavNPred{} para \resPpDSegNavNPred{} (reais: \resPpASegNavNRef{}), e o F1 de segmentos sobe nas duas classes. Os erros de fronteira também descem ou mantêm-se, mas as medianas calculam-se sobre os pares correspondidos, que mudam (na pesca, de \resPpASegPescaNPar{} para \resPpDSegPescaNPar{}), pelo que o antes e o depois não comparam os mesmos segmentos.
 
@@ -409,7 +408,7 @@ Navegação & Antes & \resPpAntesNavF & \resPpASegNavNPred & \resPpASegNavNPar &
 Navegação & Depois & \resPpDepoisNavF & \resPpDSegNavNPred & \resPpDSegNavNPar & \resPpDSegNavF & \resPpDSegNavFrag & \resPpDSegNavIniMed & \resPpDSegNavFimMed \\
 \bottomrule
 \end{tabular}
-\caption{Referência no conjunto de validação antes e depois do filtro de \resPpJanela{} pontos. Segmentos reais: \resPpASegPescaNRef{} de pesca e \resPpASegNavNRef{} de navegação.}
+\caption{\emph{Baseline} no conjunto de validação antes e depois do filtro de \resPpJanela{} pontos. Segmentos reais: \resPpASegPescaNRef{} de pesca e \resPpASegNavNRef{} de navegação.}
 \label{tab:filtro}
 \end{table*}
 
@@ -430,9 +429,9 @@ O efeito não é igual em todas as viagens: das \resPpNViagens{}, melhoram \resP
 
 A RQ3 fica \textbf{sem resposta}. Medir a interação exige comparar as quatro combinações (sem e com sobreposição, sem e com filtro) nas mesmas condições:
 \begin{itemize}
-\item só a referência foi filtrada; J0 e J50 nunca o foram;
-\item não há um conjunto limpo onde medir: a validação já foi usada, e foi no teste que se escolheram as épocas, os limiares e a janela, esta a partir dos erros da referência, o que enviesaria a comparação a favor dela;
-\item J0 e J50 foram escolhidas em épocas muito precoces e treinadas com lotes e números de passos diferentes dos da referência;
+\item só a \emph{baseline} foi filtrada; J0 e J50 nunca o foram;
+\item não há um conjunto limpo onde medir: a validação já foi usada, e foi no teste que se escolheram as épocas, os limiares e a janela, esta a partir dos erros da \emph{baseline}, o que enviesaria a comparação a favor dela;
+\item J0 e J50 foram escolhidas em épocas muito precoces e treinadas com lotes e números de passos diferentes dos da \emph{baseline};
 \item os dois efeitos sobrepõem-se: a média das janelas já suaviza um pouco as previsões, e o filtro muito mais. É plausível que a vantagem da sobreposição desapareça depois do filtro, mas isso é uma hipótese e não um resultado.
 \end{itemize}
 Responder-lhe exigiria um desenho fatorial planeado de início, com o mesmo critério de seleção, várias sementes e um conjunto final ainda por abrir.
@@ -443,8 +442,8 @@ Responder-lhe exigiria um desenho fatorial planeado de início, com o mesmo crit
 \textbf{Limitações dos resultados.}
 \begin{itemize}
 \item \textbf{Filtro.} Antes desta versão, foi medido no conjunto de validação um filtro com uma janela de 13 pontos; a decisão de procurar outra janela foi tomada depois de ver esse resultado. O valor obtido com \resPpJanela{} pontos não é, por isso, uma medição final independente.
-\item \textbf{Teste otimista.} O conjunto de teste serviu para escolher épocas, limiares e a janela; a comparação entre a referência, J0 e J50 assenta só nele.
-\item \textbf{Treinos não equivalentes.} As variantes com janelas diferem da referência no lote e no número de passos, e ficaram em épocas muito anteriores.
+\item \textbf{Teste otimista.} O conjunto de teste serviu para escolher épocas, limiares e a janela; a comparação entre a \emph{baseline}, J0 e J50 assenta só nele.
+\item \textbf{Treinos não equivalentes.} As variantes com janelas diferem da \emph{baseline} no lote e no número de passos, e ficaram em épocas muito anteriores.
 \item \textbf{Poucos dados.} Uma só semente, \resVaViagens{} viagens em cada conjunto reservado e sem intervalos de incerteza.
 \item \textbf{Navios.} A divisão é por viagem, pelo que não se afirma generalização a navios inéditos.
 \item \textbf{Um só contexto.} Os dados cobrem uma semana de navios de pesca em águas dinamarquesas (Secção~\ref{sec:dados}); não se sabe como o modelo se comporta noutras regiões ou épocas. As anotações são manuais e não se conhece uma medida da sua fiabilidade.
@@ -457,9 +456,9 @@ Responder-lhe exigiria um desenho fatorial planeado de início, com o mesmo crit
 
 \section{Conclusões e trabalho futuro}
 \label{sec:conclusoes}
-Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede aplicada a janelas e estudou um filtro temporal sobre as previsões da referência.
+Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede aplicada a janelas e estudou um filtro temporal sobre as previsões da \emph{baseline}.
 
-\textbf{RQ1.} No teste, J50 prevê menos segmentos de pesca do que J0 (\resJCSegPescaNPred{} contra \resJZSegPescaNPred{}; a referência, \resBsSegPescaNPred{}), embora os dois também difiram no limiar, na época e no número de passos, sem melhorar de forma consistente o erro de fronteira, e nenhuma variante com janelas supera a exatidão da referência (\resBsTesteAcc{}, contra \resJCTesteAcc{} de J50). Não há base para concluir que as janelas melhorem a segmentação.
+\textbf{RQ1.} No teste, J50 prevê menos segmentos de pesca do que J0 (\resJCSegPescaNPred{} contra \resJZSegPescaNPred{}; a \emph{baseline}, \resBsSegPescaNPred{}), embora os dois também difiram no limiar, na época e no número de passos, sem melhorar de forma consistente o erro de fronteira, e nenhuma variante com janelas supera a exatidão da \emph{baseline} (\resBsTesteAcc{}, contra \resJCTesteAcc{} de J50). Não há base para concluir que as janelas melhorem a segmentação.
 
 \textbf{RQ2.} Neste conjunto, o filtro reduz os segmentos de pesca previstos de \resPpASegPescaNPred{} para \resPpDSegPescaNPred{} (reais: \resPpASegPescaNRef{}) e sobe o F1 de segmentos de pesca de \resPpASegPescaF{} para \resPpDSegPescaF{}, com a exatidão por ponto a passar de \resPpAntesAcc{} para \resPpDepoisAcc{}. A medição não é independente e falta confirmá-la em dados novos.
 
@@ -467,7 +466,7 @@ Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede a
 
 \textbf{Critérios de sucesso.} O critério (i) cumpre-se com ressalvas: o efeito das janelas foi medido só no teste e o do filtro numa medição não independente. O (ii) cumpre-se em parte: a segmentação fica muito menos fragmentada, mas a fragmentação continua acima de 1 (\resPpDSegPescaFrag{} na pesca e \resPpDSegNavFrag{} na navegação), há erros longos, e a estabilidade perante pequenas alterações não foi medida. O (iii) não se cumpre.
 
-\textbf{Trabalho futuro.} Concluir o apoio à decisão previsto (Secção~\ref{sec:limitacoes}); dar mais contexto à CNN; estudar o limiar em conjunto com o filtro; \revtext{rev069}{testar mais dimensões da janela do filtro, maiores e menores, e outros tipos de janela, para perceber como mudam os resultados;} confirmar o filtro em dados novos; repetir com várias sementes e uma divisão por navio; e responder à RQ3 com um desenho fatorial.
+\textbf{Trabalho futuro.} Concluir o apoio à decisão previsto (Secção~\ref{sec:limitacoes}); dar mais contexto à CNN; estudar o limiar em conjunto com o filtro; testar mais dimensões da janela do filtro, maiores e menores, e outros tipos de janela, para perceber como mudam os resultados; confirmar o filtro em dados novos; repetir com várias sementes e uma divisão por navio; e responder à RQ3 com um desenho fatorial.
 
 \appendix
 \raggedbottom
@@ -475,7 +474,7 @@ Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede a
 \section{Anexo: pormenores do janelamento}
 \label{sec:anexo}
 
-\textbf{Janelas.} Cada viagem começa no primeiro ponto e avança pelo passo até uma janela alcançar o fim. Nenhuma janela mistura viagens, mas, dentro de uma viagem, atravessam os intervalos de tempo, tal como a referência trata a viagem como uma só sequência. A última janela pode ficar mais curta do que $L$ (\resJZJanelasCurtas{} janelas curtas em J0 e \resJCJanelasCurtas{} em J50), sem pontos falsos, e uma viagem com no máximo $L$ pontos dá uma só janela.
+\textbf{Janelas.} Cada viagem começa no primeiro ponto e avança pelo passo até uma janela alcançar o fim. Nenhuma janela mistura viagens, mas, dentro de uma viagem, atravessam os intervalos de tempo, tal como a \emph{baseline} trata a viagem como uma só sequência. A última janela pode ficar mais curta do que $L$ (\resJZJanelasCurtas{} janelas curtas em J0 e \resJCJanelasCurtas{} em J50), sem pontos falsos, e uma viagem com no máximo $L$ pontos dá uma só janela.
 
 \textbf{Lotes e perda.} Para juntar janelas de comprimentos diferentes num lote usa-se um enchimento, que a perda ignora e que a rede volta a pôr a zero na entrada e depois de cada ReLU; a previsão de uma janela curta é assim a que teria sozinha. A perda do lote é a média sobre as posições reais, pelo que um ponto presente em duas janelas conta duas vezes.
 
@@ -487,10 +486,10 @@ Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede a
 \toprule
 Modelo & Conjunto & Classe & Pontos & Prec. & Sensib. & F1 & IoU \\
 \midrule
-Ref. & Treino & Nav. & \resBsTreinoNavReal & \resBsTreinoNavPrec & \resBsTreinoNavSens & \resBsTreinoNavF & \resBsTreinoNavIoU \\
-Ref. & Treino & Pesca & \resBsTreinoPescaReal & \resBsTreinoPescaPrec & \resBsTreinoPescaSens & \resBsTreinoPescaF & \resBsTreinoPescaIoU \\
-Ref. & Teste & Nav. & \resBsTesteNavReal & \resBsTesteNavPrec & \resBsTesteNavSens & \resBsTesteNavF & \resBsTesteNavIoU \\
-Ref. & Teste & Pesca & \resBsTestePescaReal & \resBsTestePescaPrec & \resBsTestePescaSens & \resBsTestePescaF & \resBsTestePescaIoU \\
+Base & Treino & Nav. & \resBsTreinoNavReal & \resBsTreinoNavPrec & \resBsTreinoNavSens & \resBsTreinoNavF & \resBsTreinoNavIoU \\
+Base & Treino & Pesca & \resBsTreinoPescaReal & \resBsTreinoPescaPrec & \resBsTreinoPescaSens & \resBsTreinoPescaF & \resBsTreinoPescaIoU \\
+Base & Teste & Nav. & \resBsTesteNavReal & \resBsTesteNavPrec & \resBsTesteNavSens & \resBsTesteNavF & \resBsTesteNavIoU \\
+Base & Teste & Pesca & \resBsTestePescaReal & \resBsTestePescaPrec & \resBsTestePescaSens & \resBsTestePescaF & \resBsTestePescaIoU \\
 J0 & Treino & Nav. & \resJZTreinoNavReal & \resJZTreinoNavPrec & \resJZTreinoNavSens & \resJZTreinoNavF & \resJZTreinoNavIoU \\
 J0 & Treino & Pesca & \resJZTreinoPescaReal & \resJZTreinoPescaPrec & \resJZTreinoPescaSens & \resJZTreinoPescaF & \resJZTreinoPescaIoU \\
 J0 & Teste & Nav. & \resJZTesteNavReal & \resJZTesteNavPrec & \resJZTesteNavSens & \resJZTesteNavF & \resJZTesteNavIoU \\
@@ -501,7 +500,7 @@ J50 & Teste & Nav. & \resJCTesteNavReal & \resJCTesteNavPrec & \resJCTesteNavSen
 J50 & Teste & Pesca & \resJCTestePescaReal & \resJCTestePescaPrec & \resJCTestePescaSens & \resJCTestePescaF & \resJCTestePescaIoU \\
 \bottomrule
 \end{tabular}
-\captionof{table}{Métricas por ponto e por classe no treino e no teste (otimista). Ref.: referência.}
+\captionof{table}{Métricas por ponto e por classe no treino e no teste (otimista). Base: \emph{baseline}.}
 \label{tab:classes}
 \end{center}
 

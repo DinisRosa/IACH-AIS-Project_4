@@ -7,7 +7,7 @@ Uma imagem por viagem dos conjuntos de teste e de validação, com a classe de c
 | Linha | O que é |
 |---|---|
 | real | classe anotada no conjunto de dados |
-| baseline | CNN 1D sobre a viagem completa (no relatório chama-se «referência») |
+| baseline | CNN 1D sobre a viagem completa |
 | J0 | a mesma CNN em janelas de 64 pontos, sem sobreposição |
 | J50 | a mesma CNN em janelas de 64 pontos, com 50 % de sobreposição |
 | baseline + pós-processamento | a baseline depois de um filtro gaussiano de 301 pontos sobre as probabilidades |

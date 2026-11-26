@@ -6,16 +6,16 @@ Para retomar o trabalho: ler `AGENTS.md` (regras) e `handoff.md` (ponto de situa
 
 ## Viagens em imagens
 
-**[Ver o que cada modelo previu em cada viagem](viagens/README.md)**: 18 viagens de teste (real, baseline, J0, J50 e baseline com pós-processamento) e 18 de validação (real, baseline e baseline com pós-processamento). Na galeria, «baseline» é o modelo a que o relatório chama «referência».
+**[Ver o que cada modelo previu em cada viagem](viagens/README.md)**: 18 viagens de teste (real, baseline, J0, J50 e baseline com pós-processamento) e 18 de validação (real, baseline e baseline com pós-processamento).
 
 ## Estado
 
 | Parte | Estado |
 |---|---|
 | Divisão por viagem e preparação | Feito |
-| CNN de referência sobre a viagem completa | Fechada: época 162, limiar 0,65 |
+| CNN baseline sobre a viagem completa | Fechada: época 162, limiar 0,65 |
 | A mesma CNN sobre janelas (J0 sem sobreposição, J50 com 50 %) | Feito |
-| Medição final no `validation` (só a referência) | Feita, uma única abertura |
+| Medição final no `validation` (só a baseline) | Feita, uma única abertura |
 | Filtro temporal gaussiano de 301 pontos | Feito |
 | Relatório `latex/relatorio_pt.tex` | Completo (10 páginas); falta a leitura do autor |
 
@@ -117,12 +117,12 @@ Executar a partir da raiz, com `iach-ais-venv-4/bin/python -m ais.cli.<nome>`. O
 | `build_clean_dataset --split train\|validation\|test` | Constrói a base limpa de cada conjunto. |
 | `count_anomalies_train` | Conta saltos e inversões de rumo no treino. |
 | `run_phase1_training <config>` | Treina a CNN sobre a viagem completa. |
-| `select_on_test` | Escolhe época e limiar da referência no `test`. **Não repetir.** |
-| `freeze_baseline` | Congela a referência escolhida. |
+| `select_on_test` | Escolhe época e limiar da baseline no `test`. **Não repetir.** |
+| `freeze_baseline` | Congela a baseline escolhida. |
 | `build_final_results` | Macros `resultados.tex` e figuras `final_*.png` (estas já não entram no relatório). |
 | `run_window_training <config>` | Treina a CNN sobre janelas. |
 | `select_windows_on_test` | Escolhe J0 e J50 no `test`. **Não repetir.** |
-| `build_window_results [--report-figures-only]` | Macros `resultados_janelas.tex` e figuras `janelas_*`; com a opção, só as duas figuras `*_ref.png` do relatório (exige a autorização `test_report_figures` e regista o acesso). |
+| `build_window_results [--report-figures-only]` | Macros `resultados_janelas.tex` e figuras `janelas_*`; com a opção, só as três figuras do relatório com o nome do modelo (`janelas_viagens_baseline`, `janelas_linha_temporal_baseline`, `janelas_perda`; exige a autorização `test_report_figures_baseline` e regista o acesso). |
 | `final_validation` | Medição final no `validation`. **Não repetir.** |
 | `build_validation_results` | Macros e figuras da medição final, a partir de resultados guardados. |
 | `analyze_error_runs --split test\|train` | Blocos de erro (o `test` exige autorização). |
