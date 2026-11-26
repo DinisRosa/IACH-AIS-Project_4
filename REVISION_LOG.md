@@ -1186,3 +1186,13 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** 10 páginas, sem referências em falta; 662 números de linha nas margens; ligação presente no PDF; endereço público respondeu 200 sem autenticação. Testes não repetidos (sem alterações a código).
 - **Pendentes:** envio a pedido; leitura do relatório.
+
+### REV-079 — E-mail do autor no relatório (alteração do utilizador)
+
+- **Data:** 2026-11-26, alterado às 01:02 WET; registado até 01:03 WET.
+- **Cor:** Vermelho-tijolo `#B22222`, RGB (178, 34, 34). Marcador no `PROGRESS.md`; no `.tex` o texto ficou como o utilizador o escreveu (preto).
+- **O quê:** no bloco do autor de `latex/relatorio_pt.tex`, o endereço de e-mail passou a ser o institucional (`@student.uc.pt`). README, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** alteração feita pelo próprio utilizador, que pediu para a incluir no commit.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** 10 páginas, sem referências em falta; 662 números de linha nas margens; página 1 revista em imagem.
+- **Pendentes:** envio a pedido.

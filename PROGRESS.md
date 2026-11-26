@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-078, 2026-11-26 01:01 WET; refeito em REV-066)
+## Estado atual (REV-079, 2026-11-26 01:03 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -26,7 +26,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-078.
+- **Registo de revisões:** REV-001 a REV-079.
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -47,7 +47,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-079), com cor, salvo instrução.
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-080), com cor, salvo instrução.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
 - **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
@@ -59,7 +59,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md` | Alinhados em REV-067 |
-| `README.md`, `handoff.md` | Alinhados em REV-078 |
+| `README.md`, `handoff.md` | Alinhados em REV-079 |
 | `viagens/` | Galeria gerada por código (REV-073) e a sua versão `galeria_viagens.tex`/`.pdf` (REV-077); não editar à mão |
 | `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
 | `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
@@ -1422,3 +1422,16 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Envio a pedido; leitura do relatório.
+
+### 2026-11-26l — E-mail do autor alterado pelo utilizador (REV-079), 2026-11-26 01:03 WET
+
+[REV-079 | cor #B22222]
+
+**Feito**
+- O utilizador mudou no relatório o e-mail do autor para o institucional e pediu para atualizar o commit; fica num commit novo, sem reescrever o anterior.
+
+**Validado**
+- 10 páginas, sem referências em falta; 662 números de linha nas margens; página 1 revista.
+
+**Pendente**
+- Envio a pedido (REV-078 e REV-079); leitura do relatório.
