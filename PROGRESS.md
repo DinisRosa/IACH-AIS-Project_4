@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-080, 2026-11-26 01:08 WET; refeito em REV-066)
+## Estado atual (REV-081, 2026-11-26 01:16 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -26,7 +26,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-080.
+- **Registo de revisões:** REV-001 a REV-081.
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -47,7 +47,8 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-081), com cor, salvo instrução.
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-082), com cor, salvo instrução.
+- **Ordem dos anexos:** antes das referências, como no modelo IJCAI; confirmar com o enunciado se este pedir o contrário.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
 - **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
@@ -59,7 +60,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md` | Alinhados em REV-067 |
-| `README.md`, `handoff.md` | Alinhados em REV-080 |
+| `README.md`, `handoff.md` | Alinhados em REV-081 |
 | `viagens/` | Galeria gerada por código (REV-073) e a sua versão `galeria_viagens.tex`/`.pdf` (REV-077); não editar à mão |
 | `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
 | `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
@@ -1472,3 +1473,19 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório.
+
+### 2026-11-26p — Página 6 aliviada (REV-081), 2026-11-26 01:16 WET
+
+[REV-081 | cor #5F9EA0]
+
+**Feito**
+- Mais texto mínimo nas páginas mistas e Figura 6 um pouco menor; Tabelas 3 e 4 na página 7.
+
+**Validado**
+- 10 páginas, sem referências em falta; 662 números de linha nas margens; páginas 6 a 9 revistas. Testes não repetidos (sem alterações a código).
+
+**Problemas e decisões**
+- Os anexos ficam antes das referências: é o que manda o modelo do IJCAI (kit de 2027). O enunciado não está no projeto e não foi visto.
+
+**Pendente**
+- Decisão do utilizador sobre a ordem dos anexos; envio a pedido; leitura do relatório.

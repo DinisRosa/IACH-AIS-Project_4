@@ -62,9 +62,9 @@
     uc2024278343@student.uc.pt
 }
 
-% Figuras no sítio certo (REV-080): admitem-se mais figuras no topo de cada página.
+% Figuras no sítio certo (REV-080, REV-081): até 95 % de figuras no topo, mas pelo menos 25 % de texto nas páginas mistas.
 \renewcommand{\dbltopfraction}{0.95}
-\renewcommand{\textfraction}{0.05}
+\renewcommand{\textfraction}{0.25}
 \setcounter{dbltopnumber}{4}
 \setcounter{totalnumber}{6}
 \begin{document}
@@ -355,7 +355,7 @@ J50 & \resJCEpoca & \resJCLimiar & \resJCTreinoAcc & \resJCTesteAcc & \resJCTest
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/janelas_perda.png}
+\includegraphics[width=0.8\textwidth]{figures/janelas_perda.png}
 \caption{Perda por ponto ao longo das épocas, nas viagens de treino e nas de teste. A linha tracejada marca a época escolhida.}
 \label{fig:perda}
 \end{figure*}

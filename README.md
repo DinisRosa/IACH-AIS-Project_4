@@ -77,7 +77,7 @@ git show docs-historico-v1:docs/04_pos_processamento.md
 
 - `AGENTS.md`: regras do projeto (fonte única). `CLAUDE.md`: manda lê-las.
 - `handoff.md`: ponto de situação para uma nova conversa.
-- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-080).
+- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-081).
 - `docs/`:
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos, modelos e protocolos, acesso aos dados e referências verificadas.
   - `01_dados_e_preparacao.md`: colunas, unidades, entradas da CNN e preparação.

@@ -1208,3 +1208,15 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** oito variantes comparadas numa cópia temporária; 10 páginas, sem referências em falta; 662 números de linha nas margens; as 10 páginas revistas em imagem.
 - **Pendentes:** envio a pedido; leitura do relatório.
+
+### REV-081 — Página 6 aliviada
+
+- **Data:** 2026-11-26, até 01:16 WET.
+- **Cor:** Azul-cadete `#5F9EA0`, RGB (95, 158, 160). Marcador no `PROGRESS.md`; no `.tex` só mudou a disposição, sem texto novo.
+- **O quê:** em `latex/relatorio_pt.tex`, `\textfraction` de 0,05 para 0,25 e a Figura 6 a 80 % da largura (era 85 %). README, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** observação trazida pelo utilizador: a página 6 tinha duas figuras e três tabelas com muito pouco texto.
+- **Resultado:** as Tabelas 3 e 4 passam para a página 7; a Tabela 5 junta-se à Figura 8 na página 8.
+- **Não aplicado:** a segunda observação (anexos depois das referências). O modelo oficial do IJCAI manda pôr os anexos **antes** das referências (confirmado no `ijcai27.tex` do kit de autor em ijcai.org; o kit de 2026 não foi consultado). Ficou uma pré-visualização alternativa, fora do repositório, para o utilizador comparar com o enunciado.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** variantes comparadas numa cópia temporária; 10 páginas, sem referências em falta; 662 números de linha nas margens; páginas 6 a 9 revistas.
+- **Pendentes:** decisão sobre a ordem dos anexos; envio a pedido.
