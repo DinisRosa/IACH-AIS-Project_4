@@ -1176,3 +1176,13 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado** (documento novo); o relatório não muda.
 - **Validação:** 256 testes; 12 páginas, 36 viagens; páginas revistas em imagem.
 - **Pendentes:** envio a pedido.
+
+### REV-078 — Anexo B com a ligação para a galeria
+
+- **Data:** 2026-11-26, até 01:01 WET.
+- **Cor:** Azul-vivo `#1F6FEB`, RGB (31, 111, 235). No `.tex`, em `\revtext{rev078}`.
+- **O quê:** em `latex/relatorio_pt.tex`: «Anexo B: galeria de viagens», com a descrição e a ligação `https://github.com/DinisRosa/IACH-AIS-Project_4/blob/main/viagens/galeria_viagens.pdf`; uma frase em «Janelas e sobreposição (RQ1)» a remeter para o anexo; em «Divisão dos dados», as três utilizações das anotações da validação passam a «para medir», com a indicação de que depois serviram para figuras. README, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** pedido do utilizador (se fosse boa ideia). A galeria **não** foi incorporada no relatório: as suas 12 páginas levariam o relatório acima do máximo de 15. A frase da validação ficaria incompleta ao citar a galeria.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** 10 páginas, sem referências em falta; 662 números de linha nas margens; ligação presente no PDF; endereço público respondeu 200 sem autenticação. Testes não repetidos (sem alterações a código).
+- **Pendentes:** envio a pedido; leitura do relatório.

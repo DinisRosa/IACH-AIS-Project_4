@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-077, 2026-11-26 00:50 WET; refeito em REV-066)
+## Estado atual (REV-078, 2026-11-26 01:01 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -21,12 +21,12 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Perguntas:** RQ1, as janelas não superam a viagem completa; RQ2, o filtro reduz muito a fragmentação, com a ressalva acima; RQ3, sem resposta.
 - **Fonte dos números:** macros em `latex/generated/` e ficheiros em `results/` (não versionados).
 - **Conjuntos reservados (`results/access_log.jsonl`):** `test` com 2 aberturas de seleção, 2 leituras de diagnóstico e, sobre previsões guardadas, 3 análises de blocos de erro, 1 avaliação de janelas e 1 geração de figuras do relatório, 1 galeria de viagens (REV-073, gerada de novo em REV-072) e 1 geração de figuras com «baseline» (REV-072). `validation` aberto 1 vez (medição final, **gasto**); as anotações foram depois reutilizadas nas 2 versões do filtro e, em REV-073, lidas com as previsões guardadas para a galeria (2 vezes) e para a Figura 7 (REV-074). Os três conjuntos foram lidos por inteiro só para construir as bases limpas (REV-015).
-- **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, números de linha ligados; todo o texto a preto desde a REV-072; em REV-068 saiu do resumo a ressalva sobre a medição do filtro), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
+- **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, números de linha ligados; todo o texto a preto desde a REV-072, salvo o da REV-078 a cor; Anexo B com a ligação para a galeria; em REV-068 saiu do resumo a ressalva sobre a medição do filtro), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
 - **Testes:** 256 (sintéticos, mais um que lê 3 viagens de treino), a passar.
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-077.
+- **Registo de revisões:** REV-001 a REV-078.
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -47,7 +47,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-078), com cor, salvo instrução.
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-079), com cor, salvo instrução.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
 - **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
@@ -59,7 +59,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md` | Alinhados em REV-067 |
-| `README.md`, `handoff.md` | Alinhados em REV-077 |
+| `README.md`, `handoff.md` | Alinhados em REV-078 |
 | `viagens/` | Galeria gerada por código (REV-073) e a sua versão `galeria_viagens.tex`/`.pdf` (REV-077); não editar à mão |
 | `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
 | `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
@@ -1405,3 +1405,20 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório.
+
+### 2026-11-26k — Anexo B com a ligação para a galeria (REV-078), 2026-11-26 01:01 WET
+
+[REV-078 | cor #1F6FEB]
+
+**Feito**
+- Anexo B no relatório, com a ligação para o PDF da galeria no GitHub; frase de remissão nos resultados; precisão sobre o uso das anotações da validação.
+
+**Validado**
+- 10 páginas, sem referências em falta; 662 números de linha nas margens; ligação clicável no PDF; endereço público respondeu 200.
+
+**Decisões**
+- A galeria não entra como páginas do relatório (passaria o máximo de 15).
+- A ligação aponta para o ramo `main`: mover ou renomear o PDF parte-a.
+
+**Pendente**
+- Envio a pedido; leitura do relatório.
