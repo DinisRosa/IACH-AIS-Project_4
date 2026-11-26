@@ -1,12 +1,12 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-26 00:03 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-071. As horas são WET, lidas com `date` ou do `git log`.
+**Atualizado em 2026-11-26 00:04 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-071. As horas são WET, lidas com `date` ou do `git log`.
 
 ## Ponto de situação em quatro linhas
 
 - O trabalho técnico está **feito**: preparação, CNN de referência, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O documento ativo é o **relatório** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto), que substituiu a proposta.
-- **O próximo passo é continuar o relatório** a partir da leitura do utilizador (revisão REV-072, com cor). As REV-069 (duas janelas do filtro), REV-070 (números de linha) e REV-071 (página 8) estão em commits locais, **por enviar**.
+- **O próximo passo é continuar o relatório** a partir da leitura do utilizador (revisão REV-072, com cor). As REV-069 (duas janelas do filtro), REV-070 (números de linha) e REV-071 (página 8) foram enviadas para o GitHub a pedido.
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -26,7 +26,7 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 |---|---|---|
 | `pytest tests/` | 248 passaram | 23:55 |
 | Relatório (vigilante, versão da REV-070) | 10 páginas, sem referências em falta; 647 números de linha nas margens; 2026-11-26 | 00:03 |
-| GitHub (`git fetch` e `git ls-remote`) | confirmado antes da REV-069: `main` igual ao remoto (`aa918ae`); etiquetas presentes | 23:42 |
+| GitHub (`git fetch`, antes do envio) | `main` 4 commits à frente e 0 atrás de `origin/main`; envio pedido pelo utilizador; 2026-11-26 | 00:04 |
 | Vigilante do LaTeX | um a correr, com a versão nova (reiniciado às 00:00 de 2026-11-26) | 00:03 |
 | Recuperação da proposta antiga (num clone temporário) | os dois comandos do `README.md` funcionaram e a proposta compilou | 23:12 |
 | Revisão independente do relatório (subagente Opus, só leitura; anterior à REV-068) | sem erros graves; achados aplicados | 23:00 |
@@ -37,6 +37,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `442a19f` | 2026-11-26 00:03 | Preenche a página 8 do relatório com o início do anexo (REV-071) |
 | `2b91f35` | 2026-11-25 23:59 | Documenta como compilar com os números de linha nas margens (REV-070) |
 | `7cef3e2` | 2026-11-25 23:56 | Acrescenta um commit em falta à cronologia do handoff (REV-069) |
 | `0760bec` | 2026-11-25 23:56 | Conta no relatório as duas janelas do filtro (REV-069) |
@@ -180,7 +181,7 @@ bash latex/watch_latex.sh
 
 1. **Continuar o relatório** com o que o utilizador pedir (REV-072).
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. As REV-069 a REV-071 estão por enviar; confirmar com `git status -sb`.
+3. **Push:** só a pedido. O envio até à REV-071 foi pedido; confirmar com `git status -sb`.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 
