@@ -1353,3 +1353,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Envio a pedido (REV-074 e REV-075); leitura do relatório.
+
+### 2026-11-26g — Envio das REV-074 e REV-075, 2026-11-26 00:40 WET
+
+**Feito**
+- O utilizador pediu o envio do `main` para o GitHub.
+
+**Validado**
+- Antes do envio: `main` 4 commits à frente de `origin/main` e nenhum atrás; código, teste, autorização, três figuras e documentos.
+
+**Pendente**
+- Leitura do relatório.
