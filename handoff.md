@@ -1,13 +1,13 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-26 01:08 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-080 (a REV-072 foi aplicada depois da 073). As horas são WET, lidas com `date` ou do `git log`.
+**Atualizado em 2026-11-26 01:09 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-080 (a REV-072 foi aplicada depois da 073). As horas são WET, lidas com `date` ou do `git log`.
 
 ## Ponto de situação em quatro linhas
 
 - O trabalho técnico está **feito**: preparação, CNN baseline, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O documento ativo é o **relatório** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto), que substituiu a proposta.
 - **Galeria (REV-073)** em `viagens/`, ligada ao `README.md` e enviada; **REV-072** aplicada: o modelo da viagem completa chama-se **baseline** e o relatório está todo a preto.
-- **REV-074** a **REV-077** enviadas. **REV-078** (Anexo B com a ligação para `viagens/galeria_viagens.pdf` no GitHub; não mover esse ficheiro), **REV-079** (e-mail do autor) e **REV-080** (Figura 8 antes dos anexos) em commits locais, **por enviar**. **Por fazer:** a leitura do relatório pelo utilizador (REV-081).
+- **REV-074** a **REV-080** com envio pedido pelo utilizador. O Anexo B liga a `viagens/galeria_viagens.pdf` no GitHub: não mover esse ficheiro. **Por fazer:** a leitura do relatório pelo utilizador (REV-081).
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -27,7 +27,7 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 |---|---|---|
 | `pytest tests/` | 256 passaram; 2026-11-26 | 00:50 |
 | Relatório (vigilante) | 10 páginas, sem referências em falta; 662 números de linha nas margens; Figura 8 antes do Anexo A; 2026-11-26 | 01:08 |
-| GitHub (`git push` da REV-077) | `main` local e remoto em `ce81668` antes da REV-078; 2026-11-26 | 00:52 |
+| GitHub (`git fetch`, antes do envio) | `main` 4 commits à frente e 0 atrás de `origin/main`; envio pedido; 2026-11-26 | 01:09 |
 | Vigilante do LaTeX | um a correr, com a versão nova (reiniciado às 00:00 de 2026-11-26) | 00:03 |
 | Recuperação da proposta antiga (num clone temporário) | os dois comandos do `README.md` funcionaram e a proposta compilou | 23:12 |
 | Revisão independente do relatório (subagente Opus, só leitura; anterior à REV-068) | sem erros graves; achados aplicados | 23:00 |
@@ -38,6 +38,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `880c146` | 2026-11-26 01:08 | Põe a Figura 8 antes dos anexos (REV-080) |
 | `4d8512b` | 2026-11-26 01:04 | Passa o Anexo B a preto (REV-078) |
 | `bc210da` | 2026-11-26 01:03 | Muda o e-mail do autor no relatório para o institucional (REV-079) |
 | `6f94ec1` | 2026-11-26 01:01 | Acrescenta ao relatório o anexo com a ligação para a galeria (REV-078) |
@@ -200,7 +201,7 @@ bash latex/watch_latex.sh
 
 1. Os ajustes que vierem da leitura do utilizador (REV-081).
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. As REV-078 a REV-080 estão por enviar; confirmar com `git status -sb`. O repositório é público.
+3. **Push:** só a pedido. O envio até à REV-080 foi pedido; confirmar com `git status -sb`. O repositório é público.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 
