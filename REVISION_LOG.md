@@ -1231,3 +1231,13 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** 10 páginas, sem referências em falta; 662 números de linha nas margens; ligação da galeria presente; páginas 8 a 10 revistas.
 - **Pendentes:** envio a pedido; leitura do relatório.
+
+### REV-083 — Handoff e documentos para uma nova conversa
+
+- **Data:** 2026-11-26, até 01:28 WET.
+- **Cor:** Verde-musgo `#4B6F44`, RGB (75, 111, 68). Marcador no `docs/00` e no `PROGRESS.md`; sem alterações ao `.tex`.
+- **O quê:** `handoff.md` reescrito de raiz; `PROGRESS.md` (estado, acessos, decisões, pendências, artefactos), `README.md` e `docs/00` §1, §4 e §6 alinhados com as REV-069 a REV-082.
+- **Porquê:** pedido do utilizador, para continuar noutra conversa.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação:** 256 testes; relatório do zero com 10 páginas; galeria conferida; ligação do Anexo B 200; contagens de acessos tiradas de `results/access_log.jsonl`.
+- **Pendentes:** leitura do relatório.

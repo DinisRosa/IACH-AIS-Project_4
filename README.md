@@ -17,7 +17,8 @@ Para retomar o trabalho: ler `AGENTS.md` (regras) e `handoff.md` (ponto de situa
 | A mesma CNN sobre janelas (J0 sem sobreposição, J50 com 50 %) | Feito |
 | Medição final no `validation` (só a baseline) | Feita, uma única abertura |
 | Filtro temporal gaussiano de 301 pontos | Feito |
-| Relatório `latex/relatorio_pt.tex` | Completo (10 páginas); falta a leitura do autor |
+| Relatório `latex/relatorio_pt.tex` | Completo (10 páginas, anexos depois das referências); falta a leitura do autor |
+| Galeria de viagens (`viagens/`) | Feita: página, 36 imagens e PDF |
 
 Os números estão no relatório (gerados por código) e em `PROGRESS.md`. Em resumo: as janelas não superam a viagem completa; o filtro reduz muito a fragmentação, numa medição que **não é independente**; a interação entre os dois (RQ3) fica sem resposta.
 
@@ -27,7 +28,7 @@ Testes: 256 a passar (`iach-ais-venv-4/bin/python -m pytest tests/`).
 
 ## Relatório
 
-O PDF é gerado em `latex/build/relatorio_pt.pdf` (pasta não versionada). Para recompilar automaticamente a cada alteração, usar o vigilante local (não versionado):
+O PDF é gerado em `latex/build/relatorio_pt.pdf` (pasta não versionada, por isso o PDF do relatório não está no GitHub). O Anexo B liga a `viagens/galeria_viagens.pdf` no ramo `main`: não mover esse ficheiro. Para recompilar automaticamente a cada alteração, usar o vigilante local (não versionado):
 
 ```bash
 bash latex/watch_latex.sh
@@ -77,7 +78,7 @@ git show docs-historico-v1:docs/04_pos_processamento.md
 
 - `AGENTS.md`: regras do projeto (fonte única). `CLAUDE.md`: manda lê-las.
 - `handoff.md`: ponto de situação para uma nova conversa.
-- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-082).
+- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-083).
 - `docs/`:
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos, modelos e protocolos, acesso aos dados e referências verificadas.
   - `01_dados_e_preparacao.md`: colunas, unidades, entradas da CNN e preparação.

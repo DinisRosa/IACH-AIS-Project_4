@@ -1,13 +1,14 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-26 01:23 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-082 (a REV-072 foi aplicada depois da 073). As horas são WET, lidas com `date` ou do `git log`.
+**Atualizado em 2026-11-26 01:27 WET (UTC+00:00).** Reescrito de raiz em REV-083, para continuar numa nova conversa. As horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-082).
 
-## Ponto de situação em quatro linhas
+## Ponto de situação
 
 - O trabalho técnico está **feito**: preparação, CNN baseline, janelas (J0, J50), medição final no `validation` e filtro temporal.
-- O documento ativo é o **relatório** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto), que substituiu a proposta.
-- **Galeria (REV-073)** em `viagens/`, ligada ao `README.md` e enviada; **REV-072** aplicada: o modelo da viagem completa chama-se **baseline** e o relatório está todo a preto.
-- **REV-074** a **REV-082** com envio pedido pelo utilizador. Os anexos estão depois das referências por escolha sua (não repor a ordem do IJCAI sem pedido). O Anexo B liga a `viagens/galeria_viagens.pdf` no GitHub: não mover. **Por fazer:** a leitura do relatório pelo utilizador (REV-083).
+- O **relatório** `latex/relatorio_pt.tex` está completo: 10 páginas, todo a preto, com os anexos **depois** das referências.
+- A **galeria de viagens** está em `viagens/` (página, 36 imagens, PDF e `.tex`), ligada ao `README.md` e ao Anexo B do relatório.
+- O GitHub é **público**. O utilizador pediu o envio desta atualização (REV-083); confirmar com `git status -sb` que o `main` local e o remoto estão iguais.
+- **Próximo passo:** a leitura do relatório pelo utilizador e os ajustes que dela saírem (REV-084).
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -19,25 +20,26 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 3. O topo do `PROGRESS.md` (estado, decisões, pendências).
 4. `latex/relatorio_pt.tex` ou o PDF em `latex/build/relatorio_pt.pdf`.
 5. Só se for preciso: `docs/00` (modelos, protocolos, acesso e referências verificadas), `docs/01` (dados) e `REVISION_LOG.md`.
-6. Antes de agir: `git status -sb`, `git log --oneline -10` e os testes.
+6. Antes de agir: `git status -sb`, `git log --oneline -10`, os testes e ver se há um vigilante do LaTeX a correr (o utilizador pode ter alterado o `.tex`).
 
-## Última validação
+## Última validação (2026-11-26)
 
-| Verificação | Resultado | Hora (WET; 2026-11-25 salvo indicação) |
+| Verificação | Resultado | Hora (WET) |
 |---|---|---|
-| `pytest tests/` | 256 passaram; 2026-11-26 | 00:50 |
-| Relatório (vigilante) | 10 páginas, sem referências em falta; 662 números de linha nas margens; anexos na página 10; 2026-11-26 | 01:22 |
-| GitHub (`git fetch`, antes do envio) | `main` 2 commits à frente e 0 atrás de `origin/main`; envio pedido; 2026-11-26 | 01:23 |
-| Vigilante do LaTeX | um a correr, com a versão nova (reiniciado às 00:00 de 2026-11-26) | 00:03 |
-| Recuperação da proposta antiga (num clone temporário) | os dois comandos do `README.md` funcionaram e a proposta compilou | 23:12 |
-| Revisão independente do relatório (subagente Opus, só leitura; anterior à REV-068) | sem erros graves; achados aplicados | 23:00 |
+| `pytest tests/` | 256 passaram | 01:26 |
+| Relatório, compilado do zero (`watch_latex.sh --once`) | 10 páginas, sem referências em falta; 662 números de linha, todos nas margens; ligação da galeria presente | 01:26 |
+| Galeria | `galeria_viagens.tex` igual ao que o programa gera da página; 36 imagens iguais às de `proveniencia.json`; PDF com 12 páginas | 01:26 |
+| GitHub (`git fetch`, `git ls-remote`) | `main` local e remoto em `a6d8796` antes desta revisão; etiquetas `proposta-pt-v1` e `docs-historico-v1` presentes | 01:26 |
+| Ligação do Anexo B, sem sessão iniciada | respondeu 200 | 01:26 |
+| Vigilante do LaTeX | um a correr no terminal do utilizador (versão que compila até estabilizar) | 01:22 |
 
-O que mudar depois destas horas **não foi** validado por este handoff.
+Não repetido nesta atualização: a recuperação da proposta antiga num clone (2026-11-25, 23:12) e a revisão independente do relatório (2026-11-25, 23:00, anterior à REV-068; o texto mudou depois). O que mudar depois destas horas **não foi** validado por este handoff.
 
-## Cronologia dos commits recentes
+## Cronologia dos commits desta conversa
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `a6d8796` | 2026-11-26 01:23 | Regista o pedido de envio das REV-081 e REV-082 |
 | `7b9317a` | 2026-11-26 01:22 | Põe os anexos depois das referências (REV-082) |
 | `da2d2aa` | 2026-11-26 01:16 | Alivia a página 6 do relatório (REV-081) |
 | `3672387` | 2026-11-26 01:09 | Regista o pedido de envio das REV-078 a REV-080 |
@@ -64,44 +66,24 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 | `7cef3e2` | 2026-11-25 23:56 | Acrescenta um commit em falta à cronologia do handoff (REV-069) |
 | `0760bec` | 2026-11-25 23:56 | Conta no relatório as duas janelas do filtro (REV-069) |
 | `aa918ae` | 2026-11-25 23:39 | Prepara o handoff para uma nova conversa (REV-068) |
-| `6249d54` | 2026-11-25 23:37 | Regista o pedido de envio da REV-068 |
-| `5ee8117` | 2026-11-25 23:35 | Retira do resumo a ressalva sobre o filtro (REV-068) |
-| `d750eb1` | 2026-11-25 23:24 | Regista que nenhum vigilante fica a correr (REV-067) |
-| `79eca07` | 2026-11-25 23:23 | Regista que o vigilante antigo foi parado (REV-067) |
-| `552c0fc` | 2026-11-25 23:22 | Atualiza o handoff e os registos depois de confirmar o GitHub (REV-067) |
-| `7b9005a` | 2026-11-25 23:18 | Regista o arquivo dos documentos e atualiza o handoff (REV-067) |
-| `463606e` | 2026-11-25 23:18 | Arquiva os documentos concluídos e reescreve docs/00 (REV-067) |
-| `b8580b5` | 2026-11-25 23:13 | Reescreve o handoff para uma nova conversa (REV-066) |
-| `edc3dda` | 2026-11-25 23:12 | Atualiza o estado e o registo de revisões (REV-066) |
-| `8950471` | 2026-11-25 23:12 | Atualiza regras, README e docs depois de retirar a proposta (REV-066) |
-| `100e2b2` | 2026-11-25 23:12 | Retira a proposta em LaTeX e guarda o seu PDF (REV-066) |
-| `661da35` | 2026-11-25 23:03 | Regista o envio do main e da etiqueta para o GitHub (REV-065) |
-| `280459d` | 2026-11-25 23:01 | Fecha os registos da REV-065 |
-| `ace6b2b` | 2026-11-25 23:01 | Aplica a revisão independente ao relatório (REV-065) |
-| `08682a4` | 2026-11-25 22:55 | Alinha o Marco 5 e fecha a releitura nos documentos (REV-065) |
-| `fd81dc8` | 2026-11-25 22:55 | Relatório: introdução, trabalho relacionado, dados, ética, conclusões e resumo (REV-065) |
-| `219f471` | 2026-11-25 22:44 | Corrige a hora das entradas da REV-065 |
-| `d993734` | 2026-11-25 22:44 | Registos da REV-065 e verificação bibliográfica |
-| `4b799bd` | 2026-11-25 22:44 | Relatório: método, protocolo, resultados, anexo e limitações (REV-065) |
-| `ea972d5` | 2026-11-25 22:39 | Gera as macros dos blocos de erro e as duas figuras do relatório (REV-065) |
-| `b06dddc` | 2026-11-25 22:38 | Macros dos blocos de erro e figuras do relatório com «referência» (REV-065) |
-| `c6cbf83` | 2026-11-25 22:37 | Versão de segurança e esqueleto do relatório (REV-065) |
-| `38f2857` | 2026-11-25 22:37 | Plano de reescrita da proposta como relatório (REV-064) |
-| `7d60861` | 2026-11-25 21:24 | Última versão da proposta (REV-063; etiqueta `proposta-pt-v1`) |
 
-O commit desta atualização do handoff vem a seguir e não está na tabela; confirmar com `git status -sb` se já foi enviado.
+O commit desta atualização do handoff vem a seguir e não está na tabela. Os anteriores veem-se com `git log`.
 
-## O que se fez nesta conversa (2026-11-25, à noite)
+## O que se fez nesta conversa (2026-11-25, 23:40, a 2026-11-26)
 
-1. Leitura do projeto e diagnóstico da proposta (misturava proposta e relatório, repetia assuntos, tinha contradições).
-2. Plano da reescrita (REV-064; arquivado, era o `docs/06`); o utilizador aceitou as decisões D1 a D8.
-3. Relatório novo (REV-065): oito secções, anexo e bibliografia; macros novas dos blocos de erro; duas figuras com «referência»; referências confirmadas nos artigos; revisão independente aplicada.
-4. Push do `main` e da etiqueta, a pedido.
-5. Arrumação (REV-066): proposta em LaTeX retirada, PDF guardado, build do relatório direto em `latex/build/`, documentos refeitos.
-6. Documentação (REV-067): ficam `docs/00` (reescrito) e `docs/01`; `docs/02` a `06` na etiqueta `docs-historico-v1`; envio para o GitHub a pedido.
-7. O utilizador confirmou que a pasta `docs` fica assim (não repor o `05` nem o `06`), iniciou o vigilante novo e pediu para confirmar o GitHub, atualizar os registos e voltar a enviar.
-8. Ajuste ao resumo (REV-068): retirada a ressalva sobre o filtro, PDF recompilado e enviado ao utilizador, push a pedido.
-9. Handoff e registos atualizados e validados de novo, para continuar numa conversa nova.
+| Revisão | O quê |
+|---|---|
+| REV-069 | O relatório conta as duas janelas do filtro: 13 pontos (ganho pequeno) e 301; mais valores e tipos de janela em trabalho futuro |
+| REV-070, 071 | Números de linha nas margens (o vigilante compila até estabilizar); página sem coluna vazia |
+| REV-072 | O modelo da viagem completa passa a chamar-se **baseline** (era «referência»); todo o texto a preto |
+| REV-073, 077 | Galeria de viagens em `viagens/` e a sua versão em LaTeX e PDF |
+| REV-074, 075 | Figura 7 com «baseline»; legendas das Figuras 3 e 8 fora das barras e curvas |
+| REV-076 | Legenda da Tabela 6 explica porque os valores do teste são otimistas |
+| REV-078 | Anexo B com a ligação para a galeria no GitHub |
+| REV-079 | E-mail do autor passou ao institucional (alteração do próprio utilizador) |
+| REV-080, 081 | Figura 8 antes dos anexos; página 6 com mais texto |
+| REV-082 | Anexos depois das referências |
+| REV-083 | Esta atualização do handoff e dos documentos |
 
 ## Estado e resultados
 
@@ -112,43 +94,67 @@ Dataset: 123 viagens, 1 026 279 pontos; divisão por viagem, seed 42: treino 87 
 | Baseline (época 162, limiar 0,65) | exatidão 94,7 % | `test` (otimista) |
 | Baseline, medição final | exatidão 94,4 % (classe maioritária: 83,2 %) | `validation` |
 | J0 (época 8, limiar 0,60) e J50 (época 4, limiar 0,75) | 93,4 % e 93,7 %; J50 fragmenta menos | `test` |
-| Filtro de 301 pontos | 94,4 % → 94,8 %; segmentos de pesca previstos 486 → 32 (reais 18); piora 7 de 18 viagens | `validation`, **não independente** |
+| Filtro de 301 pontos (só a baseline) | 94,4 % → 94,8 %; segmentos de pesca previstos 486 → 32 (reais 18); piora 7 de 18 viagens | `validation`, **não independente** |
 
 RQ1: as janelas não superam a viagem completa. RQ2: o filtro reduz muito a fragmentação. RQ3: sem resposta. Critérios de sucesso: (i) cumprido com ressalvas, (ii) em parte, (iii) não.
 
 ## O relatório
 
-Estrutura: resumo; 1 Introdução; 2 Trabalho relacionado; 3 Dados e preparação; 4 Método; 5 Protocolo experimental; 6 Resultados e discussão; 7 Limitações, ética e dimensão humana; 8 Conclusões e trabalho futuro; anexo do janelamento.
+**Ordem:** resumo; 1 Introdução; 2 Trabalho relacionado; 3 Dados e preparação; 4 Método; 5 Protocolo experimental; 6 Resultados e discussão; 7 Limitações, ética e dimensão humana; 8 Conclusões e trabalho futuro; referências (página 9); Anexo A, pormenores do janelamento e Tabela 6; Anexo B, galeria de viagens (página 10).
 
-**Compilar:** `bash latex/watch_latex.sh` (local, não versionado; recompila para `latex/build/relatorio_pt.pdf`) ou os comandos do `README.md`. O vigilante só reage a `relatorio_pt.tex` e `references.bib`: depois de gerar macros ou figuras, reiniciá-lo. Desde a REV-070 compila até o `.aux` estabilizar (para os números de linha ficarem nas margens) e `--once` compila uma só vez. Depois de mudar o próprio script, reiniciar o vigilante.
+**Onde estão os elementos:** p. 3 Figura 1; p. 4 Figuras 2 e 3 e Tabela 1; p. 6 Tabela 2 e Figuras 4 e 5; p. 7 Figuras 6 e 7 e Tabelas 3 e 4; p. 8 Figura 8 e Tabela 5; p. 10 Tabela 6.
+
+**Compilar:** `bash latex/watch_latex.sh` (local, não versionado; recompila para `latex/build/relatorio_pt.pdf`) ou os comandos do `README.md`. O vigilante só reage a `relatorio_pt.tex` e `references.bib`: depois de gerar macros ou figuras, correr `bash latex/watch_latex.sh --once` ou reiniciá-lo. Com um vigilante a correr, **não** compilar à mão para `latex/build/`.
+
+**Disposição (frágil; rever depois de mexer em texto ou figuras):**
+- No preâmbulo, `\dbltopfraction` 0,95, `\textfraction` 0,25 e contadores de flutuantes (REV-080, 081).
+- O bloco da Figura 8 está no ficheiro **antes** da subsecção que a cita, de propósito.
+- A Tabela 6 e a legenda estão numa `minipage`, para não se separarem.
+- Os anexos vêm depois de `\bibliography`, com `\clearpage`.
+- Verificar: 10 páginas, sem `??`, e números de linha fora das colunas (com `pdftotext -bbox`, a posição horizontal fica antes de 53 pt ou depois de 559 pt). Para comparar disposições, usar uma cópia de `latex/` numa pasta temporária.
 
 **Números e figuras** (nunca escrever à mão um número empírico):
 
 | Ficheiro em `latex/` | Gerado por (`ais.cli.…`) |
 |---|---|
 | `generated/resultados.tex` | `build_final_results` |
-| `generated/resultados_janelas.tex`, `figures/janelas_perda.png` (a figura também se refaz com `--report-figures-only`) | `build_window_results` |
-| `figures/janelas_viagens_baseline.png`, `janelas_linha_temporal_baseline.png` | `build_window_results --report-figures-only` |
-| `generated/resultados_validacao.tex`, `figures/validacao_*.png` | `build_validation_results` |
-| `generated/resultados_posproc.tex`, `figures/posproc_resultados.png`, `posproc_viagem.png` | `build_postproc_results` |
+| `generated/resultados_janelas.tex` | `build_window_results` |
+| `figures/janelas_viagens_baseline.png`, `janelas_linha_temporal_baseline.png`, `janelas_perda.png` | `build_window_results --report-figures-only` |
+| `generated/resultados_validacao.tex`, `figures/validacao_resumo.png` | `build_validation_results` |
+| `figures/validacao_pior_viagem.png` | `build_validation_results --worst-trip-figure-only` |
+| `generated/resultados_posproc.tex`, `figures/posproc_viagem.png` | `build_postproc_results` |
+| `figures/posproc_resultados.png` | `build_postproc_results --results-figure-only` (não lê previsões) |
 | `generated/resultados_posproc_v1.tex` | `build_postproc_results --first-version-only` |
 | `generated/resultados_buracos.tex` | `build_window_analysis_macros` |
-| `figures/posproc_janela.png` | `plot_postprocessing_kernel` |
+| `figures/posproc_janela.png` | `plot_postprocessing_kernel` (dados sintéticos) |
 
-As figuras do esquema e da CNN são TikZ no próprio `.tex`. Alguns geradores leem previsões já guardadas dos conjuntos reservados: não os correr sem necessidade e, para o `test` ou o `validation`, pedir autorização.
+As figuras do esquema e da CNN são TikZ no próprio `.tex`. Os programas que leem previsões guardadas dos conjuntos reservados pedem autorização em `configs/authorizations/` e registam a leitura: não os correr sem pedido do utilizador. Os ficheiros `*_ref.png` e outras figuras antigas ficaram sem uso (o utilizador preferiu manter).
 
-**Resumo (REV-068):** o utilizador mandou retirar «este resultado não vem de uma medição independente». Não a repor no resumo; a ressalva continua no corpo e não se retira de lá sem pedido.
+**Decisões sobre o texto (não mudar sem pedido):**
+- **Resumo (REV-068):** sem «este resultado não vem de uma medição independente»; a ressalva mantém-se no corpo.
+- **Filtro (REV-069):** 13 pontos primeiro (ganho pequeno, não piorou no total) e depois 301; a frase do resumo começa por «Sobre as previsões dessa medição».
+- **Nome (REV-072):** «baseline», nunca «referência», para o modelo da viagem completa.
+- **Anexos (REV-082):** depois das referências, por escolha do utilizador, sabendo que as instruções do IJCAI os põem antes.
 
-**Filtro (REV-069):** o relatório conta que se testou primeiro 13 pontos (ganho pequeno, não piorou no total) e depois 301; mais dimensões e tipos de janela ficam para trabalho futuro. A frase do resumo começa por «Sobre as previsões dessa medição».
-
-**Não reintroduzir** (corrigido em REV-065, algumas coisas pela revisão independente):
-- o resultado do filtro como medição independente, ou «medido uma única vez»; a versão de 13 pontos está declarada;
+**Não reintroduzir** (corrigido em REV-065):
+- o resultado do filtro como medição independente, ou «medido uma única vez»;
 - que a janela de 301 foi escolhida comparando várias dimensões (o efeito no `test` só se mediu **depois** da escolha, sem regra declarada antes);
 - o critério da medição final como declarado antes de se conhecerem os resultados do `test`;
 - a menor fragmentação de J50 como efeito só da sobreposição (limiar, época e passos também diferem);
-- «até cerca de 20 % da captura mundial» (não está em Agnew) ou o artigo de Cheng como deteção de pesca (classifica tipos de navio).
+- «até cerca de 20 % da captura mundial» (não está em Agnew) ou o artigo de Cheng como deteção de pesca.
 
-**Bibliografia:** verificação em `docs/00` §9. `ferreira2022full` é a entrada que o relatório usa (quatro autores). Shneiderman, Guo e Lundberg só foram confirmados pelos resumos no arXiv.
+**Bibliografia:** verificação em `docs/00` §9. `ferreira2022full` é a entrada que o relatório usa. Shneiderman, Guo e Lundberg só foram confirmados pelos resumos no arXiv.
+
+## A galeria de viagens
+
+| Ficheiro em `viagens/` | Gerado por |
+|---|---|
+| `README.md`, `teste/*.png`, `validacao/*.png`, `proveniencia.json` | `build_trip_gallery` (lê previsões guardadas do `test` e do `validation`; precisa das autorizações `*_trip_gallery.json`) |
+| `galeria_viagens.tex`, `galeria_viagens.pdf` | `build_trip_gallery_pdf` (só a partir da página; correr depois do anterior) |
+
+- Teste: real, baseline, J0, J50 e baseline + pós-processamento. Validação: real, baseline e baseline + pós-processamento. O filtro aplica-se só à baseline.
+- Por ordem crescente de exatidão da baseline.
+- O Anexo B liga a `viagens/galeria_viagens.pdf` no ramo `main`: **não mover nem renomear** esse ficheiro.
 
 ## Proposta anterior
 
@@ -156,15 +162,23 @@ As figuras do esquema e da CNN são TikZ no próprio `.tex`. Alguns geradores le
 
 ## Decisões vigentes
 
-A lista completa está no topo do `PROGRESS.md`; o registo da versão de 13 pontos do filtro está em `docs/00` §5.3. As que mais pesam:
+A lista completa está no topo do `PROGRESS.md`. As que mais pesam:
 
-- Documentação: ficam só `docs/00` e `docs/01` (confirmado pelo utilizador; não repor `05` nem `06`).
 - `test` seleciona, `validation` mede; o `validation` está gasto. **Não voltar a correr** `select_on_test`, `select_windows_on_test`, `final_validation` nem `postproc_validation`.
 - Baseline, J0 e J50 fechadas. Sem novos treinos sem decisão do utilizador.
 - Relatório: máximo 15 páginas (alvo 13 ou menos); título mantido; «Figura» e «Tabela» em português; números de linha até à versão final.
-- Perguntas de investigação, objetivos e critérios de sucesso não mudam depois dos resultados.
+- Perguntas de investigação, objetivos e critérios de sucesso não mudam depois dos resultados (na REV-072 mudou só o nome do modelo).
 - Explicabilidade, calibração e *dashboard*: «previstos, não concluídos nesta fase».
-- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer texto novo ou substituído no `.tex` leva `\revtext{revNNN}{…}`, com `\definecolor{revNNN}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. A REV-068 só eliminou texto, por isso não há cor no `.tex`. Na REV-072 o utilizador mandou usar preto e passar todo o texto a preto. A REV-076 também ficou a preto, só dessa vez. O texto da REV-078 passou a preto a pedido; o relatório está todo a preto. **Próximo ID livre: REV-083.**
+- Documentação: ficam só `docs/00` e `docs/01`.
+- **Cores:** a regra (AGENTS §8) manda marcar a cor, com `\revtext{revNNN}{…}`, o texto novo ou substituído no `.tex`. O utilizador mandou usar preto na REV-072 e na REV-076 («só desta vez») e passou a preto o texto da REV-078; o relatório está todo a preto. Antes da próxima alteração de texto, **perguntar** se quer cor ou preto. Mudanças só de disposição não têm texto para colorir. **Próximo ID livre: REV-084.**
+
+## Em aberto (nada disto bloqueia)
+
+- **Enunciado:** não está no projeto e não foi visto; convém confirmar se diz alguma coisa sobre a ordem dos anexos.
+- Pequenas coisas de aspeto assinaladas ao utilizador ou notadas, sem decisão: a Figura 3 escreve «50.2» e «0.65» com ponto; a linha temporal da Figura 8 diz «antes» e «depois» em vez de «baseline» e «baseline + pós-processamento»; a legenda da Tabela 4 ainda diz «teste (otimista)», sem a explicação que a Tabela 6 ganhou; a página 10 fica com a coluna direita vazia.
+- Versão final: traduzir «Abstract» e «References» e retirar os números de linha, quando pedido.
+- Limitações dos dados: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
+- Arrumação técnica opcional: testes dos programas de treino e de figuras; unificar `class_metrics`.
 
 ## Ficheiros principais
 
@@ -172,11 +186,11 @@ A lista completa está no topo do `PROGRESS.md`; o registo da versão de 13 pont
 |---|---|
 | Regras e registo | `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md`, `REVISION_LOG.md`, `README.md`, `handoff.md` |
 | Relatório | `latex/relatorio_pt.tex`, `references.bib`, `figures/`, `generated/` |
+| Galeria | `viagens/` (não editar à mão) |
 | Documentação | `docs/00`, `docs/01`; arquivo na etiqueta `docs-historico-v1` (`docs/00` §11) |
-| Galeria | `viagens/` (gerada por `build_trip_gallery`; PDF e `.tex` por `build_trip_gallery_pdf`; não editar à mão) |
 | Código | `src/ais/phase1/` (biblioteca), `src/ais/cli/` (programas, tabela no `README.md`) |
 | Configuração | `configs/` e `configs/authorizations/` |
-| Só nesta máquina (não vão para o git) | `data/`, `results/` (modelos, previsões, `access_log.jsonl`), `iach-ais-venv-4/`, `docs/bibliografia/`, `latex/build/`, `latex/watch_latex.sh` |
+| Só nesta máquina (não vão para o git) | `data/`, `results/` (modelos, previsões, `access_log.jsonl`), `iach-ais-venv-4/`, `docs/bibliografia/`, `latex/build/` (o PDF do relatório), `latex/watch_latex.sh` |
 
 ## Comandos úteis (a partir da raiz)
 
@@ -192,21 +206,24 @@ iach-ais-venv-4/bin/python -m pytest tests/
 bash latex/watch_latex.sh
 ```
 
+```bash
+iach-ais-venv-4/bin/python -m ais.cli.build_trip_gallery_pdf
+```
+
 ## O que falhou ou exigiu correção (nesta conversa)
 
-- Horas escritas à frente do relógio duas vezes (corrigidas): **usar sempre `date`** antes de escrever uma hora.
-- Frases erradas minhas apanhadas pela revisão independente (ver «Não reintroduzir»): confirmar nos registos a ordem dos factos antes de a descrever.
-- O vigilante antigo deixou um `texput.log` quando a proposta foi retirada.
-- Ao retirar documentos, o utilizador esperava outra escolha: confirmar **quais** antes de apagar (desta vez aceitou como ficou).
-- Dos anteriores: não correr testes nem subagentes durante treinos; ao trocar texto dentro de `\revtext{…}{…}`, conferir as chavetas; `%` nu em `\texorpdfstring` parte o LaTeX; `class_metrics` duplicada.
+- PDF com números de linha entre as colunas: poucas passagens de compilação. A validação só via erros e páginas; **rever também as páginas em imagem**.
+- Compilar à mão para `latex/build/` com o vigilante a correr estragou uma compilação.
+- Chamei «página 7» à 8: confirmar a página com `pdftotext` antes de a nomear.
+- A galeria ficou com 3,5 MB, acima do estimado.
+- Pesquisas na Web apontaram para endereços errados (outros artigos): confirmar lendo a página. A regra do IJCAI sobre anexos foi confirmada nas instruções de 2019 e no kit de 2027; as de 2026 não foram lidas.
+- Horas: usar sempre `date`.
 
 ## O que fazer a seguir
 
-1. Os ajustes que vierem da leitura do utilizador (REV-083).
-2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. O envio até à REV-082 foi pedido; confirmar com `git status -sb`. O repositório é público.
-4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
-5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
+1. Os ajustes que vierem da leitura do utilizador (REV-084).
+2. Se pedido: os pontos de «Em aberto».
+3. **Push:** só a pedido. Antes de enviar, ver o que vai (`git log '@{u}..HEAD'`); depois confirmar com `git ls-remote`.
 
 ## Regras a não esquecer
 
@@ -219,9 +236,11 @@ bash latex/watch_latex.sh
 
 ## Preferências do utilizador observadas
 
-- Quer um **plano** antes de uma mudança grande e decide sobre ele; depois dá autonomia.
-- No fim de um bloco de trabalho pede os registos atualizados, commit e push.
-- Quer sempre uma forma de voltar atrás (cópia ou etiqueta) antes de reescrever ou apagar.
-- Decide depressa («aceito», «sim, continua»); registar as decisões como são ditas.
+- Para uma mudança grande quer primeiro a explicação e o **plano**, e diz para esperar pelo sim; depois dá autonomia.
+- Pede opinião («se for boa ideia, faz»; «se discordares, contraria-me»): responder com franqueza antes de aplicar.
+- Revê o PDF visualmente e pede correções de disposição, uma de cada vez; gosta de páginas cheias e de figuras antes dos anexos.
+- Costuma autorizar o envio depois de ver o PDF; pode alterar ele próprio o `.tex` e pedir para incluir no commit.
+- Pode acompanhar a conversa noutro dispositivo: enviar-lhe o PDF quando mudar.
+- Quer sempre uma forma de voltar atrás antes de reescrever ou apagar.
 - Gosta de resultados em tabelas e imagens, com o porquê, em linguagem simples.
 - Numa sessão anterior preferiu delegar trabalho pesado na Abacus (nunca o OpenCode), só com código e descrições, **nunca dados**.

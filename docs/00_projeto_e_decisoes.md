@@ -6,7 +6,7 @@
 
 Segmentar viagens AIS de pesca em **pesca** e **navegação**, com uma previsão por ponto, usando uma CNN 1D totalmente convolucional. A entidade operacional é a viagem (`id` completo, por exemplo `211477000-2`).
 
-Documento ativo: o relatório `latex/relatorio_pt.tex`. Dados do Zenodo (Song Wu, DOI 10.5281/zenodo.7283281, CC BY 4.0).
+Documento ativo: o relatório `latex/relatorio_pt.tex`. [REV-083 | cor #4B6F44] Complementa-o a galeria `viagens/` (uma imagem por viagem de teste e de validação, também em PDF), ligada no Anexo B; os anexos estão depois das referências por escolha do utilizador (REV-082). Dados do Zenodo (Song Wu, DOI 10.5281/zenodo.7283281, CC BY 4.0).
 
 Detetar comportamento compatível com pesca não demonstra ilegalidade: o modelo não verifica licenças, quotas, zonas autorizadas ou infrações. A decisão de fiscalização continua humana.
 
@@ -44,7 +44,8 @@ As ressalvas completas estão no relatório. Um resultado sem melhoria é válid
 | 4 | A mesma CNN em janelas | Feito (REV-046, REV-047) |
 | 5 | Pós-processamento | Feito (REV-056 a REV-059) |
 | 6 e 7 | Congelar as variantes e medição final no `validation` | Feito (REV-053), só a baseline |
-| — | Relatório | Completo (REV-065); falta a leitura do utilizador |
+| — | Relatório | Completo (REV-065, ajustes até REV-082); falta a leitura do utilizador |
+| — | Galeria de viagens | Feita (REV-073, REV-077) |
 
 ## 5. Modelos e protocolos
 
@@ -98,6 +99,7 @@ As regras completas estão no `AGENTS.md` §3. Resumo operacional:
 - **Não voltar a correr** `select_on_test`, `select_windows_on_test`, `final_validation` nem `postproc_validation`.
 - Exposição já ocorrida (REV-015): validação e teste foram lidos por inteiro só para construir as bases limpas e contar linhas e viagens.
 - [REV-073 | cor #006400] Galeria `viagens/`: as previsões guardadas do `test` e do `validation` foram lidas para desenhar uma imagem por viagem (`build_trip_gallery`, autorizações `*_trip_gallery.json`). Não é uma medição nova e nada se escolhe com ela.
+- [REV-083 | cor #4B6F44] Figuras do relatório com o nome «baseline» refeitas a partir de ficheiros guardados: três do `test` (REV-072, `test_report_figures_baseline.json`) e uma do `validation` (REV-074, `validation_report_figure_baseline.json`). Leituras registadas; sem parquets nem CNN. A galeria foi gerada duas vezes (REV-073 e REV-072).
 - Nenhum valor empírico usado como evidência pode depender só de um cálculo informal do agente (`AGENTS.md` §10).
 
 ## 7. Avaliação (como foi implementada)
