@@ -1,0 +1,77 @@
+{
+  "criado_utc": "2026-11-26T00:21:50+00:00",
+  "comando": "iach-ais-venv-4/bin/python -m ais.cli.build_trip_gallery",
+  "git": {
+    "commit": "abd8cab5b7d9f5f7b221806f6edde8c41cc96385",
+    "codigo_ou_configs_por_commitar": false
+  },
+  "versoes": {
+    "python": "3.14.4",
+    "numpy": "2.5.5",
+    "pandas": "3.1.1",
+    "matplotlib": "3.10.9"
+  },
+  "autorizacoes": {
+    "test": "test_trip_gallery_2026-11-26",
+    "validation": "validation_trip_gallery_2026-11-26"
+  },
+  "filtro": {
+    "tamanho_pontos": 301,
+    "sigma": "tamanho/6",
+    "limiar": 0.65
+  },
+  "manifesto": {
+    "manifests/split_manifest_seed42.csv": "d56918bc65f9bebc6aa0a01a1e82213fda2404a9dfab9f39b3a1858c52733539"
+  },
+  "fontes_sha256": {
+    "results/baseline_frozen/predictions_test_baseline.csv": "6f228531bbc7be4fcfda6943d8a9c7a302e664e1035b39497a33d25366100368",
+    "results/windows_j0/predictions_test_selected.csv": "55579a35c08b653551a20f0b4a7bd298e8716a87ce565c3f33c5b989ad658d9b",
+    "results/windows_j50/predictions_test_selected.csv": "324c4cc304f44eb6c6c94e7dec7d2e965f9c5fd592ef27298f8bc1ec695152bb",
+    "results/windows_final/final_results_windows.json": "a6e6d8ef250072b3b075e49986fd956b87e87e2020d8afc9bff2cc4583c3f396",
+    "results/postproc_window_analysis/test_eval.json": "d657530c14f1ef354885308b12fa8d9da00d72b3e4ad91a0afe9101ee837c5b5",
+    "results/postproc_validation_v2/predictions_validation_postproc.csv": "d5c10395cbbe30d2ad760321386ad3a3e57d2e32656c1c6ba758e87fa088532b",
+    "results/postproc_validation_v2/postproc_validation.json": "c94d090e77545868115b535adc6396177f42fa8a2a7ab2028978bd876c54a24b"
+  },
+  "valores_conferidos_com_resultados_gravados": {
+    "test": 181,
+    "validation": 108
+  },
+  "imagens_sha256": {
+    "viagens/teste/219000855-3.png": "7d554886ea8e63009d1e0953f57b661599ae53798ef1de6103c2714367b49787",
+    "viagens/teste/219000855-4.png": "8f0f9b7ac47deb0ad73ac2d64a1d314848b2e9c62115e4d3d41830fa64d4f9bf",
+    "viagens/teste/219001604-2.png": "29f81de14f0a2300920c5f0d1a13089ffbf01b1d764da9bdc15da8034f9743ef",
+    "viagens/teste/219001624-2.png": "0211890e72a2a7d9a4c6005942b56c85e639e6ed01d17a4ddab71af8f5925c85",
+    "viagens/teste/219001682-2.png": "15a058dcd0eb88c472cd76f5579a44ff530360c2ffd1dc1f619d9071c78aad04",
+    "viagens/teste/219002409-2.png": "c01c287314ac4e20bab50604ed003f905a41a583580939f91be4494edeaf2f5b",
+    "viagens/teste/219004203-3.png": "d34ab3b470072c1e07daf4496fe1f4508461b3311b4e5f6dc5fea2456df6cadf",
+    "viagens/teste/219004596-2.png": "436d8e1a09bab67140110499879a237b97268356f55fa311f67be91e83e0b372",
+    "viagens/teste/219005671-2.png": "2e15c39d1705150a7f01f01d4cad222f629ac7258c25fcd40d406b09a6bf0be3",
+    "viagens/teste/219007027-3.png": "644fa15eb43f2a8167b1f6973cb096220c7c94b0fcc7e3dcd5c278a78a406797",
+    "viagens/teste/219015617-2.png": "f8ec62a4ed87efa2847eca08d69f87f40deddf702bfe91ba73a20921dcdb9e61",
+    "viagens/teste/219025739-4.png": "8e0a9fa302f9e68cf54a3d7163566839b8afb9afc0efb294d656aa4cc6e38c4d",
+    "viagens/teste/219025740-6.png": "5efded3bef475e855b53db065644493795cddf273600eacaadbc48dbdf0ce1b5",
+    "viagens/teste/219028381-4.png": "8c49050b1f2fa672ee0d7f5578fdd792bc14f525f3602de9afcdb3ce012ffe59",
+    "viagens/teste/220006000-2.png": "77c26e8b4ed5c4758f177bd4040afa1861210ed1eef4d50c56fab97f4024db87",
+    "viagens/teste/220349000-3.png": "5f1cf4733b92456b723a6a4f5ccecc1647684a74e952c33207401b0e44ca29c3",
+    "viagens/teste/232020276-2.png": "61d108bc04c1746b649dc4577ea7f1dee1869e668811e4f4405d40f23639cfd4",
+    "viagens/teste/232020276-3.png": "a92bbef057879594da10010a5e5cedb827becff9eba0528d4f729fdcdce1d64c",
+    "viagens/validacao/211477000-2.png": "e4d0a748d1fe525f3bdfbcaec8b1225a02100471c4e9c1191b8501f2493a3223",
+    "viagens/validacao/219004128-2.png": "9fd6a73f3a73dadff305ab2e3633abe2ab0c77a33c5d149e6ffe7f1cef0c44af",
+    "viagens/validacao/219004128-4.png": "335c08e7691be4b1886438e485646e3bceec81e9a954bb2861a27daf8641c26b",
+    "viagens/validacao/219004343-1.png": "3303e3874b27b62c86718159215825a9a65e2c78be577357680d988ba334af96",
+    "viagens/validacao/219007027-2.png": "320badc959a5bbd5ba405531f8744d2c53befbd84790fe47f31c5605b0085f59",
+    "viagens/validacao/219009738-2.png": "0fa84ac1dc8836c49c120036b09e0ee21460ad0c905b2d2611b9b76cec1a2fe7",
+    "viagens/validacao/219012671-2.png": "d2b3956bc07039d05fbab932695e06ad164055d5daea1107a27b458b143067ea",
+    "viagens/validacao/219020187-4.png": "92cade4f9dc28e4406c8d1422edf88902c080899cb5334e7518edf606510ff9b",
+    "viagens/validacao/219025740-2.png": "4cbf5010285ca040b854982f2f12744d55792c7f704dcc58d33506f74317226c",
+    "viagens/validacao/219027026-2.png": "0c99c0fc68415e715d2e226f4c950b06a12bc9b5ee382e055724907fb1506457",
+    "viagens/validacao/219709000-2.png": "11e0ad85deb1c13a2bd63810290c238c21e06da7cfd4a009248e2824a331078e",
+    "viagens/validacao/219796000-2.png": "9b3404714cb8faa903b3fb195a83595db9b96b330139f4d965d0a543b42ef770",
+    "viagens/validacao/220204000-3.png": "fbf58db529f4ac648a140b1a1342b833379fd1caa3d4bda570e1716216ae25c2",
+    "viagens/validacao/220307000-3.png": "52ff642956e5eaec64566ae9a52afdc91298fe565cb0041c4510f2364c834ed8",
+    "viagens/validacao/220307000-4.png": "1c65f56f405896d196463aaee7b79c3f7423427d6379ecb127e6b367cc35c0de",
+    "viagens/validacao/220335000-2.png": "e6994de6464bc7fa615879e76a64a6da7c14c0704574ab968657ab75ff3d0a64",
+    "viagens/validacao/220351000-2.png": "abbac527a3f363bdf3b321e09e415ab0c7f7354ee843ea361fc034a13ea3c2ac",
+    "viagens/validacao/220356000-3.png": "9f574f6648ccb5a413a046a6a36809cb7185392da3c83924f6c67120df0d5d8d"
+  }
+}

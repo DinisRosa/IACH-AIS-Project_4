@@ -97,6 +97,7 @@ As regras completas estão no `AGENTS.md` §3. Resumo operacional:
 - Uma flag no código ou uma decisão do agente nunca é autorização.
 - **Não voltar a correr** `select_on_test`, `select_windows_on_test`, `final_validation` nem `postproc_validation`.
 - Exposição já ocorrida (REV-015): validação e teste foram lidos por inteiro só para construir as bases limpas e contar linhas e viagens.
+- [REV-073 | cor #006400] Galeria `viagens/`: as previsões guardadas do `test` e do `validation` foram lidas para desenhar uma imagem por viagem (`build_trip_gallery`, autorizações `*_trip_gallery.json`). Não é uma medição nova e nada se escolhe com ela.
 - Nenhum valor empírico usado como evidência pode depender só de um cálculo informal do agente (`AGENTS.md` §10).
 
 ## 7. Avaliação (como foi implementada)

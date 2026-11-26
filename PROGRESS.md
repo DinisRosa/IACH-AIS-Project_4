@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-071, 2026-11-26 00:03 WET; refeito em REV-066)
+## Estado atual (REV-073, 2026-11-26 00:22 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -20,13 +20,13 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Filtro (301 pontos, só a referência, `validation`):** exatidão 94,4 % → 94,8 %; segmentos de pesca previstos 486 → 32 (reais 18), de navegação 502 → 49 (reais 35); F1 de segmentos de pesca 0,028 → 0,600; melhoram 11 viagens e pioram 7. **Não é uma medição independente** (houve antes uma versão de 13 pontos, `docs/00` §5.3).
 - **Perguntas:** RQ1, as janelas não superam a viagem completa; RQ2, o filtro reduz muito a fragmentação, com a ressalva acima; RQ3, sem resposta.
 - **Fonte dos números:** macros em `latex/generated/` e ficheiros em `results/` (não versionados).
-- **Conjuntos reservados (`results/access_log.jsonl`):** `test` com 2 aberturas de seleção, 2 leituras de diagnóstico e, sobre previsões guardadas, 3 análises de blocos de erro, 1 avaliação de janelas e 1 geração de figuras do relatório. `validation` aberto 1 vez (medição final, **gasto**); as anotações foram depois reutilizadas nas 2 versões do filtro. Os três conjuntos foram lidos por inteiro só para construir as bases limpas (REV-015).
+- **Conjuntos reservados (`results/access_log.jsonl`):** `test` com 2 aberturas de seleção, 2 leituras de diagnóstico e, sobre previsões guardadas, 3 análises de blocos de erro, 1 avaliação de janelas e 1 geração de figuras do relatório e 1 galeria de viagens (REV-073). `validation` aberto 1 vez (medição final, **gasto**); as anotações foram depois reutilizadas nas 2 versões do filtro e, em REV-073, lidas com as previsões guardadas para a galeria. Os três conjuntos foram lidos por inteiro só para construir as bases limpas (REV-015).
 - **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, números de linha ligados; preto, salvo o texto de REV-069 a cor; em REV-068 saiu do resumo a ressalva sobre a medição do filtro), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
-- **Testes:** 248 (sintéticos, mais um que lê 3 viagens de treino), a passar.
+- **Testes:** 253 (sintéticos, mais um que lê 3 viagens de treino), a passar.
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-071.
+- **Registo de revisões:** REV-001 a REV-073 (a REV-072 está por aplicar).
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -41,11 +41,14 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Proposta antiga (REV-066):** retirar o `.tex`; manter o PDF e a etiqueta; compilar o relatório para `latex/build/`.
 - **Resumo do relatório (REV-068):** sem a frase «este resultado não vem de uma medição independente»; a ressalva mantém-se no corpo (protocolo, resultados, limitações e conclusões). Não a repor no resumo.
 - **Filtro no relatório (REV-069):** contar que se testou primeiro 13 pontos (ganho pequeno) e depois 301; estudar mais dimensões e tipos de janela fica para trabalho futuro.
+- **Galeria (REV-073):** `viagens/`, com «baseline»; filtro só na baseline; J0 e J50 só no teste.
+- **Nome do modelo (REV-072):** passar «referência» a «baseline» no relatório **mais tarde**; por agora o LaTeX não muda.
 - **Documentos fixos:** `latex/proposta_IAHC_DINIS_ROSA.pdf` não se altera. Autor do dataset: Song Wu, Zenodo 10.5281/zenodo.7283281 (CC BY 4.0); o Kaggle é espelho.
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-072), com cor.
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-074), com cor.
+- **REV-072:** trocar «referência» por «baseline» no relatório, figuras 4 a 6 e documentos.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
 - **Verificação bibliográfica (`docs/00` §9):** Shneiderman, Guo e Lundberg só pelos resumos no arXiv; a tese de Ghazizadeh não tem texto extraível (não é citada).
 - **Limitação registada:** o critério da menor perda no `test` escolheu épocas muito cedo (4 e 8); mudá-lo seria uma decisão metodológica nova.
@@ -57,10 +60,11 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | Ficheiro | Estado |
 |---|---|
 | `AGENTS.md`, `CLAUDE.md` | Alinhados em REV-067 |
-| `README.md`, `handoff.md` | Alinhados em REV-071 |
+| `README.md`, `handoff.md` | Alinhados em REV-073 |
+| `viagens/` | Galeria gerada por código (REV-073); não editar à mão |
 | `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
 | `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
-| `src/ais/`, `pyproject.toml`, `tests/` | Código e 248 testes |
+| `src/ais/`, `pyproject.toml`, `tests/` | Código e 253 testes |
 | `configs/`, `configs/authorizations/` | Configurações, protocolos e autorizações |
 | `latex/relatorio_pt.tex`, `references.bib`, `figures/`, `generated/` | Relatório e artefactos gerados por código |
 | `latex/proposta_pt.pdf` | Proposta anterior, só para consulta |
@@ -1283,3 +1287,25 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório.
+
+### 2026-11-26c — Galeria de viagens (REV-073), 2026-11-26 00:22 WET
+
+[REV-073 | cor #006400]
+
+**Feito**
+- Autorizações gravadas com as palavras do utilizador; `build_trip_gallery` e testes (commit `abd8cab`, antes de executar).
+- Uma execução: `viagens/README.md`, 36 imagens e `proveniencia.json`; ligação no `README.md`.
+
+**Validado**
+- 253 testes; 181 valores do teste e 108 da validação iguais aos já gravados; viagens iguais às do manifesto.
+- Lidas só previsões guardadas e resultados; sem parquets, sem CNN e sem escolhas. Duas entradas `trip_gallery` no registo de acessos.
+
+**Limitações**
+- `viagens/` ocupa 3,5 MB (acima do 1 a 2 MB estimado no plano). Blocos muito curtos aparecem esbatidos nas viagens longas.
+- Apresentação no GitHub não verificada (falta enviar).
+
+**Decisões**
+- REV-072 («referência» → «baseline» no relatório) fica por aplicar.
+
+**Pendente**
+- Envio a pedido; REV-072; leitura do relatório.

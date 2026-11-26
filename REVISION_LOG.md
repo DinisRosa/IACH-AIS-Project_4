@@ -1111,3 +1111,24 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** 10 páginas, sem referências em falta; 647 números de linha nas margens exteriores; páginas 8 e 9 revistas em imagem. Testes não repetidos (sem alterações a código).
 - **Pendentes:** leitura do relatório.
+
+### REV-072 — «Referência» passa a «baseline» no relatório (por fazer)
+
+- **Data:** decidida em 2026-11-26; **ainda não aplicada**.
+- **Cor:** Castanho-sela `#8B4513`, RGB (139, 69, 19). Reservada para o texto a trocar no `.tex`.
+- **O quê:** trocar «referência» por *baseline* no texto, nas tabelas, no esquema e nas figuras 4, 5 e 6 do relatório, e nos documentos atuais.
+- **Porquê:** o utilizador apontou que «referência» se confunde com a classe real; concordância do agente (o próprio código usa «referência» para os segmentos reais).
+- **Correspondência no LaTeX:** **pendente**, por instrução do utilizador («Vamos não alterar o LaTeX por agora»).
+- **Validação:** não aplicável.
+- **Pendentes:** toda a revisão. Substitui, quando aplicada, a parte da decisão D4 (REV-065) sobre «referência».
+
+### REV-073 — Galeria de viagens no repositório
+
+- **Data:** 2026-11-26, até 00:22 WET.
+- **Cor:** Verde-escuro `#006400`, RGB (0, 100, 0). Marcador no `docs/00` e no `PROGRESS.md`; sem alterações ao `.tex`.
+- **O quê:** `ais.cli.build_trip_gallery` e testes; autorizações `test_trip_gallery.json` e `validation_trip_gallery.json`; pasta `viagens/` (página, 36 imagens, `proveniencia.json`); `README.md`, `docs/00` §6, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** pedido do utilizador: quem lê o repositório poder ver as previsões em cada viagem.
+- **Linhas:** teste: real, baseline, J0, J50, baseline + pós-processamento; validação: real, baseline, baseline + pós-processamento. Filtro só na baseline.
+- **Correspondência no LaTeX:** **não aplicável**.
+- **Validação:** 253 testes; antes de escrever, 181 valores do teste e 108 da validação coincidem com os resultados já gravados e as viagens com o manifesto; 36 ligações de imagem resolvem; imagens revistas em folhas de conjunto. A apresentação no GitHub só se vê depois do envio.
+- **Pendentes:** envio a pedido.

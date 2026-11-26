@@ -1,12 +1,13 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-26 00:04 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-071. As horas são WET, lidas com `date` ou do `git log`.
+**Atualizado em 2026-11-26 00:22 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-073. As horas são WET, lidas com `date` ou do `git log`.
 
 ## Ponto de situação em quatro linhas
 
 - O trabalho técnico está **feito**: preparação, CNN de referência, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O documento ativo é o **relatório** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto), que substituiu a proposta.
-- **O próximo passo é continuar o relatório** a partir da leitura do utilizador (revisão REV-072, com cor). As REV-069 (duas janelas do filtro), REV-070 (números de linha) e REV-071 (página 8) foram enviadas para o GitHub a pedido.
+- **Galeria feita (REV-073):** `viagens/`, ligada ao `README.md`; em commits locais, **por enviar**.
+- **Por fazer:** REV-072 (passar «referência» a «baseline» no relatório, a pedido do utilizador, mais tarde) e a leitura do relatório pelo utilizador (REV-074, com cor).
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -24,7 +25,7 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 
 | Verificação | Resultado | Hora (WET; 2026-11-25 salvo indicação) |
 |---|---|---|
-| `pytest tests/` | 248 passaram | 23:55 |
+| `pytest tests/` | 253 passaram; 2026-11-26 | 00:22 |
 | Relatório (vigilante, versão da REV-070) | 10 páginas, sem referências em falta; 647 números de linha nas margens; 2026-11-26 | 00:03 |
 | GitHub (`git fetch`, antes do envio) | `main` 4 commits à frente e 0 atrás de `origin/main`; envio pedido pelo utilizador; 2026-11-26 | 00:04 |
 | Vigilante do LaTeX | um a correr, com a versão nova (reiniciado às 00:00 de 2026-11-26) | 00:03 |
@@ -37,6 +38,8 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `abd8cab` | 2026-11-26 00:21 | Cria o programa da galeria de viagens e grava as autorizações (REV-073) |
+| `ff050a8` | 2026-11-26 00:04 | Regista o pedido de envio das REV-069 a REV-071 |
 | `442a19f` | 2026-11-26 00:03 | Preenche a página 8 do relatório com o início do anexo (REV-071) |
 | `2b91f35` | 2026-11-25 23:59 | Documenta como compilar com os números de linha nas margens (REV-070) |
 | `7cef3e2` | 2026-11-25 23:56 | Acrescenta um commit em falta à cronologia do handoff (REV-069) |
@@ -142,7 +145,7 @@ A lista completa está no topo do `PROGRESS.md`; o registo da versão de 13 pont
 - Relatório: máximo 15 páginas (alvo 13 ou menos); título mantido; «Figura» e «Tabela» em português; números de linha até à versão final.
 - Perguntas de investigação, objetivos e critérios de sucesso não mudam depois dos resultados.
 - Explicabilidade, calibração e *dashboard*: «previstos, não concluídos nesta fase».
-- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer texto novo ou substituído no `.tex` leva `\revtext{revNNN}{…}`, com `\definecolor{revNNN}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. A REV-068 só eliminou texto, por isso não há cor no `.tex`. **Próximo ID livre: REV-072.**
+- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer texto novo ou substituído no `.tex` leva `\revtext{revNNN}{…}`, com `\definecolor{revNNN}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. A REV-068 só eliminou texto, por isso não há cor no `.tex`. **Próximo ID livre: REV-074** (a REV-072 está reservada e por aplicar).
 
 ## Ficheiros principais
 
@@ -151,6 +154,7 @@ A lista completa está no topo do `PROGRESS.md`; o registo da versão de 13 pont
 | Regras e registo | `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md`, `REVISION_LOG.md`, `README.md`, `handoff.md` |
 | Relatório | `latex/relatorio_pt.tex`, `references.bib`, `figures/`, `generated/` |
 | Documentação | `docs/00`, `docs/01`; arquivo na etiqueta `docs-historico-v1` (`docs/00` §11) |
+| Galeria | `viagens/` (gerada por `build_trip_gallery`; não editar à mão) |
 | Código | `src/ais/phase1/` (biblioteca), `src/ais/cli/` (programas, tabela no `README.md`) |
 | Configuração | `configs/` e `configs/authorizations/` |
 | Só nesta máquina (não vão para o git) | `data/`, `results/` (modelos, previsões, `access_log.jsonl`), `iach-ais-venv-4/`, `docs/bibliografia/`, `latex/build/`, `latex/watch_latex.sh` |
@@ -179,9 +183,9 @@ bash latex/watch_latex.sh
 
 ## O que fazer a seguir
 
-1. **Continuar o relatório** com o que o utilizador pedir (REV-072).
+1. Quando o utilizador pedir: **REV-072** («baseline» no relatório e figuras 4 a 6) e os ajustes da leitura (REV-074).
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. O envio até à REV-071 foi pedido; confirmar com `git status -sb`.
+3. **Push:** só a pedido. A REV-073 está por enviar; o repositório é público.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 
