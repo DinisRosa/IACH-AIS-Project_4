@@ -15,7 +15,7 @@ O LaTeX só usa estas macros: nenhum número destes resultados é escrito à mã
 
 Execução (a partir da raiz do projeto, depois de `select_windows_on_test`):
     iach-ais-venv-4/bin/python -m ais.cli.build_window_results
-    iach-ais-venv-4/bin/python -m ais.cli.build_window_results --report-figures-only   # só as 2 figuras do relatório
+    iach-ais-venv-4/bin/python -m ais.cli.build_window_results --report-figures-only   # só as 3 figuras do relatório com o nome do modelo
 """
 from __future__ import annotations
 
@@ -51,7 +51,7 @@ VARIANTS = {"J0": {"dir": "windows_j0", "label": "j0", "prefix": "JZ", "color": 
 BASE_COLOR = GREY
 NEW_AUTH = "test_selection_windows_2026-11-23"
 OLD_AUTH = "test_selection_2026-11-23"
-FIG_AUTH = "configs/authorizations/test_report_figures.json"
+FIG_AUTH = "configs/authorizations/test_report_figures_baseline.json"
 CLASS_CMAP = ListedColormap([NAV, PESCA])
 
 
@@ -279,8 +279,8 @@ def fig_matrix(R: dict, name: str) -> str:
 
 
 def fig_loss_all(R: dict) -> str:
-    """Curvas de perda (treino e teste) da referência, de J0 e de J50, lado a lado."""
-    items = [("Referência", R["baseline"]["_hist"]["monitor_loss_per_point"], R["baseline"]["_curve"], R["baseline"]["epoca"])]
+    """Curvas de perda (treino e teste) da baseline, de J0 e de J50, lado a lado."""
+    items = [("Baseline", R["baseline"]["_hist"]["monitor_loss_per_point"], R["baseline"]["_curve"], R["baseline"]["epoca"])]
     for name in VARIANTS:
         r = R["variantes"][name]
         items.append((name, r["_hist"]["train_eval_loss_per_point"], r["_curve"], r["selecao"]["epoca_escolhida"]))
@@ -299,8 +299,8 @@ def fig_loss_all(R: dict) -> str:
 
 
 def fig_matrix_all(R: dict) -> str:
-    """Matrizes de confusão por ponto no teste da referência, de J0 e de J50, lado a lado."""
-    items = [("Referência", R["baseline"]["test"])] + [(n, R["variantes"][n]["test"]) for n in VARIANTS]
+    """Matrizes de confusão por ponto no teste da baseline, de J0 e de J50, lado a lado."""
+    items = [("Baseline", R["baseline"]["test"])] + [(n, R["variantes"][n]["test"]) for n in VARIANTS]
     fig, axes = plt.subplots(1, 3, figsize=(6.9, 2.1), sharey=True)
     for ax, (title, t) in zip(axes, items):
         cm = np.array(t["matriz_confusao_linhas_real_colunas_previsto"])
@@ -325,16 +325,16 @@ def fig_trips(R: dict) -> str:
     order = sorted(bt, key=lambda i: bt[i])
     x = np.arange(len(order))
     fig, ax = plt.subplots(figsize=(6.9, 2.6))
-    ax.plot(x, [100 * bt[i] for i in order], color=BASE_COLOR, lw=1.0, marker="o", ms=4, label="referência (viagem completa)")
+    ax.plot(x, [100 * bt[i] for i in order], color=BASE_COLOR, lw=1.0, marker="o", ms=4, label="baseline (viagem completa)")
     for name, v in VARIANTS.items():
         pv = R["variantes"][name]["test"]["por_viagem"]
         ax.plot(x, [100 * pv[i]["accuracy"] for i in order], color=v["color"], lw=1.0, marker="s" if name == "J0" else "^",
                 ms=4, label=f"{name} (janelas de 64)")
     ax.set_xticks(x, order, rotation=60, ha="right", fontsize=6)
-    ax.set(ylabel="Exatidão (%)", xlabel=f"Viagens do conjunto de teste ({len(order)}), por exatidão crescente da referência",
+    ax.set(ylabel="Exatidão (%)", xlabel=f"Viagens do conjunto de teste ({len(order)}), por exatidão crescente da baseline",
            xlim=(-0.5, len(order) - 0.5))
     ax.legend(frameon=False, fontsize=7, loc="upper center", bbox_to_anchor=(0.5, 1.2), ncol=3)
-    return save(fig, "janelas_viagens_ref.png")
+    return save(fig, "janelas_viagens_baseline.png")
 
 
 def fig_segments(R: dict) -> str:
@@ -378,7 +378,7 @@ def fig_timeline(R: dict) -> tuple[str, str]:
     rows = [("real", None)]
     base = pd.read_csv(BASE / "predictions_test_baseline.csv", usecols=["id", "t", "target", "predicted"])
     base = base[base["id"] == trip].sort_values("t")
-    arrs = {"real": base["target"].to_numpy(), "referência": base["predicted"].to_numpy()}
+    arrs = {"real": base["target"].to_numpy(), "baseline": base["predicted"].to_numpy()}
     for name, v in VARIANTS.items():
         p = pd.read_csv(ROOT / "results" / v["dir"] / "predictions_test_selected.csv",
                         usecols=["id", "t", "predicted"])
@@ -393,11 +393,21 @@ def fig_timeline(R: dict) -> tuple[str, str]:
         ax.tick_params(length=0)
     axes[-1].set_xlabel(f"Pontos da viagem {trip} (azul: navegação; laranja: pesca)", fontsize=7)
     fig.tight_layout(h_pad=0.2)
-    return save(fig, "janelas_linha_temporal_ref.png"), trip
+    return save(fig, "janelas_linha_temporal_baseline.png"), trip
+
+
+def add_loss_curves(R: dict) -> dict:
+    """Junta o histórico de treino e a curva de perda no `test` gravados na seleção (não se guardam no JSON final)."""
+    runs = [(R["baseline"], "phase1_select")] + [(R["variantes"][n], v["dir"]) for n, v in VARIANTS.items()]
+    for target, folder in runs:
+        run = ROOT / "results" / folder
+        target["_hist"] = pd.read_csv(run / "training_history.csv")
+        target["_curve"] = {int(k): x for k, x in load_json(run / "selection_test.json")["curva_de_perda_por_epoca"].items()}
+    return R
 
 
 def report_figures() -> list[str]:
-    """Só as duas figuras do relatório com a legenda «referência» (REV-065), a partir de ficheiros já gerados.
+    """Só as três figuras do relatório com o nome do modelo (REV-065, REV-072), a partir de ficheiros já gerados.
 
     Usa as previsões guardadas do `test`: exige a autorização própria e regista a leitura."""
     auth = load_json(ROOT / FIG_AUTH)
@@ -406,13 +416,13 @@ def report_figures() -> list[str]:
     R = load_json(OUT / "final_results_windows.json")
     log_access(ROOT / "results" / "access_log.jsonl",
                {"event": "report_figures", "split": "test", "authorization": auth["id"]})
-    return [fig_trips(R), fig_timeline(R)[0]]
+    return [fig_trips(R), fig_timeline(R)[0], fig_loss_all(add_loss_curves(R))]
 
 
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--report-figures-only", action="store_true",
-                    help="só as figuras do relatório; não reescreve resultados nem macros")
+                    help="só as três figuras do relatório; não reescreve resultados nem macros")
     if ap.parse_args(argv).report_figures_only:
         print("escritas:", ", ".join(report_figures()))
         return

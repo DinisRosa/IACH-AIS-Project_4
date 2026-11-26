@@ -1,0 +1,13 @@
+{
+  "id": "test_report_figures_baseline_2026-11-26",
+  "concedida_por": "utilizador (mensagens no chat, 2026-11-26)",
+  "conjuntos_autorizados": ["test"],
+  "finalidade": "figuras_relatorio",
+  "fonte": "previsoes e resultados ja guardados do test (baseline, J0 e J50); sem reabrir o parquet nem correr a CNN",
+  "decisoes_cobertas": [
+    "voltar a gerar as tres figuras do relatorio que tem o nome do modelo (exatidao por viagem, linha temporal e perda por epoca), com «baseline» em vez de «referencia» (REV-072)"
+  ],
+  "validation_autorizado": false,
+  "citacao_literal": "E eu dou-te permissão para usares o teste e validação. | depois podes começar a alterar o relatório para trocar referência por baseline",
+  "nota": "O plano da REV-072 apresentado no chat incluia refazer estas tres figuras. Nenhuma escolha se faz com elas."
+}
