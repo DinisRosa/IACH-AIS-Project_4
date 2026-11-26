@@ -1,7 +1,8 @@
 %%%% comparacao_workflows.tex
 %%%% Comparação do fluxo de trabalho com agentes de IA nas quatro tentativas do projeto AIS.
 %%%% REV-084 (cor Azul-aço-escuro #1F4E79): documento novo. REV-085 (Cinzento-grafite #3C3C3C):
-%%%% a pedido do utilizador, todo o texto passa a preto; a cor fica só nas molduras das caixas.
+%%%% a pedido do utilizador, todo o texto passa a preto. REV-086 (Bronze #8C6D1F): reescrita das
+%%%% secções 3 a 7 em estilo académico, sem caixas; texto mantido a preto, a pedido do utilizador.
 %%%% Compilar a partir de investigacao_agentes/:  pdflatex comparacao_workflows.tex (duas vezes).
 %%%% Os números vêm de gerado/metricas.tex, gerado por scripts/metricas_git.py (não editar à mão).
 
@@ -19,7 +20,6 @@
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{enumitem}
-\usepackage[most]{tcolorbox}
 \usepackage{listings}
 \usepackage{caption}
 \usepackage{float}
@@ -33,21 +33,16 @@
 \input{gerado/metricas}
 
 \setlist{itemsep=2pt,topsep=4pt}
+\setlength{\emergencystretch}{2.5em}
 \captionsetup{font=small,labelfont=bf}
 \renewcommand{\arraystretch}{1.15}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 
-\newcommand{\facto}{\textsc{[facto]}}
-\newcommand{\deducao}{\textsc{[dedução]}}
 \newcommand{\Pum}{\textbf{P1}}
 \newcommand{\Pdois}{\textbf{P2}}
 \newcommand{\Ptres}{\textbf{P3}}
 \newcommand{\Pquatro}{\textbf{P4}}
 
-\newtcolorbox{sintese}[1][]{colback=rev084!5,colframe=rev084!70,fonttitle=\bfseries,
-  title={#1},boxrule=0.6pt,arc=2pt,left=6pt,right=6pt,top=4pt,bottom=4pt}
-\newtcolorbox{licao}[1][]{colback=white,colframe=rev084,fonttitle=\bfseries,
-  title={#1},boxrule=0.8pt,arc=2pt,left=6pt,right=6pt,top=4pt,bottom=4pt}
 
 \lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,
   frame=single,rulecolor=\color{rev084!40},backgroundcolor=\color{rev084!3},
@@ -125,9 +120,10 @@ Este documento responde a cinco perguntas:
 
 O documento destina-se ao autor, ao docente e a qualquer pessoa que trabalhe com agentes de
 programação. A Secção~\ref{sec:metodo} descreve o método; a Secção~\ref{sec:tentativas}, cada
-tentativa; a Secção~\ref{sec:comparacao} compara-as por eixos; as Secções~\ref{sec:balanco}
-e~\ref{sec:licoes} fazem o balanço e tiram lições; a Secção~\ref{sec:kit} apresenta o kit de
-arranque, cujos modelos estão nos anexos e em \texttt{investigacao\_agentes/kit/}.
+tentativa; a Secção~\ref{sec:comparacao} compara-as por eixos; a Secção~\ref{sec:discussao}
+discute os resultados, as implicações para projetos futuros e as limitações do estudo. Os anexos
+contêm as métricas e os modelos do kit de arranque, também guardados em
+\texttt{investigacao\_agentes/kit/}.
 
 %% =====================================================================
 \section{Método}\label{sec:metodo}
@@ -140,8 +136,8 @@ apagada no fim; nenhum foi alterado. Não se abriram ficheiros de dados AIS.
 \paragraph{Análise.} Quatro subagentes (modelo Claude Opus), um por repositório, estudaram o
 histórico com comandos git de leitura e responderam às mesmas dez perguntas: cronologia,
 ferramenta usada, documentos de instrução, memória, segurança, fiabilidade, produtividade,
-estrutura, o que correu bem e mal, e traços distintivos. Cada afirmação foi marcada como
-\facto{} (com commit, data ou caminho) ou \deducao{} (inferência). O coordenador integrou os
+estrutura, o que correu bem e mal, e traços distintivos. Cada afirmação foi acompanhada da evidência (commit, data ou caminho) ou marcada como inferência;
+no texto, as inferências são assinaladas como tal. O coordenador integrou os
 relatórios, verificou por amostragem as afirmações centrais e escreveu este documento.
 
 \paragraph{Números.} Os números das tabelas e figuras vêm do script
@@ -153,7 +149,7 @@ linhas de um ficheiro concreto) vêm dos relatórios dos subagentes e indicam o 
 
 \paragraph{Ferramentas.} O utilizador usou opencode, Cline, Abacus.AI, GitHub Copilot e
 Antigravity (Gemini) nas três primeiras tentativas, e Claude Code na quarta, mas não se lembrava
-qual em qual. A atribuição por tentativa é por isso uma \deducao{}, baseada em vestígios no
+qual em qual. A atribuição por tentativa é por isso uma inferência, baseada em vestígios no
 repositório (ficheiros-ponte, entradas no \texttt{.gitignore}, \emph{trailers}
 \texttt{Co-authored-by} e texto dos documentos).
 
@@ -194,24 +190,25 @@ dias, com uma pausa de cerca de 42~h a meio.}
 %% =====================================================================
 \section{As quatro tentativas}\label{sec:tentativas}
 
-\subsection{\Pum{} — muitas ferramentas, regras tardias, nenhum modelo}
+\subsection{Primeira tentativa (\Pum)}
 
-\paragraph{Cronologia.} \facto{} \mUmCommits{} commits entre \mUmPrimeiro{} e \mUmUltimo{}, em
-três branches (\texttt{main}, \texttt{features\_engineering}, \texttt{model\_training}). As
+\paragraph{Cronologia.} \mUmCommits{} commits entre \mUmPrimeiro{} e \mUmUltimo{}, em
+três branches (\texttt{main}, \texttt{features\_\allowbreak engineering}, \texttt{model\_\allowbreak training}). As
 primeiras semanas foram a proposta em LaTeX e a bibliografia; seguiram-se ferramentas de dados e
 análise exploratória (EDA); a 16 de novembro houve 18 commits num só dia, quase todos de
 reorganização do repositório (nova raiz, \texttt{git subtree}, arquivo de dados, ramos de fase).
 O ramo \texttt{model\_training} tem uma árvore idêntica à de \texttt{main}.
 
-\paragraph{Ferramentas.} \facto{} \mUmCoAutorCopilot{} commits têm o \emph{trailer}
+\paragraph{Ferramentas.} \mUmCoAutorCopilot{} commits têm o \emph{trailer}
 \texttt{Co-authored-by: Copilot}; o \texttt{.gitignore} passou a ignorar \texttt{.opencode/}
 (commit \texttt{afff28c}) e \texttt{.abacusai/} (\texttt{6e8beb9}); o commit \texttt{de4c55f}
 versionou cinco \emph{skills} do pacote \emph{superpowers} (brainstorming, writing-plans,
 executing-plans, \dots) e uma skill própria, \texttt{delegate-terminal}, que delegava trabalho na
-Abacus.AI ou no opencode «para poupar a quota do modelo principal». \deducao{} Copilot e opencode
-com confiança alta; Abacus.AI como executor delegado; sem vestígios de Cline nem Antigravity.
+Abacus.AI ou no opencode «para poupar a quota do modelo principal». Infere-se, com confiança alta,
+o uso do Copilot e do opencode, e da Abacus.AI como executor delegado; não há vestígios de Cline
+nem de Antigravity.
 
-\paragraph{Instruções e comunicação.} \facto{} O \texttt{AGENTS.md} só nasceu a 16 de novembro,
+\paragraph{Instruções e comunicação.} O \texttt{AGENTS.md} só nasceu a 16 de novembro,
 como subproduto da reorganização, e tratava quase só de git (ramo por fase, nunca
 \emph{force-push}, evitar \texttt{git add .}). Não tinha regras de método, de âmbito, de dados
 nem de comunicação. Antes disso, a comunicação fazia-se pela própria proposta e por três
@@ -220,12 +217,12 @@ revisões dela (uma com 1\,243 linhas) e, a partir de 13 de novembro, por pares
 A pasta \texttt{docs/} foi deixada de versionar a 8 de outubro (\texttt{a3ec4af}), pelo que o
 raciocínio dessas semanas não sobreviveu no repositório.
 
-\paragraph{Memória.} \facto{} Não havia registo de progresso nem de decisões. As 78
+\paragraph{Memória.} Não havia registo de progresso nem de decisões. As 78
 \emph{checkboxes} dos quatro planos ficaram todas por marcar, embora pelo menos três planos
 tenham sido executados; o plano do \emph{baseline} nunca foi implementado e não deixou registo
 de abandono.
 
-\paragraph{Segurança.} \facto{} A proposta inicial dividia os dados por navio, «para evitar fuga
+\paragraph{Segurança.} A proposta inicial dividia os dados por navio, «para evitar fuga
 de informação»; a \emph{spec} de 13 de novembro passou a divisão por ID de viagem, aceitando que
 viagens do mesmo navio caíssem em conjuntos diferentes. A EDA e a figura de normalização foram
 calculadas sobre o conjunto completo, antes da divisão. Um CSV de 10~MB esteve no histórico, e os
@@ -233,37 +230,35 @@ conjuntos de treino, teste e validação derivados foram versionados num arquivo
 partes de 90~MiB (cerca de 202~MB) no ramo \texttt{features\_engineering}. Um ficheiro de
 constantes tinha caminhos absolutos da máquina pessoal.
 
-\paragraph{Fiabilidade.} \facto{} \mUmFuncTestes{} testes pytest, só sobre o conversor e a
+\paragraph{Fiabilidade.} \mUmFuncTestes{} testes pytest, só sobre o conversor e a
 divisão (bons: dados sintéticos, sem escrever ficheiros reais). Sem \texttt{requirements.txt}.
 Dois conversores concorrentes escreviam no mesmo ficheiro com esquemas diferentes, e o oficial
 partia a EDA.
 
-\paragraph{Produtividade.} \facto{} Cerca de 48\,\% das linhas de Python serviam para produzir
+\paragraph{Produtividade.} Cerca de 48\,\% das linhas de Python serviam para produzir
 figuras (639 de 1\,336); 18 PNG no ramo de fase; nenhuma linha com \texttt{torch},
 \texttt{keras} ou \texttt{sklearn}. O dia mais ativo produziu zero linhas de modelo.
 
-\begin{sintese}[Em síntese — \Pum]
-É o retrato exato da queixa «faziam muito por pouco»: muita estatística, muitas figuras, muitas
+\paragraph{Síntese.} É o retrato exato da queixa «faziam muito por pouco»: muita estatística, muitas figuras, muitas
 revisões e muita engenharia de git, e o modelo nunca começou. As instruções ao agente chegaram
 tarde e só falavam de git. Várias ferramentas em paralelo, sem um registo comum, e a estrutura
 mudou de raiz duas vezes. O utilizador recomeçou porque o repositório ficou caótico.
-\end{sintese}
 
-\subsection{\Pdois{} — um só ramo útil, planos externos e auditorias}
+\subsection{Segunda tentativa (\Pdois)}
 
-\paragraph{Cronologia.} \facto{} \mDoisCommits{} commits entre \mDoisPrimeiro{} e
+\paragraph{Cronologia.} \mDoisCommits{} commits entre \mDoisPrimeiro{} e
 \mDoisUltimo{}, em \mDoisDias{} dias com commits, dos quais 17 numa só noite (23:48--02:56).
 Os ramos \texttt{code} e \texttt{latex} começaram como «um por área» e acabaram como
 \emph{snapshots} de segurança nunca integrados, que ficaram obsoletos 13 horas depois. O trabalho
 real foi linear em \texttt{main}.
 
-\paragraph{Ferramentas.} \facto{} Nenhum ficheiro-ponte; só um \texttt{AGENTS.md} genérico. A
+\paragraph{Ferramentas.} Nenhum ficheiro-ponte; só um \texttt{AGENTS.md} genérico. A
 auditoria de 17 de novembro executou um notebook para \texttt{/tmp/opencode/\dots}.
-\deducao{} opencode com confiança alta na fase intensa; a 20 de novembro, os assuntos sem
+Infere-se, com confiança alta, que o opencode foi usado na fase intensa; a 20 de novembro, os assuntos sem
 acentos e o vocabulário brasileiro sugerem outro agente ou modelo (Copilot, Cline ou o próprio
 opencode; não se distingue).
 
-\paragraph{Instruções e comunicação.} \facto{} O primeiro \texttt{AGENTS.md} (32 linhas) é uma
+\paragraph{Instruções e comunicação.} O primeiro \texttt{AGENTS.md} (32 linhas) é uma
 cópia exata de uma versão \emph{antiga} do de \Pum{}, com ramos e pastas que não existiam em
 \Pdois; o agente trabalhou cerca de 6~h30 com instruções desatualizadas até à reescrita
 (\texttt{7b4e193}). Regras acrescentadas depois de problemas: a de mensagens de commit
@@ -272,49 +267,47 @@ corte de 220 para 24 linhas no \texttt{.gitignore}. Versão final: 56 linhas, em
 tudo o resto estava em português. A novidade mais interessante foi a comunicação por
 \emph{documentos-plano}: uma auditoria pelo agente (619 linhas) e um plano de 1\,475 linhas com
 «Instruções prioritárias para o agente», «Primeira tarefa concreta» e o formato do relatório a
-devolver. \deducao{} O plano foi gerado fora do repositório por um LLM de chat, a partir da
+devolver. Tudo indica que o plano foi gerado fora do repositório por um LLM de chat, a partir da
 transcrição Whisper de uma conversa (o documento cita um ficheiro
 \texttt{\dots large-v3-turbo.txt}). Também apareceu a \emph{marcação a cores} das alterações do
 agente no Markdown e na proposta, antepassada do sistema de revisões de \Pquatro.
 
-\paragraph{Memória.} \facto{} Plano vivo com estados \texttt{[x]/[\textasciitilde]/[ ]}, auditorias
+\paragraph{Memória.} Plano vivo com estados \texttt{[x]/[\textasciitilde]/[ ]}, auditorias
 datadas e um registo de experiências em CSV (EXP-001 a EXP-009). Funcionou em parte: a auditoria
 encontrou rótulos desatualizados no plano. Mas o estado estava duplicado em 4--5 documentos: só
 para registar uma política, um commit mexeu em 7 ficheiros e outro em 8, incluindo o PDF.
 \mDoisSoMd{} commits tocaram só em Markdown. O README afirmava «falta apenas fechar ablações»
 quando nenhum classificador tinha sido treinado.
 
-\paragraph{Segurança.} \facto{} Divisão por viagem, seed 42, normalização só no treino, e os
+\paragraph{Segurança.} Divisão por viagem, seed 42, normalização só no treino, e os
 \emph{baselines} declaram que não usaram validação nem teste. Mas um script de investigação de
 qualidade lia os conjuntos normalizados de validação e teste, e o plano registou a proporção de
 pesca do teste. O próprio plano admite que o repositório não provava que os parâmetros tinham sido
 escolhidos sem olhar para o teste. Nenhum dado AIS versionado; 16 PDFs de bibliografia (cerca de
 94~MB) sim.
 
-\paragraph{Fiabilidade.} \facto{} Ambiente fixado (33 pacotes com versão exata). Sem pytest: só
+\paragraph{Fiabilidade.} Ambiente fixado (33 pacotes com versão exata). Sem pytest: só
 scripts com \texttt{assert} sobre dados de treino. Boa proveniência pontual (números nos commits,
 EXP-IDs, tabela com o commit de origem de cada valor).
 
-\begin{sintese}[Em síntese — \Pdois]
-A infraestrutura de dados ficou sólida, mas o modelo-alvo nunca foi treinado. O «muito por pouco»
+\paragraph{Síntese.} A infraestrutura de dados ficou sólida, mas o modelo-alvo nunca foi treinado. O «muito por pouco»
 mudou de forma: menos figuras, mais \emph{documentação e sincronização} (auditorias, plano de
 1\,475 linhas, 10 versões do PDF da proposta). Ganhou-se a ideia do plano externo e das cores;
 perdeu-se tempo com instruções copiadas desatualizadas, ramos-\emph{snapshot} e estado
 duplicado.
-\end{sintese}
 
-\subsection{\Ptres{} — regras de método, progresso rápido, desalinhamento com o enunciado}
+\subsection{Terceira tentativa (\Ptres)}
 
-\paragraph{Cronologia.} \facto{} \mTresCommits{} commits; 13 deles entre 20/11 22:24 e 21/11
+\paragraph{Cronologia.} \mTresCommits{} commits; 13 deles entre 20/11 22:24 e 21/11
 01:59 (cerca de 3,5~h). Quatro commits em 73 segundos sugerem trabalho já feito registado em
 bloco. O último (26/11) é um retoque isolado, com \emph{trailer} do Copilot, já com \Pquatro{}
 em curso.
 
-\paragraph{Ferramentas.} \facto{} Nenhum ficheiro-ponte; \texttt{.vscode/} ignorado; um único
-\emph{trailer} (\mTresCoAutorCopilot) do Copilot. \deducao{} Copilot ou Cline no VS Code
-(confiança média-baixa para as sessões principais).
+\paragraph{Ferramentas.} Nenhum ficheiro-ponte; \texttt{.vscode/} ignorado; um único
+\emph{trailer} (\mTresCoAutorCopilot) do Copilot. Infere-se, com confiança média-baixa, que as sessões
+principais usaram o Copilot ou o Cline no VS Code.
 
-\paragraph{Instruções e comunicação.} \facto{} Primeiro \texttt{AGENTS.md} metodológico, em
+\paragraph{Instruções e comunicação.} Primeiro \texttt{AGENTS.md} metodológico, em
 português de Portugal (\mTresAgentsPrimeiro{} → \mTresAgentsLinhas{} linhas): contexto, fase atual
 com âmbito fechado («não implementar sem pedido explícito»), oito «regras que não se quebram»,
 estrutura, comandos e um modelo de commit \emph{O quê / Porquê / Como / Impacto / Validado /
@@ -323,11 +316,11 @@ D1--D18 «validadas pelo Dinis» servia de contrato vivo. Em sentido contrário,
 «só fazer commit quando pedido» de \Pdois{} e não havia nenhuma regra sobre push; marcadores
 \texttt{[A CONFIRMAR]} ficaram até ao fim.
 
-\paragraph{Memória.} \facto{} Plano com estado por passo, registo de experiências e mensagens de
-commit ricas, sempre com «Pendente». \deducao{} Funcionou como memória técnica, mas não guardava o
+\paragraph{Memória.} Plano com estado por passo, registo de experiências e mensagens de
+commit ricas, sempre com «Pendente». Na prática, estes mecanismos serviram de memória técnica, mas não guardavam o
 estado da conversa (perguntas em aberto, o que o utilizador aprovou).
 
-\paragraph{Segurança e fiabilidade.} \facto{} O teste nunca foi usado para avaliar modelos, e a
+\paragraph{Segurança e fiabilidade.} O teste nunca foi usado para avaliar modelos, e a
 fuga entre navios foi medida (16 navios em mais de um conjunto). Mas calcularam-se percentis por
 conjunto, teste incluído, e a divisão foi escolhida entre «cinco testadas» por reproduzir os
 conjuntos da proposta. Sem pasta de testes: 313 \texttt{assert} dentro dos scripts, com modos
@@ -335,29 +328,27 @@ conjuntos da proposta. Sem pasta de testes: 313 \texttt{assert} dentro dos scrip
 determinísticos; faltou o scikit-learn no \texttt{requirements.txt}; resultados fora do git, sem
 ligação automática ao código.
 
-\paragraph{Produtividade.} \facto{} Foi a tentativa com mais progresso por hora: \emph{baselines},
+\paragraph{Produtividade.} Foi a tentativa com mais progresso por hora: \emph{baselines},
 um HMM escrito de raiz e uma BiGRU treinada (2 experiências × 3 sementes), com F1 macro na
 validação de 0,940~±~0,011 contra 0,877 do melhor \emph{baseline}. Nenhuma figura. Mas o modelo
 principal era uma BiGRU, não a CNN~1D pedida, e o HMM (534 linhas) era trabalho fora do âmbito.
 A decisão «8 épocas chegam» mostrou-se errada no próprio registo.
 
-\begin{sintese}[Em síntese — \Ptres]
-Estrutura limpa e progresso rápido: não foi abandonada por caos. \deducao{} Os motivos prováveis
+\paragraph{Síntese.} Estrutura limpa e progresso rápido: não foi abandonada por caos. Os motivos prováveis
 do recomeço foram o desalinhamento com o enunciado (BiGRU e HMM em vez de CNN com viagem completa
 e com janelas), a falta de controlo e transparência (o agente decidia e fazia commits sem
 explicar comandos) e regras de dados ainda permissivas. Daqui passaram para \Pquatro{} o modelo de
 commit, a divisão 70/15/15 com seed 42, o «perguntar em vez de assumir» e o português.
-\end{sintese}
 
-\subsection{\Pquatro{} — regras desde o primeiro commit e continuidade entre sessões}
+\subsection{Quarta tentativa (\Pquatro)}
 
-\paragraph{Cronologia.} \facto{} \mQuatroCommits{} commits em \mQuatroDias{} dias (75 no primeiro).
+\paragraph{Cronologia.} \mQuatroCommits{} commits em \mQuatroDias{} dias (75 no primeiro).
 A parte técnica (ambiente e divisão; preparação auditável; CNN~1D \emph{baseline}; janelas J0 e
 J50; medição final) ficou feita em cerca de 23~h de relógio. Depois de uma pausa de 42~h, vieram o
 pós-processamento (filtro temporal) e o relatório de 10 páginas, este com 51 commits em cerca de
 3~h.
 
-\paragraph{Ferramenta.} \facto{} Claude Code: \texttt{CLAUDE.md} de cinco linhas que manda ler o
+\paragraph{Ferramenta.} Claude Code: \texttt{CLAUDE.md} de cinco linhas que manda ler o
 \texttt{AGENTS.md} e o \texttt{handoff.md}; todos os \mQuatroCoAutor{} commits com
 \emph{trailer} da Anthropic. Os \emph{trailers} mostram quatro sessões com coordenadores
 diferentes: Haiku (\mQuatroCoAutorHaiku{} commits), Sonnet, Opus (\mQuatroCoAutorOpus) no
@@ -367,13 +358,17 @@ fechado, Opus faz diagnóstico e revisão. Há subagentes registados (implementa
 independente só de leitura antes da medição e do relatório). A Abacus.AI foi usada para uma
 segunda implementação independente do filtro, só com código, nunca com dados.
 
-\paragraph{Instruções e comunicação.} \facto{} O \texttt{AGENTS.md} já nasceu com
+\paragraph{Instruções e comunicação.} O \texttt{AGENTS.md} já nasceu com
 \mQuatroAgentsPrimeiro{} linhas e 11 secções (comunicação, dados, ambiente, testes, git,
 compatibilidade de ferramentas, revisões por cor, delegação, reprodutibilidade, fecho), mais
 1\,923 linhas de especificação em \texttt{docs/00}--\texttt{06}. Teve \mQuatroAgentsVersoes{}
-versões; as regras novas nasceram de decisões explícitas do utilizador, cada uma com um ID:
+versões; as regras novas nasceram de decisões explícitas do utilizador, cada uma com um
+identificador (Tabela~\ref{tab:regras}).
 
-\begin{center}\small
+\begin{table}[H]
+\centering\small
+\caption{Regras acrescentadas ao \texttt{AGENTS.md} de \Pquatro{} por decisão do utilizador.}
+\label{tab:regras}
 \begin{tabularx}{\linewidth}{@{}lL@{}}
 \toprule
 REV-010 & Atualizar \texttt{PROGRESS.md} e \texttt{REVISION\_LOG.md} no fim de cada interação.\\
@@ -384,15 +379,15 @@ REV-055 & Push só a pedido explícito do utilizador; nunca \texttt{--force}; su
 REV-065 e seg. & Relatório novo; exceções sucessivas à regra das cores.\\
 \bottomrule
 \end{tabularx}
-\end{center}
+\end{table}
 
-O utilizador comunicava por decisões registadas: \facto{} 37 mensagens de commit dizem «pedido do
+O utilizador comunicava por decisões registadas: 37 mensagens de commit dizem «pedido do
 utilizador»; as autorizações de acesso a dados reservados guardam a frase literal do utilizador
 em JSON; o plano do relatório usou decisões D1--D8 em tabela (recomendação contra alternativa),
 aceites em bloco; o \texttt{handoff.md} tem uma secção de preferências observadas («quer
 primeiro a explicação e o plano\dots»).
 
-\paragraph{Memória.} \facto{} Três ficheiros: \texttt{handoff.md} (ponto de situação, ordem de
+\paragraph{Memória.} Três ficheiros: \texttt{handoff.md} (ponto de situação, ordem de
 leitura, tabela de última validação com hora, cronologia de commits, o que falhou,
 preferências), alterado em 63 commits e reescrito de raiz seis vezes;
 \texttt{PROGRESS.md} (estado vivo, decisões vigentes, pendências, 104 entradas datadas), alterado
@@ -400,7 +395,7 @@ em 95 commits; e \texttt{REVISION\_LOG.md} (83 revisões, cada uma com cor, o qu
 ficheiros, correspondência no LaTeX e validação). As quatro mudanças de sessão e de modelo não
 causaram perda de contexto visível.
 
-\paragraph{Segurança.} \facto{} Divisão 70/15/15 por viagem com seed 42 e manifesto versionado.
+\paragraph{Segurança.} Divisão 70/15/15 por viagem com seed 42 e manifesto versionado.
 Um módulo \texttt{reserved.py} exige uma autorização em JSON (citação, finalidade, âmbito, número
 de rondas) e um protocolo declarado \emph{antes} de abrir, e regista cada acesso; tem testes
 próprios. Doze autorizações escritas. Num incidente (REV-050) uma leitura autorizada ficou gasta
@@ -409,292 +404,230 @@ guardar os dados antes de desenhar. Mas o \texttt{validation}, declarado «gasto
 final (REV-053), voltou a ser usado sobre previsões guardadas para duas versões do filtro (REV-057
 e REV-059), por decisão do utilizador; ficou registado como «terceira utilização», não bloqueado.
 
-\paragraph{Fiabilidade.} \facto{} Testes sintéticos desde o primeiro dia, de 15 funções para
+\paragraph{Fiabilidade.} Testes sintéticos desde o primeiro dia, de 15 funções para
 \mQuatroFuncTestes{} (256 casos com \texttt{parametrize}); apanharam erros reais (um ângulo de
 180° que virava -180°, uma convolução em viagens mais curtas que a janela). Todos os números do
 relatório entram por 512 macros geradas por código, com o commit de origem no cabeçalho.
 
-\paragraph{Produtividade.} \facto{} \mQuatroLinhasPy{} linhas de Python, das quais só 1\,921 no
+\paragraph{Produtividade.} \mQuatroLinhasPy{} linhas de Python, das quais só 1\,921 no
 núcleo (\texttt{phase1}) e 3\,839 em programas de figuras, macros e diagnóstico; 10 figuras
 órfãs. \mQuatroRegisto{} dos \mQuatroCommits{} commits (\,≈\,25\,\%) só tocam em ficheiros de
 registo, e \mQuatroSoMd{} só em Markdown. Pelo menos 10 das 20 revisões do relatório foram
 cosméticas (legendas, paginação, ordem dos anexos), cada uma com entrada no registo, no progresso
 e no handoff.
 
-\begin{sintese}[Em síntese — \Pquatro]
-A única tentativa que terminou, e depressa na parte técnica. O que mais ajudou, nas palavras do
+\paragraph{Síntese.} A única tentativa que terminou, e depressa na parte técnica. O que mais ajudou, nas palavras do
 utilizador: o \texttt{handoff}/\texttt{PROGRESS}/\texttt{REVISION\_LOG}, o manifesto e a
 obrigação de ser explícito ao autorizar validação e teste, a regra do push, e os testes com
 números reprodutíveis. O «muito por pouco» não desapareceu: deslocou-se para a contabilidade
 (registos, horas, cores) e para o código de relatório.
-\end{sintese}
 
 %% =====================================================================
-\section{Comparação por eixos}\label{sec:comparacao}
+\section{Comparação entre tentativas}\label{sec:comparacao}
 
-\subsection{Instruções dadas ao agente}
+Esta secção compara as quatro tentativas segundo os eixos definidos na introdução. A
+Tabela~\ref{tab:eixos} resume a comparação; o texto discute o que a tabela não mostra.
+
+\begin{table}[H]
+\centering\small
+\caption{Síntese comparativa das quatro tentativas, por eixo de análise.}
+\label{tab:eixos}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.6cm}LLLL@{}}
+\toprule
+ & \Pum & \Pdois & \Ptres & \Pquatro \\
+\midrule
+Instruções ao agente & tardias, só sobre git & copiadas de \Pum, depois genéricas & metodológicas, por fase & contrato completo desde o início \\
+Comunicação & proposta, revisões, \emph{spec}/\emph{plan} & planos externos e auditorias & plano com decisões D1--D18 & decisões com ID, autorizações escritas \\
+Continuidade & planos não atualizados & estado em vários documentos & plano e mensagens de commit & \texttt{handoff} e \texttt{PROGRESS} \\
+Dados reservados & EDA antes da divisão; dados no git & leitura exploratória & percentis por conjunto & acesso só com autorização e registo \\
+Testes & 14, só no conversor & \texttt{assert} em scripts & \texttt{assert} em scripts & 209 funções (256 casos) \\
+Desvio de esforço & figuras e EDA & documentação & modelos fora do âmbito & registos e relatório \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Instruções e comunicação}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{gerado/fig_agents_md.pdf}
-\caption{Tamanho do \texttt{AGENTS.md} em cada commit que o alterou (todas as branches). Em
-\Pum{} e \Pdois{} foi pequeno, tardio e centrado em git; em \Pquatro{} nasceu completo e mudou
-pouco de tamanho, mas mudou muitas vezes de conteúdo.}
+\caption{Tamanho do \texttt{AGENTS.md} em cada commit que o alterou (todas as branches).}
 \label{fig:agents}
 \end{figure}
 
-A evolução tem três fases. Em \Pum{} e \Pdois{} as instruções eram \emph{reativas}: nasciam
-depois de um problema (o commit sem corpo em \Pdois{}, a reorganização em \Pum{}) e tratavam de git.
-Em \Ptres{} passaram a ser \emph{metodológicas} (âmbito por fase, regras que não se quebram). Em
-\Pquatro{} tornaram-se \emph{um contrato de trabalho completo} desde o primeiro commit, incluindo
-as regras de interação que faltavam (explicar comandos antes, pedir autorização, push só a
-pedido). Duas lições laterais: copiar um \texttt{AGENTS.md} antigo sem o rever custa horas
-(\Pdois); e uma regra que precisa de cinco exceções em duas horas (as cores em \Pquatro) é uma
-regra mal desenhada.
+A evolução das instruções dadas ao agente passou por três fases (Figura~\ref{fig:agents}). Em
+\Pum{} e \Pdois{} as instruções eram reativas: surgiam depois de um problema e tratavam sobretudo
+de git. Em \Ptres{} tornaram-se metodológicas, com âmbito fechado por fase e um conjunto de
+regras que o agente não podia quebrar. Em \Pquatro{} o \texttt{AGENTS.md} funcionou desde o
+primeiro commit como um contrato de trabalho completo, que incluía as regras de interação que
+faltavam nas tentativas anteriores: explicar cada comando antes de o executar, pedir autorização
+para alterações metodológicas e fazer push apenas a pedido. O tamanho do ficheiro quase não mudou
+em \Pquatro, mas o conteúdo mudou em \mQuatroAgentsVersoes{} versões, quase sempre por decisão
+explícita do utilizador. Duas observações laterais merecem registo. Em \Pdois, copiar sem revisão
+o \texttt{AGENTS.md} de uma versão antiga de \Pum{} fez o agente trabalhar cerca de seis horas com
+instruções desatualizadas. Em \Pquatro, a regra das cores precisou de cinco exceções em duas
+horas, sinal de que estava mal ajustada à fase do relatório.
 
-\subsection{Comunicação entre utilizador e agente}
-
-\begin{table}[H]
-\centering\small
-\caption{Como o utilizador comunicava com o agente.}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.7cm}LLLL@{}}
-\toprule
- & \Pum & \Pdois & \Ptres & \Pquatro \\
-\midrule
-Canal principal & proposta, revisões, \emph{spec}/\emph{plan} & prompts e documentos-plano externos & AGENTS.md + plano com decisões D1--D18 & AGENTS.md, docs/00--01, decisões REV e D1--D8 \\
-Antes de agir & — & — & perguntar em vez de inventar & explicar comando, efeitos; esperar pelo sim \\
-Depois de agir & corpo do commit & corpo do commit com «Verificação» & commit O quê/\dots/Pendente & resumo + commit + PROGRESS + handoff \\
-Decisões do utilizador & implícitas & no plano & D1--D18 & REV com citação; autorizações em JSON \\
-Língua & PT e EN misturados & PT; AGENTS em EN & PT-PT & PT-PT \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-O padrão que funcionou em \Pquatro{} foi \emph{separar três coisas}: a decisão do utilizador
-(registada com ID), a autorização (escrita, com âmbito) e a execução (feita e validada pelo
-agente). As tabelas de decisões com recomendação e alternativa (D1--D8) tornaram as perguntas
-rápidas de responder. Nas tentativas anteriores, o utilizador queixava-se de que os agentes
-ignoravam regras e de explicações pouco claras; o modelo de commit de \Ptres{} e a obrigação de
-explicar antes de executar em \Pquatro{} atacaram diretamente essas queixas.
+Quanto à comunicação, o padrão que funcionou em \Pquatro{} foi separar três coisas que nas
+tentativas anteriores estavam misturadas: a decisão do utilizador, registada com um
+identificador; a autorização, escrita e com âmbito definido; e a execução, feita e validada pelo
+agente. As perguntas apresentadas em tabela, com uma recomendação e uma alternativa (decisões
+D1--D8 do plano do relatório), tornaram mais rápido responder ao agente. As queixas do utilizador
+nas primeiras tentativas (regras ignoradas e explicações pouco claras) foram atacadas por dois
+mecanismos: o modelo de mensagem de commit introduzido em \Ptres, pensado para que o utilizador
+percebesse a alteração sem abrir o diff, e a obrigação, em \Pquatro, de explicar comandos e
+efeitos antes de agir.
 
 \subsection{Memória e continuidade}
 
-\begin{table}[H]
-\centering\small
-\caption{Mecanismos para guardar estado e raciocínio entre sessões.}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.7cm}LLLL@{}}
-\toprule
- & \Pum & \Pdois & \Ptres & \Pquatro \\
-\midrule
-Estado vivo & planos com checkboxes (0 de 78 marcadas) & plano vivo + auditorias & plano com estado por passo & PROGRESS (topo vivo) \\
-Decisões & — & dispersas & D1--D18 no plano & REV-001--083 + «Decisões vigentes» \\
-Passagem entre sessões & — & — & mensagens de commit & handoff.md com hora e última validação \\
-Experiências & — & CSV EXP-001--009 & registo EXP & resultados + macros geradas \\
-Problema principal & docs fora do git & estado em 4--5 sítios & sem estado da conversa & redundância e custo \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-A peça decisiva foi o \texttt{handoff.md}: um ficheiro curto, reescrito de raiz, que diz onde se
-está, o que ler primeiro, o que foi validado e \emph{a que horas}, e o que falhou. Foi o que
-permitiu mudar de conversa e de modelo quatro vezes sem perder o fio. O preço foi a redundância: o
-mesmo facto escrito no \texttt{REVISION\_LOG}, no \texttt{PROGRESS}, no \texttt{handoff} e por
-vezes no \texttt{README} e em \texttt{docs/00}.
+Nenhuma das três primeiras tentativas tinha um mecanismo para transmitir o estado da conversa
+entre sessões. Os planos de \Pum{} ficaram com as 78 caixas de verificação por marcar; em
+\Pdois{} o estado estava repetido em quatro ou cinco documentos, que se desalinhavam; em \Ptres{}
+o plano e as mensagens de commit guardavam o estado técnico, mas não as perguntas em aberto nem o
+que o utilizador tinha aprovado. A peça que mudou isto em \Pquatro{} foi o \texttt{handoff.md}: um
+ficheiro curto, reescrito de raiz no fim de cada sessão, que indica onde se está, o que ler
+primeiro, o que foi validado e a que horas, e o que falhou. Foi o que permitiu mudar quatro vezes
+de conversa e de modelo coordenador sem perda visível de contexto. O preço foi a redundância: o
+mesmo facto ficava escrito no \texttt{REVISION\_LOG}, no \texttt{PROGRESS}, no \texttt{handoff}
+e, por vezes, no \texttt{README} e em \texttt{docs/00}.
 
 \subsection{Segurança}
 
-\begin{table}[H]
-\centering\small
-\caption{Segurança dos dados, do git e do ambiente.}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.7cm}LLLL@{}}
-\toprule
- & \Pum & \Pdois & \Ptres & \Pquatro \\
-\midrule
-Divisão & por navio → por viagem & por viagem, seed 42 & por viagem, seed 42 & por viagem, seed 42, manifesto versionado \\
-Uso de val./teste em desenvolvimento & EDA antes da divisão & leitura exploratória & percentis por conjunto & proibido; autorização escrita + registo \\
-Dados no git & sim (≈202~MB) & não & não & não (só o manifesto) \\
-Push & regra tardia (sem force) & «nunca force» & sem regra & só a pedido explícito \\
-Reutilização do conjunto final & — & — & — & 3 usos, registados \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-A segurança melhorou de forma monótona, e o salto maior foi passar de \emph{intenções}
-(«não usar o teste») para \emph{mecanismos} (código que recusa abrir sem autorização, testes
-desse código, registo de acessos). Mesmo assim, o mecanismo de \Pquatro{} só protegia contra o
-agente: não impediu o próprio utilizador de reutilizar o conjunto final, nem de retirar do resumo
-a ressalva de que o resultado do filtro não era uma medição independente (REV-068). A
-transparência dependeu do registo, não do bloqueio.
+A segurança melhorou de tentativa para tentativa. Em \Pum{} a divisão passou de navio para
+viagem, a EDA foi feita antes da divisão e os conjuntos derivados foram versionados no git; em
+\Pdois{} e \Ptres{} já não havia dados no repositório, mas ainda houve leituras exploratórias dos
+conjuntos de validação e teste. O passo decisivo de \Pquatro{} foi substituir intenções por
+mecanismos: um módulo que recusa abrir um conjunto reservado sem autorização escrita, testes desse
+módulo e um registo de acessos. Este mecanismo protegia contra o agente, mas não contra o próprio
+utilizador. O conjunto final foi reutilizado três vezes por decisão deste, e uma ressalva sobre a
+independência de um resultado foi retirada do resumo (REV-068). Ambos ficaram registados; a
+transparência dependeu, portanto, do registo e não do bloqueio. No git, a regra de push só a
+pedido explícito, introduzida na REV-055 depois de pedidos que contradiziam a regra anterior, não
+teve violações registadas.
 
 \subsection{Fiabilidade e reprodutibilidade}
 
-\Pum{} tinha poucos testes mas bons; \Pdois{} e \Ptres{} trocaram testes por \texttt{assert} em
-scripts e verificação manual nos commits; \Pquatro{} voltou aos testes sintéticos a sério e
-juntou-lhes a regra de que \emph{nenhum número do relatório pode vir de um cálculo informal do
-agente}. Esta regra, com as macros geradas, é provavelmente a melhor defesa contra a tendência dos
-agentes para afirmar resultados sem evidência. A outra metade da fiabilidade foi a honestidade
-sobre o que foi validado: o handoff de \Pquatro{} diz o que foi verificado, quando, e o que
-\emph{não} foi repetido.
+\Pum{} tinha poucos testes, mas bem desenhados; \Pdois{} e \Ptres{} substituíram-nos por
+\texttt{assert} dentro dos scripts e por verificações descritas nas mensagens de commit. \Pquatro{}
+voltou aos testes sintéticos, que passaram de 15 para \mQuatroFuncTestes{} funções e apanharam
+erros reais, e acrescentou a regra de que nenhum número usado no relatório pode resultar de um
+cálculo informal do agente. Com as macros LaTeX geradas a partir dos resultados, esta regra é
+provavelmente a melhor defesa contra a tendência dos agentes para afirmar resultados sem
+evidência. A outra parte da fiabilidade foi a honestidade sobre o que foi verificado: o
+\texttt{handoff} de \Pquatro{} indica o que foi validado, quando, e o que não foi repetido.
 
-\subsection{Produtividade: «muito por pouco»}
+\subsection{Distribuição do esforço}\label{sec:esforco}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{gerado/fig_composicao.pdf}
 \caption{Composição dos repositórios por tipo de ficheiro (união das branches; «Figuras e PDF»
-inclui bibliografia e PDFs da proposta).}
+inclui a bibliografia e os PDF da proposta).}
 \label{fig:composicao}
 \end{figure}
 
-A queixa central do utilizador aparece nas quatro tentativas com formas diferentes:
+A queixa central do utilizador, a de que os agentes «faziam muito por pouco», aparece nas quatro
+tentativas, sob formas diferentes (Figura~\ref{fig:composicao}). Em \Pum{} tomou a forma de
+exploração sem fim: 48\,\% do código servia para produzir figuras e nunca se chegou a um modelo.
+Em \Pdois{} deslocou-se para a documentação e a sincronização, com duas auditorias, um plano de
+1\,475 linhas e dez versões do PDF da proposta, sem que o modelo principal fosse treinado. Em
+\Ptres{} apareceu como sobre-engenharia fora do âmbito, com um HMM escrito de raiz e uma BiGRU em
+vez da CNN pedida. Em \Pquatro{} concentrou-se na contabilidade e no relatório: cerca de um quarto
+dos commits só atualizam registos, o código de figuras e diagnóstico tem o dobro das linhas do
+núcleo do modelo, e dez revisões foram apenas cosméticas.
 
-\begin{itemize}
-  \item \Pum: \textbf{exploração sem fim} — 48\,\% do código em figuras, nenhum modelo.
-  \item \Pdois: \textbf{documentação e sincronização} — auditorias, plano de 1\,475 linhas, 10
-        versões do PDF, estado duplicado; modelo não treinado.
-  \item \Ptres: \textbf{sobre-engenharia fora do âmbito} — HMM de raiz e BiGRU em vez da CNN.
-  \item \Pquatro: \textbf{contabilidade e relatório} — 25\,\% dos commits só de registo, 3\,839
-        linhas de código de figuras e diagnóstico contra 1\,921 de núcleo, 10 revisões
-        cosméticas.
-\end{itemize}
+A interpretação mais plausível é que os agentes tendem a preencher o espaço que lhes é dado com
+trabalho visível (figuras, documentos, registos) quando não existe um critério explícito de
+progresso. Em \Pquatro{} o problema diminuiu graças aos marcos executáveis com critério de fecho;
+manteve-se por causa da regra de atualizar os registos em cada interação. Foi esta a razão por que
+o utilizador experimentou uma \emph{skill} de alteração mínima (\emph{Ponytail}), que não deixou
+vestígios no repositório.
 
-\deducao{} Os agentes tendem a preencher o espaço que lhes é dado com trabalho \emph{visível}
-(figuras, documentos, registos) quando falta um critério explícito de progresso. O que reduziu o
-problema em \Pquatro{} foram os marcos executáveis com critério de fecho; o que o manteve foi a
-regra de atualizar registos em \emph{cada} interação. Foi por isto que o utilizador experimentou
-a skill \emph{Ponytail} (modo «mínima alteração»), que não deixou vestígios no repositório.
-
-\subsection{Estrutura do repositório}
-
-\Pum{} mudou a raiz duas vezes e teve três versões da proposta; \Pdois{} teve três cópias da
-organização (em \texttt{main} e em dois ramos-\emph{snapshot}); \Ptres{} e \Pquatro{} foram limpos.
-A diferença está em ter decidido a estrutura no primeiro dia e em usar \emph{tags} (não ramos)
-para guardar versões, como \Pquatro{} fez com \texttt{proposta-pt-v1} e \texttt{docs-historico-v1}.
+Quanto à estrutura, \Pum{} mudou a raiz do repositório duas vezes e \Pdois{} manteve três cópias da
+organização, em \texttt{main} e em dois ramos usados como cópias de segurança. \Ptres{} e
+\Pquatro{} mantiveram uma estrutura limpa, decidida no início, e \Pquatro{} usou etiquetas, e não
+ramos, para guardar versões antigas.
 
 %% =====================================================================
-\section{Balanço: o que correu bem e o que correu mal}\label{sec:balanco}
+\section{Discussão}\label{sec:discussao}
 
-\subsection{O que correu bem (e deve repetir-se)}
-\begin{enumerate}
-  \item \textbf{Regras completas desde o primeiro commit} (\Pquatro), em vez de regras reativas.
-  \item \textbf{Marcos executáveis} com critério de fecho e âmbito fechado por fase (\Ptres, \Pquatro).
-  \item \textbf{Handoff com hora e última validação} (\Pquatro): continuidade entre conversas e modelos.
-  \item \textbf{Decisões com ID} e \textbf{perguntas em tabela} com recomendação (\Pquatro).
-  \item \textbf{Isolamento auditável} dos dados reservados: manifesto, autorização escrita antes
-        de abrir, registo de acessos, testes do mecanismo (\Pquatro).
-  \item \textbf{Números gerados por código} até ao LaTeX (\Pquatro).
-  \item \textbf{Testes sintéticos} desde o primeiro dia (\Pum{} no conversor, \Pquatro{} em tudo).
-  \item \textbf{Modelo de commit} O quê / Porquê / Validação / Pendente (\Ptres, \Pquatro).
-  \item \textbf{Push só a pedido} e nunca por subagentes (\Pquatro).
-  \item \textbf{Revisão independente só de leitura} antes da medição final e do relatório (\Pquatro).
-  \item \textbf{Plano externo} preparado com um LLM de chat e entregue ao agente (\Pdois, \Pquatro).
-\end{enumerate}
+\subsection{O que explica a conclusão da quarta tentativa}
 
-\subsection{O que correu mal no início}
-\begin{enumerate}
-  \item Instruções tardias e só sobre git (\Pum); instruções copiadas desatualizadas (\Pdois).
-  \item Várias ferramentas em paralelo sem registo comum (\Pum).
-  \item Exploração e figuras sem pergunta nem critério de paragem (\Pum).
-  \item Dados e bibliografia no git; \texttt{docs/} fora do git (\Pum).
-  \item Contacto exploratório com validação e teste (\Pum, \Pdois, \Ptres).
-  \item Ramos usados como \emph{snapshots}; estrutura mudada de raiz (\Pum, \Pdois).
-  \item Estado duplicado em muitos documentos e relatórios de estado otimistas (\Pdois).
-  \item Modelo e âmbito desalinhados com o enunciado (\Ptres).
-\end{enumerate}
+A quarta tentativa não terminou por ter mais regras do que as anteriores, mas por ter as regras
+adequadas desde o primeiro commit. Quatro fatores parecem ter sido determinantes. O primeiro foi a
+organização do trabalho em marcos executáveis, cada um com critério de fecho, que impediu a
+exploração indefinida observada em \Pum. O segundo foi a separação entre decisão, autorização e
+execução, que tornou o utilizador responsável pelas escolhas metodológicas e o agente responsável
+por executá-las e por provar o que fez. O terceiro foi a passagem de testemunho entre sessões
+através do \texttt{handoff.md}, que tornou possível trabalhar em várias conversas e com vários
+modelos sem perda de contexto. O quarto foi a exigência de que todos os números viessem de código
+versionado e testado, que eliminou a possibilidade de o agente apresentar resultados sem
+evidência. Vários destes elementos tinham antecedentes nas tentativas anteriores: o modelo de
+commit e o âmbito por fases vieram de \Ptres, a marcação a cores das alterações e o plano
+preparado fora do repositório vieram de \Pdois. A quarta tentativa reuniu-os e acrescentou-lhes
+os mecanismos de controlo que faltavam.
 
-\subsection{O que ainda correu mal em \Pquatro}
-\begin{enumerate}
-  \item \textbf{Contabilidade excessiva}: atualização obrigatória de dois registos em cada
-        interação (REV-010); commits só para registar pushes, horas ou vigilantes; o
-        \texttt{PROGRESS} e o \texttt{REVISION\_LOG} pesam quase tanto como o código.
-  \item \textbf{Regra das cores rígida}: cinco exceções e quatro edições ao AGENTS.md em duas
-        horas; a paleta deixou de ser mantida depois da REV-022.
-  \item \textbf{Conjunto final reutilizado} três vezes por decisão do utilizador, e uma ressalva
-        retirada do resumo; ficou registado, mas é um risco de integridade.
-  \item \textbf{Código de relatório maior que o núcleo} e figuras órfãs.
-  \item \textbf{AGENTS.md longo} (\mQuatroAgentsLinhas{} linhas) e ainda escrito para várias
-        ferramentas depois de o Claude Code ter sido escolhido na primeira hora.
-  \item \textbf{Uma revisão por ajuste cosmético} na fase de paginação do relatório.
-\end{enumerate}
+\subsection{Problemas que persistiram}
 
-%% =====================================================================
-\section{Lições para o próximo projeto}\label{sec:licoes}
+Três problemas atravessaram as quatro tentativas sem ficarem resolvidos. O primeiro é o desvio de
+esforço discutido na Secção~\ref{sec:esforco}, que em \Pquatro{} se manifestou como contabilidade:
+a atualização obrigatória de dois registos em cada interação (REV-010), os commits feitos apenas
+para registar pushes ou horas, e um \texttt{PROGRESS} e um \texttt{REVISION\_LOG} que, juntos,
+ocupam quase tanto espaço como o código. O segundo é a rigidez de algumas regras, como a das cores
+no LaTeX, que precisou de exceções sucessivas e cuja paleta deixou de ser mantida depois da
+REV-022. O terceiro é a dependência da disciplina do próprio utilizador: os mecanismos de
+\Pquatro{} impediram o agente de usar indevidamente os dados reservados, mas não impediram a
+reutilização do conjunto final por decisão do utilizador. A estes junta-se o tamanho do
+\texttt{AGENTS.md} de \Pquatro{} (\mQuatroAgentsLinhas{} linhas), que continuou escrito para várias
+ferramentas depois de o Claude Code ter sido escolhido na primeira hora.
 
-\begin{licao}[1. Primeiro um resultado ponta a ponta, depois a exploração]
-Definir o marco 2 como «dados → modelo simples → métrica» e não aceitar figuras ou estatísticas
-que nenhuma decisão use. Cada exploração tem pergunta e critério de paragem escritos antes.
-\end{licao}
+\subsection{Implicações para projetos futuros}\label{sec:licoes}
 
-\begin{licao}[2. As regras certas no primeiro commit, curtas]
-Um \texttt{AGENTS.md} de cerca de 100 linhas, com âmbito, comunicação, dados, números, testes,
-git e continuidade. Uma ponte de 3--5 linhas por ferramenta. Rever, não copiar, o do projeto
-anterior.
-\end{licao}
+Desta comparação resultam algumas recomendações para o próximo projeto. A primeira é chegar cedo
+a um resultado ponta a ponta, por simples que seja, antes de qualquer exploração; cada análise
+exploratória deve ter uma pergunta e um critério de paragem definidos à partida. A segunda é
+escrever as regras no primeiro dia e mantê-las curtas: um \texttt{AGENTS.md} de cerca de cem
+linhas, revisto e não copiado do projeto anterior, e um ficheiro-ponte de poucas linhas para a
+ferramenta escolhida. A terceira é manter a separação entre decisão, autorização e execução, com
+as decisões registadas num único lugar. A quarta é usar mecanismos, e não intenções, para o que
+não pode falhar, como o isolamento dos dados reservados e a origem dos números, e decidir antes de
+começar o que acontece se o conjunto final for reutilizado. A quinta é tornar a continuidade mais
+leve do que em \Pquatro: atualizar o \texttt{handoff} e o \texttt{PROGRESS} no fim de cada
+sessão, e não de cada mensagem, reservar identificadores de revisão para decisões metodológicas e
+substituir as cores no LaTeX por comparações entre versões (por exemplo, com \texttt{latexdiff}).
+Por fim, convém escolher uma ferramenta principal por projeto, delegar noutras apenas tarefas com
+contrato fechado, e decidir a estrutura do repositório no primeiro dia, com dados e bibliografia
+fora do git e versões guardadas em etiquetas.
 
-\begin{licao}[3. Separar decisão, autorização e execução]
-Decisões do utilizador com ID e data, num só sítio. Autorizações escritas, com âmbito, antes de
-qualquer ação sensível. O agente executa e prova o que fez.
-\end{licao}
+Estas recomendações foram concretizadas em quatro modelos, guardados em
+\texttt{investigacao\_\allowbreak agentes/\allowbreak kit/} e reproduzidos nos anexos: um \texttt{AGENTS.md} reduzido
+(Anexo~\ref{an:agents}), um \texttt{handoff.md} (Anexo~\ref{an:handoff}), um \texttt{PROGRESS.md}
+que junta o estado e o registo de decisões (Anexo~\ref{an:progress}) e uma lista de verificação
+para o arranque de um projeto (Anexo~\ref{an:checklist}).
 
-\begin{licao}[4. Mecanismos, não intenções, para o que não pode falhar]
-Isolamento de dados reservados por código testado e registo de acessos; push só a pedido;
-números só de código versionado. E decidir antes o que acontece se o conjunto final for
-reutilizado (proibido, ou declarado no resumo).
-\end{licao}
+\subsection{Limitações}\label{sec:validade}
 
-\begin{licao}[5. Continuidade leve]
-Um \texttt{handoff.md} curto, reescrito no fim de cada \emph{sessão} (não de cada mensagem), com
-hora lida com \texttt{date}. Um \texttt{PROGRESS.md} com topo vivo e registo cronológico. IDs de
-revisão só para decisões metodológicas. Nada de commits só para registar horas ou pushes. As
-cores no LaTeX podem ser substituídas por \texttt{latexdiff} entre \emph{tags}.
-\end{licao}
-
-\begin{licao}[6. Uma ferramenta principal, delegação com contrato]
-Escolher uma ferramenta de agente por projeto. Delegar a subagentes ou a outras ferramentas só
-tarefas com contrato fechado, passar-lhes as regras e rever a evidência. Uma revisão
-independente só de leitura antes de cada entrega.
-\end{licao}
-
-\begin{licao}[7. Estrutura decidida no primeiro dia]
-Pastas finais desde o início, dados e bibliografia fora do git, versões guardadas em
-\emph{tags}, código de relatório separado do núcleo.
-\end{licao}
+Este estudo tem várias limitações. As conversas com os agentes não estão versionadas, pelo que o
+que o utilizador pediu só se observa pelos efeitos no repositório; os motivos dos recomeços e as
+frustrações vêm do próprio utilizador ou são inferências. A ferramenta usada em cada tentativa foi
+inferida a partir de vestígios, e a ausência de vestígios não prova que uma ferramenta não tenha
+sido usada. As métricas de volume (linhas, commits, ficheiros) medem esforço visível e não valor.
+A quarta tentativa beneficiou de tudo o que se aprendeu antes, incluindo o conhecimento do
+problema, pelo que nem toda a melhoria se deve ao fluxo de trabalho ou à ferramenta. Por fim, os
+relatórios por repositório foram produzidos por subagentes; as afirmações centrais foram
+verificadas por amostragem, mas não todas.
 
 %% =====================================================================
-\section{Kit de arranque}\label{sec:kit}
+\section{Conclusão}
 
-A pasta \texttt{investigacao\_agentes/kit/} contém quatro ficheiros prontos a copiar para um
-projeto novo, reproduzidos nos anexos:
-
-\begin{itemize}
-  \item \texttt{AGENTS\_modelo.md} (Anexo~\ref{an:agents}): as regras destiladas, em cerca de 100 linhas.
-  \item \texttt{handoff\_modelo.md} (Anexo~\ref{an:handoff}): a passagem de testemunho entre sessões.
-  \item \texttt{PROGRESS\_modelo.md} (Anexo~\ref{an:progress}): estado vivo, decisões e registo,
-        juntando o que em \Pquatro{} estava em dois ficheiros.
-  \item \texttt{checklist\_arranque.md} (Anexo~\ref{an:checklist}): o que fazer antes da primeira
-        sessão, na primeira sessão, em cada sessão e antes de entregar.
-\end{itemize}
-
-A mensagem para abrir cada conversa mantém-se a de \Pquatro: «Lê o AGENTS.md e o handoff.md e
-diz-me o ponto de situação.»
-
-%% =====================================================================
-\section{Limitações e ameaças à validade}\label{sec:validade}
-
-\begin{itemize}
-  \item \textbf{Sem as conversas.} O que o utilizador disse ao agente só se vê pelos efeitos no
-        repositório; motivos de recomeço e frustrações vêm do utilizador ou são deduções.
-  \item \textbf{Ferramentas deduzidas.} Os \emph{trailers} só existem quando a ferramenta os
-        acrescenta; a ausência de vestígios não prova que uma ferramenta não foi usada.
-  \item \textbf{Métricas de volume.} Linhas e commits medem esforço visível, não valor. A
-        composição por tipo de ficheiro conta ficheiros, não tamanho.
-  \item \textbf{Aprendizagem acumulada.} \Pquatro{} beneficiou de tudo o que se aprendeu antes,
-        incluindo o conhecimento do problema; nem toda a melhoria se deve ao fluxo de trabalho
-        ou à ferramenta.
-  \item \textbf{Análise feita com o mesmo tipo de agente.} Os relatórios por repositório foram
-        escritos por subagentes; as afirmações centrais foram verificadas por amostragem, não
-        todas.
-\end{itemize}
+As quatro tentativas mostram que, num projeto feito com agentes de IA, o fluxo de trabalho pesa
+tanto como o código. As primeiras tentativas falharam por falta de critério de progresso, de
+regras escritas a tempo e de memória entre sessões; a última terminou porque reuniu, desde o
+início, marcos executáveis, controlo explícito do utilizador sobre as decisões, isolamento
+auditável dos dados e números com origem em código. O problema que menos evoluiu foi a tendência
+para produzir trabalho visível em vez de progresso, que apenas mudou de forma de tentativa para
+tentativa. O kit de arranque proposto procura conservar o que funcionou e reduzir o custo do
+registo, para que o próximo projeto comece já com um fluxo de trabalho estável.
 
 %% =====================================================================
 \section*{Declaração de uso de inteligência artificial}

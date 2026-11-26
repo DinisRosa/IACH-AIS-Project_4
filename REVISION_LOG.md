@@ -1262,3 +1262,13 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** `pdflatex` duas vezes sem erros; 18 páginas; página revista em imagem.
 - **Pendentes:** leitura do documento pelo utilizador.
+
+### REV-086 — Comparação dos fluxos em estilo académico
+
+- **Data:** 2026-11-26, 02:28 WET.
+- **Cor:** Bronze `#8C6D1F`, RGB (140, 109, 31). Marcador no `PROGRESS.md` e em `investigacao_agentes/README.md`; no `.tex` o texto fica a preto, mantendo o pedido do utilizador da REV-085.
+- **O quê:** `investigacao_agentes/comparacao_workflows.tex` reescrito nas partes finais: as secções 4 a 8 (comparação, balanço, lições, kit, limitações) passam a uma secção de comparação em prosa com uma só tabela-síntese, uma secção de Discussão (fatores da conclusão de P4, problemas que persistiram, implicações para projetos futuros, limitações) e uma Conclusão. Caixas retiradas (também as sínteses da secção 3, agora parágrafos), marcas [facto]/[dedução] substituídas por texto, títulos das tentativas simplificados e a tabela de regras de P4 com legenda. Conteúdo mantido. PDF com 17 páginas.
+- **Porquê:** pedido do utilizador: o conteúdo estava bom, mas a parte final, com muitas caixas, listas e tabelas, parecia artificial e pouco académica.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** `pdflatex` duas vezes sem erros, avisos de referências nem linhas fora da margem; páginas revistas em imagem.
+- **Pendentes:** leitura do documento pelo utilizador.

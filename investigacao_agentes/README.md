@@ -1,11 +1,11 @@
 # Investigação de agentes: comparação dos fluxos de trabalho
 
-[REV-084 | cor #1F4E79] [REV-085 | cor #3C3C3C: texto do documento a preto]
+[REV-084 | cor #1F4E79] [REV-085 | cor #3C3C3C: texto do documento a preto] [REV-086 | cor #8C6D1F: estilo académico]
 
 Estudo de como o projeto AIS foi feito com agentes de IA ao longo de quatro tentativas
 (quatro repositórios GitHub), para recomeçar bem no próximo projeto.
 
-**Documento:** [`comparacao_workflows.pdf`](comparacao_workflows.pdf) (18 páginas; fonte em
+**Documento:** [`comparacao_workflows.pdf`](comparacao_workflows.pdf) (17 páginas; fonte em
 `comparacao_workflows.tex`). Gerado com IA (Claude Code), como declarado no próprio documento.
 
 | Pasta / ficheiro | O que é |
