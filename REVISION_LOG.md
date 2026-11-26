@@ -1165,3 +1165,14 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** 10 páginas, sem referências em falta; 647 números de linha nas margens; páginas 8 e 9 revistas em imagem. Testes não repetidos (sem alterações a código).
 - **Pendentes:** leitura do relatório.
+
+### REV-077 — Galeria de viagens em LaTeX e PDF
+
+- **Data:** 2026-11-26, até 00:50 WET.
+- **Cor:** Orquídea escura `#9932CC`, RGB (153, 50, 204). Marcador no `PROGRESS.md`; o documento novo fica a preto, por seguir o estilo da página que o utilizador pediu para converter.
+- **O quê:** `ais.cli.build_trip_gallery_pdf` e testes; `viagens/galeria_viagens.tex` e `viagens/galeria_viagens.pdf` (A4, 12 páginas); `AGENTS.md` §8 (segundo documento LaTeX), README, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** pedido do utilizador: guardar a galeria em LaTeX e PDF, para poder enviá-la ao professor.
+- **Como:** conversão da página `viagens/README.md`, com os mesmos textos, tabelas e imagens; autor e filiação iguais aos do relatório. Não lê dados, previsões nem resultados.
+- **Correspondência no LaTeX:** **atualizado** (documento novo); o relatório não muda.
+- **Validação:** 256 testes; 12 páginas, 36 viagens; páginas revistas em imagem.
+- **Pendentes:** envio a pedido.

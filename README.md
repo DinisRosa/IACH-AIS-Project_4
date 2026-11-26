@@ -6,7 +6,7 @@ Para retomar o trabalho: ler `AGENTS.md` (regras) e `handoff.md` (ponto de situa
 
 ## Viagens em imagens
 
-**[Ver o que cada modelo previu em cada viagem](viagens/README.md)**: 18 viagens de teste (real, baseline, J0, J50 e baseline com pós-processamento) e 18 de validação (real, baseline e baseline com pós-processamento).
+**[Ver o que cada modelo previu em cada viagem](viagens/README.md)**: 18 viagens de teste (real, baseline, J0, J50 e baseline com pós-processamento) e 18 de validação (real, baseline e baseline com pós-processamento). A mesma galeria em PDF: [`viagens/galeria_viagens.pdf`](viagens/galeria_viagens.pdf).
 
 ## Estado
 
@@ -23,7 +23,7 @@ Os números estão no relatório (gerados por código) e em `PROGRESS.md`. Em re
 
 Conjuntos reservados: o `test` serve para **selecionar** e o `validation` para a **medição final** (papéis trocados face ao habitual). O `validation` está gasto. Qualquer novo acesso a um deles exige autorização explícita (`AGENTS.md` §3).
 
-Testes: 254 a passar (`iach-ais-venv-4/bin/python -m pytest tests/`).
+Testes: 256 a passar (`iach-ais-venv-4/bin/python -m pytest tests/`).
 
 ## Relatório
 
@@ -77,7 +77,7 @@ git show docs-historico-v1:docs/04_pos_processamento.md
 
 - `AGENTS.md`: regras do projeto (fonte única). `CLAUDE.md`: manda lê-las.
 - `handoff.md`: ponto de situação para uma nova conversa.
-- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-076).
+- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-077).
 - `docs/`:
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos, modelos e protocolos, acesso aos dados e referências verificadas.
   - `01_dados_e_preparacao.md`: colunas, unidades, entradas da CNN e preparação.
@@ -87,7 +87,7 @@ git show docs-historico-v1:docs/04_pos_processamento.md
 - `configs/`: configurações, protocolos e autorizações (`authorizations/`).
 - `latex/`: `relatorio_pt.tex`, `references.bib`, `figures/`, `generated/`, o modelo IJCAI, `proposta_pt.pdf` (proposta anterior) e `proposta_IAHC_DINIS_ROSA.pdf` (entregue ao professor, não se altera).
 - `manifests/`: divisão por viagem, `split_manifest_seed42.csv` (versionado).
-- `viagens/`: galeria gerada por `build_trip_gallery` (página, uma imagem por viagem de teste e de validação e `proveniencia.json`).
+- `viagens/`: galeria gerada por `build_trip_gallery` (página, uma imagem por viagem de teste e de validação e `proveniencia.json`) e a sua versão `galeria_viagens.tex` e `.pdf`, gerada por `build_trip_gallery_pdf`.
 - `data/` e `results/`: dados e resultados. **Não versionados**: existem só na máquina do autor.
 - `requirements.txt`: dependências com versões fixas. `iach-ais-venv-4/`: ambiente local.
 
@@ -130,7 +130,8 @@ Executar a partir da raiz, com `iach-ais-venv-4/bin/python -m ais.cli.<nome>`. O
 | `postproc_validation --version <protocolo>` | Filtro sobre as previsões guardadas do `validation`. **Não repetir** (as duas versões já correram). |
 | `build_postproc_results` | Macros e figuras do filtro, a partir de resultados guardados; `--first-version-only` gera só as macros da versão de 13 pontos e `--results-figure-only` só a figura dos segmentos e do F1. |
 | `verify_postproc_independent [--size N] <csv>` | Segunda implementação das métricas do filtro. |
-| `build_trip_gallery` | Galeria `viagens/` a partir das previsões guardadas do `test` e do `validation` (exige as autorizações `*_trip_gallery` e regista as leituras). |
+| `build_trip_gallery` | Galeria `viagens/` a partir das previsões guardadas do `test` e do `validation` (exige as autorizações `*_trip_gallery` e regista as leituras). Depois, correr `build_trip_gallery_pdf`. |
+| `build_trip_gallery_pdf` | A galeria em LaTeX e PDF (`viagens/galeria_viagens.*`), a partir da página já gerada; não lê dados nem resultados; precisa de `pdflatex`. |
 | `build_window_analysis_macros` | Macros dos blocos de erro (`resultados_buracos.tex`) a partir dos resumos guardados. |
 | `plot_postprocessing_kernel` | Figura da janela gaussiana, com dados sintéticos. |
 | `plot_trip_diagnostic <viagem>` | Diagnóstico de uma viagem do `test` (com `--xy`, exige autorização própria). |
