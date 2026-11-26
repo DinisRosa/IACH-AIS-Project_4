@@ -11,9 +11,13 @@ medição final, e que a escolha do modelo foi gravada antes dessa abertura. Esc
 
 Execução (a partir da raiz do projeto, depois de `final_validation`):
     iach-ais-venv-4/bin/python -m ais.cli.build_validation_results
+
+Com `--worst-trip-figure-only` (REV-074) volta a gerar só a linha temporal da viagem de menor exatidão, sem
+reescrever macros nem outras figuras (exige a autorização `validation_report_figure_baseline` e regista a leitura).
 """
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -23,13 +27,14 @@ import pandas as pd
 from ais.cli.build_final_results import INK, INK2, NAV, PESCA, load_json, pct, plt, pt, save, thousands, trip_summary
 from ais.cli.build_window_results import point_macros, segment_macros
 from ais.cli.freeze_baseline import verify_frozen
-from ais.phase1.reserved import read_log, sha256_of
+from ais.phase1.reserved import log_access, read_log, sha256_of
 from matplotlib.colors import ListedColormap
 
 ROOT = Path(__file__).resolve().parents[3]
 FV = ROOT / "results" / "final_validation"
 GEN = ROOT / "latex" / "generated"
 AUTH_ID = "validation_final_2026-11-24"
+FIG_AUTH = "configs/authorizations/validation_report_figure_baseline.json"
 PREFIX = {"baseline": "Bs", "J0": "JZ", "J50": "JC"}
 NOME = {"baseline": "a referência (viagem completa)", "J0": "J0 (janelas sem sobreposição)",
         "J50": "J50 (janelas com 50\\,\\% de sobreposição)"}
@@ -120,13 +125,13 @@ def fig_summary(R: dict) -> str:
 
 
 def fig_worst_trip(R: dict) -> tuple[str, str]:
-    """A viagem de menor exatidão: classe real e prevista, ponto a ponto (só previsões já geradas)."""
+    """A viagem de menor exatidão: classe real e da baseline, ponto a ponto (só previsões já geradas)."""
     pv = R["validation"]["por_viagem"]
     trip = min(pv, key=lambda i: (pv[i]["accuracy"], i))
     p = pd.read_csv(FV / "predictions_validation.csv", usecols=["id", "t", "target", "predicted"])
     p = p[p["id"] == trip].sort_values("t")
     fig, axes = plt.subplots(2, 1, figsize=(6.9, 1.3), sharex=True)
-    for ax, lab, arr in zip(axes, ("real", "previsto"), (p["target"].to_numpy(), p["predicted"].to_numpy())):
+    for ax, lab, arr in zip(axes, ("real", "baseline"), (p["target"].to_numpy(), p["predicted"].to_numpy())):
         ax.imshow(arr[None, :], aspect="auto", cmap=CMAP, vmin=0, vmax=1, interpolation="nearest")
         ax.set_yticks([0], [lab], fontsize=7)
         ax.grid(False)
@@ -137,7 +142,27 @@ def fig_worst_trip(R: dict) -> tuple[str, str]:
     return save(fig, "validacao_pior_viagem.png"), trip
 
 
-def main() -> None:
+def worst_trip_figure() -> tuple[str, str]:
+    """Só a linha temporal da Figura 7, a partir das previsões guardadas da medição final."""
+    auth = load_json(ROOT / FIG_AUTH)
+    if auth.get("conjuntos_autorizados") != ["validation"] or auth.get("finalidade") != "figuras_relatorio" \
+            or auth.get("validation_autorizado") is not True:
+        raise PermissionError("Autorização inválida para a figura da validação.")
+    R = load_json(FV / "final_validation.json")
+    source = FV / "predictions_validation.csv"
+    log_access(ROOT / "results" / "access_log.jsonl",
+               {"event": "report_figures", "split": "validation", "authorization": auth["id"],
+                "file_sha256": sha256_of(source)})
+    return fig_worst_trip(R)
+
+
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser.add_argument("--worst-trip-figure-only", action="store_true", help="só a linha temporal da Figura 7")
+    if parser.parse_args(argv).worst_trip_figure_only:
+        path, trip = worst_trip_figure()
+        print(f"escrita {path} (viagem {trip})")
+        return
     R = collect()
     figs = [fig_summary(R)]
     f2, trip = fig_worst_trip(R)

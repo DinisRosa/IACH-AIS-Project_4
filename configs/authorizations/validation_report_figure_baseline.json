@@ -1,0 +1,13 @@
+{
+  "id": "validation_report_figure_baseline_2026-11-26",
+  "concedida_por": "utilizador (mensagens no chat, 2026-11-26)",
+  "conjuntos_autorizados": ["validation"],
+  "finalidade": "figuras_relatorio",
+  "fonte": "results/final_validation/predictions_validation.csv (previsoes ja guardadas da medicao final); sem reabrir o parquet nem correr a CNN",
+  "decisoes_cobertas": [
+    "voltar a gerar a linha temporal da Figura 7 com «baseline» em vez de «previsto» (REV-074)"
+  ],
+  "validation_autorizado": true,
+  "citacao_literal": "Eu acho que devia ser real e baseline. [...] E então altera aí também. | E eu dou-te permissão para usares o teste e validação.",
+  "nota": "So muda a legenda de uma figura. Nenhuma medicao nem escolha."
+}
