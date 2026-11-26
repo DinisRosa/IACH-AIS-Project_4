@@ -77,7 +77,7 @@ git show docs-historico-v1:docs/04_pos_processamento.md
 
 - `AGENTS.md`: regras do projeto (fonte única). `CLAUDE.md`: manda lê-las.
 - `handoff.md`: ponto de situação para uma nova conversa.
-- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-074).
+- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-075).
 - `docs/`:
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos, modelos e protocolos, acesso aos dados e referências verificadas.
   - `01_dados_e_preparacao.md`: colunas, unidades, entradas da CNN e preparação.
@@ -128,7 +128,7 @@ Executar a partir da raiz, com `iach-ais-venv-4/bin/python -m ais.cli.<nome>`. O
 | `analyze_error_runs --split test\|train` | Blocos de erro (o `test` exige autorização). |
 | `eval_postproc_test` | Efeito de várias janelas no `test` (exige autorização). |
 | `postproc_validation --version <protocolo>` | Filtro sobre as previsões guardadas do `validation`. **Não repetir** (as duas versões já correram). |
-| `build_postproc_results` | Macros e figuras do filtro, a partir de resultados guardados; `--first-version-only` gera só as macros da versão de 13 pontos. |
+| `build_postproc_results` | Macros e figuras do filtro, a partir de resultados guardados; `--first-version-only` gera só as macros da versão de 13 pontos e `--results-figure-only` só a figura dos segmentos e do F1. |
 | `verify_postproc_independent [--size N] <csv>` | Segunda implementação das métricas do filtro. |
 | `build_trip_gallery` | Galeria `viagens/` a partir das previsões guardadas do `test` e do `validation` (exige as autorizações `*_trip_gallery` e regista as leituras). |
 | `build_window_analysis_macros` | Macros dos blocos de erro (`resultados_buracos.tex`) a partir dos resumos guardados. |

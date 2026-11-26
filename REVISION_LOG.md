@@ -1144,3 +1144,13 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado** (só a figura).
 - **Validação:** 254 testes; relatório com 10 páginas; 647 números de linha nas margens; página 8 revista em imagem.
 - **Pendentes:** leitura do relatório.
+
+### REV-075 — Legendas das Figuras 3 e 8 sem tapar o gráfico
+
+- **Data:** 2026-11-26, até 00:38 WET.
+- **Cor:** Azul-noite `#191970`, RGB (25, 25, 112). Marcador no `PROGRESS.md`; no `.tex` não há alterações.
+- **O quê:** Figura 3 (`posproc_janela.png`): legenda no canto superior direito. Figura 8 (`posproc_resultados.png`): legenda no canto superior direito do painel dos segmentos, com o eixo alargado à direita; `build_postproc_results --results-figure-only`; README, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** pedido do utilizador: a legenda tapava uma barra e ficava no meio do gráfico.
+- **Correspondência no LaTeX:** **atualizado** (só as figuras).
+- **Validação:** 254 testes; as duas figuras e as páginas 4 e 9 revistas em imagem; 10 páginas; 647 números de linha nas margens. A Figura 3 usa dados sintéticos; a 8 usa só os resumos guardados.
+- **Pendentes:** leitura do relatório.
