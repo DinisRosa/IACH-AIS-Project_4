@@ -1197,3 +1197,14 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** 10 páginas, sem referências em falta; 662 números de linha nas margens; página 1 revista em imagem.
 - **Pendentes:** envio a pedido.
+
+### REV-080 — Figura 8 antes dos anexos
+
+- **Data:** 2026-11-26, até 01:08 WET.
+- **Cor:** Castanho-avermelhado `#A52A2A`, RGB (165, 42, 42). Marcador no `PROGRESS.md`; no `.tex` só mudou a disposição, sem texto novo.
+- **O quê:** em `latex/relatorio_pt.tex`: o bloco da Figura 8 passou para antes da subsecção «Filtro temporal (RQ2)»; parâmetros dos elementos flutuantes para admitir mais figuras no topo das páginas; a Tabela 6 e a legenda ficam inseparáveis. README, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** pedido do utilizador: a Figura 8 parecia pertencer ao Anexo A. A Tabela 6 **pertence** ao Anexo A (os resultados remetem para lá as métricas por classe) e mantém-se nele.
+- **Resultado:** Figura 8 na página 8; Anexo A começa na página 9, com a Tabela 6 antes do Anexo B.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** oito variantes comparadas numa cópia temporária; 10 páginas, sem referências em falta; 662 números de linha nas margens; as 10 páginas revistas em imagem.
+- **Pendentes:** envio a pedido; leitura do relatório.

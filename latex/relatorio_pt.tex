@@ -62,6 +62,11 @@
     uc2024278343@student.uc.pt
 }
 
+% Figuras no sítio certo (REV-080): admitem-se mais figuras no topo de cada página.
+\renewcommand{\dbltopfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\setcounter{dbltopnumber}{4}
+\setcounter{totalnumber}{6}
 \begin{document}
 
 \maketitle
@@ -388,6 +393,15 @@ Por viagem, a exatidão vai de \resVaViagMin{} (viagem \resVaPiorViagem) a \resV
 \label{fig:validacao}
 \end{figure*}
 
+% A Figura 8 está antes da subsecção que a cita para sair antes dos anexos (REV-080).
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/posproc_resultados.png}\\[2pt]
+\includegraphics[width=0.85\textwidth]{figures/posproc_viagem.png}
+\caption{Efeito do filtro no conjunto de validação. Em cima, segmentos previstos e F1 de segmentos. Em baixo, a viagem com mais segmentos de pesca previstos antes do filtro: as interrupções curtas desaparecem e os blocos longos de erro ficam.}
+\label{fig:filtro}
+\end{figure*}
+
 \subsection{Filtro temporal (RQ2)}
 \label{sec:rq2}
 
@@ -411,14 +425,6 @@ Navegação & Depois & \resPpDepoisNavF & \resPpDSegNavNPred & \resPpDSegNavNPar
 \caption{\emph{Baseline} no conjunto de validação antes e depois do filtro de \resPpJanela{} pontos. Segmentos reais: \resPpASegPescaNRef{} de pesca e \resPpASegNavNRef{} de navegação.}
 \label{tab:filtro}
 \end{table*}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.75\textwidth]{figures/posproc_resultados.png}\\[2pt]
-\includegraphics[width=0.85\textwidth]{figures/posproc_viagem.png}
-\caption{Efeito do filtro no conjunto de validação. Em cima, segmentos previstos e F1 de segmentos. Em baixo, a viagem com mais segmentos de pesca previstos antes do filtro: as interrupções curtas desaparecem e os blocos longos de erro ficam.}
-\label{fig:filtro}
-\end{figure*}
 
 O efeito não é igual em todas as viagens: das \resPpNViagens{}, melhoram \resPpViagMelhoram{} e pioram \resPpViagPioram{}. A maior queda é na viagem \resPpPiorQuedaViagem{}, de \resPpPiorQuedaAntes{} para \resPpPiorQuedaDepois{}, a mesma que já tinha a menor exatidão: quando a CNN erra durante muito tempo, o filtro pode alargar o erro em vez de o corrigir. Blocos de erro maiores do que o filtro consegue remover podem ficar, e um segmento real mais curto do que esses limites pode ser apagado.
 
@@ -480,6 +486,7 @@ Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede a
 
 \textbf{Reconstrução.} A probabilidade de cada ponto é a média simples das probabilidades das janelas que o cobrem, calculada em precisão dupla, e só depois se aplica o limiar. A perda usada para escolher a época calcula-se sobre essa probabilidade, com um recorte de $10^{-12}$.
 
+\par\noindent\begin{minipage}{\columnwidth}
 \begin{center}
 \scriptsize\setlength{\tabcolsep}{2.2pt}
 \begin{tabular}{@{}lllrrrrr@{}}
@@ -503,6 +510,7 @@ J50 & Teste & Pesca & \resJCTestePescaReal & \resJCTestePescaPrec & \resJCTesteP
 \captionof{table}{Métricas por ponto e por classe no treino e no teste. Os valores do teste são otimistas, porque este conjunto serviu para escolher as épocas e os limiares. Base: \emph{baseline}.}
 \label{tab:classes}
 \end{center}
+\end{minipage}
 
 \section{Anexo: galeria de viagens}
 \label{sec:galeria}
