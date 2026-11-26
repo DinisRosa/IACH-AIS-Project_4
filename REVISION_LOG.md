@@ -1220,3 +1220,14 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** variantes comparadas numa cópia temporária; 10 páginas, sem referências em falta; 662 números de linha nas margens; páginas 6 a 9 revistas.
 - **Pendentes:** decisão sobre a ordem dos anexos; envio a pedido.
+
+### REV-082 — Anexos depois das referências
+
+- **Data:** 2026-11-26, até 01:22 WET.
+- **Cor:** Castanho-madeira `#6B4226`, RGB (107, 66, 38). Marcador no `PROGRESS.md`; no `.tex` só mudou a ordem, sem texto novo.
+- **O quê:** em `latex/relatorio_pt.tex`, o bloco dos anexos A e B passou para depois das referências e começa numa página nova. README, `PROGRESS.md` e `handoff.md`.
+- **Porquê:** escolha do utilizador, informado de que as instruções do IJCAI (2019 e kit de 2027; as de 2026 não foram lidas) põem os anexos antes das referências. O enunciado não está no projeto e não foi visto.
+- **Resultado:** referências a terminar o texto principal na página 9; anexos na página 10.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** 10 páginas, sem referências em falta; 662 números de linha nas margens; ligação da galeria presente; páginas 8 a 10 revistas.
+- **Pendentes:** envio a pedido; leitura do relatório.

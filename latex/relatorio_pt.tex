@@ -474,6 +474,12 @@ Este trabalho comparou uma CNN 1D aplicada à viagem completa com a mesma rede a
 
 \textbf{Trabalho futuro.} Concluir o apoio à decisão previsto (Secção~\ref{sec:limitacoes}); dar mais contexto à CNN; estudar o limiar em conjunto com o filtro; testar mais dimensões da janela do filtro, maiores e menores, e outros tipos de janela, para perceber como mudam os resultados; confirmar o filtro em dados novos; repetir com várias sementes e uma divisão por navio; e responder à RQ3 com um desenho fatorial.
 
+% As figuras pendentes ficam antes das referências (REV-071); os anexos vêm depois delas (REV-082, escolha do autor).
+\FloatBarrier
+\bibliographystyle{FormattingGuidelines-IJCAI-ECAI-26/named}
+\bibliography{references}
+
+\clearpage
 \appendix
 \raggedbottom
 
@@ -518,10 +524,5 @@ J50 & Teste & Pesca & \resJCTestePescaReal & \resJCTestePescaPrec & \resJCTesteP
 A galeria mostra, viagem a viagem, a classe real e a prevista em cada ponto: nas \resSelViagens{} viagens de teste, pela \emph{baseline}, por J0, por J50 e pela \emph{baseline} com o filtro; nas \resVaViagens{} de validação, pela \emph{baseline} sem e com o filtro. Cada viagem traz a exatidão e o número de segmentos de pesca. Foi gerada a partir das previsões guardadas, só para consulta, e valem as ressalvas da Secção~\ref{sec:limitacoes}. O PDF está no repositório do projeto:
 
 {\small\urlstyle{tt}\url{https://github.com/DinisRosa/IACH-AIS-Project_4/blob/main/viagens/galeria_viagens.pdf}}
-
-% As figuras pendentes ficam antes das referências; o anexo corre logo a seguir às conclusões (REV-071).
-\FloatBarrier
-\bibliographystyle{FormattingGuidelines-IJCAI-ECAI-26/named}
-\bibliography{references}
 
 \end{document}
