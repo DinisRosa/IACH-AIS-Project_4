@@ -1,0 +1,13 @@
+{
+  "id": "test_trip_gallery_2026-11-26",
+  "concedida_por": "utilizador (mensagem no chat, 2026-11-26)",
+  "conjuntos_autorizados": ["test"],
+  "finalidade": "galeria_viagens",
+  "fonte": "previsoes ja guardadas do test (baseline, J0 e J50) e resultados ja registados para as conferir; sem reabrir o parquet nem correr a CNN",
+  "decisoes_cobertas": [
+    "gerar uma imagem por viagem (real, baseline, J0, J50 e baseline + pos-processamento de 301 pontos) e uma pagina viagens/README.md, versionadas no repositorio"
+  ],
+  "validation_autorizado": false,
+  "citacao_literal": "E eu dou-te permissão para usares o teste e validação.",
+  "nota": "Resposta ao plano da galeria apresentado no chat. Nenhuma escolha se faz com estas imagens."
+}
