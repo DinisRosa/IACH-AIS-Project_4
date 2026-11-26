@@ -3,7 +3,7 @@
 Estado vivo no topo (estado, decisões, pendências, artefactos); abaixo, o registo cronológico de marcos, validações, problemas, decisões e pendentes (AGENTS.md §5 e §8).
 Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes que não foram executados.
 
-## Estado atual (REV-079, 2026-11-26 01:03 WET; refeito em REV-066)
+## Estado atual (REV-079, 2026-11-26 01:04 WET; refeito em REV-066)
 
 | Marco | Estado |
 |---|---|
@@ -21,7 +21,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Perguntas:** RQ1, as janelas não superam a viagem completa; RQ2, o filtro reduz muito a fragmentação, com a ressalva acima; RQ3, sem resposta.
 - **Fonte dos números:** macros em `latex/generated/` e ficheiros em `results/` (não versionados).
 - **Conjuntos reservados (`results/access_log.jsonl`):** `test` com 2 aberturas de seleção, 2 leituras de diagnóstico e, sobre previsões guardadas, 3 análises de blocos de erro, 1 avaliação de janelas e 1 geração de figuras do relatório, 1 galeria de viagens (REV-073, gerada de novo em REV-072) e 1 geração de figuras com «baseline» (REV-072). `validation` aberto 1 vez (medição final, **gasto**); as anotações foram depois reutilizadas nas 2 versões do filtro e, em REV-073, lidas com as previsões guardadas para a galeria (2 vezes) e para a Figura 7 (REV-074). Os três conjuntos foram lidos por inteiro só para construir as bases limpas (REV-015).
-- **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, números de linha ligados; todo o texto a preto desde a REV-072, salvo o da REV-078 a cor; Anexo B com a ligação para a galeria; em REV-068 saiu do resumo a ressalva sobre a medição do filtro), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
+- **LaTeX:** único documento `latex/relatorio_pt.tex` (completo, 10 páginas, números de linha ligados; todo o texto a preto; Anexo B com a ligação para a galeria; em REV-068 saiu do resumo a ressalva sobre a medição do filtro), compilado para `latex/build/`. A proposta em LaTeX foi retirada (REV-066): etiqueta `proposta-pt-v1` e `latex/proposta_pt.pdf`.
 - **Testes:** 256 (sintéticos, mais um que lê 3 viagens de treino), a passar.
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
@@ -1432,6 +1432,19 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Validado**
 - 10 páginas, sem referências em falta; 662 números de linha nas margens; página 1 revista.
+
+**Pendente**
+- Envio a pedido (REV-078 e REV-079); leitura do relatório.
+
+### 2026-11-26m — Anexo B a preto (REV-078, complemento), 2026-11-26 01:04 WET
+
+[REV-078 | cor #1F6FEB, texto agora a preto no `.tex`]
+
+**Feito**
+- A pedido, o Anexo B e as duas frases da mesma revisão passaram a preto.
+
+**Validado**
+- 10 páginas, sem referências em falta; 662 números de linha nas margens; ligação presente; página 9 revista. Testes não repetidos (sem alterações a código).
 
 **Pendente**
 - Envio a pedido (REV-078 e REV-079); leitura do relatório.

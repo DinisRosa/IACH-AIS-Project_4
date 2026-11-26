@@ -1186,6 +1186,7 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** 10 páginas, sem referências em falta; 662 números de linha nas margens; ligação presente no PDF; endereço público respondeu 200 sem autenticação. Testes não repetidos (sem alterações a código).
 - **Pendentes:** envio a pedido; leitura do relatório.
+- **Complemento (01:04 WET, mesma revisão):** a pedido do utilizador, o texto desta revisão passou a **preto** (Anexo B e as duas frases ligadas); retirados `\definecolor{rev078}` e os `\revtext{rev078}`. 10 páginas; página 9 revista.
 
 ### REV-079 — E-mail do autor no relatório (alteração do utilizador)
 

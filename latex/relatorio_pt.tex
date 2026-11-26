@@ -23,7 +23,6 @@
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{xcolor}
-\definecolor{rev078}{HTML}{1F6FEB}
 
 \renewcommand{\figurename}{Figura}
 \renewcommand{\tablename}{Tabela}
@@ -235,7 +234,7 @@ com $h=(M-1)/2$ e $\sigma=M/6\approx\resPpSigma$ pontos. Os pesos gaussianos faz
 
 Os dados são divididos por viagem completa (identificador do navio e sufixo da viagem), na proporção 70/15/15, com semente 42 e um manifesto fixo: \resTrViagens{} viagens de treino (\resTrPontos{} pontos), \resSelViagens{} de teste (\resSelPontos{} pontos) e \resVaViagens{} de validação (\resVaPontos{} pontos). Viagens do mesmo navio podem ficar em conjuntos diferentes, por decisão do projeto, pelo que não se afirma generalização a navios inéditos.
 
-Os nomes dos dois conjuntos reservados têm aqui os \textbf{papéis trocados face ao habitual}: o conjunto de \textbf{teste} serve para escolher (épocas, limiares, janela do filtro) e o de \textbf{validação} para a medição final do modelo escolhido. Os resultados no teste são, por isso, otimistas. A preparação das bases leu os três conjuntos, sem analisar resultados; depois dela, cada abertura de um conjunto reservado para escolher ou medir exigiu uma autorização escrita e ficou registada. As anotações da validação foram usadas três vezes \revtext{rev078}{para medir}: na medição final e, depois, nas duas versões do filtro, sobre as previsões já guardadas e com o protocolo gravado antes de cada uma. \revtext{rev078}{Mais tarde serviram também para desenhar figuras, incluindo as da galeria (Anexo~\ref{sec:galeria}), sem escolher nem voltar a ajustar nada.}
+Os nomes dos dois conjuntos reservados têm aqui os \textbf{papéis trocados face ao habitual}: o conjunto de \textbf{teste} serve para escolher (épocas, limiares, janela do filtro) e o de \textbf{validação} para a medição final do modelo escolhido. Os resultados no teste são, por isso, otimistas. A preparação das bases leu os três conjuntos, sem analisar resultados; depois dela, cada abertura de um conjunto reservado para escolher ou medir exigiu uma autorização escrita e ficou registada. As anotações da validação foram usadas três vezes para medir: na medição final e, depois, nas duas versões do filtro, sobre as previsões já guardadas e com o protocolo gravado antes de cada uma. Mais tarde serviram também para desenhar figuras, incluindo as da galeria (Anexo~\ref{sec:galeria}), sem escolher nem voltar a ajustar nada.
 
 \subsection{Treino}
 \label{sec:treino}
@@ -295,7 +294,7 @@ O código foi verificado com testes automáticos sobre dados sintéticos (e, par
 
 Esta comparação usa o conjunto de teste, que serviu para escolher a época e o limiar de cada modelo.
 
-\textbf{Por segmento}, os três modelos fragmentam muito (Tabela~\ref{tab:segmentos}): há \resBsSegPescaNRef{} segmentos reais de pesca, e a \emph{baseline} prevê \resBsSegPescaNPred{}, J0 \resJZSegPescaNPred{} e J50 \resJCSegPescaNPred{}. A fragmentação de J50 é a menor (na pesca, \resJCSegPescaFrag{} contra \resJZSegPescaFrag{} de J0 e \resBsSegPescaFrag{} da \emph{baseline}; na navegação, \resJCSegNavFrag{} contra \resJZSegNavFrag{} e \resBsSegNavFrag{}), mas continua muito acima de 1. O F1 de segmentos de pesca é muito baixo nos três, sobretudo porque há centenas de segmentos previstos para poucos reais (na \emph{baseline}, a precisão por segmento é de \resBsSegPescaPrec{}); além disso, há em média um segmento real de pesca por viagem, e um previsto só lhe corresponde se o IoU temporal chegar ao limiar. O erro de fronteira da pesca não mostra um padrão e assenta em poucos pares (\resBsSegPescaNPar{}, \resJZSegPescaNPar{} e \resJCSegPescaNPar{}). A Figura~\ref{fig:linha} mostra a viagem de teste com mais segmentos reais. \revtext{rev078}{Todas as viagens estão na galeria do Anexo~\ref{sec:galeria}.}
+\textbf{Por segmento}, os três modelos fragmentam muito (Tabela~\ref{tab:segmentos}): há \resBsSegPescaNRef{} segmentos reais de pesca, e a \emph{baseline} prevê \resBsSegPescaNPred{}, J0 \resJZSegPescaNPred{} e J50 \resJCSegPescaNPred{}. A fragmentação de J50 é a menor (na pesca, \resJCSegPescaFrag{} contra \resJZSegPescaFrag{} de J0 e \resBsSegPescaFrag{} da \emph{baseline}; na navegação, \resJCSegNavFrag{} contra \resJZSegNavFrag{} e \resBsSegNavFrag{}), mas continua muito acima de 1. O F1 de segmentos de pesca é muito baixo nos três, sobretudo porque há centenas de segmentos previstos para poucos reais (na \emph{baseline}, a precisão por segmento é de \resBsSegPescaPrec{}); além disso, há em média um segmento real de pesca por viagem, e um previsto só lhe corresponde se o IoU temporal chegar ao limiar. O erro de fronteira da pesca não mostra um padrão e assenta em poucos pares (\resBsSegPescaNPar{}, \resJZSegPescaNPar{} e \resJCSegPescaNPar{}). A Figura~\ref{fig:linha} mostra a viagem de teste com mais segmentos reais. Todas as viagens estão na galeria do Anexo~\ref{sec:galeria}.
 
 \begin{table*}[t]
 \centering\footnotesize\setlength{\tabcolsep}{4pt}
@@ -505,12 +504,12 @@ J50 & Teste & Pesca & \resJCTestePescaReal & \resJCTestePescaPrec & \resJCTesteP
 \label{tab:classes}
 \end{center}
 
-\section{\texorpdfstring{\revtext{rev078}{Anexo: galeria de viagens}}{Anexo: galeria de viagens}}
+\section{Anexo: galeria de viagens}
 \label{sec:galeria}
 
-\revtext{rev078}{A galeria mostra, viagem a viagem, a classe real e a prevista em cada ponto: nas \resSelViagens{} viagens de teste, pela \emph{baseline}, por J0, por J50 e pela \emph{baseline} com o filtro; nas \resVaViagens{} de validação, pela \emph{baseline} sem e com o filtro. Cada viagem traz a exatidão e o número de segmentos de pesca. Foi gerada a partir das previsões guardadas, só para consulta, e valem as ressalvas da Secção~\ref{sec:limitacoes}. O PDF está no repositório do projeto:}
+A galeria mostra, viagem a viagem, a classe real e a prevista em cada ponto: nas \resSelViagens{} viagens de teste, pela \emph{baseline}, por J0, por J50 e pela \emph{baseline} com o filtro; nas \resVaViagens{} de validação, pela \emph{baseline} sem e com o filtro. Cada viagem traz a exatidão e o número de segmentos de pesca. Foi gerada a partir das previsões guardadas, só para consulta, e valem as ressalvas da Secção~\ref{sec:limitacoes}. O PDF está no repositório do projeto:
 
-\revtext{rev078}{\small\urlstyle{tt}\url{https://github.com/DinisRosa/IACH-AIS-Project_4/blob/main/viagens/galeria_viagens.pdf}}
+{\small\urlstyle{tt}\url{https://github.com/DinisRosa/IACH-AIS-Project_4/blob/main/viagens/galeria_viagens.pdf}}
 
 % As figuras pendentes ficam antes das referências; o anexo corre logo a seguir às conclusões (REV-071).
 \FloatBarrier
