@@ -1,14 +1,15 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-26 01:27 WET (UTC+00:00).** Reescrito de raiz em REV-083, para continuar numa nova conversa. As horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-082).
+**Atualizado em 2026-11-26 02:15 WET (UTC+00:00)** (REV-084: comparação dos fluxos de trabalho com agentes). Reescrito de raiz em REV-083, para continuar numa nova conversa. As horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-082).
 
 ## Ponto de situação
 
 - O trabalho técnico está **feito**: preparação, CNN baseline, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O **relatório** `latex/relatorio_pt.tex` está completo: 10 páginas, todo a preto, com os anexos **depois** das referências.
 - A **galeria de viagens** está em `viagens/` (página, 36 imagens, PDF e `.tex`), ligada ao `README.md` e ao Anexo B do relatório.
-- O GitHub é **público**. O utilizador pediu o envio desta atualização (REV-083); confirmar com `git status -sb` que o `main` local e o remoto estão iguais.
-- **Próximo passo:** a leitura do relatório pelo utilizador e os ajustes que dela saírem (REV-084).
+- A **comparação dos fluxos de trabalho com agentes** nas quatro tentativas está em `investigacao_agentes/` (documento de 18 páginas, kit de arranque, script de métricas). REV-084; falta a leitura do utilizador.
+- O GitHub é **público**. O utilizador pediu o envio da REV-084; confirmar com `git status -sb` que o `main` local e o remoto estão iguais.
+- **Próximo passo:** a leitura do relatório pelo utilizador e os ajustes que dela saírem (REV-085 ou seguinte).
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -31,6 +32,7 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 | Galeria | `galeria_viagens.tex` igual ao que o programa gera da página; 36 imagens iguais às de `proveniencia.json`; PDF com 12 páginas | 01:26 |
 | GitHub (`git fetch`, `git ls-remote`) | `main` local e remoto em `a6d8796` antes desta revisão; etiquetas `proposta-pt-v1` e `docs-historico-v1` presentes | 01:26 |
 | Ligação do Anexo B, sem sessão iniciada | respondeu 200 | 01:26 |
+| Comparação dos fluxos (`investigacao_agentes/`, REV-084) | métricas regeneradas dos clones (P4 em `0337bfa`); `pdflatex` duas vezes sem erros; 18 páginas | 02:12 |
 | Vigilante do LaTeX | um a correr no terminal do utilizador (versão que compila até estabilizar) | 01:22 |
 
 Não repetido nesta atualização: a recuperação da proposta antiga num clone (2026-11-25, 23:12) e a revisão independente do relatório (2026-11-25, 23:00, anterior à REV-068; o texto mudou depois). O que mudar depois destas horas **não foi** validado por este handoff.

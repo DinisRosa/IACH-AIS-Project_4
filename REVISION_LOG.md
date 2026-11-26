@@ -1241,3 +1241,14 @@ Regras:
 - **Correspondência no LaTeX:** **não aplicável**.
 - **Validação:** 256 testes; relatório do zero com 10 páginas; galeria conferida; ligação do Anexo B 200; contagens de acessos tiradas de `results/access_log.jsonl`.
 - **Pendentes:** leitura do relatório.
+
+### REV-084 — Documento de comparação dos fluxos de trabalho com agentes
+
+- **Data:** 2026-11-26, 01:40 a 02:15 WET.
+- **Cor:** Azul-aço-escuro `#1F4E79`, RGB (31, 78, 121). No `.tex` novo, todo o corpo leva esta cor (`\definecolor{rev084}`; equivale a `\revtext{rev084}{...}` no documento inteiro). Marcador no `PROGRESS.md` e em `investigacao_agentes/README.md`.
+- **O quê:** pasta nova `investigacao_agentes/` com `comparacao_workflows.tex` e `.pdf` (18 páginas), `kit/` (modelos de AGENTS, handoff, PROGRESS e checklist de arranque), `scripts/metricas_git.py` e `gerado/` (métricas, macros e figuras). `AGENTS.md` §8 passa a listar o documento; `README.md`, `PROGRESS.md` e `handoff.md` atualizados.
+- **Porquê:** pedido do utilizador: comparar as quatro tentativas (IACH-AIS-Project, _2, _3 e _4) quanto a comunicação com o agente, segurança, fiabilidade e memória, e tirar lições para projetos futuros. Decisões do utilizador: só os repositórios GitHub como fonte (só leitura); pasta `investigacao_agentes/`; relatório completo em português de Portugal com resumo em inglês; público: o autor, o docente e o público geral; kit com modelos em anexo e em ficheiros; métricas por script versionado; quatro subagentes Opus; revisão com cor; declarar que o documento foi gerado com IA; commit e envio no fim.
+- **Correspondência no LaTeX:** **atualizado** (documento novo; o relatório `latex/relatorio_pt.tex` não muda).
+- **Validação:** métricas regeneradas a partir de clones dos quatro repositórios (P4 em `0337bfa`); afirmações centrais dos subagentes verificadas por amostragem (trailers, `/tmp/opencode` na auditoria de P2, arquivo de dados em P1, «terceira utilização» do `validation` em P4); `pdflatex` duas vezes sem erros nem referências em falta; páginas revistas em imagem. Testes do projeto não executados (código do projeto não mudou).
+- **Limitações:** ferramenta de cada tentativa deduzida dos vestígios; sem acesso às conversas; clones e ficheiros temporários apagados no fim, a pedido do utilizador.
+- **Pendentes:** leitura do documento pelo utilizador.

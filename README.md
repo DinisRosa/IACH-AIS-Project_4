@@ -8,6 +8,10 @@ Para retomar o trabalho: ler `AGENTS.md` (regras) e `handoff.md` (ponto de situa
 
 **[Ver o que cada modelo previu em cada viagem](viagens/README.md)**: 18 viagens de teste (real, baseline, J0, J50 e baseline com pós-processamento) e 18 de validação (real, baseline e baseline com pós-processamento). A mesma galeria em PDF: [`viagens/galeria_viagens.pdf`](viagens/galeria_viagens.pdf).
 
+## Investigação de agentes
+
+[`investigacao_agentes/comparacao_workflows.pdf`](investigacao_agentes/comparacao_workflows.pdf): como o projeto foi feito com agentes de IA ao longo de quatro tentativas, o que correu bem e mal, e um kit de arranque para projetos futuros (`investigacao_agentes/kit/`).
+
 ## Estado
 
 | Parte | Estado |

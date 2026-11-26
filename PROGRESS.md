@@ -15,6 +15,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | 6 e 7 Congelar e medição final no `validation` | Feito (REV-053), só a baseline |
 | Relatório do trabalho feito | **Completo (REV-065, ajustes até REV-082); falta a leitura do utilizador** |
 | Galeria de viagens | Feita (REV-073, REV-077) |
+| Comparação dos fluxos de trabalho com agentes | Feita (REV-084), `investigacao_agentes/`; falta a leitura do utilizador |
 
 - **Baseline:** treinada só com o treino oficial (87 viagens, 300 épocas); época 162 e limiar 0,65, escolhidos no `test` e congelados em `results/baseline_frozen/`. Exatidão por ponto: 94,7 % no `test` (otimista) e 94,4 % no `validation`.
 - **J0 e J50:** a mesma CNN em janelas de 64 pontos, sem sobreposição e com 50 %; épocas 8 e 4, limiares 0,60 e 0,75. No `test`, 93,4 % e 93,7 %; J50 fragmenta menos. Não medidas no `validation`.
@@ -27,7 +28,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-083.
+- **Registo de revisões:** REV-001 a REV-084.
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -50,7 +51,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 ## Pendências abertas
 
-- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-084).
+- **Leitura do relatório pelo utilizador.** Ajustes entram numa revisão nova (REV-085 ou seguinte).
 - **Enunciado:** não está no projeto; confirmar se diz algo sobre a ordem dos anexos.
 - **Aspeto (sem decisão):** «50.2» e «0.65» com ponto na Figura 3; «antes»/«depois» na linha temporal da Figura 8; «(otimista)» sem explicação na legenda da Tabela 4; coluna direita vazia na página 10.
 - **Por decidir:** traduzir «Abstract» e «References»; versão final sem números de linha (quando pedida).
@@ -66,6 +67,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | `AGENTS.md` | Alinhado em REV-078 |
 | `CLAUDE.md` | Alinhado em REV-067 |
 | `README.md`, `handoff.md`, `docs/00` | Alinhados em REV-083 |
+| `investigacao_agentes/` | Documento, kit, script de métricas e `gerado/` (REV-084); `gerado/` não se edita à mão |
 | `viagens/` | Galeria gerada por código (REV-073) e a sua versão `galeria_viagens.tex`/`.pdf` (REV-077); não editar à mão |
 | `docs/00`, `docs/01` | Vigentes; `docs/00` §9 com a verificação bibliográfica |
 | `docs/02` a `docs/06` | Retirados (REV-067); na etiqueta `docs-historico-v1` |
@@ -1534,3 +1536,21 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Pendente**
 - Leitura do relatório pelo utilizador (REV-084).
+
+### 2026-11-26t — Comparação dos fluxos de trabalho com agentes (REV-084), 2026-11-26 02:15 WET
+
+[REV-084 | cor #1F4E79]
+
+**Feito**
+- Pasta `investigacao_agentes/`: documento `comparacao_workflows.tex`/`.pdf` (18 páginas) sobre as quatro tentativas, kit de arranque em `kit/`, script `scripts/metricas_git.py` e saídas em `gerado/`.
+- Quatro subagentes Opus leram um repositório cada, só em modo de leitura; o coordenador integrou e verificou por amostragem.
+
+**Validado**
+- Métricas regeneradas dos clones (P4 em `0337bfa`); `pdflatex` duas vezes sem erros; páginas revistas em imagem.
+- Não executado: testes do projeto (o código do projeto não mudou).
+
+**Decisões**
+- Do utilizador: fonte só os quatro repositórios GitHub; outros repositórios só de leitura; cor da revisão no `.tex`; declarar o uso de IA; commit e envio no fim; apagar no fim os clones e os ficheiros criados fora do projeto.
+
+**Pendente**
+- Leitura do documento pelo utilizador.
