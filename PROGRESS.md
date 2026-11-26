@@ -15,7 +15,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 | 6 e 7 Congelar e medição final no `validation` | Feito (REV-053), só a baseline |
 | Relatório do trabalho feito | **Completo (REV-065, ajustes até REV-082); falta a leitura do utilizador** |
 | Galeria de viagens | Feita (REV-073, REV-077) |
-| Comparação dos fluxos de trabalho com agentes | Feita (REV-084), `investigacao_agentes/`; falta a leitura do utilizador |
+| Comparação dos fluxos de trabalho com agentes | Feita (REV-084; texto a preto em REV-085), `investigacao_agentes/`; falta a leitura do utilizador |
 
 - **Baseline:** treinada só com o treino oficial (87 viagens, 300 épocas); época 162 e limiar 0,65, escolhidos no `test` e congelados em `results/baseline_frozen/`. Exatidão por ponto: 94,7 % no `test` (otimista) e 94,4 % no `validation`.
 - **J0 e J50:** a mesma CNN em janelas de 64 pontos, sem sobreposição e com 50 %; épocas 8 e 4, limiares 0,60 e 0,75. No `test`, 93,4 % e 93,7 %; J50 fragmenta menos. Não medidas no `validation`.
@@ -28,7 +28,7 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 - **Ambiente:** `iach-ais-venv-4/` (venv + pip, Python 3.14.4, CPU); pacote `ais` em modo editável; `requirements.txt`.
 - **Dados:** `data/123_fishing_trajs.csv` (123 viagens, 1 026 279 linhas); bases limpas com 713 854, 209 016 e 103 409 linhas; manifesto versionado `manifests/split_manifest_seed42.csv`.
 - **Git:** remoto `origin`, branch `main`; confirmar com `git status -sb`. Push só a pedido do utilizador (REV-055).
-- **Registo de revisões:** REV-001 a REV-084.
+- **Registo de revisões:** REV-001 a REV-085.
 - **Documentação:** `docs/00` e `docs/01` (confirmado pelo utilizador); os concluídos estão na etiqueta `docs-historico-v1` (REV-067).
 
 ## Decisões do utilizador (vigentes)
@@ -1551,6 +1551,19 @@ Regra: distinguir **feito**, **validado** e **pendente**. Não declarar testes q
 
 **Decisões**
 - Do utilizador: fonte só os quatro repositórios GitHub; outros repositórios só de leitura; cor da revisão no `.tex`; declarar o uso de IA; commit e envio no fim; apagar no fim os clones e os ficheiros criados fora do projeto.
+
+**Pendente**
+- Leitura do documento pelo utilizador.
+
+### 2026-11-26u — Comparação dos fluxos com o texto a preto (REV-085), 2026-11-26 02:15 WET
+
+[REV-085 | cor #3C3C3C]
+
+**Feito**
+- Texto de `comparacao_workflows.tex` a preto, a pedido do utilizador; PDF recompilado. O utilizador pediu commit e envio.
+
+**Validado**
+- `pdflatex` duas vezes sem erros; 18 páginas.
 
 **Pendente**
 - Leitura do documento pelo utilizador.

@@ -7,8 +7,8 @@
 - O trabalho técnico está **feito**: preparação, CNN baseline, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O **relatório** `latex/relatorio_pt.tex` está completo: 10 páginas, todo a preto, com os anexos **depois** das referências.
 - A **galeria de viagens** está em `viagens/` (página, 36 imagens, PDF e `.tex`), ligada ao `README.md` e ao Anexo B do relatório.
-- A **comparação dos fluxos de trabalho com agentes** nas quatro tentativas está em `investigacao_agentes/` (documento de 18 páginas, kit de arranque, script de métricas). REV-084; falta a leitura do utilizador.
-- O GitHub é **público**. O utilizador pediu o envio da REV-084; confirmar com `git status -sb` que o `main` local e o remoto estão iguais.
+- A **comparação dos fluxos de trabalho com agentes** nas quatro tentativas está em `investigacao_agentes/` (documento de 18 páginas, kit de arranque, script de métricas). REV-084, texto a preto em REV-085; falta a leitura do utilizador.
+- O GitHub é **público**. O utilizador pediu o envio das REV-084 e REV-085; confirmar com `git status -sb` que o `main` local e o remoto estão iguais.
 - **Próximo passo:** a leitura do relatório pelo utilizador e os ajustes que dela saírem (REV-085 ou seguinte).
 - Não há treinos, medições nem acessos a dados pendentes.
 

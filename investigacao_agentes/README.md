@@ -1,6 +1,6 @@
 # Investigação de agentes: comparação dos fluxos de trabalho
 
-[REV-084 | cor #1F4E79]
+[REV-084 | cor #1F4E79] [REV-085 | cor #3C3C3C: texto do documento a preto]
 
 Estudo de como o projeto AIS foi feito com agentes de IA ao longo de quatro tentativas
 (quatro repositórios GitHub), para recomeçar bem no próximo projeto.

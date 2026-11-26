@@ -1252,3 +1252,13 @@ Regras:
 - **Validação:** métricas regeneradas a partir de clones dos quatro repositórios (P4 em `0337bfa`); afirmações centrais dos subagentes verificadas por amostragem (trailers, `/tmp/opencode` na auditoria de P2, arquivo de dados em P1, «terceira utilização» do `validation` em P4); `pdflatex` duas vezes sem erros nem referências em falta; páginas revistas em imagem. Testes do projeto não executados (código do projeto não mudou).
 - **Limitações:** ferramenta de cada tentativa deduzida dos vestígios; sem acesso às conversas; clones e ficheiros temporários apagados no fim, a pedido do utilizador.
 - **Pendentes:** leitura do documento pelo utilizador.
+
+### REV-085 — Texto da comparação dos fluxos a preto
+
+- **Data:** 2026-11-26, 02:15 WET.
+- **Cor:** Cinzento-grafite `#3C3C3C`, RGB (60, 60, 60). Marcador no `PROGRESS.md`; no `.tex` o texto passa a preto, a pedido do utilizador (como na REV-072), e esta revisão não leva cor.
+- **O quê:** `investigacao_agentes/comparacao_workflows.tex` deixa de pôr o corpo na cor da REV-084; a cor fica só nas molduras das caixas. PDF recompilado.
+- **Porquê:** pedido do utilizador, para ler mais facilmente.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** `pdflatex` duas vezes sem erros; 18 páginas; página revista em imagem.
+- **Pendentes:** leitura do documento pelo utilizador.
