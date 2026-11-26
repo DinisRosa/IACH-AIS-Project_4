@@ -1,6 +1,6 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-26 02:15 WET (UTC+00:00)** (REV-084: comparação dos fluxos de trabalho com agentes). Reescrito de raiz em REV-083, para continuar numa nova conversa. As horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-082).
+**Atualizado em 2026-11-26 02:41 WET (UTC+00:00)** (REV-084 a REV-087: comparação dos fluxos de trabalho com agentes e guia de desenvolvimento). Reescrito de raiz em REV-083, para continuar numa nova conversa. As horas são WET, lidas com `date` ou do `git log`. Versões anteriores estão no histórico do git (REV-044 a REV-082).
 
 ## Ponto de situação
 
@@ -8,7 +8,8 @@
 - O **relatório** `latex/relatorio_pt.tex` está completo: 10 páginas, todo a preto, com os anexos **depois** das referências.
 - A **galeria de viagens** está em `viagens/` (página, 36 imagens, PDF e `.tex`), ligada ao `README.md` e ao Anexo B do relatório.
 - A **comparação dos fluxos de trabalho com agentes** nas quatro tentativas está em `investigacao_agentes/` (documento de 18 páginas, kit de arranque, script de métricas). REV-084, texto a preto em REV-085, estilo académico em REV-086; falta a leitura do utilizador.
-- O GitHub é **público**. O utilizador pediu o envio das REV-084 a REV-086; confirmar com `git status -sb` que o `main` local e o remoto estão iguais.
+- O **guia de desenvolvimento** (cada pasta e ficheiro do projeto) está em `guia_desenvolvimento/` (REV-087); falta a leitura do utilizador.
+- O GitHub é **público**. O utilizador pediu o envio das REV-084 a REV-087; confirmar com `git status -sb` que o `main` local e o remoto estão iguais.
 - **Próximo passo:** a leitura do relatório pelo utilizador e os ajustes que dela saírem (REV-085 ou seguinte).
 - Não há treinos, medições nem acessos a dados pendentes.
 

@@ -8,6 +8,10 @@ Para retomar o trabalho: ler `AGENTS.md` (regras) e `handoff.md` (ponto de situa
 
 **[Ver o que cada modelo previu em cada viagem](viagens/README.md)**: 18 viagens de teste (real, baseline, J0, J50 e baseline com pós-processamento) e 18 de validação (real, baseline e baseline com pós-processamento). A mesma galeria em PDF: [`viagens/galeria_viagens.pdf`](viagens/galeria_viagens.pdf).
 
+## Guia de desenvolvimento
+
+[`guia_desenvolvimento/guia_desenvolvimento.pdf`](guia_desenvolvimento/guia_desenvolvimento.pdf): o que é e para que serve cada pasta e ficheiro do projeto, o fluxo de dados e como retomar o desenvolvimento.
+
 ## Investigação de agentes
 
 [`investigacao_agentes/comparacao_workflows.pdf`](investigacao_agentes/comparacao_workflows.pdf): como o projeto foi feito com agentes de IA ao longo de quatro tentativas, o que correu bem e mal, e um kit de arranque para projetos futuros (`investigacao_agentes/kit/`).
@@ -82,7 +86,7 @@ git show docs-historico-v1:docs/04_pos_processamento.md
 
 - `AGENTS.md`: regras do projeto (fonte única). `CLAUDE.md`: manda lê-las.
 - `handoff.md`: ponto de situação para uma nova conversa.
-- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-083).
+- `PROGRESS.md`: estado, decisões, pendências e histórico. `REVISION_LOG.md`: revisões dos documentos, com ID e cor (REV-001 a REV-087).
 - `docs/`:
   - `00_projeto_e_decisoes.md`: objetivo, decisões, marcos, modelos e protocolos, acesso aos dados e referências verificadas.
   - `01_dados_e_preparacao.md`: colunas, unidades, entradas da CNN e preparação.
@@ -93,6 +97,8 @@ git show docs-historico-v1:docs/04_pos_processamento.md
 - `latex/`: `relatorio_pt.tex`, `references.bib`, `figures/`, `generated/`, o modelo IJCAI, `proposta_pt.pdf` (proposta anterior) e `proposta_IAHC_DINIS_ROSA.pdf` (entregue ao professor, não se altera).
 - `manifests/`: divisão por viagem, `split_manifest_seed42.csv` (versionado).
 - `viagens/`: galeria gerada por `build_trip_gallery` (página, uma imagem por viagem de teste e de validação e `proveniencia.json`) e a sua versão `galeria_viagens.tex` e `.pdf`, gerada por `build_trip_gallery_pdf`.
+- `investigacao_agentes/`: comparação dos fluxos de trabalho com agentes nas quatro tentativas, kit de arranque e script de métricas.
+- `guia_desenvolvimento/`: guia de pastas e ficheiros do projeto (`.tex` e `.pdf`).
 - `data/` e `results/`: dados e resultados. **Não versionados**: existem só na máquina do autor.
 - `requirements.txt`: dependências com versões fixas. `iach-ais-venv-4/`: ambiente local.
 

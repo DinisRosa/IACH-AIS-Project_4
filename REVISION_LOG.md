@@ -1272,3 +1272,13 @@ Regras:
 - **Correspondência no LaTeX:** **atualizado**.
 - **Validação:** `pdflatex` duas vezes sem erros, avisos de referências nem linhas fora da margem; páginas revistas em imagem.
 - **Pendentes:** leitura do documento pelo utilizador.
+
+### REV-087 — Guia de desenvolvimento
+
+- **Data:** 2026-11-26, 02:41 WET.
+- **Cor:** Verde-garrafa `#1B5E20`, RGB (27, 94, 32). Marcador no `PROGRESS.md`; no `.tex` o texto fica a preto, a pedido do utilizador («Podes fazer o texto a preto»).
+- **O quê:** pasta nova `guia_desenvolvimento/` com `guia_desenvolvimento.tex` e `.pdf` (10 páginas): o que é, o que faz e porque existe cada pasta e ficheiro do projeto (raiz, `docs/`, `data/`, `manifests/`, `src/ais/phase1` e `cli/`, `configs/`, `tests/`, `results/`, `latex/`, `viagens/`, `investigacao_agentes/`, ficheiros locais), com o fluxo de dados e como retomar. `AGENTS.md` §8, `README.md`, `PROGRESS.md` e `handoff.md` atualizados.
+- **Porquê:** pedido do utilizador: um guia de desenvolvimento, em estilo académico, para quem retome o projeto.
+- **Correspondência no LaTeX:** **atualizado** (documento novo; o relatório não muda).
+- **Validação:** descrições tiradas dos ficheiros versionados (documentação, docstrings, cabeçalhos das macros, configurações) e da listagem dos nomes das pastas locais, sem abrir dados nem PDF; figuras usadas no relatório conferidas com os `\includegraphics` (8 de 20); `pdflatex` duas vezes sem erros nem linhas fora da margem; páginas revistas em imagem.
+- **Pendentes:** leitura do guia pelo utilizador.

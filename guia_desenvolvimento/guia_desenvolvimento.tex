@@ -1,0 +1,518 @@
+%%%% guia_desenvolvimento.tex
+%%%% Guia de desenvolvimento do projeto AIS: o que é e para que serve cada pasta e ficheiro.
+%%%% REV-087 (cor Verde-garrafa #1B5E20 no registo). Texto a preto, a pedido do utilizador.
+%%%% Compilar a partir de guia_desenvolvimento/:  pdflatex guia_desenvolvimento.tex (duas vezes).
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage[provide=*,portuguese]{babel}
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+% Revisões (AGENTS.md §8): o registo usa esta cor; o texto fica a preto por pedido do utilizador.
+\definecolor{rev087}{HTML}{1B5E20}
+\newcommand{\revtext}[2]{{\color{#1}#2}}
+
+\setlist{itemsep=1pt,topsep=3pt}
+\setlist[description]{font=\normalfont\ttfamily,leftmargin=1.2em,itemsep=2pt}
+\setlength{\emergencystretch}{4em}
+\tolerance=2000
+\captionsetup{font=small,labelfont=bf}
+\renewcommand{\arraystretch}{1.15}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcommand{\f}[1]{\texttt{#1}}
+% Permite quebrar a linha depois de um traço de sublinhado nos nomes de ficheiros.
+\AtBeginDocument{\let\oldus\_\renewcommand{\_}{\oldus\allowbreak}}
+
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,frame=single,
+  rulecolor=\color{black!30},keepspaces=true,extendedchars=true,
+  literate={á}{{\'a}}1 {à}{{\`a}}1 {â}{{\^a}}1 {ã}{{\~a}}1 {ç}{{\c{c}}}1 {é}{{\'e}}1
+   {ê}{{\^e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1}
+
+\title{\textbf{Guia de desenvolvimento do projeto AIS}\\[4pt]
+\large Organização, função e uso de cada pasta e ficheiro do repositório}
+\author{Dinis Rosa\\[2pt]\small Universidade de Coimbra, Departamento de Engenharia Informática}
+\date{26 de novembro de 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Este guia descreve a organização do repositório do projeto AIS, que segmenta viagens de
+navios de pesca em pesca e navegação com uma rede neuronal convolucional unidimensional (CNN~1D).
+Para cada pasta e ficheiro indica-se o que é, o que faz, porque existe e como se usa, distinguindo
+o que está versionado no git do que existe apenas na máquina do autor. O objetivo é que alguém que
+retome o projeto, seja uma pessoa ou um agente de IA, perceba rapidamente onde está cada coisa, que
+programas produzem que resultados e que regras protegem os conjuntos de dados reservados. O guia
+descreve o estado do repositório a 26 de novembro de 2026.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+%% =====================================================================
+\section{Introdução}
+
+O projeto AIS foi desenvolvido no âmbito da unidade curricular IACH, com a ajuda de agentes de IA.
+O repositório reúne o código, os testes, as configurações, a documentação, o relatório em LaTeX e
+uma galeria de resultados, além de ficheiros cuja única função é manter a continuidade do trabalho
+entre sessões. Esta mistura é útil a quem conhece o projeto, mas pode desorientar quem chega de
+novo. Este guia percorre o repositório pasta a pasta e explica o papel de cada ficheiro.
+
+Duas distinções atravessam todo o guia. A primeira separa o que está \emph{versionado}, isto é,
+presente no GitHub, do que é \emph{local}: os dados, os resultados, o ambiente Python e o PDF do
+relatório existem apenas na máquina do autor, por decisão explícita (dados e resultados volumosos
+não se publicam). A segunda separa o que se \emph{escreve à mão} do que é \emph{gerado por código}:
+as macros com os números do relatório, a galeria de viagens e as figuras são produzidas por
+programas do projeto e não devem ser editadas diretamente.
+
+A Secção~\ref{sec:visao} apresenta a estrutura geral e o fluxo de dados. As
+Secções~\ref{sec:raiz} a~\ref{sec:investigacao} descrevem cada parte do repositório. A
+Secção~\ref{sec:locais} trata dos ficheiros locais e automáticos e a Secção~\ref{sec:retomar}
+resume como retomar o desenvolvimento.
+
+%% =====================================================================
+\section{Visão geral}\label{sec:visao}
+
+\subsection{Estrutura do repositório}
+
+A raiz do projeto tem a estrutura seguinte; as pastas marcadas com \f{(local)} não estão no git.
+
+\begin{lstlisting}
+projeto/
+|-- AGENTS.md  CLAUDE.md  handoff.md  PROGRESS.md  REVISION_LOG.md  README.md
+|-- .gitignore  pyproject.toml  requirements.txt
+|-- docs/                      documentação do projeto
+|   `-- bibliografia/          (local) artigos em PDF
+|-- data/                      (local) dataset original e bases limpas
+|-- manifests/                 divisão dos dados por viagem
+|-- src/ais/                   pacote Python
+|   |-- phase1/                biblioteca: dados, modelo, treino, métricas
+|   `-- cli/                   programas executáveis
+|-- configs/                   configurações, protocolos e autorizações
+|-- tests/                     testes com dados sintéticos
+|-- results/                   (local) saídas das execuções
+|-- latex/                     relatório em LaTeX
+|   `-- build/                 (local) PDF compilado do relatório
+|-- viagens/                   galeria de previsões por viagem
+|-- investigacao_agentes/      estudo do fluxo de trabalho com agentes
+|-- guia_desenvolvimento/      este guia
+`-- iach-ais-venv-4/           (local) ambiente Python
+\end{lstlisting}
+
+\subsection{Fluxo de dados e de trabalho}
+
+O projeto segue um fluxo linear, e quase todas as pastas correspondem a um passo dele. O ficheiro
+original \f{data/123\_fishing\_trajs.csv} (123 viagens) é dividido por viagem em treino, teste e
+validação (70/15/15, seed 42), e essa divisão fica registada em \f{manifests/}. A partir do original
+constroem-se três bases limpas, uma por conjunto, com as variáveis recalculadas. A CNN é treinada
+apenas com o treino; o conjunto \f{test} serve para escolher a época e o limiar de decisão; o modelo
+escolhido é congelado; o conjunto \f{validation} é usado uma única vez para a medição final. Sobre
+as previsões guardadas aplica-se depois um filtro temporal (pós-processamento). Os resultados de
+cada passo ficam em \f{results/}, e programas próprios convertem-nos em macros e figuras para o
+relatório (\f{latex/}) e em imagens para a galeria (\f{viagens/}).
+
+Nota sobre os papéis dos conjuntos: neste projeto, por decisão do utilizador (REV-036), o \f{test}
+é o conjunto de seleção e o \f{validation} é o conjunto da medição final, o inverso da convenção
+mais habitual. Os nomes dos ficheiros mantiveram-se.
+
+\subsection{Regras que condicionam a organização}
+
+Três regras do \f{AGENTS.md} explicam muitas escolhas de organização. Primeiro, o desenvolvimento,
+a depuração e as figuras usam apenas o treino ou dados sintéticos; abrir o \f{test} ou o
+\f{validation} exige uma autorização escrita do utilizador, guardada em
+\f{configs/authorizations/}, e cada acesso fica registado. Segundo, qualquer número usado no
+relatório tem de vir de código versionado e testado; por isso existem as macros geradas em
+\f{latex/generated/}. Terceiro, cada alteração lógica aos documentos recebe um identificador de
+revisão (REV-NNN), registado em \f{REVISION\_LOG.md}.
+
+%% =====================================================================
+\section{Ficheiros na raiz}\label{sec:raiz}
+
+Os ficheiros na raiz dividem-se em regras, continuidade e configuração do projeto Python.
+
+\begin{description}
+\item[AGENTS.md] Regras do projeto para qualquer agente de IA (e, na prática, para qualquer
+  pessoa): objetivo e âmbito, comunicação, regras dos dados, ambiente, testes, git, revisões por
+  cor, delegação em subagentes, reprodutibilidade dos cálculos e critérios de fecho. É a fonte única
+  das instruções; os outros ficheiros não as repetem.
+\item[CLAUDE.md] Ficheiro-ponte lido automaticamente pelo Claude Code. Tem apenas cinco linhas:
+  manda ler o \f{AGENTS.md} e depois o \f{handoff.md}, e resume as restrições essenciais.
+\item[handoff.md] Ponto de situação para retomar o trabalho numa nova conversa: o que está feito, o
+  que ler e por que ordem, a última validação com data e hora, a cronologia dos commits recentes, o
+  que falhou e as preferências do utilizador. É reescrito no fim de cada sessão.
+\item[PROGRESS.md] Estado vivo do projeto (marcos, decisões vigentes, pendências, artefactos) no
+  topo, seguido de um registo cronológico das sessões com o que foi feito, validado e decidido.
+\item[REVISION\_LOG.md] Registo das revisões lógicas dos documentos, cada uma com um ID estável,
+  uma cor (usada para marcar o texto no LaTeX), o motivo, os ficheiros afetados e a validação.
+\item[README.md] Página de entrada no GitHub: o que é o projeto, o estado, como compilar o
+  relatório, a estrutura, a instalação do ambiente e a lista de programas.
+\item[.gitignore] Define o que não se versiona: dados (\f{data/}, \f{*.csv}, \f{*.parquet}), com
+  exceção do manifesto da divisão; ambientes; checkpoints e \f{results/}; auxiliares do LaTeX;
+  bibliografia.
+\item[pyproject.toml] Metadados mínimos que tornam \f{src/ais} instalável em modo editável e
+  configuram o pytest (pasta \f{tests/} e caminho \f{src/}). Não repete as versões das dependências.
+\item[requirements.txt] Dependências com versões fixas (numpy, pandas, torch para CPU, pytest,
+  pyarrow, matplotlib) e a forma de as instalar no ambiente \f{iach-ais-venv-4}.
+\end{description}
+
+%% =====================================================================
+\section{Documentação (\f{docs/})}\label{sec:docs}
+
+A pasta \f{docs/} contém a documentação de referência do projeto. Os documentos de fase já
+concluídos (\f{docs/02} a \f{docs/06}) foram retirados da pasta e estão preservados no git, na
+etiqueta \f{docs-historico-v1}.
+
+\begin{description}
+\item[00\_projeto\_e\_decisoes.md] Problema e objetivo, a proposta original e as decisões que a
+  alteraram, as perguntas de investigação e respetivas respostas, os marcos, os modelos e os
+  protocolos de seleção e medição, a política de acesso aos dados, a avaliação, os limites do
+  trabalho, as referências bibliográficas verificadas e o ambiente.
+\item[01\_dados\_e\_preparacao.md] O dataset e as suas colunas, cuidados com tipos e valores em
+  falta, rótulos, variáveis recalculadas, entradas da CNN, como é feita a preparação, as anomalias
+  encontradas no treino e as dúvidas ainda abertas sobre os dados.
+\item[bibliografia/] (local) Os artigos usados no projeto, em PDF: trabalhos sobre deteção de
+  atividade de pesca com dados AIS e VMS, segmentação semântica de trajetórias, modelos ocultos de
+  Markov aplicados a navios e classificação com aprendizagem profunda. Não se versiona por ocupar
+  espaço e por os PDF terem direitos de autor; as referências usadas estão em
+  \f{latex/references.bib} e verificadas em \f{docs/00} §9.
+\end{description}
+
+%% =====================================================================
+\section{Dados e divisão}\label{sec:dados}
+
+\subsection{\f{data/} (local)}
+
+Contém o dataset e as bases derivadas; nada desta pasta está no git.
+
+\begin{description}
+\item[123\_fishing\_trajs.csv] O ficheiro original: 123 viagens e 1\,026\,279 linhas, uma por ponto
+  AIS, com posição, tempo, variáveis de movimento e a classe anotada (pesca ou navegação). Nunca é
+  alterado.
+\item[123\_fishing\_trajs\_clean\_train.parquet] Base limpa do treino, com as variáveis
+  recalculadas pela preparação (\f{build\_clean\_dataset}). É a única usada em desenvolvimento.
+\item[123\_fishing\_trajs\_clean\_test.parquet] Base limpa do conjunto de seleção; só se abre com
+  autorização.
+\item[123\_fishing\_trajs\_clean\_validation.parquet] Base limpa do conjunto da medição final; já
+  foi usada para essa medição.
+\end{description}
+
+\subsection{\f{manifests/}}
+
+\begin{description}
+\item[split\_manifest\_seed42.csv] O manifesto da divisão: para cada ID de viagem, o conjunto a que
+  pertence (treino, teste ou validação) e o número de linhas. Foi gerado uma vez por
+  \f{create\_split\_manifest} e é o único CSV versionado, para que a divisão seja verificável por
+  qualquer pessoa. Todos os programas confirmam contra ele que estão a ler o conjunto certo.
+\end{description}
+
+%% =====================================================================
+\section{Código (\f{src/ais/})}\label{sec:codigo}
+
+O código está organizado como um pacote Python, \f{ais}, instalado em modo editável no ambiente do
+projeto. Divide-se numa biblioteca (\f{phase1/}), com as funções reutilizáveis e testadas, e num
+conjunto de programas (\f{cli/}), que as combinam para executar cada passo do fluxo. Os ficheiros
+\f{\_\_init\_\_.py} existem apenas para que as pastas sejam reconhecidas como pacotes. O nome
+\f{phase1} é histórico: a biblioteca cobre hoje todas as fases do projeto.
+
+\subsection{Biblioteca (\f{src/ais/phase1/})}
+
+\begin{description}
+\item[data.py] Preparação comum: leitura segura do treino (recusa ficheiros que não correspondam ao
+  treino no manifesto), validação das colunas, construção de uma sequência completa por viagem,
+  normalização ajustada só no treino e carregamento dos dados para a CNN.
+\item[model.py] A CNN~1D de referência (\emph{baseline}) que recebe uma viagem completa e devolve
+  um valor por ponto, o cálculo do campo recetivo e a contagem de parâmetros.
+\item[training.py] Função de perda (entropia cruzada binária sobre \emph{logits}), otimizador,
+  ciclo de treino por época, avaliação de diagnóstico e treino completo com paragem.
+\item[windows.py] Janelamento da mesma CNN (variantes J0 e J50): posições das janelas,
+  verificação de cobertura, perda com máscara e reconstrução das probabilidades por ponto a partir
+  de janelas sobrepostas.
+\item[inference.py] Previsão por ponto com um modelo treinado e tabelas de métricas.
+\item[metrics.py] Métricas por ponto, globais e por classe.
+\item[segments.py] Extração de segmentos contínuos de pesca e navegação e métricas por segmento,
+  com emparelhamento por sobreposição temporal.
+\item[postprocessing.py] Filtro gaussiano sobre as probabilidades previstas (pós-processamento) e
+  análise dos blocos de erro usada para escolher o tamanho da janela.
+\item[selection.py] Critérios de seleção declarados no protocolo: escolha da época (menor perda) e
+  do limiar (maior F1 macro).
+\item[reserved.py] Acesso controlado ao \f{test} e ao \f{validation}: verifica a autorização e o
+  protocolo, recusa uma segunda ronda não autorizada e regista cada acesso em
+  \f{results/access\_log.jsonl}.
+\item[config.py] Leitura e validação dos ficheiros de configuração de treino.
+\item[artifacts.py] Gravação e leitura de \emph{checkpoints} com tipos simples.
+\item[checks.py] Teste rápido de treino sobre uma cópia do modelo, para detetar erros antes de uma
+  execução longa.
+\item[utils.py] Reprodutibilidade (sementes) e escolha do dispositivo (CPU).
+\end{description}
+
+\subsection{Programas (\f{src/ais/cli/})}
+
+Cada programa executa-se a partir da raiz com o comando
+\f{iach-ais-venv-4/bin/python -m ais.cli.<nome>}. Agrupam-se aqui pelo passo do fluxo. Os
+programas que abriram ou mediram um conjunto reservado não devem voltar a ser executados sem nova
+autorização; o \f{README.md} assinala-os.
+
+\paragraph{Divisão e preparação dos dados.}
+\begin{description}
+\item[create\_split\_manifest] Cria o manifesto da divisão por viagem. Já foi executado e não deve
+  ser refeito.
+\item[verify\_trip\_count] Confirma o número de viagens do ficheiro original.
+\item[check\_units\_train] Verifica unidades e convenções (distâncias, velocidades, rumos) usando
+  apenas o treino.
+\item[build\_clean\_dataset] Constrói a base limpa de um conjunto, recalculando distância, tempo,
+  velocidade e rumo entre pontos consecutivos da mesma viagem.
+\item[count\_anomalies\_train] Conta saltos e inversões de rumo por viagem no treino.
+\item[count\_shared\_vessels] Conta navios com viagens em mais de um conjunto, usando só o
+  manifesto.
+\end{description}
+
+\paragraph{Treino, seleção e congelação.}
+\begin{description}
+\item[run\_phase1\_training] Treina a CNN sobre a viagem completa com uma configuração de
+  \f{configs/}.
+\item[select\_on\_test] Escolhe a época e o limiar da \emph{baseline} no \f{test}, numa única
+  ronda e segundo um protocolo declarado antes.
+\item[freeze\_baseline] Congela o modelo escolhido e verifica que não foi alterado.
+\item[run\_window\_training] Treina a CNN sobre janelas (J0 ou J50).
+\item[select\_windows\_on\_test] Escolhe a época e o limiar de J0 e J50 no \f{test} e mede-os por
+  segmento.
+\item[final\_validation] Medição final, única, do modelo escolhido no \f{validation}.
+\end{description}
+
+\paragraph{Pós-processamento.}
+\begin{description}
+\item[analyze\_error\_runs] Mede o comprimento dos blocos de erro nas previsões, para escolher a
+  janela do filtro.
+\item[eval\_postproc\_test] Efeito de várias janelas do filtro sobre as previsões guardadas do
+  \f{test}.
+\item[postproc\_validation] Aplica o filtro às previsões guardadas do \f{validation}, segundo um
+  protocolo declarado.
+\item[verify\_postproc\_independent] Segunda implementação, independente, das métricas do filtro,
+  para confirmar os resultados.
+\item[segment\_metrics] Métricas por segmento a partir de um ficheiro de previsões.
+\end{description}
+
+\paragraph{Resultados para o relatório e para a galeria.}
+\begin{description}
+\item[build\_final\_results] Macros \f{resultados.tex} com os números da \emph{baseline} e dos
+  dados.
+\item[build\_window\_results] Macros \f{resultados\_janelas.tex} e figuras das janelas.
+\item[build\_validation\_results] Macros e figuras da medição final.
+\item[build\_postproc\_results] Macros e figuras do pós-processamento.
+\item[build\_window\_analysis\_macros] Macros da análise dos blocos de erro.
+\item[plot\_postprocessing\_kernel] Figura da janela gaussiana, com dados sintéticos.
+\item[build\_trip\_gallery] Gera a galeria \f{viagens/}: uma imagem por viagem do \f{test} e do
+  \f{validation}, a página Markdown e a proveniência. Exige autorização e regista as leituras.
+\item[build\_trip\_gallery\_pdf] Converte a página da galeria em LaTeX e PDF.
+\end{description}
+
+\paragraph{Diagnóstico e execuções antigas.}
+\begin{description}
+\item[plot\_trip\_diagnostic] Gráfico de diagnóstico de uma viagem (classe real e previsões).
+\item[diagnostic\_fit\_3\_trips] Ensaio curto de ajuste da CNN em três viagens de treino.
+\item[plot\_diagnostic\_3trips] Figuras desse ensaio.
+\item[plot\_phase1\_run] Figuras do primeiro treino.
+\item[benchmark\_training\_speed] Medição da velocidade de treino em CPU.
+\end{description}
+\noindent Estes cinco programas serviram para tomar decisões durante o desenvolvimento e não
+contribuem para o relatório final.
+
+%% =====================================================================
+\section{Configurações (\f{configs/})}\label{sec:configs}
+
+As configurações separam os parâmetros do código, para que cada execução fique descrita por um
+ficheiro versionado. Há três tipos.
+
+\paragraph{Configurações de treino.} \f{phase1\_run1.json} (primeiro treino, com 15\,\% do treino
+reservado para monitorização interna), \f{phase1\_final.json} (treino sem monitorização),
+\f{phase1\_select.json} (treino de 300 épocas que guarda todos os \emph{checkpoints} para a
+seleção) e \f{windows\_j0.json} e \f{windows\_j50.json} (janelas de 64 pontos, sem sobreposição e
+com 50\,\%). Indicam a semente, os caminhos, a taxa de aprendizagem, o número de épocas, o
+orçamento de tempo e o dispositivo.
+
+\paragraph{Protocolos.} \f{selection\_protocol.json}, \f{selection\_protocol\_windows.json} e
+\f{selection\_protocol\_validation.json} descrevem, antes de se abrir o conjunto, os candidatos e
+os critérios de escolha da \emph{baseline}, das janelas e do modelo a medir no \f{validation}.
+\f{postproc\_protocol.json} e \f{postproc\_protocol\_v2.json} descrevem as duas aplicações do
+filtro (13 e 301 pontos). Declarar o protocolo antes de abrir os dados impede que a escolha se
+ajuste aos resultados.
+
+\paragraph{Autorizações (\f{authorizations/}).} Doze ficheiros JSON, um por autorização concedida
+pelo utilizador para aceder ao \f{test} ou ao \f{validation}. Cada um indica quem autorizou e
+quando, a citação literal do pedido, o conjunto, a finalidade (seleção, medição final, diagnóstico,
+figuras do relatório ou galeria), as decisões que cobre, a fonte de dados e o número máximo de
+rondas. O código de \f{reserved.py} recusa qualquer acesso sem uma autorização compatível.
+
+%% =====================================================================
+\section{Testes (\f{tests/})}\label{sec:testes}
+
+Os testes usam dados sintéticos, inventados dentro de cada teste; só um lê três viagens reais do
+treino. Correm com \f{iach-ais-venv-4/bin/python -m pytest tests/} (256 casos a 26 de novembro).
+Organizam-se por área.
+
+\begin{itemize}
+\item \texttt{test\_sequences.py, test\_point\_alignment.py, test\_access\_policy.py}: construção das
+  sequências, normalização, alinhamento ponto a ponto e recusa de ler dados que não sejam do
+  treino.
+\item \texttt{test\_build\_clean\_dataset.py, test\_count\_anomalies\_train.py,
+  test\_count\_shared\_vessels.py}: cálculo das variáveis recalculadas, contagem de anomalias e de
+  navios partilhados.
+\item \texttt{test\_model\_shapes.py, test\_loss\_and\_gradients.py,
+  test\_checkpoint\_and\_training\_loop.py, test\_integration\_phase1.py}: forma de saída e campo
+  recetivo da CNN, perda e gradientes, configuração, \emph{checkpoints}, ciclo de treino e um teste
+  de integração de ponta a ponta.
+\item \texttt{test\_windows.py, test\_select\_windows.py}: janelamento, cobertura, perda com máscara e
+  seleção das janelas.
+\item \texttt{test\_segments\_and\_metrics.py}: extração de segmentos e métricas por segmento.
+\item \texttt{test\_reserved\_access.py, test\_reserved\_diagnostic.py, test\_final\_validation.py,
+  test\_validation\_figure\_authorization.py}: política de acesso aos conjuntos reservados: uma só
+  ronda, recusa sem autorização, registo dos acessos e medição final.
+\item \texttt{test\_postprocessing.py, test\_postproc\_validation.py,
+  test\_postproc\_first\_version\_macros.py, test\_window\_analysis\_macros.py}: filtro gaussiano, a
+  sua aplicação ao \f{validation} e as macros correspondentes.
+\item \texttt{test\_final\_results\_format.py, test\_trip\_gallery.py, test\_trip\_gallery\_pdf.py}: formatação dos números para o LaTeX e geração da galeria.
+\end{itemize}
+
+%% =====================================================================
+\section{Resultados (\f{results/}, local)}\label{sec:resultados}
+
+Cada execução grava numa subpasta própria as previsões, os \emph{checkpoints}, os resumos em JSON e
+um manifesto da execução (configuração, versões, commit). A pasta não se versiona por ser volumosa;
+os números que interessam chegam ao relatório através das macros geradas.
+
+\begin{itemize}
+\item \texttt{access\_log.jsonl}: registo de todos os acessos aos conjuntos reservados.
+\item \texttt{clean\_train/, clean\_test/, clean\_validation/}: resumos da construção de cada base limpa.
+\item \texttt{anomalies\_train/, units\_check\_train/, shared\_vessels/}: saídas das verificações do treino e
+  da contagem de navios partilhados.
+\item \texttt{phase1\_run1/, phase1\_final/, phase1\_select/}: os três treinos da \emph{baseline}; o último
+  guarda os 300 \emph{checkpoints} usados na seleção.
+\item \texttt{baseline\_frozen/}: a \emph{baseline} congelada (época 162, limiar 0,65), as suas previsões e
+  os resultados finais.
+\item \texttt{windows\_j0/, windows\_j50/, windows\_j0\_frozen/, windows\_j50\_frozen/, windows\_final/}: treinos, seleção, modelos congelados e resultados das janelas.
+\item \texttt{final\_validation/}: a medição final no \f{validation}.
+\item \texttt{postproc\_window\_analysis/, postproc\_validation/, postproc\_validation\_v2/}: análise dos
+  blocos de erro e as duas versões do pós-processamento.
+\item \texttt{diagnostic\_trip/, diagnostic\_3trips/, benchmark\_speed/}: diagnósticos e medições de
+  velocidade feitos durante o desenvolvimento.
+\end{itemize}
+
+%% =====================================================================
+\section{Relatório (\f{latex/})}\label{sec:latex}
+
+\begin{description}
+\item[relatorio\_pt.tex] O relatório do trabalho, no modelo IJCAI--ECAI 26 (10 páginas). Os números
+  não estão escritos à mão: vêm das macros de \f{generated/}.
+\item[references.bib] As referências bibliográficas do relatório.
+\item[generated/] Seis ficheiros de macros gerados por programas de \f{src/ais/cli/}, cada um com
+  um cabeçalho que indica o programa, a fonte e o commit: \f{resultados.tex}
+  (\f{build\_final\_results}), \f{resultados\_janelas.tex} (\f{build\_window\_results}),
+  \f{resultados\_validacao.tex} (\f{build\_validation\_results}), \f{resultados\_posproc.tex} e
+  \f{resultados\_posproc\_v1.tex} (\f{build\_postproc\_results}) e \f{resultados\_buracos.tex}
+  (\f{build\_window\_analysis\_macros}). Não se editam à mão.
+\item[figures/] Vinte figuras PNG geradas pelos mesmos programas. Oito entram no relatório: a
+  janela do filtro, a linha temporal e as viagens das janelas (\f{*\_baseline}), as curvas de
+  perda, o resumo e a pior viagem da validação, e os resultados e uma viagem do pós-processamento.
+  As outras doze (\f{diag3\_*}, \f{final\_*}, \f{posproc\_viagens}, \f{janelas\_matrizes},
+  \f{janelas\_segmentos}, as versões \f{*\_ref} e as versões sem \f{\_baseline} no nome) são de
+  versões anteriores e foram mantidas por decisão do utilizador.
+\item[FormattingGuidelines-IJCAI-ECAI-26/] O estilo da conferência (\f{ijcai26.sty}) e o estilo
+  bibliográfico (\f{named.bst}) usados pelo relatório.
+\item[proposta\_IAHC\_DINIS\_ROSA.pdf] A proposta entregue ao professor. É um documento histórico
+  e não se altera.
+\item[proposta\_pt.pdf] A última versão da proposta em LaTeX, antes de ser substituída pelo
+  relatório; a fonte está na etiqueta git \f{proposta-pt-v1}.
+\item[build/] (local) Pasta onde se compila o relatório; guarda apenas \f{relatorio\_pt.pdf}.
+\item[watch\_latex.sh] (local) Vigilante que recompila o relatório sempre que o \f{.tex} ou o
+  \f{.bib} mudam, até os números de linha estabilizarem; \f{--once} compila uma vez.
+\end{description}
+
+%% =====================================================================
+\section{Galeria de viagens (\f{viagens/})}\label{sec:viagens}
+
+A galeria mostra, para cada viagem do \f{test} e do \f{validation}, a classe real e a prevista por
+cada modelo, e é referida no Anexo~B do relatório. Tudo nesta pasta é gerado por código.
+
+\begin{description}
+\item[README.md] A página da galeria no GitHub, com a legenda e as imagens.
+\item[teste/, validacao/] Dezoito imagens PNG em cada uma, uma por viagem, com o ID da viagem
+  como nome.
+\item[proveniencia.json] O comando, o commit, as versões e as autorizações usadas para gerar a
+  galeria.
+\item[galeria\_viagens.tex, galeria\_viagens.pdf] A mesma galeria em LaTeX e PDF, gerada por
+  \f{build\_trip\_gallery\_pdf}. O relatório liga para este PDF, por isso não deve ser movido.
+\end{description}
+
+%% =====================================================================
+\section{Investigação de agentes (\f{investigacao\_agentes/})}\label{sec:investigacao}
+
+Esta pasta contém um estudo à parte do trabalho técnico: a comparação do fluxo de trabalho com
+agentes de IA nas quatro tentativas do projeto.
+
+\begin{description}
+\item[comparacao\_workflows.tex, comparacao\_workflows.pdf] O documento do estudo.
+\item[kit/] Modelos reutilizáveis para projetos futuros: \f{AGENTS\_modelo.md},
+  \f{handoff\_modelo.md}, \f{PROGRESS\_modelo.md} e \f{checklist\_arranque.md}.
+\item[scripts/metricas\_git.py] Lê clones dos quatro repositórios e gera as métricas e as
+  figuras do estudo.
+\item[gerado/] As saídas desse script: \f{metricas.json}, as macros \f{metricas.tex} e três
+  figuras. Não se editam à mão.
+\item[README.md] Descrição da pasta e instruções para regenerar o estudo.
+\end{description}
+
+%% =====================================================================
+\section{Ficheiros locais e automáticos}\label{sec:locais}
+
+Além das pastas locais já descritas (\f{data/}, \f{results/}, \f{docs/bibliografia/},
+\f{latex/build/}), existem na raiz outros elementos que não fazem parte do trabalho em si.
+\f{iach-ais-venv-4/} é o ambiente virtual Python do projeto, criado com \f{venv} e as dependências
+de \f{requirements.txt}; não se versiona e pode ser recriado. \f{.pytest\_cache/} e as pastas
+\f{\_\_pycache\_\_/} são criadas automaticamente pelo pytest e pelo Python e podem ser apagadas sem
+consequências. \f{.git/} contém o histórico do repositório, incluindo as etiquetas
+\f{proposta-pt-v1} e \f{docs-historico-v1}. Por fim, a pasta \f{guia\_desenvolvimento/} contém
+este guia.
+
+%% =====================================================================
+\section{Como retomar o desenvolvimento}\label{sec:retomar}
+
+Quem retoma o projeto deve começar por ler o \f{AGENTS.md}, o \f{handoff.md} e o topo do
+\f{PROGRESS.md}, por esta ordem, e confirmar o estado com \f{git status -sb} e com os testes. Numa
+máquina nova, o ambiente recria-se com os comandos abaixo; os dados e os resultados não estão no
+repositório e têm de ser obtidos à parte.
+
+\begin{lstlisting}
+python3 -m venv iach-ais-venv-4
+iach-ais-venv-4/bin/python -m pip install -r requirements.txt
+iach-ais-venv-4/bin/python -m pip install -e . --no-build-isolation --no-deps
+iach-ais-venv-4/bin/python -m pytest tests/
+\end{lstlisting}
+
+Qualquer trabalho novo deve respeitar três cuidados. Os conjuntos \f{test} e \f{validation} não se
+abrem sem autorização escrita do utilizador; o \f{validation} já foi usado para a medição final. Os
+números que entram no relatório têm de ser produzidos por um programa e chegar ao LaTeX como
+macros, nunca escritos à mão. E as alterações aos documentos registam-se com um novo identificador
+no \f{REVISION\_LOG.md}, com uma entrada no \f{PROGRESS.md} e com a atualização do
+\f{handoff.md} no fim da sessão.
+
+%% =====================================================================
+\section*{Declaração de uso de inteligência artificial}
+\addcontentsline{toc}{section}{Declaração de uso de inteligência artificial}
+
+Este guia foi gerado com inteligência artificial (Claude Code, modelo Claude Opus 5.5, da
+Anthropic), a pedido e sob a orientação de Dinis Rosa. As descrições baseiam-se na leitura dos
+ficheiros versionados (documentação, cabeçalhos e funções do código, configurações) e na listagem
+dos nomes das pastas locais; não se abriram os dados nem os PDF da bibliografia.
+
+\end{document}
