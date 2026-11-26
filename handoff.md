@@ -1,12 +1,12 @@
 # Handoff — Projeto AIS
 
-**Atualizado em 2026-11-25 23:59 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-070. Todas as horas são WET, lidas com `date` ou do `git log`.
+**Atualizado em 2026-11-26 00:03 WET (UTC+00:00).** Reescrito de raiz em REV-066, para continuar numa nova conversa; atualizado em REV-067 a REV-071. As horas são WET, lidas com `date` ou do `git log`.
 
 ## Ponto de situação em quatro linhas
 
 - O trabalho técnico está **feito**: preparação, CNN de referência, janelas (J0, J50), medição final no `validation` e filtro temporal.
 - O documento ativo é o **relatório** `latex/relatorio_pt.tex` (completo, 10 páginas, a preto), que substituiu a proposta.
-- **O próximo passo é continuar o relatório** a partir da leitura do utilizador (revisão REV-071, com cor). A REV-069 (as duas janelas do filtro) e a REV-070 (números de linha) estão em commits locais, **por enviar**.
+- **O próximo passo é continuar o relatório** a partir da leitura do utilizador (revisão REV-072, com cor). As REV-069 (duas janelas do filtro), REV-070 (números de linha) e REV-071 (página 8) estão em commits locais, **por enviar**.
 - Não há treinos, medições nem acessos a dados pendentes.
 
 Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e diz-me o ponto de situação. Quero continuar o relatório.»
@@ -22,12 +22,12 @@ Mensagem sugerida para abrir a nova conversa: «Lê o AGENTS.md e o handoff.md e
 
 ## Última validação
 
-| Verificação | Resultado | Hora (WET, 2026-11-25) |
+| Verificação | Resultado | Hora (WET; 2026-11-25 salvo indicação) |
 |---|---|---|
 | `pytest tests/` | 248 passaram | 23:55 |
-| Relatório (compilação do zero com `watch_latex.sh --once`) | 10 páginas; os 647 números de linha nas margens exteriores | 23:59 |
+| Relatório (vigilante, versão da REV-070) | 10 páginas, sem referências em falta; 647 números de linha nas margens; 2026-11-26 | 00:03 |
 | GitHub (`git fetch` e `git ls-remote`) | confirmado antes da REV-069: `main` igual ao remoto (`aa918ae`); etiquetas presentes | 23:42 |
-| Vigilante do LaTeX | um a correr, ainda com a versão antiga do script: reiniciar | 23:59 |
+| Vigilante do LaTeX | um a correr, com a versão nova (reiniciado às 00:00 de 2026-11-26) | 00:03 |
 | Recuperação da proposta antiga (num clone temporário) | os dois comandos do `README.md` funcionaram e a proposta compilou | 23:12 |
 | Revisão independente do relatório (subagente Opus, só leitura; anterior à REV-068) | sem erros graves; achados aplicados | 23:00 |
 
@@ -37,6 +37,7 @@ O que mudar depois destas horas **não foi** validado por este handoff.
 
 | Commit | Data e hora | Assunto |
 |---|---|---|
+| `2b91f35` | 2026-11-25 23:59 | Documenta como compilar com os números de linha nas margens (REV-070) |
 | `7cef3e2` | 2026-11-25 23:56 | Acrescenta um commit em falta à cronologia do handoff (REV-069) |
 | `0760bec` | 2026-11-25 23:56 | Conta no relatório as duas janelas do filtro (REV-069) |
 | `aa918ae` | 2026-11-25 23:39 | Prepara o handoff para uma nova conversa (REV-068) |
@@ -140,7 +141,7 @@ A lista completa está no topo do `PROGRESS.md`; o registo da versão de 13 pont
 - Relatório: máximo 15 páginas (alvo 13 ou menos); título mantido; «Figura» e «Tabela» em português; números de linha até à versão final.
 - Perguntas de investigação, objetivos e critérios de sucesso não mudam depois dos resultados.
 - Explicabilidade, calibração e *dashboard*: «previstos, não concluídos nesta fase».
-- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer texto novo ou substituído no `.tex` leva `\revtext{revNNN}{…}`, com `\definecolor{revNNN}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. A REV-068 só eliminou texto, por isso não há cor no `.tex`. **Próximo ID livre: REV-071.**
+- **Cores:** a REV-065 foi a preto por exceção autorizada. A partir da REV-068, qualquer texto novo ou substituído no `.tex` leva `\revtext{revNNN}{…}`, com `\definecolor{revNNN}` no preâmbulo (acrescentar `\usepackage{xcolor}` se faltar) e uma cor ainda não usada no `REVISION_LOG.md`. A REV-068 só eliminou texto, por isso não há cor no `.tex`. **Próximo ID livre: REV-072.**
 
 ## Ficheiros principais
 
@@ -177,9 +178,9 @@ bash latex/watch_latex.sh
 
 ## O que fazer a seguir
 
-1. **Continuar o relatório** com o que o utilizador pedir (REV-071). Opcional: o espaço em branco da página 7.
+1. **Continuar o relatório** com o que o utilizador pedir (REV-072).
 2. Se pedido: traduzir «Abstract» e «References» (no modelo IJCAI); versão final sem números de linha.
-3. **Push:** só a pedido. A REV-069 e a REV-070 estão por enviar; confirmar com `git status -sb`.
+3. **Push:** só a pedido. As REV-069 a REV-071 estão por enviar; confirmar com `git status -sb`.
 4. Opcional: arrumação técnica (testes dos programas de treino, figuras e resultados; unificar `class_metrics`; figuras sem uso em `latex/figures/`, que o utilizador preferiu manter).
 5. Limitações em aberto: CRS (hipótese WGS84), 128 contra 123 trajetórias, fiabilidade das anotações, cálculo de `distanceToShore`.
 

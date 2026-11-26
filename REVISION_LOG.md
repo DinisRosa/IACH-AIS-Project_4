@@ -1101,3 +1101,13 @@ Regras:
 - **Correspondência no LaTeX:** **não aplicável** (o texto não mudou; só a compilação).
 - **Validação:** compilação do zero: 10 páginas, os 647 números de linha nas margens exteriores (posições lidas com `pdftotext -bbox` e páginas revistas em imagem). Testes não repetidos (sem alterações a código Python).
 - **Pendentes:** o utilizador reiniciar o vigilante que está a correr.
+
+### REV-071 — Página 8 preenchida nas duas colunas
+
+- **Data:** 2026-11-26, até 00:03 WET.
+- **Cor:** Azul-ardósia escuro `#483D8B`, RGB (72, 61, 139). Marcador no `PROGRESS.md`; no `.tex` só mudou a disposição, sem texto novo para colorir.
+- **O quê:** em `latex/relatorio_pt.tex`, o `\FloatBarrier` saiu de antes do `\appendix` e passou para antes das referências; o anexo começa na página 8, a seguir às conclusões.
+- **Porquê:** pedido do utilizador: a página 8 só tinha um bloco pequeno de texto na coluna da esquerda. A entrada da REV-070 chamava-lhe, por erro, página 7.
+- **Correspondência no LaTeX:** **atualizado**.
+- **Validação:** 10 páginas, sem referências em falta; 647 números de linha nas margens exteriores; páginas 8 e 9 revistas em imagem. Testes não repetidos (sem alterações a código).
+- **Pendentes:** leitura do relatório.
